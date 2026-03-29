@@ -1,0 +1,59 @@
+name: shapepro
+description: ShapePro - App profissional de dieta e treino personalizado
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Design
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.0
+  shimmer: ^3.0.0
+  flutter_svg: ^2.0.10+1
+  lottie: ^3.1.2
+  
+  # State Management
+  provider: ^6.1.2
+  
+  # Networking & Storage
+  http: ^1.2.2
+  shared_preferences: ^2.3.3
+  
+  # Charts
+  fl_chart: ^0.69.2
+  
+  # Utils
+  intl: ^0.20.2
+  local_auth: ^2.2.0
+  flutter_localizations:
+    sdk: flutter
+
+  # Icons
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+  generate: true
+  
+  assets:
+    - assets/icon.png
+    - assets/images/
+    - assets/exercises/
+

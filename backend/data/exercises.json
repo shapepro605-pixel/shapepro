@@ -1,0 +1,731 @@
+{
+    "peito": [
+        {
+            "nome": "Supino reto com barra",
+            "descricao": "Deite no banco reto, segure a barra na largura dos ombros, desça até o peito e empurre para cima.",
+            "musculos_trabalhados": [
+                "Peitoral maior",
+                "Tríceps",
+                "Deltóide anterior"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barra e banco reto",
+            "dificuldade": "intermediario",
+            "dicas": "1. Deite-se no banco com os olhos sob a barra. 2. Segure a barra um pouco mais larga que a largura dos ombros. 3. Desça a barra lentamente até o meio do peito. 4. Empurre com força para cima sem esticar totalmente os cotovelos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Barbell_Bench_Press/1.jpg"
+        },
+        {
+            "nome": "Supino inclinado com halteres",
+            "descricao": "No banco inclinado a 30-45°, faça o movimento de supino com halteres para focar na porção superior do peito.",
+            "musculos_trabalhados": [
+                "Peitoral superior",
+                "Deltóide anterior",
+                "Tríceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Halteres e banco inclinado",
+            "dificuldade": "intermediario",
+            "dicas": "1. Ajuste o banco para 30-45 graus. 2. Empurre os halteres para cima simultaneamente. 3. Desça controlando o peso até os halteres ficarem próximos aos ombros.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/1.jpg"
+        },
+        {
+            "nome": "Crucifixo com halteres",
+            "descricao": "Deitado no banco reto, abra os braços lateralmente com halteres, mantendo leve flexão nos cotovelos.",
+            "musculos_trabalhados": [
+                "Peitoral maior",
+                "Deltóide anterior"
+            ],
+            "series": 3,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Halteres e banco reto",
+            "dificuldade": "iniciante",
+            "dicas": "1. Mantenha os cotovelos levemente flexionados. 2. Abra os braços como se fosse abraçar uma árvore. 3. Sinta o peito alongar na descida.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Flyes/1.jpg"
+        },
+        {
+            "nome": "Crossover na polia",
+            "descricao": "Em pé entre as polias, puxe os cabos para baixo e para frente, cruzando na frente do corpo.",
+            "musculos_trabalhados": [
+                "Peitoral maior",
+                "Peitoral inferior"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "60s",
+            "equipamento": "Máquina de polia",
+            "dificuldade": "iniciante",
+            "dicas": "1. Fique entre as polias, dê um passo à frente. 2. Puxe os cabos cruzando-os à frente do peito. 3. Sinta o aperto no peitoral inferior e médio.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Crossover/1.jpg"
+        },
+        {
+            "nome": "Flexão de braço",
+            "descricao": "Apoie as mãos no chão na largura dos ombros e faça o movimento de empurrar o corpo para cima.",
+            "musculos_trabalhados": [
+                "Peitoral maior",
+                "Tríceps",
+                "Core"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Nenhum (peso corporal)",
+            "dificuldade": "iniciante",
+            "dicas": "1. Mantenha os cotovelos a 45 graus do corpo. 2. Empurre o chão com as mãos. 3. Mantenha o corpo reto como uma prancha.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/1.jpg"
+        },
+        {
+            "nome": "Supino declinado com barra",
+            "descricao": "No banco declinado, realize o supino para focar na porção inferior do peitoral.",
+            "musculos_trabalhados": [
+                "Peitoral inferior",
+                "Tríceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barra e banco declinado",
+            "dificuldade": "avancado",
+            "dicas": "1. Garanta que seus pés estejam presos sob o suporte. 2. Foque na parte inferior do peito. 3. Peça ajuda para tirar a barra.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Barbell_Bench_Press/1.jpg"
+        }
+    ],
+    "costas": [
+        {
+            "nome": "Puxada frontal na polia",
+            "descricao": "Sentado na máquina, puxe a barra até o peito com pegada aberta.",
+            "musculos_trabalhados": [
+                "Latíssimo do dorso",
+                "Bíceps",
+                "Romboides"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Máquina de polia alta",
+            "dificuldade": "iniciante",
+            "dicas": "1. Sente-se com os joelhos presos. 2. Use pegada aberta. 3. Puxe a barra até a parte superior do peito.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/V-Bar_Pulldown/1.jpg"
+        },
+        {
+            "nome": "Remada curvada com barra",
+            "descricao": "Com o tronco inclinado a 45°, puxe a barra em direção ao abdômen.",
+            "musculos_trabalhados": [
+                "Latíssimo do dorso",
+                "Trapézio",
+                "Romboides",
+                "Bíceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barra",
+            "dificuldade": "intermediario",
+            "dicas": "1. Incline o tronco a 45 graus. 2. Puxe a barra em direção ao umbigo. 3. Mantenha a coluna neutra.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Barbell_Row/1.jpg"
+        },
+        {
+            "nome": "Remada unilateral com halter",
+            "descricao": "Apoie um joelho e uma mão no banco, puxe o halter com o outro braço.",
+            "musculos_trabalhados": [
+                "Latíssimo do dorso",
+                "Romboides",
+                "Bíceps"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Halter e banco",
+            "dificuldade": "iniciante",
+            "dicas": "1. Apoie um braço no banco. 2. Puxe o halter como se estivesse dando a partida em um motor. 3. Estique bem as costas na descida.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Dumbbell_Row/1.jpg"
+        },
+        {
+            "nome": "Pulldown com triângulo",
+            "descricao": "Na polia alta, use a pegada triângulo (neutra) para puxar em direção ao peito.",
+            "musculos_trabalhados": [
+                "Latíssimo do dorso",
+                "Bíceps"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Máquina de polia alta com triângulo",
+            "dificuldade": "iniciante",
+            "dicas": "1. Pegada triângulo foca no meio das costas. 2. Puxe até o peito. 3. Controle o retorno da carga.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Lat_Pulldown/1.jpg"
+        },
+        {
+            "nome": "Barra fixa (pull-up)",
+            "descricao": "Pendurado na barra, puxe o corpo para cima até o queixo ultrapassar a barra.",
+            "musculos_trabalhados": [
+                "Latíssimo do dorso",
+                "Bíceps",
+                "Core"
+            ],
+            "series": 4,
+            "repeticoes": "6-10",
+            "descanso": "90s",
+            "equipamento": "Barra fixa",
+            "dificuldade": "avancado",
+            "dicas": "1. Comece com pegada aberta na largura dos ombros. 2. Tente encostar o peito na barra. 3. Desça até os braços estarem quase retos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pullups/1.jpg"
+        },
+        {
+            "nome": "Remada cavalinho (T-bar)",
+            "descricao": "Com o tronco inclinado, puxe a barra T em direção ao peito.",
+            "musculos_trabalhados": [
+                "Latíssimo do dorso",
+                "Trapézio médio",
+                "Romboides"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barra T",
+            "dificuldade": "intermediario",
+            "dicas": "1. Use o suporte cavalinho ou barra no canto. 2. Puxe a carga focando nas escápulas. 3. Mantenha o equilíbrio.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_T-Bar_Row/1.jpg"
+        }
+    ],
+    "ombros": [
+        {
+            "nome": "Desenvolvimento com halteres",
+            "descricao": "Sentado, empurre os halteres acima da cabeça partindo da altura dos ombros.",
+            "musculos_trabalhados": [
+                "Deltóide anterior",
+                "Deltóide lateral",
+                "Tríceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Halteres",
+            "dificuldade": "intermediario",
+            "dicas": "1. Ajuste o banco em 90 graus. 2. Estenda os braços quase totalmente acima da cabeça. 3. Desça até o ângulo de 90 nos cotovelos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Shoulder_Press/1.jpg"
+        },
+        {
+            "nome": "Elevação lateral",
+            "descricao": "Em pé, eleve os halteres lateralmente até a altura dos ombros com braços quase estendidos.",
+            "musculos_trabalhados": [
+                "Deltóide lateral"
+            ],
+            "series": 4,
+            "repeticoes": "12-15",
+            "descanso": "45-60s",
+            "equipamento": "Halteres",
+            "dificuldade": "iniciante",
+            "dicas": "1. Mantenha os cotovelos levemente flexionados. 2. Eleve os halteres até a linha dos ombros, não mais. 3. Pense em 'jogar' o peso para os lados.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/1.jpg"
+        },
+        {
+            "nome": "Elevação frontal",
+            "descricao": "Em pé, eleve os halteres à frente do corpo até a altura dos ombros.",
+            "musculos_trabalhados": [
+                "Deltóide anterior"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Halteres ou barra",
+            "dificuldade": "iniciante",
+            "dicas": "1. Coluna reta, core firme. 2. Suba o halter até a altura dos olhos. 3. Alterne os braços ou faça simultâneo.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/1.jpg"
+        },
+        {
+            "nome": "Desenvolvimento Arnold",
+            "descricao": "Sentado, comece com halteres à frente (pegada supinada), gire e empurre para cima.",
+            "musculos_trabalhados": [
+                "Deltóide anterior",
+                "Deltóide lateral",
+                "Tríceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60s",
+            "equipamento": "Halteres",
+            "dificuldade": "avancado",
+            "dicas": "1. Comece com palmas voltadas para você. 2. Ao subir, gire os halteres para fora. 3. Finalize com braços estendidos acima.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Arnold_Dumbbell_Press/1.jpg"
+        },
+        {
+            "nome": "Face pull na polia",
+            "descricao": "Na polia alta, puxe a corda em direção ao rosto, abrindo os cotovelos.",
+            "musculos_trabalhados": [
+                "Deltóide posterior",
+                "Trapézio",
+                "Infraespinhal"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Máquina de polia com corda",
+            "dificuldade": "iniciante",
+            "dicas": "1. Puxe a corda em direção à testa. 2. 'Abra' a corda no final do movimento. 3. Foque na parte posterior do ombro.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/1.jpg"
+        },
+        {
+            "nome": "Encolhimento com halteres",
+            "descricao": "Em pé, segure halteres ao lado do corpo e eleve os ombros em direção às orelhas.",
+            "musculos_trabalhados": [
+                "Trapézio superior"
+            ],
+            "series": 4,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Halteres",
+            "dificuldade": "iniciante",
+            "dicas": "Segure a contração no topo por 2 segundos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Shrug/1.jpg"
+        }
+    ],
+    "biceps": [
+        {
+            "nome": "Rosca direta com barra",
+            "descricao": "Em pé, segure a barra com pegada supinada e flexione os cotovelos.",
+            "musculos_trabalhados": [
+                "Bíceps braquial",
+                "Braquial"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60s",
+            "equipamento": "Barra reta ou W",
+            "dificuldade": "iniciante",
+            "dicas": "Mantenha os cotovelos fixos ao lado do corpo.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Curl/1.jpg"
+        },
+        {
+            "nome": "Rosca alternada com halteres",
+            "descricao": "Em pé, faça a rosca alternando um braço por vez com supinação.",
+            "musculos_trabalhados": [
+                "Bíceps braquial",
+                "Braquiorradial"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Halteres",
+            "dificuldade": "iniciante",
+            "dicas": "1. Alterne entre os braços. 2. Gire o punho (supinação) na metade do caminho. 3. Controle a descida.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Incline_Dumbbell_Curl/1.jpg"
+        },
+        {
+            "nome": "Rosca martelo",
+            "descricao": "Em pé, segure os halteres em pegada neutra e flexione os cotovelos.",
+            "musculos_trabalhados": [
+                "Braquial",
+                "Braquiorradial",
+                "Bíceps"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Halteres",
+            "dificuldade": "iniciante",
+            "dicas": "1. Pegada neutra (palmas para dentro). 2. Excelente para o antebraço e braquial. 3. Mantenha os punhos retos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Hammer_Curl/1.jpg"
+        },
+        {
+            "nome": "Rosca concentrada",
+            "descricao": "Sentado, apoie o cotovelo na parte interna da coxa e flexione com halter.",
+            "musculos_trabalhados": [
+                "Bíceps braquial (pico)"
+            ],
+            "series": 3,
+            "repeticoes": "10-15",
+            "descanso": "45s",
+            "equipamento": "Halter",
+            "dificuldade": "iniciante",
+            "dicas": "1. Apoie o cotovelo no joelho. 2. Isole totalmente o bíceps. 3. Faça o movimento lento e concentrado.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Concentration_Curls/1.jpg"
+        },
+        {
+            "nome": "Rosca Scott na máquina",
+            "descricao": "Sentado no banco Scott, apoie os braços e faça a flexão com barra ou máquina.",
+            "musculos_trabalhados": [
+                "Bíceps braquial (porção curta)"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Banco Scott com barra W",
+            "dificuldade": "intermediario",
+            "dicas": "1. Use a barra W para poupar os punhos. 2. Apoie bem os braços no banco. 3. Não descanse no topo.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Machine_Bicep_Curl/1.jpg"
+        }
+    ],
+    "triceps": [
+        {
+            "nome": "Tríceps na polia (pushdown)",
+            "descricao": "Na polia alta, empurre a barra para baixo estendendo os cotovelos.",
+            "musculos_trabalhados": [
+                "Tríceps (cabeça lateral)"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Máquina de polia com barra reta",
+            "dificuldade": "iniciante",
+            "dicas": "Mantenha os cotovelos fixos ao lado do corpo.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown/1.jpg"
+        },
+        {
+            "nome": "Tríceps francês com halter",
+            "descricao": "Deitado ou sentado, segure um halter atrás da cabeça e estenda os braços.",
+            "musculos_trabalhados": [
+                "Tríceps (cabeça longa)"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Halter",
+            "dificuldade": "intermediario",
+            "dicas": "1. Pode ser feito sentado ou em pé. 2. Segure o halter com as duas mãos em formato de cálice. 3. Desça o máximo que puder atrás da cabeça.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Dumbbell_Triceps_Extension/1.jpg"
+        },
+        {
+            "nome": "Tríceps corda na polia",
+            "descricao": "Na polia alta com pegada de corda, empurre para baixo abrindo as mãos no final.",
+            "musculos_trabalhados": [
+                "Tríceps (todas as cabeças)"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Máquina de polia com corda",
+            "dificuldade": "iniciante",
+            "dicas": "1. Afaste as mãos ao final do movimento para contração máxima. 2. Mantenha a postura ereta. 3. Excelente para isolar a cabeça lateral do tríceps.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown/1.jpg"
+        },
+        {
+            "nome": "Mergulho no banco (dip)",
+            "descricao": "Apoie as mãos no banco atrás de você e desça o corpo flexionando os cotovelos.",
+            "musculos_trabalhados": [
+                "Tríceps",
+                "Deltóide anterior",
+                "Peitoral"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "60s",
+            "equipamento": "Banco",
+            "dificuldade": "iniciante",
+            "dicas": "1. Mantenha as pernas esticadas à frente para dificultar. 2. Desça até os cotovelos formarem 90 graus. 3. Não deixe os ombros subirem.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Dips/1.jpg"
+        },
+        {
+            "nome": "Tríceps testa com barra W",
+            "descricao": "Deitado, desça a barra W em direção à testa e estenda os braços.",
+            "musculos_trabalhados": [
+                "Tríceps (cabeça longa e medial)"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60s",
+            "equipamento": "Barra W e banco reto",
+            "dificuldade": "intermediario",
+            "dicas": "1. Desça a barra em direção à testa. 2. Mantenha os cotovelos fechados, não deixe abrir para os lados. 3. Use carga moderada para não forçar os cotovelos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Skullcrusher/1.jpg"
+        }
+    ],
+    "pernas": [
+        {
+            "nome": "Agachamento livre com barra",
+            "descricao": "Com a barra nos trapézios, agache até as coxas ficarem paralelas ao chão.",
+            "musculos_trabalhados": [
+                "Quadríceps",
+                "Glúteos",
+                "Isquiotibiais",
+                "Core"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "90-120s",
+            "equipamento": "Barra e rack",
+            "dificuldade": "intermediario",
+            "dicas": "1. Pés na largura dos ombros, peito aberto. 2. Desça empurrando o quadril para trás como se fosse sentar em uma cadeira. 3. Mantenha os calcanhares no chão. 4. Suba fazendo força no calcanhar.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Squat/1.jpg"
+        },
+        {
+            "nome": "Leg press 45°",
+            "descricao": "Na máquina leg press, empurre a plataforma com os pés afastados na largura dos ombros.",
+            "musculos_trabalhados": [
+                "Quadríceps",
+                "Glúteos",
+                "Isquiotibiais"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "90s",
+            "equipamento": "Máquina leg press",
+            "dificuldade": "iniciante",
+            "dicas": "1. Apoie bem a lombar no encosto. 2. Destrave a plataforma com cuidado. 3. Não estique totalmente os joelhos (mantenha micro-flexionado).",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/1.jpg"
+        },
+        {
+            "nome": "Cadeira extensora",
+            "descricao": "Sentado na máquina, estenda as pernas contra a resistência.",
+            "musculos_trabalhados": [
+                "Quadríceps"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "60s",
+            "equipamento": "Máquina extensora",
+            "dificuldade": "iniciante",
+            "dicas": "1. Ajuste a máquina para que o joelho coincida com o eixo de rotação. 2. Estenda e segure 1 segundo no topo. 3. Desça controladamente.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/1.jpg"
+        },
+        {
+            "nome": "Mesa flexora (leg curl)",
+            "descricao": "Deitado na máquina, flexione os joelhos trazendo os calcanhares em direção aos glúteos.",
+            "musculos_trabalhados": [
+                "Isquiotibiais"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Máquina flexora",
+            "dificuldade": "iniciante",
+            "dicas": "1. Mantenha o quadril colado no banco. 2. Puxe o peso até os calcanhares quase tocarem o glúteo. 3. Excelente para isolar o posterior de coxa.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Leg_Curl/1.jpg"
+        },
+        {
+            "nome": "Avanço (passada) com halteres",
+            "descricao": "Dê um passo à frente e desça até o joelho de trás quase tocar o chão.",
+            "musculos_trabalhados": [
+                "Quadríceps",
+                "Glúteos",
+                "Isquiotibiais"
+            ],
+            "series": 3,
+            "repeticoes": "12-15 (cada perna)",
+            "descanso": "60s",
+            "equipamento": "Halteres",
+            "dificuldade": "intermediario",
+            "dicas": "1. Dê um passo largo o suficiente para que o joelho não passe a ponta do pé. 2. Mantenha o equilíbrio focando em um ponto fixo. 3. Tronco sempre ereto.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Lunges/1.jpg"
+        },
+        {
+            "nome": "Panturrilha em pé na máquina",
+            "descricao": "Na máquina de panturrilha, eleve os calcanhares o máximo possível.",
+            "musculos_trabalhados": [
+                "Gastrocnêmio",
+                "Sóleo"
+            ],
+            "series": 4,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Máquina de panturrilha",
+            "dificuldade": "iniciante",
+            "dicas": "1. Alongue bem a panturrilha na descida. 2. Suba o máximo que puder na ponta dos pés. 3. Não dê 'trancos' com o joelho.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg"
+        },
+        {
+            "nome": "Agachamento hack",
+            "descricao": "Na máquina hack, posicione os pés à frente e agache controladamente.",
+            "musculos_trabalhados": [
+                "Quadríceps",
+                "Glúteos"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "90s",
+            "equipamento": "Máquina hack",
+            "dificuldade": "intermediario",
+            "dicas": "1. Mantenha as costas totalmente apoiadas. 2. Agache até formar 90 graus. 3. Ótima variação para quem tem problemas de coluna com agachamento livre.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/1.jpg"
+        },
+        {
+            "nome": "Stiff (levantamento terra romeno)",
+            "descricao": "Com a barra, desça o tronco mantendo as pernas quase estendidas.",
+            "musculos_trabalhados": [
+                "Isquiotibiais",
+                "Glúteos",
+                "Eretores da espinha"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "90s",
+            "equipamento": "Barra",
+            "dificuldade": "avancado",
+            "dicas": "1. Pernas quase esticadas, mas não travadas. 2. Desça a barra rente às pernas. 3. Sinta o alongamento intenso no posterior de coxa.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/1.jpg"
+        }
+    ],
+    "abdomen": [
+        {
+            "nome": "Abdominal crunch",
+            "descricao": "Deitado, com joelhos flexionados, eleve os ombros do chão contraindo o abdômen.",
+            "musculos_trabalhados": [
+                "Reto abdominal (porção superior)"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "30-45s",
+            "equipamento": "Nenhum",
+            "dificuldade": "iniciante",
+            "dicas": "1. Coloque as mãos atrás das orelhas, não na nuca. 2. Tire apenas as escápulas do chão. 3. Solte o ar na subida e sinta o abdômen contrair.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Crunch/1.jpg"
+        },
+        {
+            "nome": "Prancha (plank)",
+            "descricao": "Apoie-se nos antebraços e ponta dos pés, mantendo o corpo reto.",
+            "musculos_trabalhados": [
+                "Core completo",
+                "Reto abdominal",
+                "Transverso",
+                "Oblíquos"
+            ],
+            "series": 3,
+            "repeticoes": "30-60 segundos",
+            "descanso": "45s",
+            "equipamento": "Nenhum",
+            "dificuldade": "iniciante",
+            "dicas": "1. Apoie-se nos antebraços no chão. 2. Mantenha o corpo em linha reta e o umbigo 'para dentro'. 3. Respire de forma curta e controlada durante todo o tempo.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/1.jpg"
+        },
+        {
+            "nome": "Elevação de pernas pendurado",
+            "descricao": "Pendurado na barra, eleve as pernas retas até a altura do quadril.",
+            "musculos_trabalhados": [
+                "Reto abdominal (porção inferior)",
+                "Flexores do quadril"
+            ],
+            "series": 3,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Barra fixa",
+            "dificuldade": "avancado",
+            "dicas": "1. Segure firme na barra para não balançar o tronco. 2. Eleve as pernas usando a força do abdômen inferior. 3. Desça com controle para não usar o impulso.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hanging_Leg_Raise/1.jpg"
+        },
+        {
+            "nome": "Abdominal bicicleta",
+            "descricao": "Deitado, simule o movimento de pedalar tocando cotovelo no joelho oposto.",
+            "musculos_trabalhados": [
+                "Oblíquos",
+                "Reto abdominal"
+            ],
+            "series": 3,
+            "repeticoes": "20-30 (total)",
+            "descanso": "30s",
+            "equipamento": "Nenhum",
+            "dificuldade": "iniciante",
+            "dicas": "1. Faça o movimento de pedalar com as pernas. 2. Tente tocar o cotovelo direito no joelho esquerdo e vice-versa. 3. Excelente para os oblíquos.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Crunch/1.jpg"
+        },
+        {
+            "nome": "Abdominal infra na máquina",
+            "descricao": "Na máquina, flexione o tronco contra a resistência focando na porção inferior.",
+            "musculos_trabalhados": [
+                "Reto abdominal"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Máquina abdominal",
+            "dificuldade": "iniciante",
+            "dicas": "1. Use a carga da máquina para aproximar o tronco do quadril. 2. Foque na flexão da coluna e não apenas no movimento dos braços. 3. Mantenha o queixo longe do peito.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Oblique_Crunch/1.jpg"
+        },
+        {
+            "nome": "Prancha lateral",
+            "descricao": "Apoie-se em um antebraço lateralmente, mantendo o corpo reto.",
+            "musculos_trabalhados": [
+                "Oblíquos",
+                "Transverso do abdômen"
+            ],
+            "series": 3,
+            "repeticoes": "20-30 segundos (cada lado)",
+            "descanso": "30s",
+            "equipamento": "Nenhum",
+            "dificuldade": "intermediario",
+            "dicas": "1. Fique de lado e apoie apenas um antebraço e o pé. 2. Mantenha o quadril alto para trabalhar os oblíquos. 3. Ótimo para estabilidade do core.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/1.jpg"
+        }
+    ],
+    "gluteos": [
+        {
+            "nome": "Hip thrust com barra",
+            "descricao": "Com as costas apoiadas no banco e barra sobre o quadril, eleve o quadril contraindo os glúteos.",
+            "musculos_trabalhados": [
+                "Glúteo máximo",
+                "Isquiotibiais"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "60-90s",
+            "equipamento": "Barra e banco",
+            "dificuldade": "intermediario",
+            "dicas": "1. Use uma almofada na barra se necessário. 2. Empurre o calcanhar no chão no topo do movimento. 3. Aperte o glúteo o máximo que puder.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Hip_Thrust/1.jpg"
+        },
+        {
+            "nome": "Elevação pélvica (ponte)",
+            "descricao": "Deitado no chão, eleve o quadril contraindo os glúteos.",
+            "musculos_trabalhados": [
+                "Glúteo máximo",
+                "Core"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Nenhum",
+            "dificuldade": "iniciante",
+            "dicas": "1. Pode ser feito com peso no quadril. 2. Pés próximos ao glúteo para mais ativação. 3. Não arquive as costas excessivamente no topo.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Glute_Bridge/1.jpg"
+        },
+        {
+            "nome": "Abdução de quadril na máquina",
+            "descricao": "Sentado na máquina, abra as pernas contra a resistência.",
+            "musculos_trabalhados": [
+                "Glúteo médio",
+                "Glúteo mínimo"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Máquina abdutora",
+            "dificuldade": "iniciante",
+            "dicas": "1. Incline o tronco à frente para isolar mais o glúteo médio. 2. Abra as pernas até o limite e segure a volta. 3. Procure não usar as mãos no suporte da máquina.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ab_Crunch_Machine/1.jpg"
+        },
+        {
+            "nome": "Kickback na polia (coice)",
+            "descricao": "Na polia baixa com caneleira, estenda a perna para trás contraindo o glúteo.",
+            "musculos_trabalhados": [
+                "Glúteo máximo"
+            ],
+            "series": 3,
+            "repeticoes": "12-15 (cada perna)",
+            "descanso": "45s",
+            "equipamento": "Máquina de polia com caneleira",
+            "dificuldade": "iniciante",
+            "dicas": "1. Chute para trás e levemente para cima. 2. Mantenha a perna de apoio levemente flexionada. 3. Isole o movimento no quadril, sem mexer a coluna.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Glute_Kickback/1.jpg"
+        },
+        {
+            "nome": "Agachamento sumô",
+            "descricao": "Com os pés bem afastados e pontas dos pés para fora, agache profundamente.",
+            "musculos_trabalhados": [
+                "Glúteos",
+                "Adutores",
+                "Quadríceps"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Halter ou kettlebell",
+            "dificuldade": "intermediario",
+            "dicas": "1. Use um halter pesado entre as pernas. 2. Foque em jogar o peso nos calcanhares. 3. Excelente para glúteo e interno de coxa.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plie_Dumbbell_Squat/1.jpg"
+        }
+    ]
+}

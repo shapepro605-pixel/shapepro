@@ -1,0 +1,53 @@
+{
+    "proteinas": [
+        {"nome": "Peito de frango grelhado", "calorias": 165, "proteina": 31, "carbo": 0, "gordura": 3.6, "porcao": 150, "custo": "baixo"},
+        {"nome": "Ovo cozido", "calorias": 155, "proteina": 13, "carbo": 1.1, "gordura": 11, "porcao": 50, "unidade": "1 unidade", "custo": "baixo"},
+        {"nome": "Patinho bovino grelhado", "calorias": 219, "proteina": 35, "carbo": 0, "gordura": 7.3, "porcao": 120, "custo": "medio"},
+        {"nome": "Tilápia grelhada", "calorias": 128, "proteina": 26, "carbo": 0, "gordura": 2.7, "porcao": 150, "custo": "medio"},
+        {"nome": "Peito de peru", "calorias": 104, "proteina": 17, "carbo": 4.2, "gordura": 1.7, "porcao": 100, "custo": "medio"},
+        {"nome": "Atum em lata (água)", "calorias": 116, "proteina": 26, "carbo": 0, "gordura": 0.8, "porcao": 100, "custo": "medio"},
+        {"nome": "Queijo cottage", "calorias": 98, "proteina": 11, "carbo": 3.4, "gordura": 4.3, "porcao": 100, "custo": "medio"},
+        {"nome": "Whey protein", "calorias": 120, "proteina": 24, "carbo": 3, "gordura": 1.5, "porcao": 30, "unidade": "1 scoop", "custo": "alto"},
+        {"nome": "Salmão grelhado", "calorias": 208, "proteina": 20, "carbo": 0, "gordura": 13, "porcao": 150, "custo": "alto"},
+        {"nome": "Iogurte grego natural", "calorias": 59, "proteina": 10, "carbo": 3.6, "gordura": 0.7, "porcao": 170, "custo": "medio"}
+    ],
+    "carboidratos": [
+        {"nome": "Arroz integral", "calorias": 111, "proteina": 2.6, "carbo": 23, "gordura": 0.9, "porcao": 150, "custo": "baixo"},
+        {"nome": "Batata doce cozida", "calorias": 86, "proteina": 1.6, "carbo": 20, "gordura": 0.1, "porcao": 150, "custo": "baixo"},
+        {"nome": "Aveia em flocos", "calorias": 389, "proteina": 17, "carbo": 66, "gordura": 7, "porcao": 40, "custo": "baixo"},
+        {"nome": "Pão integral", "calorias": 247, "proteina": 13, "carbo": 41, "gordura": 3.4, "porcao": 50, "unidade": "2 fatias", "custo": "medio"},
+        {"nome": "Macarrão integral", "calorias": 124, "proteina": 5, "carbo": 26, "gordura": 0.5, "porcao": 150, "custo": "medio"},
+        {"nome": "Mandioca cozida", "calorias": 125, "proteina": 1, "carbo": 30, "gordura": 0.1, "porcao": 130, "custo": "baixo"},
+        {"nome": "Granola sem açúcar", "calorias": 421, "proteina": 10, "carbo": 64, "gordura": 15, "porcao": 30, "custo": "medio"},
+        {"nome": "Banana", "calorias": 89, "proteina": 1.1, "carbo": 23, "gordura": 0.3, "porcao": 100, "unidade": "1 unidade", "custo": "baixo"},
+        {"nome": "Cuscuz", "calorias": 112, "proteina": 3.8, "carbo": 23, "gordura": 0.2, "porcao": 135, "custo": "baixo"},
+        {"nome": "Tapioca", "calorias": 330, "proteina": 0.5, "carbo": 80, "gordura": 0.1, "porcao": 40, "unidade": "2 colheres", "custo": "baixo"}
+    ],
+    "gorduras": [
+        {"nome": "Azeite de oliva", "calorias": 884, "proteina": 0, "carbo": 0, "gordura": 100, "porcao": 10, "unidade": "1 colher sopa", "custo": "medio"},
+        {"nome": "Castanha do Pará", "calorias": 656, "proteina": 14, "carbo": 12, "gordura": 66, "porcao": 15, "unidade": "3 unidades", "custo": "alto"},
+        {"nome": "Abacate", "calorias": 160, "proteina": 2, "carbo": 8.5, "gordura": 15, "porcao": 70, "custo": "medio"},
+        {"nome": "Pasta de amendoim", "calorias": 588, "proteina": 25, "carbo": 20, "gordura": 50, "porcao": 20, "unidade": "1 colher sopa", "custo": "medio"},
+        {"nome": "Amêndoas", "calorias": 579, "proteina": 21, "carbo": 22, "gordura": 50, "porcao": 15, "unidade": "10 unidades", "custo": "alto"},
+        {"nome": "Nozes", "calorias": 654, "proteina": 15, "carbo": 14, "gordura": 65, "porcao": 15, "unidade": "5 unidades", "custo": "alto"},
+        {"nome": "Linhaça", "calorias": 534, "proteina": 18, "carbo": 29, "gordura": 42, "porcao": 10, "unidade": "1 colher sopa", "custo": "baixo"},
+        {"nome": "Chia", "calorias": 486, "proteina": 17, "carbo": 42, "gordura": 31, "porcao": 10, "unidade": "1 colher sopa", "custo": "baixo"}
+    ],
+    "verduras_legumes": [
+        {"nome": "Brócolis cozido", "calorias": 35, "proteina": 2.4, "carbo": 7, "gordura": 0.4, "porcao": 100, "custo": "medio"},
+        {"nome": "Espinafre", "calorias": 23, "proteina": 2.9, "carbo": 3.6, "gordura": 0.4, "porcao": 80, "custo": "medio"},
+        {"nome": "Salada verde mista", "calorias": 15, "proteina": 1.2, "carbo": 2.5, "gordura": 0.2, "porcao": 100, "custo": "baixo"},
+        {"nome": "Tomate", "calorias": 18, "proteina": 0.9, "carbo": 3.9, "gordura": 0.2, "porcao": 100, "custo": "medio"},
+        {"nome": "Abobrinha refogada", "calorias": 20, "proteina": 1.2, "carbo": 3.4, "gordura": 0.3, "porcao": 100, "custo": "baixo"},
+        {"nome": "Cenoura cozida", "calorias": 35, "proteina": 0.8, "carbo": 8.2, "gordura": 0.2, "porcao": 80, "custo": "baixo"},
+        {"nome": "Feijão carioca", "calorias": 76, "proteina": 4.8, "carbo": 13.6, "gordura": 0.5, "porcao": 100, "custo": "baixo"}
+    ],
+    "frutas": [
+        {"nome": "Maçã", "calorias": 52, "proteina": 0.3, "carbo": 14, "gordura": 0.2, "porcao": 130, "unidade": "1 unidade", "custo": "medio"},
+        {"nome": "Morango", "calorias": 32, "proteina": 0.7, "carbo": 7.7, "gordura": 0.3, "porcao": 100, "unidade": "8 unidades", "custo": "alto"},
+        {"nome": "Laranja", "calorias": 47, "proteina": 0.9, "carbo": 12, "gordura": 0.1, "porcao": 150, "unidade": "1 unidade", "custo": "baixo"},
+        {"nome": "Melão", "calorias": 34, "proteina": 0.8, "carbo": 8.2, "gordura": 0.2, "porcao": 150, "unidade": "1 fatia", "custo": "medio"},
+        {"nome": "Mamão", "calorias": 43, "proteina": 0.5, "carbo": 11, "gordura": 0.3, "porcao": 150, "unidade": "1 fatia", "custo": "baixo"},
+        {"nome": "Manga", "calorias": 60, "proteina": 0.8, "carbo": 15, "gordura": 0.4, "porcao": 120, "unidade": "½ unidade", "custo": "medio"}
+    ]
+}

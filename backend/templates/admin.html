@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShapePro - Admin Dashboard</title>
+    <!-- Tailwind CSS para Estilização Premium Dark -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0A0A1A',
+                        darkCard: '#16162A',
+                        darkBorder: '#2A2A4A',
+                        primary: '#6C5CE7',
+                        secondary: '#00D2FF',
+                        danger: '#FD4556',
+                        success: '#2ED573',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0A0A1A; color: white; }
+        .glass-panel { background: rgba(22, 22, 42, 0.7); backdrop-filter: blur(10px); }
+        .btn-gradient { background: linear-gradient(90deg, #6C5CE7, #00D2FF); transition: opacity 0.3s; }
+        .btn-gradient:hover { opacity: 0.8; }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0A0A1A; }
+        ::-webkit-scrollbar-thumb { background: #2A2A4A; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6C5CE7; }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex" id="app">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="absolute inset-0 z-50 flex items-center justify-center bg-darkBg">
+        <div class="glass-panel border border-darkBorder p-8 rounded-2xl w-full max-w-md shadow-2xl transition-all duration-500">
+            <div class="text-center mb-6">
+                <i id="secret-shield" class="fas fa-shield-alt text-5xl text-primary mb-4 cursor-pointer hover:opacity-80 transition"></i>
+                <h1 class="text-2xl font-bold">ShapePro Center</h1>
+                <p id="secret-hint" class="text-primary mt-2 text-sm">Autentique-se para acessar o painel.</p>
+            </div>
+            <form id="login-form" class="transition-opacity duration-1000">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Email Administrativo</label>
+                    <input type="email" id="email" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition" placeholder="admin@shapepro.com">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Senha</label>
+                    <input type="password" id="password" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition" placeholder="••••••••">
+                </div>
+                <div id="login-error" class="hidden text-danger text-sm mb-4 text-center font-bold"></div>
+                <button type="submit" class="w-full btn-gradient py-3 rounded-lg font-bold text-lg shadow-lg">Entrar no Painel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard-screen" class="hidden w-full h-full flex">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-darkCard border-r border-darkBorder h-full flex flex-col">
+            <div class="p-6 border-b border-darkBorder">
+                <h2 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">ShapePro <span class="text-white font-light text-xl">Admin</span></h2>
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="#" id="menu-dash" onclick="switchView('dash')" class="flex items-center space-x-3 px-4 py-3 bg-primary/20 text-primary font-bold rounded-lg border border-primary/30 transition">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários Base</span>
+                </a>
+                <a href="#" id="menu-plans" onclick="switchView('plans')" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Planos & Cupons</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition" onclick="alert('Funcionalidade em breve!')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Estatísticas (Em breve)</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition" onclick="alert('Configurações do App (Em breve)')">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações App</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-darkBorder">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center font-bold">
+                        A
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold" id="admin-name">Admin</p>
+                        <p class="text-xs text-gray-400">Diretor Sênior</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="w-full py-2 bg-darkBg border border-darkBorder rounded-lg text-danger hover:bg-danger/10 transition font-semibold text-sm">
+                    Sair do Painel
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENT -->
+        <main class="flex-1 h-full overflow-y-auto p-8 relative">
+            <div id="view-dash" class="max-w-7xl mx-auto space-y-8">
+                
+                <!-- Header -->
+                <header class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-1">Visão Geral</h1>
+                        <p class="text-gray-400">Resumo em tempo real do ecossistema ShapePro.</p>
+                    </div>
+                    <button onclick="loadDashboard()" class="p-2 bg-darkCard border border-darkBorder rounded-lg text-gray-400 hover:text-white transition">
+                        <i class="fas fa-sync-alt"></i> Atualizar Dados
+                    </button>
+                </header>
+
+                <!-- Metrics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-darkCard border border-darkBorder p-6 rounded-xl relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10"><i class="fas fa-users text-8xl text-secondary"></i></div>
+                        <h3 class="text-gray-400 font-medium mb-1">Total de Usuários</h3>
+                        <p class="text-4xl font-black text-white" id="stat-total">0</p>
+                    </div>
+                    <div class="bg-darkCard border border-darkBorder p-6 rounded-xl relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10"><i class="fas fa-user-check text-8xl text-success"></i></div>
+                        <h3 class="text-gray-400 font-medium mb-1">Usuários Ativos</h3>
+                        <p class="text-4xl font-black text-success" id="stat-active">0</p>
+                    </div>
+                    <div class="bg-darkCard border border-darkBorder p-6 rounded-xl relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10"><i class="fas fa-crown text-8xl text-primary"></i></div>
+                        <h3 class="text-gray-400 font-medium mb-1">Assinantes Premium</h3>
+                        <p class="text-4xl font-black text-primary" id="stat-premium">0</p>
+                    </div>
+                    <div class="bg-darkCard border border-danger/20 p-6 rounded-xl relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10"><i class="fas fa-user-slash text-8xl text-danger"></i></div>
+                        <h3 class="text-danger font-medium mb-1">Usuários Deletados/Banidos</h3>
+                        <p class="text-4xl font-black text-danger" id="stat-banned">0</p>
+                    </div>
+                </div>
+
+                <!-- Users Table Section -->
+                <div class="bg-darkCard border border-darkBorder rounded-xl overflow-hidden flex flex-col h-[500px]">
+                    <div class="p-6 border-b border-darkBorder flex justify-between items-center bg-darkBg/50">
+                        <h2 class="text-xl font-bold"><i class="fas fa-list mr-2 text-primary"></i> Gerenciamento de Usuários (CRM)</h2>
+                    </div>
+                    <div class="flex-1 overflow-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-darkBg/80 text-gray-400 text-sm border-b border-darkBorder">
+                                    <th class="py-4 px-6 font-medium">ID</th>
+                                    <th class="py-4 px-6 font-medium">Usuário</th>
+                                    <th class="py-4 px-6 font-medium">Objetivo / Ritmo</th>
+                                    <th class="py-4 px-6 font-medium">Plano Atual</th>
+                                    <th class="py-4 px-6 font-medium">Status (Soft-Delete)</th>
+                                    <th class="py-4 px-6 font-medium text-right">Ação Rápida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody" class="divide-y divide-darkBorder">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end view dash -->
+
+            <!-- VIEW PLANS -->
+            <div id="view-plans" class="hidden max-w-7xl mx-auto space-y-8">
+                <header class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-1">Planos & Cupons</h1>
+                        <p class="text-gray-400">Configure os valores cobrados no app e gere acessos vips.</p>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="plans-container">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <div class="bg-darkCard border border-darkBorder rounded-xl p-6">
+                    <h2 class="text-xl font-bold mb-4"><i class="fas fa-ticket-alt mr-2 text-primary"></i> Gerador de Cupons (Promo Codes)</h2>
+                    <form id="promo-form" class="flex flex-wrap gap-4 mb-6">
+                        <input type="text" id="promo-code" placeholder="CÓDIGO (ex: VIP100)" class="bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white font-bold uppercase" required>
+                        <input type="number" id="promo-perc" placeholder="% Desconto" class="bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white w-32" min="0" max="100">
+                        <label class="flex items-center space-x-2 text-gray-300">
+                            <input type="checkbox" id="promo-free" class="w-5 h-5 rounded border-darkBorder text-primary focus:ring-primary">
+                            <span>100% Gratuito</span>
+                        </label>
+                        <input type="number" id="promo-uses" placeholder="Max Usos" class="bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white w-32" value="1" min="1">
+                        <button type="submit" class="btn-gradient px-6 py-2 rounded-lg font-bold text-white shadow-lg">Criar Cupom</button>
+                    </form>
+                    <div class="overflow-auto border border-darkBorder rounded-lg">
+                        <table class="w-full text-left border-collapse">
+                            <thead><tr class="bg-darkBg/80 text-gray-400 text-xs border-b border-darkBorder">
+                                <th class="py-3 px-4">Código</th><th class="py-3 px-4">Benefício</th><th class="py-3 px-4">Usos</th><th class="py-3 px-4">Status</th><th class="py-3 px-4 text-right">Ação</th>
+                            </tr></thead>
+                            <tbody id="promos-tbody" class="divide-y divide-darkBorder text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end view plans -->
+
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = '/api/admin';
+        
+        // Secret Login Reveal removed as per user request for direct access
+
+
+        // View Switcher
+        function switchView(view) {
+            document.getElementById('view-dash').classList.toggle('hidden', view !== 'dash');
+            document.getElementById('view-plans').classList.toggle('hidden', view !== 'plans');
+            
+            document.getElementById('menu-dash').className = view === 'dash' 
+                ? "flex items-center space-x-3 px-4 py-3 bg-primary/20 text-primary font-bold rounded-lg border border-primary/30 transition"
+                : "flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition";
+                
+            document.getElementById('menu-plans').className = view === 'plans' 
+                ? "flex items-center space-x-3 px-4 py-3 bg-primary/20 text-primary font-bold rounded-lg border border-primary/30 transition"
+                : "flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition";
+
+            if(view === 'dash') loadDashboard();
+            if(view === 'plans') loadPlansView();
+        }
+
+        // Router Logic
+        function checkAuth() {
+            const token = localStorage.getItem('admin_token');
+            if(token) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                loadDashboard();
+            } else {
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('dashboard-screen').classList.add('hidden');
+            }
+        }
+
+        // Login Submit
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('login-error');
+
+            try {
+                const res = await fetch(API_BASE + '/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+                const data = await res.json();
+                if(data.success) {
+                    localStorage.setItem('admin_token', data.access_token);
+                    document.getElementById('admin-name').innerText = data.user.nome;
+                    errorEl.classList.add('hidden');
+                    checkAuth();
+                } else {
+                    errorEl.innerText = data.error;
+                    errorEl.classList.remove('hidden');
+                }
+            } catch(e) {
+                errorEl.innerText = "Erro ao conectar com o servidor.";
+                errorEl.classList.remove('hidden');
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            checkAuth();
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const token = localStorage.getItem('admin_token');
+            if(!options.headers) options.headers = {};
+            options.headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await fetch(url, options);
+            if(res.status === 401 || res.status === 403) {
+                logout();
+                throw new Error("Sessão expirada");
+            }
+            return res.json();
+        }
+
+        async function loadDashboard() {
+            loadStats();
+            loadUsers();
+        }
+
+        async function loadStats() {
+            try {
+                const data = await fetchWithAuth(API_BASE + '/stats');
+                if(data.success) {
+                    document.getElementById('stat-total').innerText = data.total_users;
+                    document.getElementById('stat-active').innerText = data.active_users;
+                    document.getElementById('stat-banned').innerText = data.banned_users;
+                    document.getElementById('stat-premium').innerText = data.premium_users;
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadUsers() {
+            try {
+                const data = await fetchWithAuth(API_BASE + '/users');
+                if(data.success) {
+                    renderUsersTable(data.users);
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('users-tbody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-darkBorder/30 transition text-sm";
+                
+                // Status Badge
+                const statusBadge = user.is_active 
+                    ? '<span class="px-3 py-1 bg-success/20 text-success rounded-full text-xs font-bold border border-success/30"><i class="fas fa-check-circle mr-1"></i> Ativo</span>'
+                    : '<span class="px-3 py-1 bg-danger/20 text-danger rounded-full text-xs font-bold border border-danger/30"><i class="fas fa-ban mr-1"></i> Banido / Excluído</span>';
+                
+                // Plan Badge
+                let planText = user.plano_assinatura.toUpperCase();
+                let planColor = "text-primary font-bold";
+                let planIcon = "fa-crown";
+                
+                if (user.plano_assinatura === 'free') {
+                    if (user.is_trial) {
+                        planText = user.cartao_cadastrado ? "TRIAL (FULL)" : "TRIAL (LIMIT)";
+                        planColor = user.cartao_cadastrado ? "text-secondary font-black" : "text-gray-400 font-semibold";
+                        planIcon = user.cartao_cadastrado ? "fa-bolt" : "fa-lock";
+                    } else {
+                        planText = "EXPIRADO";
+                        planColor = "text-danger font-medium";
+                        planIcon = "fa-calendar-times";
+                    }
+                }
+                
+                const planBadge = `<span class="${planColor}"><i class="fas ${planIcon}"></i> ${planText}</span>`;
+
+                // Action Btn
+                const actionBtn = user.is_active
+                    ? `<button onclick="toggleUser(${user.id})" class="text-danger hover:bg-danger/20 px-3 py-1 rounded border border-danger/50 transition" title="Banir este usuário (Soft-delete)"><i class="fas fa-trash-alt"></i> Banir/Ocultar</button>`
+                    : `<button onclick="toggleUser(${user.id})" class="text-success hover:bg-success/20 px-3 py-1 rounded border border-success/50 transition" title="Reativar usuário"><i class="fas fa-undo"></i> Restaurar</button>`;
+
+                const adminIcon = user.is_admin ? '<i class="fas fa-user-shield text-primary ml-2" title="Administrador"></i>' : '';
+
+                tr.innerHTML = `
+                    <td class="py-4 px-6 font-mono text-gray-500">#${user.id}</td>
+                    <td class="py-4 px-6">
+                        <p class="font-bold text-white flex items-center">${user.nome} ${adminIcon}</p>
+                        <p class="text-gray-500 text-xs">${user.email}</p>
+                        <p class="text-gray-600 text-[10px] mt-1">Registrado em: ${user.data_criacao}</p>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="text-white">${user.objetivo?.replace('_', ' ').toUpperCase() || 'N/A'}</span><br>
+                        <span class="text-xs ${user.cartao_cadastrado ? 'text-success' : 'text-gray-500'} mt-1 block">
+                            ${user.cartao_cadastrado ? '<i class="fas fa-credit-card"></i> Cartão Ativo' : '<i class="far fa-credit-card"></i> Sem Cartão'}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6">${planBadge}</td>
+                    <td class="py-4 px-6">${statusBadge}</td>
+                    <td class="py-4 px-6 text-right">${user.is_admin ? '<span class="text-gray-500 text-xs italic">Intocável (Admin)</span>' : actionBtn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function toggleUser(id) {
+            if(!confirm("Atenção: Ao clicar em OK você mudará o status (Banir/Desbanir) deste usuário no aplicativo. O histórico no banco se mantém intocável.")) return;
+            
+            try {
+                const res = await fetchWithAuth(API_BASE + `/users/${id}/toggle`, { method: 'PUT' });
+                if(res.success) {
+                    loadDashboard(); // reload table
+                } else {
+                    alert(res.error || "Erro ao banir usuário");
+                }
+            } catch(e) {
+                alert("Erro de comunicação com servidor.");
+            }
+        }
+
+        // --- Plans & Promos Logic ---
+
+        async function loadPlansView() {
+            try {
+                const [pRes, cRes] = await Promise.all([
+                    fetchWithAuth(API_BASE + '/plans'),
+                    fetchWithAuth(API_BASE + '/promos')
+                ]);
+                if(pRes.success) renderPlans(pRes.plans);
+                if(cRes.success) renderPromos(cRes.promos);
+            } catch(e) {}
+        }
+
+        function renderPlans(plans) {
+            const defaults = [
+                {code: 'mensal', name: 'Plano Mensal', duration_months: 1, price: 29.90, is_active: true},
+                {code: 'trimestral', name: 'Plano Trimestral', duration_months: 3, price: 79.90, is_active: true},
+                {code: 'anual', name: 'Plano Anual', duration_months: 12, price: 199.90, is_active: true}
+            ];
+            const activePlans = defaults.map(d => plans.find(p => p.code === d.code) || d);
+
+            const container = document.getElementById('plans-container');
+            container.innerHTML = activePlans.map((p) => `
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-xl relative hover:border-primary/50 transition">
+                    <h3 class="text-xl font-bold mb-2 text-white">${p.name}</h3>
+                    <p class="text-gray-400 text-sm mb-4">Plano de ${p.duration_months} meses</p>
+                    <div class="flex items-center space-x-2 mb-4 bg-darkBg border border-darkBorder rounded-lg px-3 py-2">
+                        <span class="text-xl font-bold text-gray-400">R$</span>
+                        <input type="number" id="price-${p.code}" value="${p.price}" step="0.01" class="bg-transparent text-white w-full text-2xl font-bold text-primary focus:outline-none">
+                    </div>
+                    <label class="flex items-center space-x-2 text-gray-300 mb-6 cursor-pointer">
+                        <input type="checkbox" id="active-${p.code}" ${p.is_active ? 'checked' : ''} class="w-5 h-5 accent-primary rounded">
+                        <span class="text-sm font-semibold">Exibir no Aplicativo Livre</span>
+                    </label>
+                    <button onclick="savePlan('${p.code}', '${p.name}', ${p.duration_months})" class="w-full py-3 bg-primary/20 text-primary hover:bg-primary hover:text-white rounded-lg transition font-bold border border-primary/50 shadow-lg">
+                        <i class="fas fa-save mr-2"></i>Salvar Preço
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function savePlan(code, name, months) {
+            const price = parseFloat(document.getElementById('price-'+code).value);
+            const isActive = document.getElementById('active-'+code).checked;
+            try {
+                const res = await fetchWithAuth(API_BASE + '/plans', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({code, name, duration_months: months, price, is_active: isActive})
+                });
+                if(res.success) alert(name + " configurado com sucesso! Preço será refletido instantaneamente.");
+                else alert("Erro: " + res.error);
+            } catch(e) { alert("Erro de rede."); }
+        }
+
+        document.getElementById('promo-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formBtn = e.target.querySelector('button');
+            formBtn.innerText = 'Criando...';
+            try {
+                const res = await fetchWithAuth(API_BASE + '/promos', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        code: document.getElementById('promo-code').value,
+                        discount_percent: parseFloat(document.getElementById('promo-perc').value) || 0,
+                        is_free: document.getElementById('promo-free').checked,
+                        max_uses: parseInt(document.getElementById('promo-uses').value) || 1,
+                        is_active: true
+                    })
+                });
+                if(res.success) {
+                    document.getElementById('promo-form').reset();
+                    loadPlansView(); // reload table
+                } else alert(res.error);
+            } catch(e) {}
+            formBtn.innerText = 'Criar Cupom';
+        });
+
+        function renderPromos(promos) {
+            const tbody = document.getElementById('promos-tbody');
+            tbody.innerHTML = promos.map(p => `
+                <tr class="hover:bg-darkBorder/30">
+                    <td class="py-3 px-4 font-mono font-bold text-white bg-darkBg/50"><i class="fas fa-tag text-primary mr-2 text-xs"></i>${p.code}</td>
+                    <td class="py-3 px-4 text-primary font-bold">${p.is_free ? '🎁 100% GRÁTIS' : p.discount_percent + '% OFF'}</td>
+                    <td class="py-3 px-4 text-gray-300 font-mono">${p.current_uses} / ${p.max_uses}</td>
+                    <td class="py-3 px-4">${p.is_active && p.current_uses < p.max_uses 
+                        ? '<span class="px-2 py-1 bg-success/20 text-success rounded-lg text-xs font-bold whitespace-nowrap"><i class="fas fa-check-circle mr-1"></i> Válido</span>' 
+                        : '<span class="px-2 py-1 bg-danger/20 text-danger rounded-lg text-xs font-bold whitespace-nowrap"><i class="fas fa-times-circle mr-1"></i> Inválido</span>'}</td>
+                    <td class="py-3 px-4 text-right">
+                        <button onclick="togglePromo(${p.id})" class="px-3 py-1 bg-darkBg border border-darkBorder hover:bg-darkBorder rounded text-gray-400 hover:text-white transition" title="Ativar/Desativar Cupom"><i class="fas fa-power-off"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function togglePromo(id) {
+            try {
+                const res = await fetchWithAuth(API_BASE + '/promos/' + id + '/toggle', {method: 'PUT'});
+                if(res.success) loadPlansView();
+            } catch(e){}
+        }
+
+        // Init
+        checkAuth();
+    </script>
+</body>
+</html>

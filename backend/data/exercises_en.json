@@ -1,0 +1,731 @@
+{
+    "peito": [
+        {
+            "nome": "Barbell Bench Press",
+            "descricao": "Lie on a flat bench, hold the bar at shoulder width, lower it to your chest and push up.",
+            "musculos_trabalhados": [
+                "Pectoralis Major",
+                "Triceps",
+                "Anterior Deltoid"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barbell and Flat Bench",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your feet firm on the floor and your shoulder blades retracted.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Barbell_Bench_Press/1.jpg"
+        },
+        {
+            "nome": "Incline Dumbbell Press",
+            "descricao": "On a bench inclined at 30-45°, perform the bench press movement with dumbbells to focus on the upper chest.",
+            "musculos_trabalhados": [
+                "Upper Pectoral",
+                "Anterior Deltoid",
+                "Triceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Dumbbells and Incline Bench",
+            "dificuldade": "intermediate",
+            "dicas": "Control the descent and feel the stretch in your chest.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/1.jpg"
+        },
+        {
+            "nome": "Dumbbell Fly",
+            "descricao": "Lying on a flat bench, open your arms laterally with dumbbells, keeping a slight bend in your elbows.",
+            "musculos_trabalhados": [
+                "Pectoralis Major",
+                "Anterior Deltoid"
+            ],
+            "series": 3,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Dumbbells and Flat Bench",
+            "dificuldade": "beginner",
+            "dicas": "Don't go too low to protect your shoulders.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Flyes/1.jpg"
+        },
+        {
+            "nome": "Cable Crossover",
+            "descricao": "Standing between the pulleys, pull the cables down and forward, crossing in front of your body.",
+            "musculos_trabalhados": [
+                "Pectoralis Major",
+                "Lower Pectoral"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "60s",
+            "equipamento": "Cable Machine",
+            "dificuldade": "beginner",
+            "dicas": "Keep your elbows slightly bent throughout the movement.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Crossover/1.jpg"
+        },
+        {
+            "nome": "Push-up",
+            "descricao": "Support your hands on the floor at shoulder width and push your body up.",
+            "musculos_trabalhados": [
+                "Pectoralis Major",
+                "Triceps",
+                "Core"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "None (bodyweight)",
+            "dificuldade": "beginner",
+            "dicas": "Keep your body straight from head to toe.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/1.jpg"
+        },
+        {
+            "nome": "Decline Barbell Bench Press",
+            "descricao": "On a decline bench, perform the bench press to focus on the lower part of the chest.",
+            "musculos_trabalhados": [
+                "Lower Pectoral",
+                "Triceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barbell and Decline Bench",
+            "dificuldade": "advanced",
+            "dicas": "Ask a partner for help unsetting the bar.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Barbell_Bench_Press/1.jpg"
+        }
+    ],
+    "costas": [
+        {
+            "nome": "Lat Pulldown",
+            "descricao": "Sitting at the machine, pull the bar to your chest with a wide grip.",
+            "musculos_trabalhados": [
+                "Latissimus Dorsi",
+                "Biceps",
+                "Rhomboids"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "High Pulley Machine",
+            "dificuldade": "beginner",
+            "dicas": "Pull with your elbows and not with your hands.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/V-Bar_Pulldown/1.jpg"
+        },
+        {
+            "nome": "Bent-over Barbell Row",
+            "descricao": "With your torso inclined at 45°, pull the bar towards your abdomen.",
+            "musculos_trabalhados": [
+                "Latissimus Dorsi",
+                "Trapezius",
+                "Rhomboids",
+                "Biceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Barbell",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your back straight and your core engaged.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Barbell_Row/1.jpg"
+        },
+        {
+            "nome": "One-arm Dumbbell Row",
+            "descricao": "Support one knee and one hand on the bench, pull the dumbbell with the other arm.",
+            "musculos_trabalhados": [
+                "Latissimus Dorsi",
+                "Rhomboids",
+                "Biceps"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Dumbbell and Bench",
+            "dificuldade": "beginner",
+            "dicas": "Raise your elbow past your back for maximum contraction.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Dumbbell_Row/1.jpg"
+        },
+        {
+            "nome": "Triangle Lat Pulldown",
+            "descricao": "On a high pulley, use a triangle (neutral) grip to pull towards your chest.",
+            "musculos_trabalhados": [
+                "Latissimus Dorsi",
+                "Biceps"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "High Pulley Machine with Triangle",
+            "dificuldade": "beginner",
+            "dicas": "Lean your torso slightly back.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Lat_Pulldown/1.jpg"
+        },
+        {
+            "nome": "Pull-up",
+            "descricao": "Hanging from the bar, pull your body up until your chin passes the bar.",
+            "musculos_trabalhados": [
+                "Latissimus Dorsi",
+                "Biceps",
+                "Core"
+            ],
+            "series": 4,
+            "repeticoes": "6-10",
+            "descanso": "90s",
+            "equipamento": "Pull-up Bar",
+            "dificuldade": "advanced",
+            "dicas": "If necessary, use an assist band.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pullups/1.jpg"
+        },
+        {
+            "nome": "T-bar Row",
+            "descricao": "With your torso inclined, pull the T-bar towards your chest.",
+            "musculos_trabalhados": [
+                "Latissimus Dorsi",
+                "Middle Trapezius",
+                "Rhomboids"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "T-bar",
+            "dificuldade": "intermediate",
+            "dicas": "Don't use body momentum, control the movement.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_T-Bar_Row/1.jpg"
+        }
+    ],
+    "ombros": [
+        {
+            "nome": "Dumbbell Shoulder Press",
+            "descricao": "Sitting, push the dumbbells above your head starting from shoulder height.",
+            "musculos_trabalhados": [
+                "Anterior Deltoid",
+                "Lateral Deltoid",
+                "Triceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60-90s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "intermediate",
+            "dicas": "Don't hyperextend your lower back.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Shoulder_Press/1.jpg"
+        },
+        {
+            "nome": "Lateral Raise",
+            "descricao": "Standing, raise the dumbbells laterally to shoulder height with arms almost extended.",
+            "musculos_trabalhados": [
+                "Lateral Deltoid"
+            ],
+            "series": 4,
+            "repeticoes": "12-15",
+            "descanso": "45-60s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "beginner",
+            "dicas": "Don't swing your body. Raise to the shoulder line.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/1.jpg"
+        },
+        {
+            "nome": "Front Raise",
+            "descricao": "Standing, raise the dumbbells in front of your body to shoulder height.",
+            "musculos_trabalhados": [
+                "Anterior Deltoid"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Dumbbells or Barbell",
+            "dificuldade": "beginner",
+            "dicas": "Alternate between dumbbells and barbell to vary the stimulus.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/1.jpg"
+        },
+        {
+            "nome": "Arnold Press",
+            "descricao": "Sitting, start with dumbbells in front (supinated grip), rotate and push up.",
+            "musculos_trabalhados": [
+                "Anterior Deltoid",
+                "Lateral Deltoid",
+                "Triceps"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "advanced",
+            "dicas": "Make the rotation smooth and controlled.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Arnold_Dumbbell_Press/1.jpg"
+        },
+        {
+            "nome": "Cable Face Pull",
+            "descricao": "On a high pulley, pull the rope towards your face, opening your elbows.",
+            "musculos_trabalhados": [
+                "Posterior Deltoid",
+                "Trapezius",
+                "Infraspinatus"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Pulley Machine with Rope",
+            "dificuldade": "beginner",
+            "dicas": "Focus on scapular retraction at the end of the movement.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/1.jpg"
+        },
+        {
+            "nome": "Dumbbell Shrug",
+            "descricao": "Standing, hold dumbbells at your side and raise your shoulders towards your ears.",
+            "musculos_trabalhados": [
+                "Upper Trapezius"
+            ],
+            "series": 4,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "beginner",
+            "dicas": "Hold the contraction at the top for 2 seconds.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Shrug/1.jpg"
+        }
+    ],
+    "biceps": [
+        {
+            "nome": "Barbell Curl",
+            "descricao": "Standing, hold the bar with a supinated grip and flex your elbows.",
+            "musculos_trabalhados": [
+                "Biceps Brachii",
+                "Brachialis"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60s",
+            "equipamento": "Straight or EZ Bar",
+            "dificuldade": "beginner",
+            "dicas": "Keep your elbows fixed at your side.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Curl/1.jpg"
+        },
+        {
+            "nome": "Alternating Dumbbell Curl",
+            "descricao": "Standing, curl alternating one arm at a time with supination.",
+            "musculos_trabalhados": [
+                "Biceps Brachii",
+                "Brachioradialis"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "beginner",
+            "dicas": "Supinate your wrist during the ascent.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Incline_Dumbbell_Curl/1.jpg"
+        },
+        {
+            "nome": "Hammer Curl",
+            "descricao": "Standing, hold the dumbbells in a neutral grip and flex your elbows.",
+            "musculos_trabalhados": [
+                "Brachialis",
+                "Brachioradialis",
+                "Biceps"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "beginner",
+            "dicas": "Don't swing your body, control the descent.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Hammer_Curl/1.jpg"
+        },
+        {
+            "nome": "Concentration Curl",
+            "descricao": "Sitting, support your elbow on the inner thigh and flex with a dumbbell.",
+            "musculos_trabalhados": [
+                "Biceps Brachii (peak)"
+            ],
+            "series": 3,
+            "repeticoes": "10-15",
+            "descanso": "45s",
+            "equipamento": "Dumbbell",
+            "dificuldade": "beginner",
+            "dicas": "Focus on maximum biceps contraction.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Concentration_Curls/1.jpg"
+        },
+        {
+            "nome": "Machine Scott Curl",
+            "descricao": "Sitting at the Scott bench, support your arms and flex with a bar or machine.",
+            "musculos_trabalhados": [
+                "Biceps Brachii (short head)"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Scott Bench with EZ Bar",
+            "dificuldade": "intermediate",
+            "dicas": "Don't fully extend your elbows in the negative phase.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Machine_Bicep_Curl/1.jpg"
+        }
+    ],
+    "triceps": [
+        {
+            "nome": "Triceps Pushdown",
+            "descricao": "On a high pulley, push the bar down extending your elbows.",
+            "musculos_trabalhados": [
+                "Triceps (lateral head)"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Pulley Machine with Straight Bar",
+            "dificuldade": "beginner",
+            "dicas": "Keep your elbows fixed at your side.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown/1.jpg"
+        },
+        {
+            "nome": "Overhead Dumbbell Triceps Extension",
+            "descricao": "Lying or sitting, hold a dumbbell behind your head and extend your arms.",
+            "musculos_trabalhados": [
+                "Triceps (long head)"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Dumbbell",
+            "dificuldade": "intermediate",
+            "dicas": "Lower the dumbbell behind your head with control.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Dumbbell_Triceps_Extension/1.jpg"
+        },
+        {
+            "nome": "Rope Triceps Pushdown",
+            "descricao": "On a high pulley with a rope grip, push down opening your hands at the end.",
+            "musculos_trabalhados": [
+                "Triceps (all heads)"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Pulley Machine with Rope",
+            "dificuldade": "beginner",
+            "dicas": "Open the rope at the end to contract the lateral triceps.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown/1.jpg"
+        },
+        {
+            "nome": "Bench Dip",
+            "descricao": "Support your hands on the bench behind you and lower your body by flexing your elbows.",
+            "musculos_trabalhados": [
+                "Triceps",
+                "Anterior Deltoid",
+                "Pectoral"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "60s",
+            "equipamento": "Bench",
+            "dificuldade": "beginner",
+            "dicas": "The straighter your body, the more focus on the triceps.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Dips/1.jpg"
+        },
+        {
+            "nome": "EZ Bar Skull Crusher",
+            "descricao": "Lying down, lower the EZ bar towards your forehead and extend your arms.",
+            "musculos_trabalhados": [
+                "Triceps (long and medial head)"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "60s",
+            "equipamento": "EZ Bar and Flat Bench",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your elbows pointed at the ceiling.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Skullcrusher/1.jpg"
+        }
+    ],
+    "pernas": [
+        {
+            "nome": "Barbell Squat",
+            "descricao": "With the bar on your trapezius, squat until your thighs are parallel to the floor.",
+            "musculos_trabalhados": [
+                "Quadriceps",
+                "Glutes",
+                "Hamstrings",
+                "Core"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "90-120s",
+            "equipamento": "Barbell and Rack",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your knees in the direction of your feet and your chest high.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Squat/1.jpg"
+        },
+        {
+            "nome": "Leg Press 45°",
+            "descricao": "On the leg press machine, push the platform with your feet shoulder-width apart.",
+            "musculos_trabalhados": [
+                "Quadriceps",
+                "Glutes",
+                "Hamstrings"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "90s",
+            "equipamento": "Leg Press Machine",
+            "dificuldade": "beginner",
+            "dicas": "Don't lock your knees at the top. Lower to 90°.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/1.jpg"
+        },
+        {
+            "nome": "Leg Extension",
+            "descricao": "Sitting on the machine, extend your legs against resistance.",
+            "musculos_trabalhados": [
+                "Quadriceps"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "60s",
+            "equipamento": "Leg Extension Machine",
+            "dificuldade": "beginner",
+            "dicas": "Hold the contraction at the top for 1-2 seconds.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/1.jpg"
+        },
+        {
+            "nome": "Leg Curl",
+            "descricao": "Lying on the machine, flex your knees bringing your heels towards your glutes.",
+            "musculos_trabalhados": [
+                "Hamstrings"
+            ],
+            "series": 3,
+            "repeticoes": "10-12",
+            "descanso": "60s",
+            "equipamento": "Leg Curl Machine",
+            "dificuldade": "beginner",
+            "dicas": "Don't lift your hips off the bench during the exercise.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Leg_Curl/1.jpg"
+        },
+        {
+            "nome": "Dumbbell Lunge",
+            "descricao": "Take a step forward and lower until the back knee almost touches the floor.",
+            "musculos_trabalhados": [
+                "Quadriceps",
+                "Glutes",
+                "Hamstrings"
+            ],
+            "series": 3,
+            "repeticoes": "12-15 (each leg)",
+            "descanso": "60s",
+            "equipamento": "Dumbbells",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your torso upright and take wide steps.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Lunges/1.jpg"
+        },
+        {
+            "nome": "Standing Calf Raise",
+            "descricao": "On the calf machine, raise your heels as high as possible.",
+            "musculos_trabalhados": [
+                "Gastrocnemius",
+                "Soleus"
+            ],
+            "series": 4,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Calf Machine",
+            "dificuldade": "beginner",
+            "dicas": "Lower completely to stretch and rise on your toes.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg"
+        },
+        {
+            "nome": "Hack Squat",
+            "descricao": "On the hack machine, position your feet forward and squat controlledly.",
+            "musculos_trabalhados": [
+                "Quadriceps",
+                "Glutes"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "90s",
+            "equipamento": "Hack Machine",
+            "dificuldade": "intermediate",
+            "dicas": "Position your feet higher for more emphasis on the glutes.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/1.jpg"
+        },
+        {
+            "nome": "Stiff (Romanian Deadlift)",
+            "descricao": "With the bar, lower your torso keeping your legs almost extended.",
+            "musculos_trabalhados": [
+                "Hamstrings",
+                "Glutes",
+                "Erector Spinae"
+            ],
+            "series": 4,
+            "repeticoes": "8-12",
+            "descanso": "90s",
+            "equipamento": "Barbell",
+            "dificuldade": "advanced",
+            "dicas": "Keep the bar close to your body and your back straight.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/1.jpg"
+        }
+    ],
+    "abdomen": [
+        {
+            "nome": "Abdominal Crunch",
+            "descricao": "Lying down, with knees bent, lift your shoulders off the floor by contracting your abdomen.",
+            "musculos_trabalhados": [
+                "Rectus Abdominis (upper)"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "30-45s",
+            "equipamento": "None",
+            "dificuldade": "beginner",
+            "dicas": "Don't pull your neck with your hands.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Crunch/1.jpg"
+        },
+        {
+            "nome": "Plank",
+            "descricao": "Support yourself on your forearms and toes, keeping your body straight.",
+            "musculos_trabalhados": [
+                "Full Core",
+                "Rectus Abdominis",
+                "Transversus",
+                "Obliques"
+            ],
+            "series": 3,
+            "repeticoes": "30-60 seconds",
+            "descanso": "45s",
+            "equipamento": "None",
+            "dificuldade": "beginner",
+            "dicas": "Don't let your hips fall or rise too much.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/1.jpg"
+        },
+        {
+            "nome": "Hanging Leg Raise",
+            "descricao": "Hanging from the bar, lift your legs straight to hip height.",
+            "musculos_trabalhados": [
+                "Rectus Abdominis (lower)",
+                "Hip Flexors"
+            ],
+            "series": 3,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Pull-up Bar",
+            "dificuldade": "advanced",
+            "dicas": "Control the descent, avoid swinging.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hanging_Leg_Raise/1.jpg"
+        },
+        {
+            "nome": "Bicycle Crunch",
+            "descricao": "Lying down, simulate the pedaling movement by touching your elbow to the opposite knee.",
+            "musculos_trabalhados": [
+                "Obliques",
+                "Rectus Abdominis"
+            ],
+            "series": 3,
+            "repeticoes": "20-30 (total)",
+            "descanso": "30s",
+            "equipamento": "None",
+            "dificuldade": "beginner",
+            "dicas": "Keep your lower back pressed to the floor.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Crunch/1.jpg"
+        },
+        {
+            "nome": "Machine Abdominal Crunch",
+            "descricao": "On the machine, flex your torso against resistance focusing on the lower portion.",
+            "musculos_trabalhados": [
+                "Rectus Abdominis"
+            ],
+            "series": 3,
+            "repeticoes": "12-15",
+            "descanso": "45s",
+            "equipamento": "Abdominal Machine",
+            "dificuldade": "beginner",
+            "dicas": "Exhale during the contraction.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Oblique_Crunch/1.jpg"
+        },
+        {
+            "nome": "Side Plank",
+            "descricao": "Support yourself on one forearm laterally, keeping your body straight.",
+            "musculos_trabalhados": [
+                "Obliques",
+                "Transversus Abdominis"
+            ],
+            "series": 3,
+            "repeticoes": "20-30 seconds (each side)",
+            "descanso": "30s",
+            "equipamento": "None",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your hips aligned, don't let them fall.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/1.jpg"
+        }
+    ],
+    "gluteos": [
+        {
+            "nome": "Barbell Hip Thrust",
+            "descricao": "With your back supported on the bench and a bar over your hips, lift your hips by contracting your glutes.",
+            "musculos_trabalhados": [
+                "Gluteus Maximus",
+                "Hamstrings"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "60-90s",
+            "equipamento": "Barbell and Bench",
+            "dificuldade": "intermediate",
+            "dicas": "Hold the contraction at the top for 2 seconds.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Hip_Thrust/1.jpg"
+        },
+        {
+            "nome": "Glute Bridge",
+            "descricao": "Lying on the floor, lift your hips by contracting your glutes.",
+            "musculos_trabalhados": [
+                "Gluteus Maximus",
+                "Core"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "None",
+            "dificuldade": "beginner",
+            "dicas": "Squeeze your glutes at the top and lower controlledly.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Glute_Bridge/1.jpg"
+        },
+        {
+            "nome": "Hip Abduction Machine",
+            "descricao": "Sitting on the machine, open your legs against resistance.",
+            "musculos_trabalhados": [
+                "Gluteus Medius",
+                "Gluteus Minimus"
+            ],
+            "series": 3,
+            "repeticoes": "15-20",
+            "descanso": "45s",
+            "equipamento": "Abductor Machine",
+            "dificuldade": "beginner",
+            "dicas": "Lean your torso slightly forward for more activation.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ab_Crunch_Machine/1.jpg"
+        },
+        {
+            "nome": "Cable Kickback",
+            "descricao": "On a low pulley with an ankle strap, extend your leg back by contracting your glute.",
+            "musculos_trabalhados": [
+                "Gluteus Maximus"
+            ],
+            "series": 3,
+            "repeticoes": "12-15 (each leg)",
+            "descanso": "45s",
+            "equipamento": "Pulley Machine with Ankle Strap",
+            "dificuldade": "beginner",
+            "dicas": "Don't hyperextend your lower back, focus on the glute contraction.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Glute_Kickback/1.jpg"
+        },
+        {
+            "nome": "Sumo Squat",
+            "descricao": "With your feet wide apart and toes pointing out, squat deeply.",
+            "musculos_trabalhados": [
+                "Glutes",
+                "Adductors",
+                "Quadriceps"
+            ],
+            "series": 4,
+            "repeticoes": "10-15",
+            "descanso": "60s",
+            "equipamento": "Dumbbell or Kettlebell",
+            "dificuldade": "intermediate",
+            "dicas": "Keep your knees in the direction of your feet.",
+            "imagem": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plie_Dumbbell_Squat/1.jpg"
+        }
+    ]
+}

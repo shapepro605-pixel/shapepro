@@ -1,0 +1,42 @@
+# Root .gitignore for ShapePro (Flask + Flutter)
+
+# Python leftovers
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+instance/
+*.db
+
+# Flutter/Dart leftovers
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+ios/.generated/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+lib/generated_plugin_registrant.dart
+
+# Android leftovers
+android/**/generated/
+android/app/key/
+android/key.properties
+*.jks
+*.keystore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,186 @@
+import os
+from flask import Blueprint, jsonify, request, render_template
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from models.user import User
+from models.payment import SubscriptionPlan, PromoCode
+from database import db
+from routes.auth import bcrypt
+from services.i18n import t
+
+admin_bp = Blueprint('admin', __name__)
+
+@admin_bp.route('/admin')
+def render_admin_dashboard():
+    # Renders the HTML template for the admin panel
+    return render_template('admin.html')
+
+@admin_bp.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = User.query.filter_by(email=email).first()
+    if not user or not bcrypt.check_password_hash(user.password_hash, password):
+        return jsonify({'error': t('invalid_credentials')}), 401
+    
+    if not user.is_admin:
+        return jsonify({'error': t('admin_access_restricted')}), 403
+
+    access_token = create_access_token(identity=str(user.id))
+    return jsonify({
+        'success': True,
+        'access_token': access_token,
+        'user': user.to_dict()
+    }), 200
+
+def check_admin(user_id):
+    user = User.query.get(int(user_id))
+    return user is not None and user.is_admin
+
+@admin_bp.route('/api/admin/stats', methods=['GET'])
+@jwt_required()
+def get_admin_stats():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    total_users = User.query.count()
+    active_users = User.query.filter_by(is_active=True).count()
+    banned_users = total_users - active_users
+    premium_users = User.query.filter(User.plano_assinatura != 'free').count()
+
+    return jsonify({
+        'success': True,
+        'total_users': total_users,
+        'active_users': active_users,
+        'banned_users': banned_users,
+        'premium_users': premium_users
+    }), 200
+
+@admin_bp.route('/api/admin/users', methods=['GET'])
+@jwt_required()
+def get_all_users():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    users = User.query.order_by(User.id.desc()).all()
+    users_data = [u.to_dict() for u in users]
+    
+    return jsonify({
+        'success': True,
+        'users': users_data
+    }), 200
+
+@admin_bp.route('/api/admin/users/<int:target_id>/toggle', methods=['PUT'])
+@jwt_required()
+def toggle_user_status(target_id):
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    if int(user_id) == target_id:
+        return jsonify({'error': t('cannot_ban_self')}), 400
+
+    target_user = User.query.get(target_id)
+    if not target_user:
+        return jsonify({'error': t('user_not_found')}), 404
+
+    target_user.is_active = not target_user.is_active
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'message': t('status_updated'),
+        'is_active': target_user.is_active
+    }), 200
+
+@admin_bp.route('/api/admin/plans', methods=['GET'])
+@jwt_required()
+def get_plans():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+    
+    plans = SubscriptionPlan.query.all()
+    return jsonify({'success': True, 'plans': [p.to_dict() for p in plans]}), 200
+
+@admin_bp.route('/api/admin/plans', methods=['POST'])
+@jwt_required()
+def create_or_update_plan():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    data = request.get_json()
+    code = data.get('code')
+    plan = SubscriptionPlan.query.filter_by(code=code).first()
+
+    if plan:
+        plan.name = data.get('name', plan.name)
+        plan.duration_months = data.get('duration_months', plan.duration_months)
+        plan.price = data.get('price', plan.price)
+        plan.is_active = data.get('is_active', plan.is_active)
+    else:
+        plan = SubscriptionPlan(
+            name=data.get('name'),
+            code=code,
+            duration_months=data.get('duration_months'),
+            price=data.get('price'),
+            is_active=data.get('is_active', True)
+        )
+        db.session.add(plan)
+    
+    db.session.commit()
+    return jsonify({'success': True, 'plan': plan.to_dict()}), 200
+
+@admin_bp.route('/api/admin/promos', methods=['GET'])
+@jwt_required()
+def get_promos():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+    
+    promos = PromoCode.query.order_by(PromoCode.id.desc()).all()
+    return jsonify({'success': True, 'promos': [p.to_dict() for p in promos]}), 200
+
+@admin_bp.route('/api/admin/promos', methods=['POST'])
+@jwt_required()
+def create_promo():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    data = request.get_json()
+    code = data.get('code', '').upper()
+    existing = PromoCode.query.filter_by(code=code).first()
+    if existing:
+        return jsonify({'error': t('code_already_exists')}), 400
+
+    promo = PromoCode(
+        code=code,
+        discount_percent=data.get('discount_percent', 0.0),
+        is_free=data.get('is_free', False),
+        max_uses=data.get('max_uses', 1),
+        current_uses=0,
+        is_active=data.get('is_active', True)
+    )
+    db.session.add(promo)
+    db.session.commit()
+    return jsonify({'success': True, 'promo': promo.to_dict()}), 201
+
+@admin_bp.route('/api/admin/promos/<int:target_id>/toggle', methods=['PUT'])
+@jwt_required()
+def toggle_promo(target_id):
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    promo = PromoCode.query.get(target_id)
+    if not promo:
+        return jsonify({'error': t('promo_not_found')}), 404
+
+    promo.is_active = not promo.is_active
+    db.session.commit()
+    return jsonify({'success': True, 'is_active': promo.is_active}), 200

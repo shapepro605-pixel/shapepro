@@ -1,0 +1,53 @@
+{
+    "proteinas": [
+        {"nome": "Grilled chicken breast", "calorias": 165, "proteina": 31, "carbo": 0, "gordura": 3.6, "porcao": 150, "custo": "baixo"},
+        {"nome": "Boiled egg", "calorias": 155, "proteina": 13, "carbo": 1.1, "gordura": 11, "porcao": 50, "unidade": "1 unit", "custo": "baixo"},
+        {"nome": "Grilled beef (top side)", "calorias": 219, "proteina": 35, "carbo": 0, "gordura": 7.3, "porcao": 120, "custo": "medio"},
+        {"nome": "Grilled tilapia", "calorias": 128, "proteina": 26, "carbo": 0, "gordura": 2.7, "porcao": 150, "custo": "medio"},
+        {"nome": "Turkey breast", "calorias": 104, "proteina": 17, "carbo": 4.2, "gordura": 1.7, "porcao": 100, "custo": "medio"},
+        {"nome": "Canned tuna (water)", "calorias": 116, "proteina": 26, "carbo": 0, "gordura": 0.8, "porcao": 100, "custo": "medio"},
+        {"nome": "Cottage cheese", "calorias": 98, "proteina": 11, "carbo": 3.4, "gordura": 4.3, "porcao": 100, "custo": "medio"},
+        {"nome": "Whey protein", "calorias": 120, "proteina": 24, "carbo": 3, "gordura": 1.5, "porcao": 30, "unidade": "1 scoop", "custo": "alto"},
+        {"nome": "Grilled salmon", "calorias": 208, "proteina": 20, "carbo": 0, "gordura": 13, "porcao": 150, "custo": "alto"},
+        {"nome": "Natural Greek yogurt", "calorias": 59, "proteina": 10, "carbo": 3.6, "gordura": 0.7, "porcao": 170, "custo": "medio"}
+    ],
+    "carboidratos": [
+        {"nome": "Brown rice", "calorias": 111, "proteina": 2.6, "carbo": 23, "gordura": 0.9, "porcao": 150, "custo": "baixo"},
+        {"nome": "Boiled sweet potato", "calorias": 86, "proteina": 1.6, "carbo": 20, "gordura": 0.1, "porcao": 150, "custo": "baixo"},
+        {"nome": "Oat flakes", "calorias": 389, "proteina": 17, "carbo": 66, "gordura": 7, "porcao": 40, "custo": "baixo"},
+        {"nome": "Whole grain bread", "calorias": 247, "proteina": 13, "carbo": 41, "gordura": 3.4, "porcao": 50, "unidade": "2 slices", "custo": "medio"},
+        {"nome": "Whole grain pasta", "calorias": 124, "proteina": 5, "carbo": 26, "gordura": 0.5, "porcao": 150, "custo": "medio"},
+        {"nome": "Boiled cassava", "calorias": 125, "proteina": 1, "carbo": 30, "gordura": 0.1, "porcao": 130, "custo": "baixo"},
+        {"nome": "Sugar-free granola", "calorias": 421, "proteina": 10, "carbo": 64, "gordura": 15, "porcao": 30, "custo": "medio"},
+        {"nome": "Banana", "calorias": 89, "proteina": 1.1, "carbo": 23, "gordura": 0.3, "porcao": 100, "unidade": "1 unit", "custo": "baixo"},
+        {"nome": "Couscous", "calorias": 112, "proteina": 3.8, "carbo": 23, "gordura": 0.2, "porcao": 135, "custo": "baixo"},
+        {"nome": "Tapioca", "calorias": 330, "proteina": 0.5, "carbo": 80, "gordura": 0.1, "porcao": 40, "unidade": "2 spoons", "custo": "baixo"}
+    ],
+    "gorduras": [
+        {"nome": "Olive oil", "calorias": 884, "proteina": 0, "carbo": 0, "gordura": 100, "porcao": 10, "unidade": "1 tablespoon", "custo": "medio"},
+        {"nome": "Brazil nuts", "calorias": 656, "proteina": 14, "carbo": 12, "gordura": 66, "porcao": 15, "unidade": "3 units", "custo": "alto"},
+        {"nome": "Avocado", "calorias": 160, "proteina": 2, "carbo": 8.5, "gordura": 15, "porcao": 70, "custo": "medio"},
+        {"nome": "Peanut butter", "calorias": 588, "proteina": 25, "carbo": 20, "gordura": 50, "porcao": 20, "unidade": "1 tablespoon", "custo": "medio"},
+        {"nome": "Almonds", "calorias": 579, "proteina": 21, "carbo": 22, "gordura": 50, "porcao": 15, "unidade": "10 units", "custo": "alto"},
+        {"nome": "Walnuts", "calorias": 654, "proteina": 15, "carbo": 14, "gordura": 65, "porcao": 15, "unidade": "5 units", "custo": "alto"},
+        {"nome": "Flaxseed", "calorias": 534, "proteina": 18, "carbo": 29, "gordura": 42, "porcao": 10, "unidade": "1 tablespoon", "custo": "baixo"},
+        {"nome": "Chia", "calorias": 486, "proteina": 17, "carbo": 42, "gordura": 31, "porcao": 10, "unidade": "1 tablespoon", "custo": "baixo"}
+    ],
+    "verduras_legumes": [
+        {"nome": "Steamed broccoli", "calorias": 35, "proteina": 2.4, "carbo": 7, "gordura": 0.4, "porcao": 100, "custo": "medio"},
+        {"nome": "Spinach", "calorias": 23, "proteina": 2.9, "carbo": 3.6, "gordura": 0.4, "porcao": 80, "custo": "medio"},
+        {"nome": "Mixed green salad", "calorias": 15, "proteina": 1.2, "carbo": 2.5, "gordura": 0.2, "porcao": 100, "custo": "baixo"},
+        {"nome": "Tomato", "calorias": 18, "proteina": 0.9, "carbo": 3.9, "gordura": 0.2, "porcao": 100, "custo": "medio"},
+        {"nome": "Sautéed zucchini", "calorias": 20, "proteina": 1.2, "carbo": 3.4, "gordura": 0.3, "porcao": 100, "custo": "baixo"},
+        {"nome": "Boiled carrot", "calorias": 35, "proteina": 0.8, "carbo": 8.2, "gordura": 0.2, "porcao": 80, "custo": "baixo"},
+        {"nome": "Carioca beans", "calorias": 76, "proteina": 4.8, "carbo": 13.6, "gordura": 0.5, "porcao": 100, "custo": "baixo"}
+    ],
+    "frutas": [
+        {"nome": "Apple", "calorias": 52, "proteina": 0.3, "carbo": 14, "gordura": 0.2, "porcao": 130, "unidade": "1 unit", "custo": "medio"},
+        {"nome": "Strawberry", "calorias": 32, "proteina": 0.7, "carbo": 7.7, "gordura": 0.3, "porcao": 100, "unidade": "8 units", "custo": "alto"},
+        {"nome": "Orange", "calorias": 47, "proteina": 0.9, "carbo": 12, "gordura": 0.1, "porcao": 150, "unidade": "1 unit", "custo": "baixo"},
+        {"nome": "Melon", "calorias": 34, "proteina": 0.8, "carbo": 8.2, "gordura": 0.2, "porcao": 150, "unidade": "1 slice", "custo": "medio"},
+        {"nome": "Papaya", "calorias": 43, "proteina": 0.5, "carbo": 11, "gordura": 0.3, "porcao": 150, "unidade": "1 slice", "custo": "baixo"},
+        {"nome": "Mango", "calorias": 60, "proteina": 0.8, "carbo": 15, "gordura": 0.4, "porcao": 120, "unidade": "½ unit", "custo": "medio"}
+    ]
+}

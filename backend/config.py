@@ -1,0 +1,40 @@
+import os
+from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+class Config:
+    """Base configuration."""
+    SECRET_KEY = os.getenv('SECRET_KEY', 'shapepro-default-secret')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'shapepro-jwt-default')
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+    
+    # ── App Management ────────────────────────────────────────────────
+    APP_NAME = "ShapePro"
+    APP_VERSION = "1.0.0"
+    APP_MIN_VERSION = "1.0.0" # Force update if lower
+    APP_UPDATE_URL = "https://shapepro.com.br/download"
+
+
+class DevelopmentConfig(Config):
+    """Development configuration."""
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///shapepro.db')
+
+
+class ProductionConfig(Config):
+    """Production configuration."""
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+
+
+config_by_name = {
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+}
