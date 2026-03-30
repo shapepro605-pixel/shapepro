@@ -97,6 +97,10 @@ def create_app(config_name=None):
         }), 200
 
     # ── Health check ──────────────────────────────────────────────────
+    @app.route('/health', methods=['GET'])
+    def health_check():
+        """Railway health check endpoint."""
+        return jsonify({'status': 'healthy', 'version': app.config.get('APP_VERSION')}), 200
 
     # ── Web Frontend ──────────────────────────────────────────────────
     @app.route('/', methods=['GET'])
@@ -112,6 +116,9 @@ def create_app(config_name=None):
 
     return app
 
+
+# Ensure instance folder exists for SQLite
+os.makedirs(os.path.join(os.getcwd(), 'instance'), exist_ok=True)
 
 # Module-level app instance for gunicorn (Railway production)
 app = create_app()
