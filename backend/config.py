@@ -30,9 +30,9 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
-    # Use absolute path for SQLite in production to avoid 'unable to open' errors
+    # Move database to the root for maximum reliability on Railway
     _base_dir = os.path.abspath(os.path.dirname(__file__))
-    _db_path = os.path.join(_base_dir, 'instance', 'shapepro.db')
+    _db_path = os.path.join(_base_dir, 'shapepro.db')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f'sqlite:///{_db_path}')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 

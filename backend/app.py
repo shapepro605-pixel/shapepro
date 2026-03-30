@@ -117,9 +117,6 @@ def create_app(config_name=None):
     return app
 
 
-# Ensure instance folder exists for SQLite
-os.makedirs(os.path.join(os.getcwd(), 'instance'), exist_ok=True)
-
 # Module-level app instance for gunicorn (Railway production)
 app = create_app()
 
