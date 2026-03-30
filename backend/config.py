@@ -30,7 +30,10 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    # Use absolute path for SQLite in production to avoid 'unable to open' errors
+    _base_dir = os.path.abspath(os.path.dirname(__file__))
+    _db_path = os.path.join(_base_dir, 'instance', 'shapepro.db')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f'sqlite:///{_db_path}')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 
 
