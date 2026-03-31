@@ -397,6 +397,7 @@
             <div class="form-group"><label data-i18n="lbl_name">Nome</label><input id="reg-nome" data-i18n-placeholder="placeholder_name" placeholder="Seu nome"></div>
             <div class="form-group"><label data-i18n="lbl_email">Email</label><input id="reg-email" type="email" placeholder="seu@email.com"></div>
             <div class="form-group"><label data-i18n="lbl_password">Senha</label><input id="reg-password" type="password" data-i18n-placeholder="placeholder_min_pass" placeholder="Mínimo 6 caracteres"></div>
+            <div class="form-group"><label data-i18n="lbl_phone">Telefone</label><input id="reg-telefone" type="tel" data-i18n-placeholder="placeholder_phone" placeholder="(DDD) 99999-9999"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                 <div class="form-group"><label data-i18n="lbl_age">Idade</label><input id="reg-idade" type="number" placeholder="25"></div>
                 <div class="form-group"><label data-i18n="lbl_gender">Sexo</label>
@@ -810,6 +811,8 @@ const translations = {
         btn_create_account: "Criar minha conta",
         msg_already_have_account: "Já tem conta?",
         btn_login_link: "Fazer login",
+        lbl_phone: "Telefone",
+        placeholder_phone: "(DDD) 99999-9999",
         checkout_title: "Desbloqueie o Pro",
         checkout_subtitle: "Dietas com ritmo agressivo e treinos avançados",
         lbl_promo_code: "Tem um Reference Code?",
@@ -953,6 +956,8 @@ const translations = {
         btn_create_account: "Create my account",
         msg_already_have_account: "Already have an account?",
         btn_login_link: "Login here",
+        lbl_phone: "Phone Number",
+        placeholder_phone: "+1 (555) 000-0000",
         checkout_title: "Unlock Pro",
         checkout_subtitle: "Aggressive pace diets and advanced workouts",
         lbl_promo_code: "Have a Reference Code?",
@@ -1200,6 +1205,7 @@ async function register() {
         objetivo: document.getElementById('reg-objetivo').value,
         nivel_atividade: document.getElementById('reg-nivel').value,
         ritmo_meta: document.getElementById('reg-ritmo').value,
+        telefone: document.getElementById('reg-telefone').value,
     };
     const r = await api('POST', '/auth/register', data);
     if (r.access_token) {
