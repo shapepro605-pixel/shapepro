@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/exercise_card.dart';
+import '../widgets/upgrade_sheet.dart';
 import 'workout_active.dart';
 
 class TreinoScreen extends StatefulWidget {
@@ -100,7 +101,7 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                       decoration: BoxDecoration(
-                        color: _treinoColors[_selectedTreino]!.withOpacity(0.15),
+                        color: _treinoColors[_selectedTreino]!.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -130,7 +131,7 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
                     gradient: LinearGradient(
                       colors: [
                         _treinoColors[_selectedTreino]!,
-                        _treinoColors[_selectedTreino]!.withOpacity(0.7),
+                        _treinoColors[_selectedTreino]!.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -179,6 +180,10 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
     final nome = treino['nome'] ?? '';
     final tempo = treino['tempo_estimado'] ?? '';
 
+    final api = Provider.of<ApiService>(context, listen: false);
+    final isTrial = api.currentUser?['is_trial'] ?? false;
+
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 22),
       child: Column(
@@ -191,12 +196,12 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  _treinoColors[tipo]!.withOpacity(0.15),
-                  _treinoColors[tipo]!.withOpacity(0.05),
+                  _treinoColors[tipo]!.withValues(alpha: 0.15),
+                  _treinoColors[tipo]!.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: _treinoColors[tipo]!.withOpacity(0.2)),
+              border: Border.all(color: _treinoColors[tipo]!.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
@@ -215,7 +220,7 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _treinoColors[tipo]!.withOpacity(0.2),
+                    color: _treinoColors[tipo]!.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(nome, style: GoogleFonts.inter(
@@ -228,51 +233,65 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
           const SizedBox(height: 18),
 
           // COMEÇAR TREINO BUTTON
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => WorkoutActiveScreen(
-                      treino: _treinos[index],
-                      accentColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
-                    ),
-                  ),
-                );
-                // When coming back, maybe reload something if needed
-                // _loadTreinos(); // usually static though
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                elevation: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
-                  const SizedBox(width: 8),
-                  Text(AppLocalizations.of(context)!.startWorkout, style: GoogleFonts.inter(
-                    color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 1
-                  )),
-                ],
-              ),
-            ),
-          ),
+          _buildStartWorkoutButton(index, tipo, isTrial),
           const SizedBox(height: 24),
 
           // Exercises list
           ...exercicios.asMap().entries.map((entry) {
+            final idx = entry.key;
+            final isLocked = isTrial && idx >= 1; // Only first exercise is free during trial
             final ex = entry.value as Map<String, dynamic>;
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: ExerciseCard(
-                exercise: ex,
-                index: entry.key + 1,
-                accentColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
+              child: Stack(
+                children: [
+                  Opacity(
+                    opacity: isLocked ? 0.5 : 1.0,
+                    child: ExerciseCard(
+                      exercise: ex,
+                      index: idx + 1,
+                      accentColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
+                    ),
+                  ),
+                  if (isLocked)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: () => showUpgradeSheet(context),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withValues(alpha: 0.1),
+                                Colors.black.withValues(alpha: 0.5),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(0xFFFFD700).withValues(alpha: 0.15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFFFD700).withValues(alpha: 0.4),
+                                    blurRadius: 20,
+                                    spreadRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(Icons.lock_rounded, color: Color(0xFFFFD700), size: 26),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             );
           }),
@@ -281,4 +300,50 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
       ),
     );
   }
+
+  Widget _buildStartWorkoutButton(int index, String tipo, bool isTrial) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: () async {
+          if (isTrial) {
+            showUpgradeSheet(context);
+            return;
+          }
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => WorkoutActiveScreen(
+                treino: _treinos[index],
+                accentColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
+              ),
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isTrial ? Colors.grey[800] : (_treinoColors[tipo] ?? const Color(0xFF6C5CE7)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: isTrial ? 0 : 8,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(isTrial ? Icons.lock : Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            const SizedBox(width: 8),
+            Text(
+              isTrial ? "BLOQUEADO (TRIAL)" : AppLocalizations.of(context)!.startWorkout,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

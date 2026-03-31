@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 
 class WorkoutActiveScreen extends StatefulWidget {
@@ -217,7 +217,7 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: const Color(0xFF2A2A4A)),
             ),
-            child: Icon(Icons.fitness_center, color: widget.accentColor.withOpacity(0.3), size: 100),
+            child: Icon(Icons.fitness_center, color: widget.accentColor.withValues(alpha: 0.3), size: 100),
           ),
           const SizedBox(height: 30),
           
@@ -243,8 +243,8 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: widget.accentColor.withOpacity(0.1),
-                border: Border.all(color: widget.accentColor.withOpacity(0.2)),
+                color: widget.accentColor.withValues(alpha: 0.1),
+                border: Border.all(color: widget.accentColor.withValues(alpha: 0.2)),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/api.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import 'challenge_active.dart';
 
 class ChallengesScreen extends StatefulWidget {
@@ -62,16 +62,16 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.championshipsTitle ?? 'Campeonatos'),
+        title: Text(l10n.championshipsTitle),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Theme.of(context).primaryColor,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white38,
           tabs: [
-            Tab(text: l10n.daily ?? 'Diários'),
-            Tab(text: l10n.weekly ?? 'Semanais'),
-            Tab(text: l10n.monthly ?? 'Mensais'),
+            Tab(text: l10n.daily),
+            Tab(text: l10n.weekly),
+            Tab(text: l10n.monthly),
           ],
         ),
       ),
@@ -124,7 +124,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
         ),
         boxShadow: isActive ? [
           BoxShadow(
-            color: const Color(0xFF00D2FF).withOpacity(0.2),
+            color: const Color(0xFF00D2FF).withValues(alpha: 0.2),
             blurRadius: 15,
             spreadRadius: 2,
           )
@@ -181,7 +181,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              color: const Color(0xFF1E1E38).withOpacity(0.5),
+              color: const Color(0xFF1E1E38).withValues(alpha: 0.5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -214,7 +214,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
                         backgroundColor: const Color(0xFF00D2FF),
                         foregroundColor: Colors.white,
                         elevation: 10,
-                        shadowColor: const Color(0xFF00D2FF).withOpacity(0.5),
+                        shadowColor: const Color(0xFF00D2FF).withValues(alpha: 0.5),
                         minimumSize: const Size(100, 36),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

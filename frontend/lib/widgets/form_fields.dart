@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 
 class FormSectionHeader extends StatelessWidget {
   final String title;
@@ -71,7 +71,7 @@ class SexOptionWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF6C5CE7).withOpacity(0.15) : const Color(0xFF1E1E38),
+            color: isSelected ? const Color(0xFF6C5CE7).withValues(alpha: 0.15) : const Color(0xFF1E1E38),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF2A2A4A),
@@ -120,7 +120,7 @@ class GoalOptionWidget extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6C5CE7).withOpacity(0.12) : const Color(0xFF1E1E38),
+          color: isSelected ? const Color(0xFF6C5CE7).withValues(alpha: 0.12) : const Color(0xFF1E1E38),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF2A2A4A),
@@ -133,7 +133,7 @@ class GoalOptionWidget extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF6C5CE7).withOpacity(0.2) : const Color(0xFF2A2A4A),
+                color: isSelected ? const Color(0xFF6C5CE7).withValues(alpha: 0.2) : const Color(0xFF2A2A4A),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(icon, color: isSelected ? const Color(0xFF6C5CE7) : Colors.white54),
@@ -195,7 +195,7 @@ class ActivityLevelSelector extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: selected ? const Color(0xFF6C5CE7).withOpacity(0.15) : const Color(0xFF1E1E38),
+              color: selected ? const Color(0xFF6C5CE7).withValues(alpha: 0.15) : const Color(0xFF1E1E38),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: selected ? const Color(0xFF6C5CE7) : const Color(0xFF2A2A4A),

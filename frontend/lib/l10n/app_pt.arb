@@ -170,5 +170,29 @@
   "groceryBudget": "Orçamento de Mercado",
   "economic": "Econômico",
   "premium": "Premium",
-  "standard": "Padrão"
+  "standard": "Padrão",
+  "championshipsTitle": "Campeonatos & Desafios",
+  "daily": "Diário",
+  "weekly": "Semanal",
+  "monthly": "Mensal",
+  "phoneNumber": "Telefone",
+  "phoneHint": "(DDD) 99999-9999",
+  "phoneRequired": "Telefone obrigatório",
+  "verifyPhone": "Verificar Telefone",
+  "verifySubtitle": "Enviamos um código de 6 dígitos para {phone}",
+  "@verifySubtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "codeHint": "000000",
+  "verifyBtn": "Verificar Código",
+  "resendCode": "Reenviar Código",
+  "invalidCode": "Código inválido",
+  "lockedTrial": "Conteúdo Bloqueado",
+  "upgradeToUnlock": "Assine o Premium para desbloquear todas as refeições e treinos.",
+  "medicalDisclaimerTitle": "Aviso Médico Importante",
+  "medicalDisclaimerDesc": "Este aplicativo oferece orientações de fitness e nutrição apenas para fins informativos. Consulte sempre um médico antes de iniciar qualquer programa de exercícios ou dieta severa.",
+  "accept": "Aceitar",
+  "diet_generated": "Sua dieta foi gerada com sucesso!"
 }

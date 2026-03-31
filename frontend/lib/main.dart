@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,11 @@ import 'screens/resultado.dart';
 import 'screens/checkout.dart';
 import 'screens/profile_edit.dart';
 import 'screens/challenges.dart';
+import 'screens/verify_sms.dart';
+import 'screens/privacy_policy.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:shapepro/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
@@ -36,6 +40,9 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   runApp(ShapeProApp(isLoggedIn: token != null && token.isNotEmpty));
 }
@@ -85,6 +92,9 @@ class ShapeProApp extends StatelessWidget {
               '/checkout': (context) => const CheckoutScreen(),
               '/profile_edit': (context) => const ProfileEditScreen(),
               '/challenges': (context) => const ChallengesScreen(),
+              '/verify_sms': (context) => const VerifySmsScreen(),
+              '/privacy': (context) => const PrivacyPolicyScreen(),
+
 
             },
           );
@@ -182,7 +192,7 @@ class ShapeProApp extends StatelessWidget {
           ),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: const Color(0xFF16162A),
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -246,10 +256,10 @@ class ShapeProApp extends StatelessWidget {
         labelStyle: GoogleFonts.inter(color: Colors.black54),
         hintStyle: GoogleFonts.inter(color: Colors.black26),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: Color(0xFFE1E2E6), width: 1)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: const BorderSide(color: Color(0xFFE1E2E6), width: 1)),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -353,7 +363,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF6C5CE7).withOpacity(0.4),
+                            color: const Color(0xFF6C5CE7).withValues(alpha: 0.4),
                             blurRadius: 30,
                             spreadRadius: 5,
                           ),
@@ -409,7 +419,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        const Color(0xFF6C5CE7).withOpacity(0.6),
+                        const Color(0xFF6C5CE7).withValues(alpha: 0.6),
                       ),
                     ),
                   ),

@@ -170,5 +170,29 @@
   "groceryBudget": "Grocery Budget",
   "economic": "Economic",
   "premium": "Premium",
-  "standard": "Standard"
+  "standard": "Standard",
+  "championshipsTitle": "Championships & Challenges",
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "phoneNumber": "Phone Number",
+  "phoneHint": "(555) 000-0000",
+  "phoneRequired": "Phone number required",
+  "verifyPhone": "Verify Phone",
+  "verifySubtitle": "We sent a 6-digit code to {phone}",
+  "@verifySubtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "codeHint": "000000",
+  "verifyBtn": "Verify Code",
+  "resendCode": "Resend Code",
+  "invalidCode": "Invalid code",
+  "lockedTrial": "Locked Content",
+  "upgradeToUnlock": "Subscribe to Premium to unlock all meals and workouts.",
+  "medicalDisclaimerTitle": "Important Medical Disclaimer",
+  "medicalDisclaimerDesc": "This application provides fitness and nutrition guidance for informational purposes only. Always consult a physician before starting any exercise program or severe diet.",
+  "accept": "Accept",
+  "diet_generated": "Your diet has been generated successfully!"
 }

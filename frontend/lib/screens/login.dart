@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -70,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen>
       );
       if (authenticated) {
         setState(() => _isLoading = true);
+        if (!mounted) return;
         final api = Provider.of<ApiService>(context, listen: false);
         final success = await api.loginWithBiometricToken();
         if (mounted) {
@@ -198,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                              color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
                               blurRadius: 25,
                               offset: const Offset(0, 8),
                             ),
@@ -236,9 +237,9 @@ class _LoginScreenState extends State<LoginScreen>
                         padding: const EdgeInsets.all(14),
                         margin: const EdgeInsets.only(bottom: 20),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFD4556).withOpacity(0.1),
+                          color: const Color(0xFFFD4556).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFFD4556).withOpacity(0.3)),
+                          border: Border.all(color: const Color(0xFFFD4556).withValues(alpha: 0.3)),
                         ),
                         child: Row(
                           children: [
@@ -363,12 +364,12 @@ class _LoginScreenState extends State<LoginScreen>
                     // ── Divider ───────────────────────────────────
                     Row(
                       children: [
-                        Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
+                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text('ou', style: GoogleFonts.inter(color: Colors.white30, fontSize: 13)),
                         ),
-                        Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
+                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -388,7 +389,7 @@ class _LoginScreenState extends State<LoginScreen>
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
                             side: const BorderSide(color: Color(0xFF6C5CE7)),
-                            backgroundColor: const Color(0xFF6C5CE7).withOpacity(0.1),
+                            backgroundColor: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
@@ -436,6 +437,31 @@ class _LoginScreenState extends State<LoginScreen>
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                               ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(context, '/privacy'),
+                            child: Text(
+                              'Privacidade',
+                              style: GoogleFonts.inter(color: Colors.white38, fontSize: 11, decoration: TextDecoration.underline),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text('•', style: GoogleFonts.inter(color: Colors.white38, fontSize: 11)),
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(context, '/privacy'),
+                            child: Text(
+                              'Termos de Uso',
+                              style: GoogleFonts.inter(color: Colors.white38, fontSize: 11, decoration: TextDecoration.underline),
                             ),
                           ),
                         ],

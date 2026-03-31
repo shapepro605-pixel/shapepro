@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 
 class ResultadoScreen extends StatefulWidget {
@@ -148,7 +148,7 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
               children: [
                 _buildStatCard(AppLocalizations.of(context)!.treinos, '${user['treinos_concluidos'] ?? 0}', AppLocalizations.of(context)!.completed, const Color(0xFFFD4556), Icons.local_fire_department),
                 const SizedBox(width: 12),
-                _buildStatCard(AppLocalizations.of(context)!.dietas, '$totalDietas', AppLocalizations.of(context)!.generated, const Color(0xFF2ED573), Icons.restaurant_menu),
+                _buildStatCard(AppLocalizations.of(context)!.dieta, '$totalDietas', AppLocalizations.of(context)!.generated, const Color(0xFF2ED573), Icons.restaurant_menu),
               ],
             ),
             const SizedBox(height: 28),
@@ -244,7 +244,7 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
                           color: Colors.white60, fontSize: 14,
                         )),
                       ),
-                      Text('${peso} kg', style: GoogleFonts.inter(
+                      Text('$peso kg', style: GoogleFonts.inter(
                         color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16,
                       )),
                     ],
@@ -274,7 +274,7 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
         decoration: BoxDecoration(
           color: const Color(0xFF16162A),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +282,7 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
             Container(
               width: 38, height: 38,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 20),
@@ -292,7 +292,7 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
               fontSize: 24, fontWeight: FontWeight.w800, color: Colors.white,
             )),
             Text(unit, style: GoogleFonts.inter(
-              fontSize: 12, color: Colors.white45,
+              fontSize: 12, color: Colors.white54,
             )),
             const SizedBox(height: 4),
             Text(label, style: GoogleFonts.inter(
@@ -375,8 +375,8 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFF6C5CE7).withOpacity(0.3),
-                    const Color(0xFF00D2FF).withOpacity(0.0),
+                    const Color(0xFF6C5CE7).withValues(alpha: 0.3),
+                    const Color(0xFF00D2FF).withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -399,12 +399,19 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
 
     int activeIndex = -1;
     if (imc != null) {
-      if (imc < 18.5) activeIndex = 0;
-      else if (imc < 25) activeIndex = 1;
-      else if (imc < 30) activeIndex = 2;
-      else if (imc < 35) activeIndex = 3;
-      else if (imc < 40) activeIndex = 4;
-      else activeIndex = 5;
+      if (imc < 18.5) {
+        activeIndex = 0;
+      } else if (imc < 25) {
+        activeIndex = 1;
+      } else if (imc < 30) {
+        activeIndex = 2;
+      } else if (imc < 35) {
+        activeIndex = 3;
+      } else if (imc < 40) {
+        activeIndex = 4;
+      } else {
+        activeIndex = 5;
+      }
     }
 
     return Container(
@@ -424,9 +431,9 @@ class _ResultadoScreenState extends State<ResultadoScreen> {
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: isActive ? color.withOpacity(0.15) : Colors.transparent,
+              color: isActive ? color.withValues(alpha: 0.15) : Colors.transparent,
               borderRadius: BorderRadius.circular(10),
-              border: isActive ? Border.all(color: color.withOpacity(0.4)) : null,
+              border: isActive ? Border.all(color: color.withValues(alpha: 0.4)) : null,
             ),
             child: Row(
               children: [

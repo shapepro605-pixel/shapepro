@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'dart:async';
 
 class ApiService extends ChangeNotifier {
   // Base URL for the API.
   // In production, pass via: flutter build --dart-define=API_URL=https://xxx.up.railway.app
   static String get baseUrl {
-    const prodUrl = String.fromEnvironment('API_URL', defaultValue: '');
+    const prodUrl = String.fromEnvironment('API_URL', defaultValue: 'https://shapepro-production.up.railway.app');
     if (prodUrl.isNotEmpty) return '$prodUrl/api';
     
     if (kIsWeb) {
@@ -21,7 +23,6 @@ class ApiService extends ChangeNotifier {
   static const String currentAppVersion = "1.0.0";
   
   String? _accessToken;
-  String? _refreshToken;
   Map<String, dynamic>? _currentUser;
   bool _isLoading = false;
   Locale _locale = const Locale('pt', 'BR');
@@ -33,6 +34,12 @@ class ApiService extends ChangeNotifier {
   bool get isLoggedIn => _accessToken != null;
   Locale get locale => _locale;
   bool get isDarkMode => _isDarkMode;
+
+  // IAP
+  final InAppPurchase _iap = InAppPurchase.instance;
+  StreamSubscription<List<PurchaseDetails>>? _subscription;
+  List<ProductDetails> _products = [];
+  List<ProductDetails> get products => _products;
 
   // ── Auth Headers ─────────────────────────────────────────────────────
 
@@ -47,7 +54,6 @@ class ApiService extends ChangeNotifier {
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _accessToken = prefs.getString('access_token');
-    _refreshToken = prefs.getString('refresh_token');
     final userJson = prefs.getString('current_user');
     if (userJson != null) {
       _currentUser = jsonDecode(userJson);
@@ -59,15 +65,83 @@ class ApiService extends ChangeNotifier {
     
     _isDarkMode = prefs.getBool('is_dark_mode') ?? true;
     
+    // Initialize IAP
+    _initializeIAP();
+    
     notifyListeners();
   }
 
-  Future<void> _saveTokens(String access, String refresh) async {
+  void _initializeIAP() {
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription?.cancel();
+    }, onError: (error) {
+      // Handle error
+    });
+  }
+
+  Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
+    for (var purchaseDetails in purchaseDetailsList) {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+        // Show loading if needed
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+          // Handle error
+        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+                   purchaseDetails.status == PurchaseStatus.restored) {
+          // Verify with backend
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            // Deliver product
+          }
+        }
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _iap.completePurchase(purchaseDetails);
+        }
+      }
+    }
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchase) async {
+    final res = await _request('POST', '/payment/verify', body: {
+      'server_verification_data': purchase.verificationData.serverVerificationData,
+      'product_id': purchase.productID,
+      'purchase_id': purchase.purchaseID,
+    });
+    if (res['success'] == true && res['user'] != null) {
+      _saveUser(res['user']);
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> fetchProducts() async {
+    const Set<String> ids = {'shapepro_mensal', 'shapepro_anual'};
+    final ProductDetailsResponse response = await _iap.queryProductDetails(ids);
+    if (response.notFoundIDs.isNotEmpty) {
+      // Handle missing IDs
+    }
+    _products = response.productDetails;
+    notifyListeners();
+  }
+
+  Future<void> buyProduct(ProductDetails product) async {
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+    await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _saveTokens(String access) async {
     _accessToken = access;
-    _refreshToken = refresh;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('access_token', access);
-    await prefs.setString('refresh_token', refresh);
   }
 
   Future<void> _saveUser(Map<String, dynamic> user) async {
@@ -143,6 +217,7 @@ class ApiService extends ChangeNotifier {
     required String email,
     required String password,
     required String nome,
+    required String telefone,
     int? idade,
     double? altura,
     double? peso,
@@ -155,6 +230,7 @@ class ApiService extends ChangeNotifier {
       'email': email,
       'password': password,
       'nome': nome,
+      'telefone': telefone,
       if (idade != null) 'idade': idade,
       if (altura != null) 'altura': altura,
       if (peso != null) 'peso': peso,
@@ -165,10 +241,22 @@ class ApiService extends ChangeNotifier {
     });
 
     if (result['success'] == true) {
-      await _saveTokens(result['access_token'], result['refresh_token']);
+      await _saveTokens(result['access_token']);
       await _saveUser(result['user']);
     }
     return result;
+  }
+
+  Future<Map<String, dynamic>> verifySms(String code) async {
+    final result = await _request('POST', '/auth/verify_sms', body: {'code': code});
+    if (result['success'] == true && result['user'] != null) {
+      await _saveUser(result['user']);
+    }
+    return result;
+  }
+
+  Future<Map<String, dynamic>> resendSms() async {
+    return await _request('POST', '/auth/resend_sms');
   }
 
   Future<Map<String, dynamic>> login({
@@ -181,7 +269,7 @@ class ApiService extends ChangeNotifier {
     });
 
     if (result['success'] == true) {
-      await _saveTokens(result['access_token'], result['refresh_token']);
+      await _saveTokens(result['access_token']);
       await _saveUser(result['user']);
     }
     return result;
@@ -189,7 +277,6 @@ class ApiService extends ChangeNotifier {
 
   Future<void> logout() async {
     _accessToken = null;
-    _refreshToken = null;
     _currentUser = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -224,6 +311,53 @@ class ApiService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> getWeightHistory() async {
     return await _request('GET', '/auth/weight');
+  }
+
+  // ── TRACKING (Water & Metrics) ───────────────────────────────────────
+
+  Future<Map<String, dynamic>> logWater(int ml) async {
+    return await _request('POST', '/tracking/water', body: {'ml': ml});
+  }
+
+  Future<Map<String, dynamic>> getWaterToday() async {
+    return await _request('GET', '/tracking/water/today');
+  }
+
+  Future<Map<String, dynamic>> logMetrics(Map<String, dynamic> data) async {
+    return await _request('POST', '/tracking/metrics', body: data);
+  }
+
+  // ── SLEEP ────────────────────────────────────────────────────────────
+
+  Future<Map<String, dynamic>> logSleep(String horaDormir, String horaAcordar, {int qualidade = 3, String notas = ''}) async {
+    return await _request('POST', '/tracking/sleep', body: {
+      'hora_dormir': horaDormir,
+      'hora_acordar': horaAcordar,
+      'qualidade': qualidade,
+      'notas': notas,
+    });
+  }
+
+  Future<Map<String, dynamic>> getSleepHistory() async {
+    return await _request('GET', '/tracking/sleep/history');
+  }
+
+  Future<Map<String, dynamic>> getSleepStats() async {
+    return await _request('GET', '/tracking/sleep/stats');
+  }
+
+  // ── JOURNAL ──────────────────────────────────────────────────────────
+
+  Future<Map<String, dynamic>> createJournalEntry(Map<String, dynamic> data) async {
+    return await _request('POST', '/journal', body: data);
+  }
+
+  Future<Map<String, dynamic>> listJournalEntries({int limit = 10}) async {
+    return await _request('GET', '/journal?limit=$limit');
+  }
+
+  Future<Map<String, dynamic>> getJournalStats() async {
+    return await _request('GET', '/journal/stats');
   }
 
   // ── DIET ─────────────────────────────────────────────────────────────
@@ -333,7 +467,7 @@ class ApiService extends ChangeNotifier {
     if (bToken != null && bUserJson != null) {
       _accessToken = bToken;
       _currentUser = jsonDecode(bUserJson);
-      await _saveTokens(bToken, prefs.getString('refresh_token') ?? '');
+      await _saveTokens(bToken);
       await _saveUser(_currentUser!);
       return true;
     }
@@ -372,7 +506,7 @@ class ApiService extends ChangeNotifier {
         };
       }
     } catch (e) {
-      print('Erro ao checar versão: $e');
+      // Version check failed - ignore for production
     }
     return {'success': false};
   }

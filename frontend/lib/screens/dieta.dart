@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
+import '../widgets/upgrade_sheet.dart';
 import 'workout_active.dart';
 
 class DietaScreen extends StatefulWidget {
@@ -91,7 +92,7 @@ class _DietaScreenState extends State<DietaScreen> {
               children: [
                 const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
                 const SizedBox(width: 12),
-                Text(AppLocalizations.of(context)!.diet_generated + " & Treinos atualizados!"),
+                Text("${AppLocalizations.of(context)!.diet_generated} & Treinos atualizados!"),
               ],
             ),
             backgroundColor: const Color(0xFF2ED573),
@@ -219,7 +220,7 @@ class _DietaScreenState extends State<DietaScreen> {
             children: [
               _buildChip(AppLocalizations.of(context)!.dry, 'perder_peso', _selectedObjetivo, (v) => setState(() => _selectedObjetivo = v)),
               const SizedBox(width: 8),
-              _buildChip(AppLocalizations.of(context)!.maintain, 'manter', _selectedObjetivo, (v) => setState(() => _selectedObjetivo = v)),
+              _buildChip(AppLocalizations.of(context)!.maintainWeight, 'manter', _selectedObjetivo, (v) => setState(() => _selectedObjetivo = v)),
               const SizedBox(width: 8),
               _buildChip(AppLocalizations.of(context)!.grow, 'ganhar_massa', _selectedObjetivo, (v) => setState(() => _selectedObjetivo = v)),
             ],
@@ -231,18 +232,18 @@ class _DietaScreenState extends State<DietaScreen> {
               const SizedBox(width: 8),
               _buildChip(AppLocalizations.of(context)!.standard, 'padrao', _selectedRitmo, (v) => setState(() => _selectedRitmo = v), icon: Icons.balance),
               const SizedBox(width: 8),
-              _buildChip(AppLocalizations.of(context)!.extreme + '🔥', 'agressivo', _selectedRitmo, (v) => setState(() => _selectedRitmo = v), isExtreme: true),
+              _buildChip('${AppLocalizations.of(context)!.extreme}🔥', 'agressivo', _selectedRitmo, (v) => setState(() => _selectedRitmo = v), isExtreme: true),
             ],
           ),
           const SizedBox(height: 10),
           // --- Budget Section ---
           Row(
             children: [
-               _buildChip(AppLocalizations.of(context)!.economic + ' 💰', 'economico', _selectedOrcamento, (v) => setState(() => _selectedOrcamento = v)),
+               _buildChip('${AppLocalizations.of(context)!.economic} 💰', 'economico', _selectedOrcamento, (v) => setState(() => _selectedOrcamento = v)),
                const SizedBox(width: 8),
                _buildChip(AppLocalizations.of(context)!.standard, 'padrao', _selectedOrcamento, (v) => setState(() => _selectedOrcamento = v)),
                const SizedBox(width: 8),
-               _buildChip(AppLocalizations.of(context)!.premium + ' ✨', 'premium', _selectedOrcamento, (v) => setState(() => _selectedOrcamento = v), isPremium: true),
+               _buildChip('${AppLocalizations.of(context)!.premium} ✨', 'premium', _selectedOrcamento, (v) => setState(() => _selectedOrcamento = v), isPremium: true),
             ],
           ),
         ],
@@ -262,7 +263,7 @@ class _DietaScreenState extends State<DietaScreen> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: selected ? activeColor.withOpacity(0.15) : const Color(0xFF1E1E38),
+            color: selected ? activeColor.withValues(alpha: 0.15) : const Color(0xFF1E1E38),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: selected ? activeColor : const Color(0xFF2A2A4A),
@@ -300,7 +301,7 @@ class _DietaScreenState extends State<DietaScreen> {
             Container(
               width: 80, height: 80,
               decoration: BoxDecoration(
-                color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(22),
               ),
               child: const Icon(Icons.restaurant_menu, color: Color(0xFF6C5CE7), size: 40),
@@ -313,7 +314,7 @@ class _DietaScreenState extends State<DietaScreen> {
             Text(
               AppLocalizations.of(context)!.generatePersonalizedDiet,
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(color: Colors.white45, fontSize: 14),
+              style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
             ),
             const SizedBox(height: 30),
             ElevatedButton.icon(
@@ -392,7 +393,7 @@ class _DietaScreenState extends State<DietaScreen> {
                             fontSize: 28, fontWeight: FontWeight.w900, color: Colors.white,
                           )),
                           Text('kcal', style: GoogleFonts.inter(
-                            fontSize: 12, color: Colors.white45,
+                            fontSize: 12, color: Colors.white54,
                           )),
                         ],
                       ),
@@ -423,6 +424,7 @@ class _DietaScreenState extends State<DietaScreen> {
             final refeicao = entry.value as Map<String, dynamic>;
             return _buildRefeicaoCard(refeicao, entry.key);
           }),
+
           const SizedBox(height: 30),
 
           // ── Treinos Sincronizados ──────────────────────────────
@@ -432,7 +434,7 @@ class _DietaScreenState extends State<DietaScreen> {
             )),
             const SizedBox(height: 6),
             Text('Planejados especialmente para seu objetivo (IA).', style: GoogleFonts.inter(
-              fontSize: 13, color: Colors.white45,
+              fontSize: 13, color: Colors.white54,
             )),
             const SizedBox(height: 14),
             _buildTreinosSincronizadosList(),
@@ -481,7 +483,7 @@ class _DietaScreenState extends State<DietaScreen> {
               decoration: BoxDecoration(
                 color: const Color(0xFF16162A),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: color.withOpacity(0.3)),
+                border: Border.all(color: color.withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -490,7 +492,7 @@ class _DietaScreenState extends State<DietaScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.15),
+                      color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text('Treino $tipo', style: GoogleFonts.inter(
@@ -533,7 +535,7 @@ class _DietaScreenState extends State<DietaScreen> {
               fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white,
             )),
             Text(label, style: GoogleFonts.inter(
-              fontSize: 11, color: Colors.white45,
+              fontSize: 11, color: Colors.white54,
             )),
           ],
         ),
@@ -546,6 +548,19 @@ class _DietaScreenState extends State<DietaScreen> {
     final horario = refeicao['horario'] ?? '';
     final alimentos = refeicao['alimentos'] as List<dynamic>? ?? [];
     final totalCal = refeicao['total_calorias'] ?? 0;
+
+    // ── Padlock Logic ──
+    final api = Provider.of<ApiService>(context, listen: false);
+    final isTrial = api.currentUser?['is_trial'] ?? false;
+    
+    // Parse time to check if it's before 12:00
+    bool isLocked = false;
+    if (isTrial) {
+      try {
+        final hour = int.parse(horario.split(':')[0]);
+        if (hour > 12) isLocked = true; // Lock meals after lunch (lanche, jantar, ceia)
+      } catch (_) {}
+    }
 
     final icons = [
       Icons.free_breakfast,
@@ -565,75 +580,127 @@ class _DietaScreenState extends State<DietaScreen> {
       const Color(0xFFA29BFE),
     ];
 
+    final accentColor = colors[index % colors.length];
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         color: const Color(0xFF16162A),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF2A2A4A)),
+        border: Border.all(color: isLocked ? Colors.white10 : const Color(0xFF2A2A4A)),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-          childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
-          leading: Container(
-            width: 42, height: 42,
-            decoration: BoxDecoration(
-              color: colors[index % colors.length].withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icons[index % icons.length], color: colors[index % colors.length], size: 22),
-          ),
-          title: Text(nome, style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600, color: Colors.white, fontSize: 15,
-          )),
-          subtitle: Row(
-            children: [
-              Text(horario, style: GoogleFonts.inter(
-                color: Colors.white38, fontSize: 12,
-              )),
-              const SizedBox(width: 12),
-              Text('$totalCal kcal', style: GoogleFonts.inter(
-                color: colors[index % colors.length], fontSize: 12, fontWeight: FontWeight.w600,
-              )),
-            ],
-          ),
-          iconColor: Colors.white38,
-          collapsedIconColor: Colors.white38,
-          children: alimentos.map((alimento) {
-            final a = alimento as Map<String, dynamic>;
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  Container(
-                    width: 6, height: 6,
-                    decoration: BoxDecoration(
-                      color: colors[index % colors.length].withOpacity(0.5),
-                      shape: BoxShape.circle,
+        child: Opacity(
+          opacity: isLocked ? 0.6 : 1.0,
+          child: ExpansionTile(
+            tilePadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+            childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
+            leading: Stack(
+              children: [
+                Container(
+                  width: 42, height: 42,
+                  decoration: BoxDecoration(
+                    color: accentColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icons[index % icons.length], color: accentColor, size: 22),
+                ),
+                if (isLocked)
+                  Positioned(
+                    right: -2, bottom: -2,
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0A0A1A),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFFD700).withValues(alpha: 0.5),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(Icons.lock_rounded, color: Color(0xFFFFD700), size: 14),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(a['nome'] ?? '', style: GoogleFonts.inter(
-                      color: Colors.white70, fontSize: 13,
-                    )),
+              ],
+            ),
+            title: Text(nome, style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600, color: Colors.white, fontSize: 15,
+            )),
+            subtitle: Row(
+              children: [
+                Text(horario, style: GoogleFonts.inter(
+                  color: Colors.white38, fontSize: 12,
+                )),
+                const SizedBox(width: 12),
+                Text('$totalCal kcal', style: GoogleFonts.inter(
+                  color: accentColor, fontSize: 12, fontWeight: FontWeight.w600,
+                )),
+              ],
+            ),
+            trailing: isLocked 
+              ? Container(
+                  width: 32, height: 32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
-                  Text(a['porcao'] ?? '', style: GoogleFonts.inter(
-                    color: Colors.white38, fontSize: 12,
-                  )),
-                  const SizedBox(width: 10),
-                  Text('${a['calorias'] ?? 0} kcal', style: GoogleFonts.inter(
-                    color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w600,
-                  )),
-                ],
-              ),
-            );
-          }).toList(),
+                  child: const Icon(Icons.lock_rounded, color: Color(0xFFFFD700), size: 16),
+                )
+              : null,
+            onExpansionChanged: (expanded) {
+              if (expanded && isLocked) {
+                // Prevent expanding and show upgrade sheet
+                showUpgradeSheet(context);
+              }
+            },
+            iconColor: Colors.white38,
+            collapsedIconColor: Colors.white38,
+            children: isLocked ? [] : alimentos.map((alimento) {
+              final a = alimento as Map<String, dynamic>;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 6, height: 6,
+                      decoration: BoxDecoration(
+                        color: accentColor.withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(a['nome'] ?? '', style: GoogleFonts.inter(
+                        color: Colors.white70, fontSize: 13,
+                      )),
+                    ),
+                    Text(a['porcao'] ?? '', style: GoogleFonts.inter(
+                      color: Colors.white38, fontSize: 12,
+                    )),
+                    const SizedBox(width: 10),
+                    Text('${a['calorias'] ?? 0} kcal', style: GoogleFonts.inter(
+                      color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w600,
+                    )),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
   }
+
 }

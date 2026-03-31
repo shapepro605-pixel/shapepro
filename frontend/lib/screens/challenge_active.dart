@@ -54,7 +54,7 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
@@ -70,7 +70,7 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
               height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF00D2FF).withOpacity(0.2),
+                color: const Color(0xFF00D2FF).withValues(alpha: 0.2),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -111,7 +111,7 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF6C5CE7).withOpacity(0.5),
+                                color: const Color(0xFF6C5CE7).withValues(alpha: 0.5),
                                 blurRadius: 30,
                                 offset: const Offset(0, 10),
                               )
@@ -236,12 +236,12 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E38).withOpacity(0.6),
+        color: const Color(0xFF1E1E38).withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -274,7 +274,7 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFD93D).withOpacity(0.15),
+                  color: const Color(0xFFFFD93D).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -320,7 +320,7 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
         color: const Color(0xFF16162A),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isCompleted ? color.withOpacity(0.6) : Colors.white.withOpacity(0.05),
+          color: isCompleted ? color.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.05),
           width: isCompleted ? 1.5 : 1,
         ),
       ),
@@ -330,10 +330,10 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: isCompleted ? color : color.withOpacity(0.15),
+              color: isCompleted ? color : color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
               boxShadow: isCompleted ? [
-                BoxShadow(color: color.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 5))
+                BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 15, offset: const Offset(0, 5))
               ] : null,
             ),
             child: Icon(
@@ -370,7 +370,7 @@ class _ChallengeActiveScreenState extends State<ChallengeActiveScreen> with Sing
                     value: progressValue,
                     minHeight: 6,
                     backgroundColor: const Color(0xFF1E1E38),
-                    valueColor: AlwaysStoppedAnimation<Color>(isCompleted ? color : color.withOpacity(0.7)),
+                    valueColor: AlwaysStoppedAnimation<Color>(isCompleted ? color : color.withValues(alpha: 0.7)),
                   ),
                 ),
               ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/form_fields.dart';
 
@@ -13,9 +13,12 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
+  final TextEditingController _pesoController = TextEditingController();
+  final TextEditingController _smsController = TextEditingController();
+  
   bool _isLoading = false;
+  bool _isVerifying = false;
   String? _errorMessage;
 
   // Step 1: Conta
@@ -30,12 +33,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   // Step 3: Medidas
   final _alturaController = TextEditingController();
-  final _pesoController = TextEditingController();
+
+  // Step 5: Telefone (inserted as Step 1)
+  final _telefoneController = TextEditingController();
+
 
   // Step 4: Objetivo
   String _objetivo = 'perder_peso';
   String _nivelAtividade = 'moderado';
-  String _ritmoMeta = 'padrao';
+  final String _ritmoMeta = 'padrao';
+
+  @override
+  void initState() {
+    super.initState();
+    final api = Provider.of<ApiService>(context, listen: false);
+    if (api.isLoggedIn && api.currentUser?['telefone_verificado'] == false) {
+      _isVerifying = true;
+    }
+  }
 
   @override
   void dispose() {
@@ -45,7 +60,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _idadeController.dispose();
     _alturaController.dispose();
     _pesoController.dispose();
+    _telefoneController.dispose();
+    _smsController.dispose();
     super.dispose();
+
   }
 
   Future<void> _register() async {
@@ -54,6 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _errorMessage = null;
     });
 
+    final l10n = AppLocalizations.of(context)!;
     final api = Provider.of<ApiService>(context, listen: false);
     final result = await api.register(
       email: _emailController.text.trim(),
@@ -66,17 +85,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
       objetivo: _objetivo,
       nivelAtividade: _nivelAtividade,
       ritmoMeta: _ritmoMeta,
+      telefone: _telefoneController.text.trim(),
     );
 
+
     if (mounted) {
-      setState(() => _isLoading = false);
-      if (result['success'] == true) {
-        // Success! Go to home
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      } else {
-        setState(() => _errorMessage = result['error'] ?? AppLocalizations.of(context)!.fillAllFields);
-      }
+      setState(() {
+        _isLoading = false;
+        if (result['success'] == true) {
+          _isVerifying = true;
+          _errorMessage = null;
+        } else {
+          _errorMessage = result['error'] ?? l10n.fillAllFields;
+        }
+      });
     }
+  }
+
+  Future<void> _verifySms() async {
+    if (_smsController.text.length < 4) return;
+    setState(() => _isLoading = true);
+    
+    final api = Provider.of<ApiService>(context, listen: false);
+    final result = await api.verifySms(_smsController.text);
+    
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+        if (result['success'] == true) {
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          _errorMessage = result['error'] ?? 'Código inválido';
+        }
+      });
+    }
+  }
+
+  Future<void> _resendSms() async {
+     final api = Provider.of<ApiService>(context, listen: false);
+     await api.resendSms();
+     if (mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         const SnackBar(content: Text('Código reenviado!')),
+       );
+     }
   }
 
   void _nextStep() {
@@ -86,11 +138,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
     }
+    if (_currentStep == 1) {
+      if (_telefoneController.text.isEmpty) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.phoneRequired);
+        return;
+      }
+    }
     setState(() {
       _errorMessage = null;
       _currentStep++;
     });
   }
+
 
   void _previousStep() {
     setState(() {
@@ -120,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Row(
                   children: [
-                    if (_currentStep > 0)
+                    if (_currentStep > 0 && !_isVerifying)
                       GestureDetector(
                         onTap: _previousStep,
                         child: Container(
@@ -133,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: const Icon(Icons.arrow_back_ios_new, color: Colors.white70, size: 18),
                         ),
                       )
-                    else
+                    else if (!_isVerifying)
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
                         child: Container(
@@ -147,40 +206,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     const Spacer(),
-                    Text(
-                      AppLocalizations.of(context)!.step(_currentStep + 1, 4),
-                      style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
-                    ),
+                    if (!_isVerifying)
+                      Text(
+                        AppLocalizations.of(context)!.step(_currentStep + 1, 5),
+                        style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
+                      ),
                   ],
                 ),
               ),
 
               // ── Progress bar ────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: Row(
-                  children: List.generate(4, (i) => Expanded(
-                    child: Container(
-                      height: 4,
-                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        color: i <= _currentStep
-                            ? const Color(0xFF6C5CE7)
-                            : const Color(0xFF2A2A4A),
+              if (!_isVerifying)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: Row(
+                    children: List.generate(5, (i) => Expanded(
+                      child: Container(
+                        height: 4,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          color: i <= _currentStep
+                              ? const Color(0xFF6C5CE7)
+                              : const Color(0xFF2A2A4A),
+                        ),
                       ),
-                    ),
-                  )),
+                    )),
+                  ),
                 ),
-              ),
 
               // ── Content ─────────────────────────────────────
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 28),
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: _buildStep(),
+                    duration: const Duration(milliseconds: 400),
+                    child: _isVerifying 
+                      ? _buildVerifyStep()
+                      : (_currentStep == 0
+                        ? _buildStep1()
+                        : (_currentStep == 1
+                            ? _buildStepPhone()
+                            : (_currentStep == 2
+                                ? _buildStep2()
+                                : (_currentStep == 3
+                                    ? _buildStep3()
+                                    : _buildStep4())))),
                   ),
                 ),
               ),
@@ -191,20 +262,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildStep() {
-    switch (_currentStep) {
-      case 0:
-        return _buildStep1();
-      case 1:
-        return _buildStep2();
-      case 2:
-        return _buildStep3();
-      case 3:
-        return _buildStep4();
-      default:
-        return const SizedBox();
-    }
-  }
+
+
+
+
 
   // ── Step 1: Conta ───────────────────────────────────────────────────────
 
@@ -268,7 +329,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  // ── Step Phone: novo ───────────────────────────────────────────────────
+
+  Widget _buildStepPhone() {
+    return Column(
+      key: const ValueKey('stepPhone'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FormSectionHeader(
+          title: AppLocalizations.of(context)!.verifyPhone,
+          subtitle: "Precisamos verificar seu número para segurança da sua conta.",
+        ),
+        const SizedBox(height: 20),
+        if (_errorMessage != null) _buildError(),
+        CustomLabel(label: AppLocalizations.of(context)!.phoneNumber),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _telefoneController,
+          keyboardType: TextInputType.phone,
+          style: GoogleFonts.inter(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context)!.phoneHint,
+            prefixIcon: const Icon(Icons.phone_android_outlined, color: Color(0xFF6C5CE7)),
+          ),
+        ),
+        const SizedBox(height: 40),
+        _buildNextButton(AppLocalizations.of(context)!.continueBtn, _nextStep),
+        const SizedBox(height: 30),
+      ],
+    );
+  }
+
   // ── Step 2: Dados Pessoais ──────────────────────────────────────────────
+
 
   Widget _buildStep2() {
     return Column(
@@ -366,6 +459,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // ── Step 4: Objetivo ────────────────────────────────────────────────────
 
   Widget _buildStep4() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       key: const ValueKey('step4'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,15 +503,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
           currentValue: _nivelAtividade,
           onSelected: (v) => setState(() => _nivelAtividade = v),
         ),
-        const SizedBox(height: 30),
-        CustomLabel(label: l10n.dietPace),
-        const SizedBox(height: 12),
-        _buildRitmoSelector(),
         const SizedBox(height: 35),
         _buildNextButton(
           _isLoading ? l10n.creatingAccount : l10n.createMyAccount,
           _isLoading ? null : _register,
           isPrimary: true,
+        ),
+        const SizedBox(height: 30),
+      ],
+    );
+  }
+
+  // ── Step: Verify SMS ───────────────────────────────────────────────────
+
+  Widget _buildVerifyStep() {
+    return Column(
+      key: const ValueKey('verifySize'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FormSectionHeader(
+          title: "Verificar Telefone",
+          subtitle: "Enviamos um código de 6 dígitos para o seu celular. Digite-o para liberar seu acesso.",
+        ),
+        const SizedBox(height: 30),
+        if (_errorMessage != null) _buildError(),
+        TextFormField(
+          controller: _smsController,
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 8,
+          ),
+          decoration: const InputDecoration(
+            hintText: '000000',
+            hintStyle: TextStyle(color: Colors.white24, letterSpacing: 8),
+          ),
+        ),
+        const SizedBox(height: 35),
+        _buildNextButton(
+          _isLoading ? "Verificando..." : "Confirmar Código",
+          _isLoading ? null : _verifySms,
+          isPrimary: true,
+        ),
+        const SizedBox(height: 25),
+        Center(
+          child: TextButton(
+            onPressed: _isLoading ? null : _resendSms,
+            child: Text(
+              "Não recebeu? Reenviar",
+              style: GoogleFonts.inter(color: const Color(0xFF00D2FF), fontWeight: FontWeight.w600),
+            ),
+          ),
         ),
         const SizedBox(height: 30),
       ],
@@ -432,9 +571,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.all(14),
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFD4556).withOpacity(0.1),
+        color: const Color(0xFFFD4556).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFFD4556).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFFFD4556).withValues(alpha: 0.3)),
       ),
       child: Text(_errorMessage!, style: GoogleFonts.inter(
         color: const Color(0xFFFD4556), fontSize: 13,

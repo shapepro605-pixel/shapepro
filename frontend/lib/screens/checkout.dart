@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import '../services/api.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -13,7 +14,6 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _isLoading = true;
-  List<dynamic> _plans = [];
   final TextEditingController _promoController = TextEditingController();
 
   @override
@@ -24,83 +24,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Future<void> _loadPlans() async {
     final api = Provider.of<ApiService>(context, listen: false);
-    final res = await api.getPaymentPlans();
+    await api.fetchProducts();
     if (mounted) {
-      if (res['success'] == true && res['plans'] != null) {
-        setState(() {
-          _plans = res['plans'];
-          _isLoading = false;
-        });
-      } else {
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.errorLoadingPlans)),
-        );
-      }
+      setState(() => _isLoading = false);
     }
   }
 
-  void _assinar(String planCode, String planName) async {
+  void _assinar(ProductDetails product) async {
     final promoCode = _promoController.text.trim();
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF16162A),
- title: Text(
-          promoCode.isNotEmpty
-              ? AppLocalizations.of(context)!.confirmPlanActivation(promoCode) // reusing param for promo code display title shorthand if needed, but let's be more precise
-              : AppLocalizations.of(context)!.confirmSubscription,
-          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        content: Text(
-          AppLocalizations.of(context)!.confirmPlanActivation(planName),
-          style: GoogleFonts.inter(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white54)),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6C5CE7)),
-            child: Text(AppLocalizations.of(context)!.confirm),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) return;
-
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator(color: Color(0xFF6C5CE7))),
-    );
-
-    final api = Provider.of<ApiService>(context, listen: false);
-    final res = await api.checkout(planCode, promoCode);
-    
-    if (!mounted) return;
-    Navigator.pop(context); // close loading
-
-    if (res['success'] == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${AppLocalizations.of(context)!.congrats} ${res['message']}'),
-          backgroundColor: const Color(0xFF2ED573),
-        ),
-      );
-      Navigator.pop(context); // return to home/navigation
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(res['error'] ?? AppLocalizations.of(context)!.paymentError),
-          backgroundColor: const Color(0xFFFD4556),
-        ),
-      );
+    if (promoCode.isNotEmpty) {
+       // Optional: verify promo code with backend first
     }
+    
+    final api = Provider.of<ApiService>(context, listen: false);
+    await api.buyProduct(product);
   }
 
   @override
@@ -159,7 +96,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                   const SizedBox(height: 32),
                   
-                  ..._plans.map((p) => _buildPlanCard(p)).toList(),
+                  ...Provider.of<ApiService>(context).products.map((p) => _buildProductCard(p)),
 
                   const SizedBox(height: 32),
                   Container(
@@ -205,24 +142,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Row(
+                    Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        AppLocalizations.of(context)!.termsOfUse,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: Colors.white38,
-                          decoration: TextDecoration.underline,
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/privacy'),
+                        child: Text(
+                          AppLocalizations.of(context)!.termsOfUse,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: Colors.white38,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
-                      Text(
-                        AppLocalizations.of(context)!.privacy,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: Colors.white38,
-                          decoration: TextDecoration.underline,
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/privacy'),
+                        child: Text(
+                          AppLocalizations.of(context)!.privacy,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: Colors.white38,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ],
@@ -233,16 +176,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget _buildPlanCard(Map<String, dynamic> plan) {
-    final meses = plan['duration_months'] as int;
-    final preco = (plan['price'] as num).toDouble();
-    final bool isBest = meses == 12;
+  Widget _buildProductCard(ProductDetails product) {
+    final bool isBest = product.id == 'shapepro_anual';
 
     return Stack(
       clipBehavior: Clip.none,
       children: [
         GestureDetector(
-          onTap: () => _assinar(plan['code'], plan['name']),
+          onTap: () => _assinar(product),
           child: Container(
             margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(20),
@@ -261,7 +202,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      plan['name'],
+                      product.title.split('(')[0].trim(),
                       style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
@@ -270,7 +211,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      AppLocalizations.of(context)!.accessDuration(meses, meses == 1 ? AppLocalizations.of(context)!.month : AppLocalizations.of(context)!.months),
+                      product.description,
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         color: Colors.white70,
@@ -282,17 +223,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'R\$ ${preco.toStringAsFixed(2)}',
+                      product.price,
                       style: GoogleFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
                         color: isBest ? const Color(0xFF6C5CE7) : Colors.white,
                       ),
                     ),
-                    if (meses > 1) ...[
+                    if (isBest) ...[
                       const SizedBox(height: 2),
                       Text(
-                        'ou R\$ ${(preco / meses).toStringAsFixed(2)}/mês',
+                        'Melhor valor',
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           color: Colors.white54,
@@ -316,7 +257,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF6C5CE7).withOpacity(0.4),
+                    color: const Color(0xFF6C5CE7).withValues(alpha: 0.4),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   )

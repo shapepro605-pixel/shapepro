@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/api.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +26,55 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.initState();
     _loadData();
     _checkUpdate();
+    _showMedicalDisclaimer();
   }
+
+  Future<void> _showMedicalDisclaimer() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasAccepted = prefs.getBool('medical_disclaimer_accepted') ?? false;
+    
+    if (!hasAccepted && mounted) {
+      // Small delay to let initial UI settle
+      Future.delayed(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color(0xFF16162A),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+            title: Row(
+              children: [
+                const Icon(Icons.medical_services_outlined, color: Color(0xFFFD4556)),
+                const SizedBox(width: 12),
+                Expanded(child: Text(AppLocalizations.of(context)!.medicalDisclaimerTitle, 
+                  style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white))),
+              ],
+            ),
+            content: Text(
+              AppLocalizations.of(context)!.medicalDisclaimerDesc,
+              style: GoogleFonts.inter(color: Colors.white70, fontSize: 13, height: 1.5),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  await prefs.setBool('medical_disclaimer_accepted', true);
+                  if (context.mounted) Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6C5CE7),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: Text(AppLocalizations.of(context)!.accept),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
 
   Future<void> _checkUpdate() async {
     final api = Provider.of<ApiService>(context, listen: false);
@@ -69,10 +120,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               child: const Text('DEPOIS', style: TextStyle(color: Colors.white54)),
             ),
           ElevatedButton(
-            onPressed: () {
-              // Usually launch URL here
-              print('Lançando URL: $url');
-              Navigator.pop(context);
+            onPressed: () async {
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+              if (mounted) Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6C5CE7),
@@ -89,6 +142,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> _loadData() async {
     final api = Provider.of<ApiService>(context, listen: false);
     await api.init();
+    
+    // Check if phone is verified
+    if (api.currentUser != null && api.currentUser!['telefone_verificado'] == false) {
+       if (mounted) {
+         Navigator.pushReplacementNamed(context, '/register'); 
+         // Note: register.dart now handles _isVerifying state if user is logged in
+         return;
+       }
+    }
+
     final result = await api.getProgresso();
     if (mounted) {
       setState(() {
@@ -189,58 +252,65 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(AppLocalizations.of(context)!.hello, style: GoogleFonts.inter(
-                            fontSize: 16, color: Colors.white54,
+                            fontSize: 14, color: Colors.white54,
                           )),
-                          Text(nome, style: GoogleFonts.inter(
-                            fontSize: 26, fontWeight: FontWeight.w800, color: Colors.white,
-                          )),
+                          Text(nome, 
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 22, fontWeight: FontWeight.w800, color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () => Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData()),
-                      icon: const Icon(Icons.edit_outlined, color: Colors.white54, size: 20),
-                      tooltip: AppLocalizations.of(context)!.editProfile,
-                    ),
-                    IconButton(
-                      onPressed: () => Provider.of<ApiService>(context, listen: false).toggleTheme(),
-                      icon: Icon(
-                        Provider.of<ApiService>(context).isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                        color: Provider.of<ApiService>(context).isDarkMode ? Colors.white54 : Colors.black54,
-                        size: 20,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        final api = Provider.of<ApiService>(context, listen: false);
-                        if (api.locale.languageCode == 'pt') {
-                          api.setLocale(const Locale('en', 'US'));
-                        } else {
-                          api.setLocale(const Locale('pt', 'BR'));
-                        }
-                      },
-                      icon: Text(
-                        Provider.of<ApiService>(context).locale.languageCode == 'pt' ? '🇺🇸' : '🇧🇷',
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                    ),
                     const SizedBox(width: 8),
+                    // Action Buttons Grouped
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildHeaderButton(
+                          Provider.of<ApiService>(context).isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                          () => Provider.of<ApiService>(context, listen: false).toggleTheme(),
+                        ),
+                        _buildHeaderButton(
+                          Icons.language,
+                          () {
+                            final api = Provider.of<ApiService>(context, listen: false);
+                            if (api.locale.languageCode == 'pt') {
+                              api.setLocale(const Locale('en', 'US'));
+                            } else {
+                              api.setLocale(const Locale('pt', 'BR'));
+                            }
+                          },
+                          isEmoji: true,
+                          emoji: Provider.of<ApiService>(context).locale.languageCode == 'pt' ? '🇺🇸' : '🇧🇷',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 12),
                     GestureDetector(
                       onTap: _showProfileMenu,
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)],
+                      child: Hero(
+                        tag: 'avatar',
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(color: const Color(0xFF6C5CE7).withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                            ],
                           ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                          child: Text(
-                            nome.isNotEmpty ? nome[0].toUpperCase() : AppLocalizations.of(context)!.atleta[0].toUpperCase(),
-                            style: GoogleFonts.inter(
-                              fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white,
+                          child: Center(
+                            child: Text(
+                              nome.isNotEmpty ? nome[0].toUpperCase() : AppLocalizations.of(context)!.atleta[0].toUpperCase(),
+                              style: GoogleFonts.inter(
+                                fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -248,6 +318,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 28),
 
                 // ── IMC Card ────────────────────────────────────
@@ -269,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(22),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                              color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -307,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
+                                      color: Colors.white.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
@@ -398,14 +469,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildProfileCompletionBanner() {
+  Widget _buildHeaderButton(IconData icon, VoidCallback onTap, {bool isEmoji = false, String? emoji}) {
     return Container(
-      margin: const EdgeInsets.bottom(22),
+      margin: const EdgeInsets.only(left: 8),
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E38),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: onTap,
+        icon: isEmoji 
+          ? Text(emoji!, style: const TextStyle(fontSize: 18))
+          : Icon(icon, color: Colors.white54, size: 18),
+      ),
+    );
+  }
+
+  Widget _buildProfileCompletionBanner() {
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 22),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFF6B6B).withOpacity(0.1),
+        color: const Color(0xFFFF6B6B).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFFF6B6B).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFFFF6B6B).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -450,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(icon, color: color, size: 24),
@@ -540,8 +631,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFF6C5CE7).withOpacity(0.3),
-                    const Color(0xFF6C5CE7).withOpacity(0.0),
+                    const Color(0xFF6C5CE7).withValues(alpha: 0.3),
+                    const Color(0xFF6C5CE7).withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -635,7 +726,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 color: const Color(0xFF16162A),
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: colors[i].withOpacity(0.3)),
+                border: Border.all(color: colors[i].withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -645,7 +736,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: colors[i].withOpacity(0.15),
+                      color: colors[i].withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(day['icon'] as IconData, color: colors[i], size: 20),
@@ -657,7 +748,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white,
                       )),
                       Text(day['nome'] as String, style: GoogleFonts.inter(
-                        fontSize: 10, color: Colors.white45,
+                        fontSize: 10, color: Colors.white54,
                       )),
                     ],
                   ),
@@ -708,19 +799,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ],
                 ),
               );
-              if (confirm == true) {
-                final api = Provider.of<ApiService>(context, listen: false);
-                await api.deleteAccount();
-                await api.logout();
-                if (mounted) Navigator.pushReplacementNamed(context, '/login');
-              }
-            }, color: const Color(0xFFFD4556)),
+                if (confirm == true) {
+                  if (!mounted) return;
+                  final api = Provider.of<ApiService>(context, listen: false);
+                  final r = await api.deleteAccount();
+                  if (r['success'] == true && mounted) {
+                    await api.logout();
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                  } else if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(r['error'] ?? 'Erro ao excluir conta')),
+                    );
+                  }
+                }
+              }, color: const Color(0xFFFD4556)),
             _buildMenuItem(Icons.help_outline, 'Ajuda', () {}),
             const SizedBox(height: 8),
             _buildMenuItem(Icons.logout, 'Sair', () async {
+              if (!mounted) return;
               final api = Provider.of<ApiService>(context, listen: false);
               await api.logout();
-              if (mounted) Navigator.pushReplacementNamed(context, '/login');
+              if (!mounted) return;
+              Navigator.pushReplacementNamed(context, '/login');
             }, color: const Color(0xFFFD4556)),
             const SizedBox(height: 10),
           ],
@@ -749,7 +849,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF0F0F24),
-        border: Border(top: BorderSide(color: const Color(0xFF2A2A4A).withOpacity(0.5))),
+        border: Border(top: BorderSide(color: const Color(0xFF2A2A4A).withValues(alpha: 0.5))),
       ),
       child: BottomNavigationBar(
         currentIndex: _currentIndex,

@@ -315,34 +315,25 @@
             </div>
         </div>
 
-        <div id="modal-unlock-full" class="modal-overlay">
+        <!-- SMS VERIFICATION -->
+        <div id="modal-verify-sms" class="modal-overlay">
             <div class="modal-content" style="text-align:center;">
-                <button class="modal-close" onclick="closeModal('modal-unlock-full')"><span class="material-icons-round">close</span></button>
-                <div style="background:rgba(0,210,255,0.1); width:70px; height:70px; border-radius:35px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-                    <span class="material-icons-round" style="color:var(--secondary); font-size:40px;">bolt</span>
+                <div style="background:rgba(108,92,231,0.1); width:70px; height:70px; border-radius:35px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                    <span class="material-icons-round" style="color:var(--primary); font-size:40px;">sms</span>
                 </div>
-                <h2 style="font-size:24px; font-weight:900; margin-bottom:12px;">Desbloqueio VIP Grátis</h2>
-                <p style="color:var(--text-gray); font-size:14px; margin-bottom:24px;">Cadastre seu cartão agora e ganhe <b>3 dias de ACESSO TOTAL</b> (sem cadeados) para testar tudo. Não cobraremos nada!</p>
+                <h2 style="font-size:24px; font-weight:900; margin-bottom:12px;" data-i18n="sms_verify_title">Verificar Telefone</h2>
+                <p style="color:var(--text-gray); font-size:14px; margin-bottom:24px;" data-i18n="sms_verify_desc">Enviamos um código de 6 dígitos para o seu celular. Digite-o abaixo para liberar seu acesso.</p>
                 
-                <div style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:24px; text-align:left;">
-                    <div style="margin-bottom:12px;">
-                        <label style="font-size:11px; color:var(--text-gray); font-weight:700;">NÚMERO DO CARTÃO</label>
-                        <div style="background:#0A0A1A; border:1px solid var(--border); padding:12px; border-radius:8px; color:#fff; font-family:monospace;">•••• •••• •••• ••••</div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                        <div>
-                            <label style="font-size:11px; color:var(--text-gray); font-weight:700;">VALIDADE</label>
-                            <div style="background:#0A0A1A; border:1px solid var(--border); padding:12px; border-radius:8px; color:#fff;">00/00</div>
-                        </div>
-                        <div>
-                            <label style="font-size:11px; color:var(--text-gray); font-weight:700;">CVV</label>
-                            <div style="background:#0A0A1A; border:1px solid var(--border); padding:12px; border-radius:8px; color:#fff;">•••</div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <input type="number" id="sms-code-input" placeholder="000000" style="text-align:center; font-size:32px; letter-spacing:8px; font-weight:900; border:2px solid var(--border);">
                 </div>
 
-                <button class="btn btn-primary" onclick="registerCard()" style="width:100%; height:60px; font-size:18px;">Ativar meus 3 dias FULL</button>
-                <p style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:16px;"><span class="material-icons-round" style="font-size:12px; vertical-align:middle;">verified_user</span> Transação 100% segura e encriptada.</p>
+                <div id="sms-error" class="error-msg hidden"></div>
+
+                <button class="btn btn-primary" onclick="verifySmsCode()" style="width:100%; height:60px; font-size:18px;" data-i18n="btn_verify">Confirmar Código</button>
+                <p style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:20px;">
+                    <span data-i18n="msg_no_receive">Não recebeu?</span> <span class="link" onclick="resendSmsCode()" data-i18n="btn_resend">Reenviar</span>
+                </p>
             </div>
         </div>
 
@@ -813,6 +804,11 @@ const translations = {
         btn_login_link: "Fazer login",
         lbl_phone: "Telefone",
         placeholder_phone: "(DDD) 99999-9999",
+        sms_verify_title: "Verificar Telefone",
+        sms_verify_desc: "Enviamos um código de 6 dígitos para o seu celular. Digite-o abaixo para liberar seu acesso.",
+        btn_verify: "Confirmar Código",
+        msg_no_receive: "Não recebeu?",
+        btn_resend: "Reenviar",
         checkout_title: "Desbloqueie o Pro",
         checkout_subtitle: "Dietas com ritmo agressivo e treinos avançados",
         lbl_promo_code: "Tem um Reference Code?",
@@ -958,6 +954,11 @@ const translations = {
         btn_login_link: "Login here",
         lbl_phone: "Phone Number",
         placeholder_phone: "+1 (555) 000-0000",
+        sms_verify_title: "Verify Phone",
+        sms_verify_desc: "We sent a 6-digit code to your phone. Enter it below to unlock access.",
+        btn_verify: "Confirm Code",
+        msg_no_receive: "Didn't receive it?",
+        btn_resend: "Resend",
         checkout_title: "Unlock Pro",
         checkout_subtitle: "Aggressive pace diets and advanced workouts",
         lbl_promo_code: "Have a Reference Code?",
@@ -1130,10 +1131,6 @@ function navigateTo(page) {
     
     // Lock premium routes
     if ((page === 'dieta' || page === 'treino') && currentUser && currentUser.plano_assinatura === 'free') {
-        if (!currentUser.cartao_cadastrado && currentUser.is_trial) {
-            openModal('modal-unlock-full');
-            return;
-        }
         showPage('page-checkout');
         loadCheckout();
         return;
@@ -1212,41 +1209,43 @@ async function register() {
         token = r.access_token; currentUser = r.user;
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(currentUser));
-        document.getElementById('bottom-nav').classList.remove('hidden');
-        navigateTo('home');
+        
+        // Show SMS Verification instead of Home
+        openModal('modal-verify-sms');
     } else {
         const el = document.getElementById('register-error');
         el.textContent = r.error || translations[currentLang].register_error;
         el.classList.remove('hidden');
     }
 }
+
+async function verifySmsCode() {
+    const code = document.getElementById('sms-code-input').value;
+    if (!code || code.length < 4) return;
+    
+    const r = await api('POST', '/auth/verify_sms', { code });
+    if (r.success) {
+        currentUser = r.user;
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        closeModal('modal-verify-sms');
+        document.getElementById('bottom-nav').classList.remove('hidden');
+        navigateTo('home');
+    } else {
+        const el = document.getElementById('sms-error');
+        el.textContent = r.error || "Código incorreto";
+        el.classList.remove('hidden');
+    }
+}
+
+async function resendSmsCode() {
+    await api('POST', '/auth/resend_sms', {});
+    alert("Código reenviado!");
+}
 function doLogout() {
     token = null; currentUser = null;
     localStorage.clear();
     document.getElementById('bottom-nav').classList.add('hidden');
     showPage('page-login');
-}
-async function registerCard() {
-    const btn = document.querySelector('#modal-unlock-full .btn-primary');
-    const oldTxt = btn.innerText;
-    btn.innerText = 'Validando...';
-    btn.disabled = true;
-    
-    // Simulate API delay
-    await new Promise(r => setTimeout(r, 1500));
-    
-    const r = await api('POST', '/payment/register-card', {});
-    if (r.success) {
-        currentUser = r.user;
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        closeModal('modal-unlock-full');
-        alert("Sucesso! Agora você tem 3 dias de acesso total grátis.");
-        loadHome();
-    } else {
-        alert(r.error || "Erro ao validar cartão");
-    }
-    btn.innerText = oldTxt;
-    btn.disabled = false;
 }
 
 // ── Theme Toggle ─────────────────────────────────────────────

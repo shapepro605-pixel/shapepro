@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 
 class ExerciseCard extends StatefulWidget {
   final Map<String, dynamic> exercise;
@@ -58,10 +58,8 @@ class _ExerciseCardState extends State<ExerciseCard>
   Widget build(BuildContext context) {
     final ex = widget.exercise;
     final nome = ex['nome'] ?? '';
-    final grupo = ex['grupo_muscular'] ?? '';
     final series = ex['series'] ?? 0;
     final reps = ex['repeticoes'] ?? '';
-    final descanso = ex['descanso'] ?? '';
     final dicas = ex['dicas'] ?? '';
     final equipamento = ex['equipamento'] ?? '';
     final musculos = ex['musculos_trabalhados'] as List<dynamic>? ?? [];
@@ -73,12 +71,12 @@ class _ExerciseCardState extends State<ExerciseCard>
         duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
           color: _isExpanded
-              ? widget.accentColor.withOpacity(0.06)
+              ? widget.accentColor.withValues(alpha: 0.06)
               : const Color(0xFF16162A),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: _isExpanded
-                ? widget.accentColor.withOpacity(0.3)
+                ? widget.accentColor.withValues(alpha: 0.3)
                 : const Color(0xFF2A2A4A),
           ),
         ),
@@ -106,7 +104,7 @@ class _ExerciseCardState extends State<ExerciseCard>
                           : null,
                     ),
                     child: ex['imagem'] == null || ex['imagem'].toString().isEmpty
-                        ? Icon(Icons.fitness_center, color: widget.accentColor.withOpacity(0.5))
+                        ? Icon(Icons.fitness_center, color: widget.accentColor.withValues(alpha: 0.5))
                         : null,
                   ),
                   const SizedBox(width: 14),
@@ -152,7 +150,7 @@ class _ExerciseCardState extends State<ExerciseCard>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Divider(color: const Color(0xFF2A2A4A).withOpacity(0.5), height: 1),
+                    Divider(color: const Color(0xFF2A2A4A).withValues(alpha: 0.5), height: 1),
                     const SizedBox(height: 14),
 
                     // Difficulty
@@ -218,9 +216,9 @@ class _ExerciseCardState extends State<ExerciseCard>
                         width: double.infinity,
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFA502).withOpacity(0.08),
+                          color: const Color(0xFFFFA502).withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFFFA502).withOpacity(0.15)),
+                          border: Border.all(color: const Color(0xFFFFA502).withValues(alpha: 0.15)),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +227,7 @@ class _ExerciseCardState extends State<ExerciseCard>
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(dicas, style: GoogleFonts.inter(
-                                color: const Color(0xFFFFA502).withOpacity(0.9),
+                                color: const Color(0xFFFFA502).withValues(alpha: 0.9),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               )),
@@ -252,7 +250,7 @@ class _ExerciseCardState extends State<ExerciseCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(text, style: GoogleFonts.inter(
@@ -283,9 +281,9 @@ class _ExerciseCardState extends State<ExerciseCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(label, style: GoogleFonts.inter(
         fontSize: 11, fontWeight: FontWeight.w700, color: color,
