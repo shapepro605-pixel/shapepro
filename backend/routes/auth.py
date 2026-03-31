@@ -1,3 +1,4 @@
+import random
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token, create_refresh_token,
@@ -21,7 +22,7 @@ def register():
     if not data:
         return jsonify({'error': t('data_not_provided')}), 400
 
-    required_fields = ['email', 'password', 'nome']
+    required_fields = ['email', 'password', 'nome', 'telefone']
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({'error': t('field_required', field=field)}), 400
@@ -29,6 +30,7 @@ def register():
     email = data['email'].strip().lower()
     password = data['password']
     nome = data['nome'].strip()
+    telefone = data.get('telefone', '').strip()
 
     if len(password) < 6:
         return jsonify({'error': t('password_min_length')}), 400
@@ -40,8 +42,13 @@ def register():
 
     # Create user
     password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    otp_code = str(random.randint(100000, 999999))
+    print(f"\n[ATENÇÃO] 📱 CÓDIGO SMS PARA {telefone}: {otp_code}\n")
+
     new_user = User(
         email=email,
+        telefone=telefone,
+        otp_code=otp_code,
         password_hash=password_hash,
         nome=nome,
         idade=data.get('idade'),
@@ -66,6 +73,44 @@ def register():
         'access_token': access_token,
         'refresh_token': refresh_token,
     }), 201
+
+
+@auth_bp.route('/verify_sms', methods=['POST'])
+@jwt_required()
+def verify_sms():
+    data = request.get_json()
+    if not data or 'code' not in data:
+        return jsonify({'error': 'Código inválido'}), 400
+
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+    
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
+        
+    if user.otp_code == str(data['code']).strip():
+        user.telefone_verificado = True
+        user.otp_code = None
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Telefone verificado com sucesso!', 'user': user.to_dict()}), 200
+    
+    return jsonify({'error': 'Código incorreto'}), 400
+
+
+@auth_bp.route('/resend_sms', methods=['POST'])
+@jwt_required()
+def resend_sms():
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+    
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
+        
+    user.otp_code = str(random.randint(100000, 999999))
+    print(f"\n[REENVIO] 📱 CÓDIGO SMS PARA {user.telefone}: {user.otp_code}\n")
+    db.session.commit()
+    
+    return jsonify({'success': True, 'message': 'Código reenviado'}), 200
 
 
 @auth_bp.route('/login', methods=['POST'])

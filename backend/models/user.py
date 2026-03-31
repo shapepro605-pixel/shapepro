@@ -9,6 +9,7 @@ class User(db.Model, SerialMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    telefone = db.Column(db.String(30), unique=True, nullable=True, index=True)
     password_hash = db.Column(db.String(256), nullable=False)
     nome = db.Column(db.String(100), nullable=False)
     idade = db.Column(db.Integer, nullable=True)
@@ -23,6 +24,8 @@ class User(db.Model, SerialMixin):
     assinatura_ativa = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(db.Boolean, default=False)
+    telefone_verificado = db.Column(db.Boolean, default=False)
+    otp_code = db.Column(db.String(10), nullable=True)
     # Subscription & Trial Logic
     cartao_cadastrado = db.Column(db.Boolean, default=False)
     data_vencimento = db.Column(db.DateTime, nullable=True) # Used for paid plans or advanced trial
@@ -51,6 +54,7 @@ class User(db.Model, SerialMixin):
         d['pontos_xp'] = self.pontos_xp or 0
         d['cartao_cadastrado'] = self.cartao_cadastrado or False
         d['is_trial'] = self.is_in_trial()
+        d['telefone_verificado'] = self.telefone_verificado or False
         return d
 
     def is_in_trial(self):

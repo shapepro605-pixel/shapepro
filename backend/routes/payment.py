@@ -38,6 +38,37 @@ def checkout():
         'user': user.to_dict()
     }), 200
 
+@payment_bp.route('/api/payment/verify', methods=['POST'])
+@jwt_required()
+def verify_purchase():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+
+    data = request.get_json()
+    product_id = data.get('product_id')
+    # server_verification_data = data.get('server_verification_data')
+
+    # PRODUCTION: Integrate with google-api-python-client here
+    # 1. Verify token with Google Play Developer API
+    # 2. Check if purchase is valid
+    # 3. Update user subscription status
+
+    # CURRENT BUILD: Mark user as premium upon receiving a purchase token from Flutter
+    if product_id == 'shapepro_anual':
+        user.plano_assinatura = 'anual'
+    else:
+        user.plano_assinatura = 'mensal'
+        
+    user.assinatura_ativa = True
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'user': user.to_dict()
+    }), 200
+
 @payment_bp.route('/api/payment/register-card', methods=['POST'])
 @jwt_required()
 def register_card():

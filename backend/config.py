@@ -18,7 +18,7 @@ class Config:
     APP_NAME = "ShapePro"
     APP_VERSION = "1.0.0"
     APP_MIN_VERSION = "1.0.0" # Force update if lower
-    APP_UPDATE_URL = "https://shapepro.com.br/download"
+    APP_UPDATE_URL = "https://shapepro-production.up.railway.app"
 
 
 class DevelopmentConfig(Config):
