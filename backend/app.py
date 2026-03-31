@@ -84,6 +84,17 @@ def create_app(config_name=None):
     def internal_error(error):
         return jsonify({'error': 'Erro interno do servidor'}), 500
 
+    # ── Admin Migration ───────────────────────────────────────────────
+    @app.route('/api/admin/migrate', methods=['GET'])
+    def run_migration():
+        """Route to manually trigger DB migration in prod."""
+        from migrate_db import migrate
+        try:
+            migrate()
+            return jsonify({'success': True, 'message': 'Migração concluída com sucesso.'}), 200
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 500
+
     # ── App Configuration ─────────────────────────────────────────────
     @app.route('/api/app/config', methods=['GET'])
     def app_config():
