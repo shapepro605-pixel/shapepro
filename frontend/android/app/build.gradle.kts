@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "com.shapepro.fitness"
     compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    // ndkVersion automatically managed by Flutter
 
     allprojects {
         tasks.withType<JavaCompile> {
@@ -35,9 +35,13 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = 35 // Targeting Android 15 (stable)
+        targetSdk = 34 // Targeting Android 14 (Stable from yesterday)
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86_64"))
+        }
     }
 
     lint {
@@ -67,7 +71,7 @@ android {
 
     packaging {
         jniLibs {
-            useLegacyPackaging = true
+            useLegacyPackaging = false
             keepDebugSymbols.add("**/*.so")
         }
     }
@@ -78,14 +82,9 @@ android {
             signingConfig = signingConfigs.getByName("release")
             
             // Optimization for production
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            
-            ndk {
-                debugSymbolLevel = "none"
-                abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86_64"))
-            }
         }
     }
 }
