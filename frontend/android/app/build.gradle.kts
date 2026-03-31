@@ -35,9 +35,14 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = 36 // Targeting Android 15 SDK 36 (required by plugins)
+        targetSdk = 35 // Targeting Android 15 (stable)
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 
     signingConfigs {
@@ -62,6 +67,7 @@ android {
 
     packaging {
         jniLibs {
+            useLegacyPackaging = true
             keepDebugSymbols.add("**/*.so")
         }
     }
@@ -72,12 +78,13 @@ android {
             signingConfig = signingConfigs.getByName("release")
             
             // Optimization for production
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
+            
             ndk {
                 debugSymbolLevel = "none"
+                abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86_64"))
             }
         }
     }

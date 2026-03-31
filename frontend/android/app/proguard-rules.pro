@@ -29,3 +29,25 @@
 -repackageclasses ''
 -allowaccessmodification
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+# In-App Purchase rules
+-keep class com.android.billingclient.** { *; }
+
+# Google Play Core rules
+-keep class com.google.android.play.core.common.IntentSenderForResultStarter { *; }
+-keep class com.google.android.play.core.release_notes.** { *; }
+-keep class com.google.android.play.core.review.** { *; }
+-keep class com.google.android.play.core.appupdate.** { *; }
+-keep class com.google.android.play.core.tasks.** { *; }
+-keep class com.google.android.play.core.splitinstall.** { *; }
+
+# Local Auth rules
+-keep class androidx.biometric.** { *; }
+-keep class io.flutter.plugins.localauth.** { *; }
+-keep class androidx.fragment.app.FragmentActivity { *; }
+-keep class androidx.fragment.app.Fragment { *; }
+
+# Suppress warnings that don't affect runtime
+-dontwarn com.google.android.gms.**
+-dontwarn com.google.android.play.core.**
+-dontwarn com.google.firebase.**

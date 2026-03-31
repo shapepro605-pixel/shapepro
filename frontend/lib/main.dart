@@ -51,7 +51,13 @@ class ShapeProApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ApiService()..init(),
+      create: (context) {
+        final api = ApiService();
+        api.init().catchError((e) {
+          debugPrint('Error initializing ApiService: $e');
+        });
+        return api;
+      },
       child: Consumer<ApiService>(
         builder: (context, api, child) {
           // Update System UI according to theme
