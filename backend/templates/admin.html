@@ -153,6 +153,7 @@
                                 <tr class="bg-darkBg/80 text-gray-400 text-sm border-b border-darkBorder">
                                     <th class="py-4 px-6 font-medium">ID</th>
                                     <th class="py-4 px-6 font-medium">Usuário</th>
+                                    <th class="py-4 px-6 font-medium">Telefone</th>
                                     <th class="py-4 px-6 font-medium">Objetivo / Ritmo</th>
                                     <th class="py-4 px-6 font-medium">Plano Atual</th>
                                     <th class="py-4 px-6 font-medium">Status (Soft-Delete)</th>
@@ -354,13 +355,23 @@
 
                 const adminIcon = user.is_admin ? '<i class="fas fa-user-shield text-primary ml-2" title="Administrador"></i>' : '';
 
+                // Phone Info & SMS Status
+                const phoneStatus = user.telefone_verificado 
+                    ? '<i class="fas fa-check-circle text-success ml-1" title="Verificado"></i>' 
+                    : '<i class="fas fa-hourglass-half text-orange-400 ml-1" title="Aguardando Verificação"></i>';
+                
+                const phoneDisplay = user.telefone 
+                    ? `<span class="text-white font-mono">${user.telefone}</span> ${phoneStatus}`
+                    : '<span class="text-gray-600 italic">Não informado</span>';
+
                 tr.innerHTML = `
                     <td class="py-4 px-6 font-mono text-gray-500">#${user.id}</td>
                     <td class="py-4 px-6">
                         <p class="font-bold text-white flex items-center">${user.nome} ${adminIcon}</p>
                         <p class="text-gray-500 text-xs">${user.email}</p>
-                        <p class="text-gray-600 text-[10px] mt-1">Registrado em: ${user.data_criacao}</p>
+                        <p class="text-gray-600 text-[10px] mt-1 text-gray-700">Registrado em: ${user.data_criacao}</p>
                     </td>
+                    <td class="py-4 px-6">${phoneDisplay}</td>
                     <td class="py-4 px-6">
                         <span class="text-white">${user.objetivo?.replace('_', ' ').toUpperCase() || 'N/A'}</span><br>
                         <span class="text-xs ${user.cartao_cadastrado ? 'text-success' : 'text-gray-500'} mt-1 block">
