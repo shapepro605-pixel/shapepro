@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -40,9 +39,6 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
-
-  // Initialize Firebase
-  await Firebase.initializeApp();
 
   runApp(ShapeProApp(isLoggedIn: token != null && token.isNotEmpty));
 }

@@ -15,10 +15,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   int _currentStep = 0;
   final TextEditingController _pesoController = TextEditingController();
-  final TextEditingController _smsController = TextEditingController();
   
   bool _isLoading = false;
-  bool _isVerifying = false;
   String? _errorMessage;
 
   // Step 1: Conta
@@ -88,47 +86,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       telefone: _telefoneController.text.trim(),
     );
 
-
     if (mounted) {
       setState(() {
         _isLoading = false;
         if (result['success'] == true) {
-          _isVerifying = true;
           _errorMessage = null;
+          // Redirect to the dedicated VerifySmsScreen after successful registration
+          Navigator.pushNamedAndRemoveUntil(context, '/verify-sms', (route) => false);
         } else {
           _errorMessage = result['error'] ?? l10n.fillAllFields;
         }
       });
     }
-  }
-
-  Future<void> _verifySms() async {
-    if (_smsController.text.length < 4) return;
-    setState(() => _isLoading = true);
-    
-    final api = Provider.of<ApiService>(context, listen: false);
-    final result = await api.verifySms(_smsController.text);
-    
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-        if (result['success'] == true) {
-          Navigator.pushReplacementNamed(context, '/home');
-        } else {
-          _errorMessage = result['error'] ?? 'Código inválido';
-        }
-      });
-    }
-  }
-
-  Future<void> _resendSms() async {
-     final api = Provider.of<ApiService>(context, listen: false);
-     await api.resendSms();
-     if (mounted) {
-       ScaffoldMessenger.of(context).showSnackBar(
-         const SnackBar(content: Text('Código reenviado!')),
-       );
-     }
   }
 
   void _nextStep() {
@@ -179,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Row(
                   children: [
-                    if (_currentStep > 0 && !_isVerifying)
+                    if (_currentStep > 0)
                       GestureDetector(
                         onTap: _previousStep,
                         child: Container(
@@ -192,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: const Icon(Icons.arrow_back_ios_new, color: Colors.white70, size: 18),
                         ),
                       )
-                    else if (!_isVerifying)
+                    else
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
                         child: Container(
@@ -206,34 +175,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     const Spacer(),
-                    if (!_isVerifying)
-                      Text(
-                        AppLocalizations.of(context)!.step(_currentStep + 1, 5),
-                        style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
-                      ),
+                    Text(
+                      AppLocalizations.of(context)!.step(_currentStep + 1, 5),
+                      style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
+                    ),
                   ],
                 ),
               ),
 
               // ── Progress bar ────────────────────────────────
-              if (!_isVerifying)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
-                  child: Row(
-                    children: List.generate(5, (i) => Expanded(
-                      child: Container(
-                        height: 4,
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: i <= _currentStep
-                              ? const Color(0xFF6C5CE7)
-                              : const Color(0xFF2A2A4A),
-                        ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Row(
+                  children: List.generate(5, (i) => Expanded(
+                    child: Container(
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: i <= _currentStep
+                            ? const Color(0xFF6C5CE7)
+                            : const Color(0xFF2A2A4A),
                       ),
-                    )),
-                  ),
+                    ),
+                  )),
                 ),
+              ),
 
               // ── Content ─────────────────────────────────────
               Expanded(
@@ -241,17 +208,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 28),
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 400),
-                    child: _isVerifying 
-                      ? _buildVerifyStep()
-                      : (_currentStep == 0
-                        ? _buildStep1()
-                        : (_currentStep == 1
-                            ? _buildStepPhone()
-                            : (_currentStep == 2
-                                ? _buildStep2()
-                                : (_currentStep == 3
-                                    ? _buildStep3()
-                                    : _buildStep4())))),
+                    child: _currentStep == 0
+                      ? _buildStep1()
+                      : (_currentStep == 1
+                          ? _buildStepPhone()
+                          : (_currentStep == 2
+                              ? _buildStep2()
+                              : (_currentStep == 3
+                                  ? _buildStep3()
+                                  : _buildStep4()))),
                   ),
                 ),
               ),
@@ -288,6 +253,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: _nomeController,
+          textCapitalization: TextCapitalization.words,
           style: GoogleFonts.inter(color: Colors.white),
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.yourName,
@@ -514,55 +480,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // ── Step: Verify SMS ───────────────────────────────────────────────────
-
-  Widget _buildVerifyStep() {
-    return Column(
-      key: const ValueKey('verifySize'),
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FormSectionHeader(
-          title: "Verificar Telefone",
-          subtitle: "Enviamos um código de 6 dígitos para o seu celular. Digite-o para liberar seu acesso.",
-        ),
-        const SizedBox(height: 30),
-        if (_errorMessage != null) _buildError(),
-        TextFormField(
-          controller: _smsController,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 8,
-          ),
-          decoration: const InputDecoration(
-            hintText: '000000',
-            hintStyle: TextStyle(color: Colors.white24, letterSpacing: 8),
-          ),
-        ),
-        const SizedBox(height: 35),
-        _buildNextButton(
-          _isLoading ? "Verificando..." : "Confirmar Código",
-          _isLoading ? null : _verifySms,
-          isPrimary: true,
-        ),
-        const SizedBox(height: 25),
-        Center(
-          child: TextButton(
-            onPressed: _isLoading ? null : _resendSms,
-            child: Text(
-              "Não recebeu? Reenviar",
-              style: GoogleFonts.inter(color: const Color(0xFF00D2FF), fontWeight: FontWeight.w600),
-            ),
-          ),
-        ),
-        const SizedBox(height: 30),
-      ],
-    );
-  }
-
   // Helpers
 
   Widget _buildError() {
@@ -590,8 +507,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary
               ? const Color(0xFF6C5CE7)
-              : const Color(0xFF6C5CE7),
+              : const Color(0xFF6C5CE7).withValues(alpha: 0.8),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: isPrimary ? 4 : 0,
         ),
         child: Text(label, style: GoogleFonts.inter(
           fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white,

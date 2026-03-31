@@ -6,13 +6,12 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.shapepro.fitness"
     compileSdk = 36
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "28.2.13676358"
 
     allprojects {
         tasks.withType<JavaCompile> {
@@ -35,8 +34,8 @@ android {
         applicationId = "com.shapepro.fitness"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion // Required for modern Firebase features and security
-        targetSdk = 34 // Targeting Android 14 (API 34)
+        minSdk = 24
+        targetSdk = 36 // Targeting Android 15 SDK 36 (required by plugins)
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -61,6 +60,12 @@ android {
         }
     }
 
+    packaging {
+        jniLibs {
+            keepDebugSymbols.add("**/*.so")
+        }
+    }
+
     buildTypes {
         release {
             // Signing with the release keys for the official App Store version.
@@ -70,7 +75,17 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            ndk {
+                debugSymbolLevel = "none"
+            }
         }
+    }
+}
+
+tasks.whenTaskAdded {
+    if (name.startsWith("strip") && name.contains("DebugSymbols")) {
+        enabled = false
     }
 }
 

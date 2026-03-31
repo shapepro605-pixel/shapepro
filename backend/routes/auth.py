@@ -1,7 +1,7 @@
 import random
 import secrets
 import string
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import (
     create_access_token, create_refresh_token,
     jwt_required, get_jwt_identity
@@ -10,10 +10,20 @@ from flask_bcrypt import Bcrypt
 from database import db
 from models.user import User
 from services.i18n import t
+from twilio.rest import Client
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 bcrypt = Bcrypt()
 
+def get_twilio_client():
+    """Returns a Twilio client and the service SID if configured."""
+    account_sid = current_app.config.get('TWILIO_ACCOUNT_SID')
+    auth_token = current_app.config.get('TWILIO_AUTH_TOKEN')
+    service_sid = current_app.config.get('TWILIO_VERIFY_SERVICE_SID')
+    
+    if all([account_sid, auth_token, service_sid]):
+        return Client(account_sid, auth_token), service_sid
+    return None, None
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -34,6 +44,11 @@ def register():
     nome = data['nome'].strip()
     telefone = data.get('telefone', '').strip()
 
+    # Formatar telefone para E.164 (ex: +5511999999999) se necessário
+    if telefone and not telefone.startswith('+'):
+        if len(telefone) >= 10:
+            telefone = f"+55{telefone}"
+
     if len(password) < 6:
         return jsonify({'error': t('password_min_length')}), 400
 
@@ -50,13 +65,24 @@ def register():
 
     # Create user
     password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-    otp_code = str(random.randint(100000, 999999))
-    print(f"\n[ATENÇÃO] 📱 CÓDIGO SMS PARA {telefone}: {otp_code}\n")
+    
+    # Twilio SMS Verification
+    twilio_client, service_sid = get_twilio_client()
+    if twilio_client:
+        try:
+            twilio_client.verify.v2.services(service_sid).verifications.create(to=telefone, channel='sms')
+        except Exception as e:
+            print(f"[TWILIO ERROR] {e}")
+            # Fallback will allow account creation but might fail verification
+    else:
+        # Fallback manual logic for testing/non-configured
+        otp_code = str(random.randint(100000, 999999))
+        print(f"\n[MOCK SMS] PARA {telefone}: {otp_code}\n")
 
     new_user = User(
         email=email,
         telefone=telefone,
-        otp_code=otp_code,
+        otp_code=None if twilio_client else otp_code, # Use None for Twilio
         password_hash=password_hash,
         nome=nome,
         idade=data.get('idade'),
@@ -100,12 +126,29 @@ def verify_sms():
     
     if not user:
         return jsonify({'error': 'Usuário não encontrado'}), 404
-        
-    if user.otp_code == str(data['code']).strip():
+    
+    code = str(data['code']).strip()
+    
+    # Twilio Verification
+    twilio_client, service_sid = get_twilio_client()
+    if twilio_client:
+        try:
+            check = twilio_client.verify.v2.services(service_sid).verification_checks.create(to=user.telefone, code=code)
+            if check.status == 'approved':
+                user.telefone_verificado = True
+                db.session.commit()
+                return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
+            else:
+                return jsonify({'error': 'Código incorreto ou expirado'}), 400
+        except Exception as e:
+            return jsonify({'error': f'Erro na verificação: {str(e)}'}), 500
+    
+    # Fallback to local OTP
+    if user.otp_code == code:
         user.telefone_verificado = True
         user.otp_code = None
         db.session.commit()
-        return jsonify({'success': True, 'message': 'Telefone verificado com sucesso!', 'user': user.to_dict()}), 200
+        return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
     
     return jsonify({'error': 'Código incorreto'}), 400
 
@@ -118,11 +161,18 @@ def resend_sms():
     
     if not user:
         return jsonify({'error': 'Usuário não encontrado'}), 404
-        
-    user.otp_code = str(random.randint(100000, 999999))
-    print(f"\n[REENVIO] 📱 CÓDIGO SMS PARA {user.telefone}: {user.otp_code}\n")
-    db.session.commit()
     
+    twilio_client, service_sid = get_twilio_client()
+    if twilio_client:
+        try:
+            twilio_client.verify.v2.services(service_sid).verifications.create(to=user.telefone, channel='sms')
+        except Exception as e:
+            return jsonify({'error': f'Falha ao reenviar: {str(e)}'}), 500
+    else:
+        user.otp_code = str(random.randint(100000, 999999))
+        print(f"\n[REENVIO MOCK] PARA {user.telefone}: {user.otp_code}\n")
+    
+    db.session.commit()
     return jsonify({'success': True, 'message': 'Código reenviado'}), 200
 
 

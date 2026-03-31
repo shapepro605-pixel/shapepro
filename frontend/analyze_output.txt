@@ -1,0 +1,30 @@
+﻿Analyzing frontend...                                           
+
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home.dart:128:42 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home.dart:804:55 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\screens\home.dart:808:55 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home.dart:810:42 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home.dart:823:46 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\screens\login.dart:52:43 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\login.dart:113:31 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\login.dart:114:48 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\login.dart:251:40 - use_build_context_synchronously
+
+flutter : 9 issues 
+found. (ran in 5.9s)
+At line:1 char:1
++ flutter analyze 2>&1 
+| Out-File -FilePath C:\
+Users\mae12\.gemini\anti
+ ...
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified: 
+(9 i    ssues found. 
+(ran in 5    
+.9s):String) [], Remot  
+  eException
+    + 
+FullyQualifiedErrorI    
+d : NativeCommandError
+ 
