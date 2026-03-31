@@ -44,10 +44,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    final api = Provider.of<ApiService>(context, listen: false);
-    if (api.isLoggedIn && api.currentUser?['telefone_verificado'] == false) {
-      _isVerifying = true;
-    }
   }
 
   @override
@@ -59,9 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _alturaController.dispose();
     _pesoController.dispose();
     _telefoneController.dispose();
-    _smsController.dispose();
     super.dispose();
-
   }
 
   Future<void> _register() async {
