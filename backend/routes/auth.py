@@ -1,4 +1,6 @@
 import random
+import secrets
+import string
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token, create_refresh_token,
@@ -40,6 +42,12 @@ def register():
     if existing_user:
         return jsonify({'error': t('email_already_registered')}), 409
 
+    # Check for duplicate phone
+    if telefone:
+        existing_phone = User.query.filter_by(telefone=telefone).first()
+        if existing_phone:
+            return jsonify({'error': t('phone_already_registered')}), 409
+
     # Create user
     password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
     otp_code = str(random.randint(100000, 999999))
@@ -60,8 +68,13 @@ def register():
         ritmo_meta=data.get('ritmo_meta', 'padrao'),
     )
 
-    db.session.add(new_user)
-    db.session.commit()
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"[ERRO] Falha ao criar usuário: {e}")
+        return jsonify({'error': 'Erro ao criar conta. Verifique os dados e tente novamente.'}), 500
 
     # Generate tokens
     access_token = create_access_token(identity=str(new_user.id))
@@ -194,8 +207,8 @@ def delete_profile():
     if not user:
         return jsonify({'error': t('user_not_found')}), 404
 
-    # Manually delete orphans in gamification tables that don't have cascade setup
-    from models.gamification import UserChallenge, UserAchievement, SleepLog, JournalEntry
+    # Manually delete orphans in challenge tables that don't have cascade setup
+    from models.challenge import UserChallenge, UserAchievement, SleepLog, JournalEntry
     try:
         UserChallenge.query.filter_by(user_id=user.id).delete()
         UserAchievement.query.filter_by(user_id=user.id).delete()
@@ -257,3 +270,34 @@ def get_weight_history():
     logs = WeightLog.query.filter_by(user_id=int(user_id)).order_by(WeightLog.data.desc()).limit(30).all()
 
     return jsonify({'logs': [log.to_dict() for log in logs]}), 200
+
+
+@auth_bp.route('/reset_password', methods=['POST'])
+def reset_password():
+    """Reset password for a user account. Generates a temporary password."""
+    data = request.get_json()
+    if not data or 'email' not in data:
+        return jsonify({'error': 'Informe o email cadastrado.'}), 400
+
+    email = data['email'].strip().lower()
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        # For security, don't reveal if email exists or not
+        return jsonify({
+            'success': True,
+            'message': 'Se o email estiver cadastrado, você receberá instruções para redefinir sua senha.'
+        }), 200
+
+    # Generate a temporary password
+    temp_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+    user.password_hash = bcrypt.generate_password_hash(temp_password).decode('utf-8')
+    db.session.commit()
+
+    # In production, send via email service. For now, log it.
+    print(f"\n[RESET SENHA] 📧 Nova senha temporária para {email}: {temp_password}\n")
+
+    return jsonify({
+        'success': True,
+        'message': 'Se o email estiver cadastrado, você receberá instruções para redefinir sua senha.'
+    }), 200

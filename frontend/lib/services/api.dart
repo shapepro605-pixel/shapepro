@@ -259,6 +259,10 @@ class ApiService extends ChangeNotifier {
     return await _request('POST', '/auth/resend_sms');
   }
 
+  Future<Map<String, dynamic>> resetPassword(String email) async {
+    return await _request('POST', '/auth/reset_password', body: {'email': email});
+  }
+
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,

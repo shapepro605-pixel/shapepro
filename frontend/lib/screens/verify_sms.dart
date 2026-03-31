@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
@@ -16,17 +15,18 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
   final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   bool _isLoading = false;
-  bool _isSendingSms = false;
+  bool _isResending = false;
   String? _errorMessage;
-  String? _verificationId;
-  int? _resendToken;
+  String? _successMessage;
 
   @override
   void initState() {
     super.initState();
-    // Send SMS after build to have access to context
+    // Auto-focus the first OTP field after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _sendVerificationSms();
+      if (_focusNodes.isNotEmpty && mounted) {
+        _focusNodes[0].requestFocus();
+      }
     });
   }
 
@@ -41,164 +41,87 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
     super.dispose();
   }
 
-  /// Send SMS via Firebase Phone Auth
-  Future<void> _sendVerificationSms() async {
-    final api = Provider.of<ApiService>(context, listen: false);
-    final phone = api.currentUser?['telefone'] ?? '';
-
-    if (phone.isEmpty) {
-      setState(() => _errorMessage = 'Número de telefone não encontrado.');
-      return;
-    }
-
-    // Ensure phone starts with country code
-    String formattedPhone = phone.trim();
-    if (!formattedPhone.startsWith('+')) {
-      // Assume Brazil if no country code
-      formattedPhone = '+55$formattedPhone';
-    }
-
-    setState(() {
-      _isSendingSms = true;
-      _errorMessage = null;
-    });
-
-    try {
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: formattedPhone,
-        timeout: const Duration(seconds: 60),
-        forceResendingToken: _resendToken,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // Auto-verification (Android only — auto-reads SMS)
-          if (mounted) {
-            setState(() => _isLoading = true);
-            await _completeVerification(credential);
-          }
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          if (mounted) {
-            setState(() {
-              _isSendingSms = false;
-              _errorMessage = _getFirebaseErrorMessage(e.code);
-            });
-          }
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          if (mounted) {
-            setState(() {
-              _verificationId = verificationId;
-              _resendToken = resendToken;
-              _isSendingSms = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.resendCode),
-                backgroundColor: const Color(0xFF2ED573),
-              ),
-            );
-          }
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          if (mounted) {
-            _verificationId = verificationId;
-          }
-        },
-      );
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isSendingSms = false;
-          _errorMessage = 'Erro ao enviar SMS. Tente novamente.';
-        });
-      }
-    }
-  }
-
-  /// Verify the OTP code entered by user
+  /// Verify the OTP code entered by user against the backend
   Future<void> _verify() async {
     String code = _controllers.map((c) => c.text).join();
-    if (code.length < 6) return;
-
-    if (_verificationId == null) {
-      setState(() => _errorMessage = 'Aguarde o envio do SMS...');
+    if (code.length < 6) {
+      setState(() => _errorMessage = 'Digite o código completo de 6 dígitos.');
       return;
     }
 
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _successMessage = null;
     });
 
     try {
-      final credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId!,
-        smsCode: code,
-      );
-      await _completeVerification(credential);
-    } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = _getFirebaseErrorMessage(e.code);
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = AppLocalizations.of(context)!.invalidCode;
-        });
-      }
-    }
-  }
-
-  /// After Firebase verifies, notify our backend
-  Future<void> _completeVerification(PhoneAuthCredential credential) async {
-    try {
-      // Authenticate with Firebase
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // Notify our backend that phone is verified
-      if (!mounted) return;
       final api = Provider.of<ApiService>(context, listen: false);
-      final code = _controllers.map((c) => c.text).join();
-      await api.verifySms(code.isNotEmpty ? code : '000000');
+      final result = await api.verifySms(code);
 
-      if (mounted) {
+      if (!mounted) return;
+
+      if (result['success'] == true) {
         setState(() => _isLoading = false);
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      } else {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = result['error'] ?? AppLocalizations.of(context)!.invalidCode;
+        });
+        // Clear fields on error so user can retry
+        for (var c in _controllers) {
+          c.clear();
+        }
+        _focusNodes[0].requestFocus();
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = AppLocalizations.of(context)!.invalidCode;
+          _errorMessage = 'Erro de conexão. Verifique sua internet.';
         });
       }
     }
   }
 
-  /// Resend SMS
+  /// Resend OTP via backend
   Future<void> _resend() async {
-    for (var c in _controllers) {
-      c.clear();
-    }
-    _focusNodes[0].requestFocus();
-    await _sendVerificationSms();
-  }
+    setState(() {
+      _isResending = true;
+      _errorMessage = null;
+      _successMessage = null;
+    });
 
-  String _getFirebaseErrorMessage(String code) {
-    switch (code) {
-      case 'invalid-phone-number':
-        return 'Número de telefone inválido.';
-      case 'too-many-requests':
-        return 'Muitas tentativas. Aguarde alguns minutos.';
-      case 'invalid-verification-code':
-        return 'Código inválido. Tente novamente.';
-      case 'session-expired':
-        return 'Código expirado. Solicite um novo.';
-      default:
-        return 'Erro na verificação ($code). Tente novamente.';
+    try {
+      final api = Provider.of<ApiService>(context, listen: false);
+      final result = await api.resendSms();
+
+      if (!mounted) return;
+
+      for (var c in _controllers) {
+        c.clear();
+      }
+      _focusNodes[0].requestFocus();
+
+      if (result['success'] == true) {
+        setState(() {
+          _isResending = false;
+          _successMessage = 'Novo código enviado! Verifique seu celular.';
+        });
+      } else {
+        setState(() {
+          _isResending = false;
+          _errorMessage = result['error'] ?? 'Erro ao reenviar código.';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isResending = false;
+          _errorMessage = 'Erro de conexão. Tente novamente.';
+        });
+      }
     }
   }
 
@@ -256,31 +179,10 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
+
                 if (_errorMessage != null) _buildError(),
-                if (_isSendingSms)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(14),
-                    margin: const EdgeInsets.only(bottom: 25),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF6C5CE7).withValues(alpha: 0.3)),
-                    ),
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                          width: 16, height: 16,
-                          child: CircularProgressIndicator(color: Color(0xFF6C5CE7), strokeWidth: 2),
-                        ),
-                        const SizedBox(width: 12),
-                        Text('Enviando SMS...', style: GoogleFonts.inter(
-                          color: const Color(0xFF6C5CE7), fontSize: 13,
-                        )),
-                      ],
-                    ),
-                  ),
-                
+                if (_successMessage != null) _buildSuccess(),
+
                 // ── OTP Fields ──────────────────────────────────────
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -292,14 +194,29 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
                 const SizedBox(height: 24),
                 Center(
                   child: TextButton(
-                    onPressed: (_isLoading || _isSendingSms) ? null : _resend,
-                    child: Text(
-                      AppLocalizations.of(context)!.resendCode,
-                      style: GoogleFonts.inter(
-                        color: const Color(0xFF6C5CE7),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    onPressed: (_isLoading || _isResending) ? null : _resend,
+                    child: _isResending
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(
+                                width: 14, height: 14,
+                                child: CircularProgressIndicator(color: Color(0xFF6C5CE7), strokeWidth: 2),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Reenviando...',
+                                style: GoogleFonts.inter(color: const Color(0xFF6C5CE7), fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            AppLocalizations.of(context)!.resendCode,
+                            style: GoogleFonts.inter(
+                              color: const Color(0xFF6C5CE7),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -363,9 +280,41 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFFD4556).withValues(alpha: 0.3)),
       ),
-      child: Text(_errorMessage!, style: GoogleFonts.inter(
-        color: const Color(0xFFFD4556), fontSize: 13,
-      )),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, color: Color(0xFFFD4556), size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(_errorMessage!, style: GoogleFonts.inter(
+              color: const Color(0xFFFD4556), fontSize: 13,
+            )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuccess() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: 25),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2ED573).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF2ED573).withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle_outline, color: Color(0xFF2ED573), size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(_successMessage!, style: GoogleFonts.inter(
+              color: const Color(0xFF2ED573), fontSize: 13,
+            )),
+          ),
+        ],
+      ),
     );
   }
 
@@ -374,7 +323,7 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: (_isLoading || _verificationId == null) ? null : _verify,
+        onPressed: _isLoading ? null : _verify,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF6C5CE7),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

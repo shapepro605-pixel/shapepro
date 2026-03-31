@@ -9,7 +9,7 @@ class User(db.Model, SerialMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    telefone = db.Column(db.String(30), unique=True, nullable=True, index=True)
+    telefone = db.Column(db.String(30), nullable=True, index=True)
     password_hash = db.Column(db.String(256), nullable=False)
     nome = db.Column(db.String(100), nullable=False)
     idade = db.Column(db.Integer, nullable=True)
