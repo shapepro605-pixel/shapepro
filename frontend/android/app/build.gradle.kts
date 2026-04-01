@@ -11,7 +11,6 @@ plugins {
 android {
     namespace = "com.shapepro.fitness"
     compileSdk = 36
-    ndkVersion = "27.0.12077973"
 
     allprojects {
         tasks.withType<JavaCompile> {
@@ -85,6 +84,14 @@ android {
                 debugSymbolLevel = "SYMBOL_TABLE"
             }
         }
+    }
+}
+
+// FIX for 'Release app bundle failed to strip debug symbols from native libraries'
+// This forces Gradle to skip the stripping task which is failing due to NDK 27+ conflict.
+tasks.whenTaskAdded {
+    if (name.startsWith("strip") && name.endsWith("DebugSymbols")) {
+        enabled = false
     }
 }
 
