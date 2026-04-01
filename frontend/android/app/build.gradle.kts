@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "com.shapepro.fitness"
     compileSdk = 36
-    // ndkVersion automatically managed by Flutter
+    ndkVersion = "27.0.12077973"
 
     allprojects {
         tasks.withType<JavaCompile> {
@@ -38,10 +38,6 @@ android {
         targetSdk = 34 // Targeting Android 14 (Stable from yesterday)
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-
-        ndk {
-            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86_64"))
-        }
     }
 
     lint {
@@ -71,8 +67,7 @@ android {
 
     packaging {
         jniLibs {
-            useLegacyPackaging = false
-            keepDebugSymbols.add("**/*.so")
+            useLegacyPackaging = true
         }
     }
 
@@ -85,13 +80,11 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
-    }
-}
-
-tasks.whenTaskAdded {
-    if (name.startsWith("strip") && name.contains("DebugSymbols")) {
-        enabled = false
     }
 }
 

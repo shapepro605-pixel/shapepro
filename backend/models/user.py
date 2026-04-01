@@ -63,7 +63,7 @@ class User(db.Model, SerialMixin):
             return False
             
         from datetime import datetime
-        trial_days = 3 if self.cartao_cadastrado else 2
+        trial_days = 2
         days_active = (datetime.utcnow() - self.data_criacao).days
         return days_active < trial_days
 

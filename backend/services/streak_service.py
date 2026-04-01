@@ -190,3 +190,35 @@ class StreakService:
                 db.session.add(Challenge(**d))
 
         db.session.commit()
+
+    @staticmethod
+    def update_challenge_progress(user_id, categoria, valor):
+        """
+        Consolidated logic for updating user challenge progress.
+        Replaces redundant logic in tracking.py, journal.py, and plan.py.
+        """
+        from models.challenge import UserChallenge, Challenge
+        from models.user import User
+
+        try:
+            active = UserChallenge.query.join(Challenge).filter(
+                UserChallenge.user_id == int(user_id),
+                UserChallenge.status == 'ativo',
+                Challenge.categoria == categoria
+            ).all()
+
+            for uc in active:
+                uc.progresso = (uc.progresso or 0) + valor
+                if uc.progresso >= uc.challenge.meta_valor:
+                    uc.status = 'concluido'
+                    uc.data_conclusao = datetime.utcnow()
+                    user = User.query.get(int(user_id))
+                    if user:
+                        user.pontos_xp = (user.pontos_xp or 0) + uc.challenge.pontos_xp
+            
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(f"[ShapePro AI] Challenge update error: {e}")
+            db.session.rollback()
+            return False

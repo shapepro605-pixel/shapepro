@@ -4,6 +4,7 @@ from database import db
 from models.user import User, DietPlan, TrainingPlan
 from services.dieta_service import DietaService
 from services.treino_service import TreinoService
+from services.streak_service import StreakService
 from services.i18n import t
 
 plan_bp = Blueprint('plan', __name__, url_prefix='/api/plan')
@@ -301,22 +302,7 @@ def concluir_treino():
     novas_conquistas = StreakService.verificar_conquistas(user)
 
     # Auto-update training challenges
-    try:
-        from models.challenge import UserChallenge, Challenge
-        active = UserChallenge.query.join(Challenge).filter(
-            UserChallenge.user_id == int(user_id),
-            UserChallenge.status == 'ativo',
-            Challenge.categoria == 'treino'
-        ).all()
-        from datetime import datetime
-        for uc in active:
-            uc.progresso = (uc.progresso or 0) + 1
-            if uc.progresso >= uc.challenge.meta_valor:
-                uc.status = 'concluido'
-                uc.data_conclusao = datetime.utcnow()
-                user.pontos_xp = (user.pontos_xp or 0) + uc.challenge.pontos_xp
-    except Exception as e:
-        print(f'[ShapePro] Challenge update error: {e}')
+    StreakService.update_challenge_progress(user_id, 'treino', 1)
 
     db.session.commit()
 

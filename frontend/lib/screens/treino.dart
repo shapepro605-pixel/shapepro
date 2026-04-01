@@ -307,10 +307,6 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
       height: 56,
       child: ElevatedButton(
         onPressed: () async {
-          if (isTrial) {
-            showUpgradeSheet(context);
-            return;
-          }
           await Navigator.push(
             context,
             MaterialPageRoute(

@@ -8,6 +8,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from database import db
 from models.challenge import JournalEntry
+from services.streak_service import StreakService
 
 journal_bp = Blueprint('journal', __name__, url_prefix='/api/journal')
 
@@ -35,7 +36,7 @@ def create_entry():
     db.session.commit()
 
     # Auto-update journal challenges
-    _atualizar_desafio_diario(user_id, 'diario')
+    StreakService.update_challenge_progress(user_id, 'diario', 1)
 
     return jsonify({
         'message': 'Entrada registrada!',
@@ -118,24 +119,3 @@ def delete_entry(entry_id):
     return jsonify({'message': 'Entrada removida!'}), 200
 
 
-def _atualizar_desafio_diario(user_id, categoria):
-    """Auto-update active challenges related to this category."""
-    from models.challenge import UserChallenge, Challenge
-
-    active = UserChallenge.query.join(Challenge).filter(
-        UserChallenge.user_id == user_id,
-        UserChallenge.status == 'ativo',
-        Challenge.categoria == categoria
-    ).all()
-
-    for uc in active:
-        uc.progresso = (uc.progresso or 0) + 1
-        if uc.progresso >= uc.challenge.meta_valor:
-            uc.status = 'concluido'
-            uc.data_conclusao = datetime.utcnow()
-            from models.user import User
-            user = User.query.get(user_id)
-            if user:
-                user.pontos_xp = (user.pontos_xp or 0) + uc.challenge.pontos_xp
-
-    db.session.commit()

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
+import '../widgets/upgrade_sheet.dart';
 
 class WorkoutActiveScreen extends StatefulWidget {
   final Map<String, dynamic> treino;
@@ -26,6 +27,7 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
   int _restSecondsLeft = 0;
   Timer? _restTimer;
   bool _isCompleting = false;
+  bool _isTrial = false;
 
   List<dynamic> get exercicios => widget.treino['exercicios'] as List<dynamic>? ?? [];
 
@@ -33,6 +35,7 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    _isTrial = Provider.of<ApiService>(context, listen: false).currentUser?['is_trial'] ?? false;
   }
 
   @override
@@ -69,6 +72,10 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
 
   void _nextExercise() {
     _endRest();
+    if (_isTrial) {
+      showUpgradeSheet(context);
+      return;
+    }
     if (_currentIndex < exercicios.length - 1) {
       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }

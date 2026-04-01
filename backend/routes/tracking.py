@@ -4,6 +4,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from database import db
 from models.user import User, WeightLog, BodyMetric, WaterLog
 
+from services.streak_service import StreakService
+
 tracking_bp = Blueprint('tracking', __name__, url_prefix='/api/tracking')
 
 @tracking_bp.route('/weight', methods=['POST'])
@@ -76,7 +78,7 @@ def log_water():
     ).scalar() or 0
     
     # Auto-update water challenges
-    _auto_update_challenges(user_id, 'agua', data['ml'])
+    StreakService.update_challenge_progress(user_id, 'agua', data['ml'])
     
     return jsonify({'message': 'Água registrada!', 'total_today': total_today}), 201
 
@@ -134,7 +136,7 @@ def log_sleep():
     db.session.commit()
     
     # Auto-update sleep challenges
-    _auto_update_challenges(user_id, 'sono', duracao)
+    StreakService.update_challenge_progress(user_id, 'sono', duracao)
     
     return jsonify({'message': 'Sono registrado!', 'sleep': log.to_dict()}), 201
 
@@ -194,25 +196,3 @@ def get_sleep_stats():
 
 # ── Helper ─────────────────────────────────────────────────────────────
 
-def _auto_update_challenges(user_id, categoria, valor):
-    """Auto-update active challenges for the given category."""
-    try:
-        from models.challenge import UserChallenge, Challenge
-        active = UserChallenge.query.join(Challenge).filter(
-            UserChallenge.user_id == user_id,
-            UserChallenge.status == 'ativo',
-            Challenge.categoria == categoria
-        ).all()
-        
-        for uc in active:
-            uc.progresso = (uc.progresso or 0) + valor
-            if uc.progresso >= uc.challenge.meta_valor:
-                uc.status = 'concluido'
-                uc.data_conclusao = datetime.utcnow()
-                user = User.query.get(user_id)
-                if user:
-                    user.pontos_xp = (user.pontos_xp or 0) + uc.challenge.pontos_xp
-        
-        db.session.commit()
-    except Exception as e:
-        print(f"[ShapePro] Error updating challenges: {e}")
