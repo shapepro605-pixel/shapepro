@@ -814,6 +814,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 }
               }, color: const Color(0xFFFD4556)),
             _buildMenuItem(Icons.help_outline, 'Ajuda', () {}),
+            _buildMenuItem(Icons.info_outline, 'Sobre o App', () {
+              showLicensePage(
+                context: context,
+                applicationName: 'ShapePro',
+                applicationVersion: '1.0.1+11',
+                applicationIcon: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Image.asset('assets/icon.png', width: 44, height: 44),
+                ),
+              );
+            }),
+            _buildMenuItem(Icons.privacy_tip_outlined, 'Política de Privacidade', () {
+              Navigator.pushNamed(context, '/privacy');
+            }),
             const SizedBox(height: 8),
             _buildMenuItem(Icons.logout, 'Sair', () async {
               if (!mounted) return;

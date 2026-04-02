@@ -367,15 +367,17 @@
             <h2 data-i18n="login_title">Bem-vindo de volta</h2>
             <p class="subtitle" data-i18n="login_subtitle">Entre na sua conta para continuar</p>
             <div id="login-error" class="error-msg hidden"></div>
-            <div class="form-group">
-                <label data-i18n="lbl_email">Email</label>
-                <input type="email" id="login-email" placeholder="seu@email.com">
-            </div>
-            <div class="form-group">
-                <label data-i18n="lbl_password">Senha</label>
-                <input type="password" id="login-password" placeholder="••••••••">
-            </div>
-            <button class="btn btn-primary" onclick="login()" data-i18n="btn_login">Entrar</button>
+            <form id="login-form-wrapper" onsubmit="event.preventDefault(); login();">
+                <div class="form-group">
+                    <label data-i18n="lbl_email">Email</label>
+                    <input type="email" id="login-email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="lbl_password">Senha</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" data-i18n="btn_login">Entrar</button>
+            </form>
             <button class="btn btn-outline" onclick="showPage('page-register')" data-i18n="btn_create_free">Criar conta grátis</button>
         </div>
 
@@ -384,44 +386,45 @@
             <div class="auth-logo"><span class="material-icons-round">person_add</span></div>
             <h2 data-i18n="reg_title">Crie sua conta</h2>
             <p class="subtitle" data-i18n="reg_subtitle">Comece sua jornada de transformação</p>
-            <div id="register-error" class="error-msg hidden"></div>
-            <div class="form-group"><label data-i18n="lbl_name">Nome</label><input id="reg-nome" data-i18n-placeholder="placeholder_name" placeholder="Seu nome"></div>
-            <div class="form-group"><label data-i18n="lbl_email">Email</label><input id="reg-email" type="email" placeholder="seu@email.com"></div>
-            <div class="form-group"><label data-i18n="lbl_password">Senha</label><input id="reg-password" type="password" data-i18n-placeholder="placeholder_min_pass" placeholder="Mínimo 6 caracteres"></div>
-            <div class="form-group"><label data-i18n="lbl_phone">Telefone</label><input id="reg-telefone" type="tel" data-i18n-placeholder="placeholder_phone" placeholder="(DDD) 99999-9999"></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                <div class="form-group"><label data-i18n="lbl_age">Idade</label><input id="reg-idade" type="number" placeholder="25"></div>
-                <div class="form-group"><label data-i18n="lbl_gender">Sexo</label>
-                    <select id="reg-sexo">
-                        <option value="M" data-i18n="opt_male">Masculino</option>
-                        <option value="F" data-i18n="opt_female">Feminino</option>
+            <form id="register-form-wrapper" onsubmit="event.preventDefault(); register();">
+                <div class="form-group"><label data-i18n="lbl_name">Nome</label><input id="reg-nome" data-i18n-placeholder="placeholder_name" placeholder="Seu nome" required></div>
+                <div class="form-group"><label data-i18n="lbl_email">Email</label><input id="reg-email" type="email" placeholder="seu@email.com" required></div>
+                <div class="form-group"><label data-i18n="lbl_password">Senha</label><input id="reg-password" type="password" data-i18n-placeholder="placeholder_min_pass" placeholder="Mínimo 6 caracteres" required></div>
+                <div class="form-group"><label data-i18n="lbl_phone">Telefone</label><input id="reg-telefone" type="tel" data-i18n-placeholder="placeholder_phone" placeholder="(DDD) 99999-9999" required></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="form-group"><label data-i18n="lbl_age">Idade</label><input id="reg-idade" type="number" placeholder="25"></div>
+                    <div class="form-group"><label data-i18n="lbl_gender">Sexo</label>
+                        <select id="reg-sexo">
+                            <option value="M" data-i18n="opt_male">Masculino</option>
+                            <option value="F" data-i18n="opt_female">Feminino</option>
+                        </select></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="form-group"><label data-i18n="lbl_height">Altura (cm)</label><input id="reg-altura" type="number" placeholder="175"></div>
+                    <div class="form-group"><label data-i18n="lbl_weight">Peso (kg)</label><input id="reg-peso" type="number" step="0.1" placeholder="75"></div>
+                </div>
+                <div class="form-group"><label data-i18n="lbl_goal">Objetivo</label>
+                    <select id="reg-objetivo">
+                        <option value="perder_peso" data-i18n="opt_lose_fat">Perder gordura</option>
+                        <option value="manter" data-i18n="opt_maintain">Manter peso</option>
+                        <option value="ganhar_massa" data-i18n="opt_gain_mass">Ganhar massa</option>
                     </select></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                <div class="form-group"><label data-i18n="lbl_height">Altura (cm)</label><input id="reg-altura" type="number" placeholder="175"></div>
-                <div class="form-group"><label data-i18n="lbl_weight">Peso (kg)</label><input id="reg-peso" type="number" step="0.1" placeholder="75"></div>
-            </div>
-            <div class="form-group"><label data-i18n="lbl_goal">Objetivo</label>
-                <select id="reg-objetivo">
-                    <option value="perder_peso" data-i18n="opt_lose_fat">Perder gordura</option>
-                    <option value="manter" data-i18n="opt_maintain">Manter peso</option>
-                    <option value="ganhar_massa" data-i18n="opt_gain_mass">Ganhar massa</option>
-                </select></div>
-            <div class="form-group"><label data-i18n="lbl_activity">Nível de atividade</label>
-                <select id="reg-nivel">
-                    <option value="sedentario" data-i18n="opt_sedentary">Sedentário</option>
-                    <option value="leve" data-i18n="opt_light">Leve (1-2x/sem)</option>
-                    <option value="moderado" data-i18n="opt_moderate" selected>Moderado (3-5x/sem)</option>
-                    <option value="intenso" data-i18n="opt_intense">Intenso (6-7x/sem)</option>
-                    <option value="muito_intenso" data-i18n="opt_athlete">Atleta (2x/dia)</option>
-                </select></div>
-            <div class="form-group"><label data-i18n="lbl_pace">Ritmo da Dieta (Agressividade)</label>
-                <select id="reg-ritmo">
-                    <option value="leve" data-i18n="opt_slow">Leve (Reeducação / Ganho Lento)</option>
-                    <option value="padrao" data-i18n="opt_standard" selected>Padrão (Balanço Ideal)</option>
-                    <option value="agressivo" data-i18n="opt_aggressive">Agressivo (Desafio / Mudança Rápida)</option>
-                </select></div>
-            <button class="btn btn-primary" onclick="register()" data-i18n="btn_create_account">Criar minha conta</button>
+                <div class="form-group"><label data-i18n="lbl_activity">Nível de atividade</label>
+                    <select id="reg-nivel">
+                        <option value="sedentario" data-i18n="opt_sedentary">Sedentário</option>
+                        <option value="leve" data-i18n="opt_light">Leve (1-2x/sem)</option>
+                        <option value="moderado" data-i18n="opt_moderate" selected>Moderado (3-5x/sem)</option>
+                        <option value="intenso" data-i18n="opt_intense">Intenso (6-7x/sem)</option>
+                        <option value="muito_intenso" data-i18n="opt_athlete">Atleta (2x/dia)</option>
+                    </select></div>
+                <div class="form-group"><label data-i18n="lbl_pace">Ritmo da Dieta (Agressividade)</label>
+                    <select id="reg-ritmo">
+                        <option value="leve" data-i18n="opt_slow">Leve (Reeducação / Ganho Lento)</option>
+                        <option value="padrao" data-i18n="opt_standard" selected>Padrão (Balanço Ideal)</option>
+                        <option value="agressivo" data-i18n="opt_aggressive">Agressivo (Desafio / Mudança Rápida)</option>
+                    </select></div>
+                <button type="submit" class="btn btn-primary" data-i18n="btn_create_account">Criar minha conta</button>
+            </form>
             <p style="text-align:center;margin-top:20px;color:rgba(255,255,255,0.4);font-size:13px">
                 <span data-i18n="msg_already_have_account">Já tem conta?</span> <span class="link" onclick="showPage('page-login')" data-i18n="btn_login_link">Fazer login</span></p>
         </div>
