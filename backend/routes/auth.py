@@ -77,11 +77,10 @@ def register():
             print(f"[TWILIO] Enviando SMS para {telefone}...")
             twilio_client.verify.v2.services(service_sid).verifications.create(to=telefone, channel='sms')
         except Exception as e:
-            print(f"[TWILIO ERROR] Erro crítico ao enviar para {telefone}: {str(e)}")
-            # Fallback for development if Twilio fails
-            if current_app.config.get('DEBUG'):
-                otp_code = str(random.randint(100000, 999999))
-                print(f"[DEBUG FALLBACK SMS] {telefone}: {otp_code}")
+            error_msg = str(e)
+            print(f"[TWILIO ERROR] Erro crítico ao enviar para {telefone}: {error_msg}")
+            # Fallback debug mode: Return the error to the response for identification
+            return jsonify({'error': f'Falha no SMS (Twilio): {error_msg}'}), 500
     else:
         # Fallback manual logic for testing/non-configured
         otp_code = str(random.randint(100000, 999999))
@@ -179,7 +178,9 @@ def resend_sms():
         try:
             twilio_client.verify.v2.services(service_sid).verifications.create(to=user.telefone, channel='sms')
         except Exception as e:
-            return jsonify({'error': f'Falha ao reenviar: {str(e)}'}), 500
+            error_msg = str(e)
+            print(f"[TWILIO ERROR] Falha ao reenviar: {error_msg}")
+            return jsonify({'error': f'Erro Twilio: {error_msg}'}), 500
     else:
         user.otp_code = str(random.randint(100000, 999999))
         print(f"\n[REENVIO MOCK] PARA {user.telefone}: {user.otp_code}\n")
