@@ -350,8 +350,23 @@ def reset_password():
     user.password_hash = bcrypt.generate_password_hash(temp_password).decode('utf-8')
     db.session.commit()
 
-    # In production, send via email service. For now, log it.
-    print(f"\n[RESET SENHA] 📧 Nova senha temporária para {email}: {temp_password}\n")
+    # In production, send via email service.
+    from flask_mail import Message
+    from flask import current_app
+    
+    try:
+        msg = Message(
+            subject="Recuperação de Senha - ShapePro",
+            recipients=[email],
+            body=f"Olá,\n\nRecebemos uma solicitação de redefinição de senha para sua conta ShapePro.\n\nSua nova senha temporária é: {temp_password}\n\nRecomendamos que você altere esta senha imediatamente após entrar no aplicativo.\n\nAtenciosamente,\nEquipe ShapePro"
+        )
+        current_app.mail.send(msg)
+        print(f"\n[RESET SENHA] 📧 E-mail enviado para {email}\n")
+    except Exception as e:
+        print(f"\n[RESET SENHA] ❌ Erro ao enviar e-mail para {email}: {str(e)}\n")
+        # Log temp password for emergency even if email fails
+        print(f"[FALLBACK] Senha: {temp_password}")
+
 
     return jsonify({
         'success': True,

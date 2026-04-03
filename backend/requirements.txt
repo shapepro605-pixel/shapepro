@@ -9,3 +9,5 @@ google-generativeai==0.8.0
 marshmallow==3.23.0
 Flask-Limiter==3.8.0
 twilio
+Flask-Mail==0.9.1
+

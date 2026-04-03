@@ -89,7 +89,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigator.pushNamedAndRemoveUntil(context, '/verify_sms', (route) => false);
         } else {
           _errorMessage = result['error'] ?? l10n.fillAllFields;
+          // Show a Snackbar for double visibility
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_errorMessage!),
+              backgroundColor: const Color(0xFFFD4556),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
         }
+
       });
     }
   }
