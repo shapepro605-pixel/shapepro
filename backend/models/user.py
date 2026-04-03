@@ -1,4 +1,6 @@
 from datetime import datetime
+from sqlalchemy.orm import validates
+import re
 from database import db
 from models.base import SerialMixin
 
@@ -37,6 +39,21 @@ class User(db.Model, SerialMixin):
     pontos_xp = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Boolean, default=True)
     data_atualizacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    @validates('telefone')
+    def validate_telefone(self, key, telefone):
+        if not telefone:
+            return None
+            
+        # Normalização forçada: Remover tudo exceto dígitos e o '+'
+        clean_phone = re.sub(r'[^\d+]', '', str(telefone))
+        
+        # Adicionar +55 se for um número brasileiro sem o prefixo (10 ou 11 dígitos)
+        if not clean_phone.startswith('+'):
+            if len(clean_phone) >= 10 and len(clean_phone) <= 11:
+                clean_phone = f"+55{clean_phone}"
+                
+        return clean_phone
 
     # Relationships
     dietas = db.relationship('DietPlan', backref='user', lazy=True, cascade='all, delete-orphan')

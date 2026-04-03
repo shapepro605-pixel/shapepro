@@ -184,3 +184,30 @@ def toggle_promo(target_id):
     promo.is_active = not promo.is_active
     db.session.commit()
     return jsonify({'success': True, 'is_active': promo.is_active}), 200
+
+
+@admin_bp.route('/api/admin/system/reset_test_users', methods=['POST'])
+@jwt_required()
+def reset_test_users():
+    """Delete all non-admin users and their data (cascaded)."""
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    try:
+        # Delete all users except admins
+        users_to_delete = User.query.filter_by(is_admin=False).all()
+        count = len(users_to_delete)
+        
+        for u in users_to_delete:
+            db.session.delete(u)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Sistema resetado. {count} usuários de teste removidos.'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Falha no reset: {str(e)}'}), 500
