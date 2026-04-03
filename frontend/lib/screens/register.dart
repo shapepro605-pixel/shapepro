@@ -83,10 +83,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (mounted) {
       setState(() {
         _isLoading = false;
-        if (result['success'] == true) {
+        if (result['success'] == true || result.containsKey('access_token')) {
           _errorMessage = null;
           // Redirect to the dedicated VerifySmsScreen after successful registration
-          Navigator.pushNamedAndRemoveUntil(context, '/verify-sms', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '/verify_sms', (route) => false);
         } else {
           _errorMessage = result['error'] ?? l10n.fillAllFields;
         }

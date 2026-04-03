@@ -107,11 +107,13 @@ def register():
     refresh_token = create_refresh_token(identity=str(new_user.id))
 
     return jsonify({
+        'success': True,
         'message': t('account_created'),
         'user': new_user.to_dict(),
         'access_token': access_token,
         'refresh_token': refresh_token,
     }), 201
+
 
 
 @auth_bp.route('/verify_sms', methods=['POST'])
@@ -198,11 +200,13 @@ def login():
     refresh_token = create_refresh_token(identity=str(user.id))
 
     return jsonify({
+        'success': True,
         'message': t('login_success'),
         'user': user.to_dict(),
         'access_token': access_token,
         'refresh_token': refresh_token,
     }), 200
+
 
 
 @auth_bp.route('/profile', methods=['GET'])
