@@ -1,0 +1,7 @@
+﻿--------- beginning of main
+04-02 21:53:20.286 16294 16294 I flutter : ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/register
+04-02 21:53:21.416 16294 16294 I flutter : Γ£à API RESPONSE [POST] 201: {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NTE3NzYwMSwianRpIjoiYmI3YWQwMWItY2M1Zi00ZWI3LTg1NWQtNzhkN2NiODc1ZDQ4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3NzUxNzc2MDEsImNzcmYiOiJkMDg5NDg3OS0zM2RiLTRmZTMtYjllOS00MGE2NjFhNDgzZWYiLCJleHAiOjE3NzUxODEyMDF9.dzQS0nTonvQb9xHktW10m5mA4PtNxAD8dKB3kCbdUVQ","message":"Conta criada com sucesso!","refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NTE3NzYwMSwianRpIjoiMDBlZWRjZGMtMThmZi00NjQ0LTkyMmItOWQ5YjhkZTYzZmEzIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiIxIiwibmJmIjoxNzc1MTc3NjAxLCJjc3JmIjoiYmNmYmZiZTktMDVlNi00NzBlLWJjNjYtYjc4NDQwZDg1OTZiIiwiZXhwIjoxNzc3NzY5NjAxfQ.Vd7VeRUOTY4eXQ8m_EZkpRDQITyNaih2yA_b_JN0Rv8","success":true,"user":{"altura":178.0,"assinatura_ativa":false,"cartao_cadastrado":false,"data_atualizacao":"2026-04-03T00:53:21.738778","data_criacao":"2026-04-03T00:53:21.738771","data_vencimento":null,"email":"shape2411@gmail.com","id":1,"idade":37,"imc":21.8,"is
+04-02 21:53:21.416 16294 16294 I flutter : 
+04-02 21:54:29.653 16294 16294 I flutter : ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/resend_sms
+04-02 21:54:30.385 16294 16294 I flutter : Γ£à API RESPONSE [POST] 200: {"message":"C\u00f3digo reenviado","success":true}
+04-02 21:54:30.385 16294 16294 I flutter : 

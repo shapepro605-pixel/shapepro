@@ -112,7 +112,9 @@ def register():
         'user': new_user.to_dict(),
         'access_token': access_token,
         'refresh_token': refresh_token,
+        'debug_otp': None if twilio_client else otp_code # TEMPORÁRIO PARA DEBUG
     }), 201
+
 
 
 
