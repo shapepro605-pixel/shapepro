@@ -10,14 +10,8 @@ plugins {
 
 android {
     namespace = "com.shapepro.fitness"
-    compileSdk = 36
-
-    allprojects {
-        tasks.withType<JavaCompile> {
-            options.compilerArgs.add("-Xlint:all")
-            options.compilerArgs.add("-Xlint:-serial")
-        }
-    }
+    compileSdk = 36 // Required for latest local_auth plugins
+    ndkVersion = "28.2.13676358" // Match ndk.dir in local.properties
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -29,14 +23,16 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.shapepro.fitness"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = 34 // Targeting Android 14 (Stable from yesterday)
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Explicitly defining ABIs to ensure universal compatibility (32-bit and 64-bit)
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
+        }
     }
 
     lint {
@@ -66,32 +62,21 @@ android {
 
     packaging {
         jniLibs {
+            // Essential for Android 15 (16KB page size) on S25
             useLegacyPackaging = true
+        }
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 
     buildTypes {
         release {
-            // Signing with the release keys for the official App Store version.
             signingConfig = signingConfigs.getByName("release")
-            
-            // Optimization for production
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            
-            ndk {
-                debugSymbolLevel = "SYMBOL_TABLE"
-            }
         }
-    }
-}
-
-// FIX for 'Release app bundle failed to strip debug symbols from native libraries'
-// This forces Gradle to skip the stripping task which is failing due to NDK 27+ conflict.
-tasks.whenTaskAdded {
-    if (name.startsWith("strip") && name.endsWith("DebugSymbols")) {
-        enabled = false
     }
 }
 

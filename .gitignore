@@ -40,3 +40,14 @@ android/key.properties
 # OS
 .DS_Store
 Thumbs.db
+
+# Debugging and Logs (Internal Trash)
+crash_log.txt
+crash_log_full.txt
+logs.txt
+logs_full.txt
+run_crash_log.txt
+debug_s25.ps1
+reparar_sdk.ps1
+diagnosticar_e_compilar.ps1
+*.ps1

@@ -163,32 +163,36 @@ class ApiService extends ChangeNotifier {
 
     try {
       final uri = Uri.parse('$baseUrl$endpoint');
+      debugPrint('🚀 API REQUEST [$method]: $uri');
+      
       http.Response response;
 
       switch (method.toUpperCase()) {
         case 'GET':
-          response = await http.get(uri, headers: _headers);
+          response = await http.get(uri, headers: _headers).timeout(const Duration(seconds: 15));
           break;
         case 'POST':
           response = await http.post(
             uri,
             headers: _headers,
             body: body != null ? jsonEncode(body) : null,
-          );
+          ).timeout(const Duration(seconds: 15));
           break;
         case 'PUT':
           response = await http.put(
             uri,
             headers: _headers,
             body: body != null ? jsonEncode(body) : null,
-          );
+          ).timeout(const Duration(seconds: 15));
           break;
         case 'DELETE':
-          response = await http.delete(uri, headers: _headers);
+          response = await http.delete(uri, headers: _headers).timeout(const Duration(seconds: 15));
           break;
         default:
           throw Exception('Método HTTP não suportado: $method');
       }
+
+      debugPrint('✅ API RESPONSE [$method] ${response.statusCode}: ${response.body}');
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -201,14 +205,16 @@ class ApiService extends ChangeNotifier {
         };
       }
     } catch (e) {
+      debugPrint('🔥 API ERROR: $e');
       return {
         'success': false,
-        'error': 'Erro de conexão. Verifique sua internet.',
+        'error': 'Erro de conexão ou tempo de resposta excedido.',
       };
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+
   }
 
   // ── AUTH ──────────────────────────────────────────────────────────────
