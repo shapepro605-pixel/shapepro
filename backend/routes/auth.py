@@ -13,7 +13,7 @@ from services.i18n import t
 from twilio.rest import Client
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
-bcrypt = Bcrypt()
+bcrypt = Bcrypt() # Used as a utility for hashing/checking
 
 def get_twilio_client():
     """Returns a Twilio client and the service SID if configured."""
@@ -45,9 +45,13 @@ def register():
     telefone = data.get('telefone', '').strip()
 
     # Formatar telefone para E.164 (ex: +5511999999999) se necessário
-    if telefone and not telefone.startswith('+'):
-        if len(telefone) >= 10:
-            telefone = f"+55{telefone}"
+    if telefone:
+        # Remover caracteres não numéricos exceto o +
+        import re
+        clean_phone = re.sub(r'[^\d+]', '', telefone)
+        if not clean_phone.startswith('+') and len(clean_phone) >= 10:
+            clean_phone = f"+55{clean_phone}"
+        telefone = clean_phone
 
     if len(password) < 6:
         return jsonify({'error': t('password_min_length')}), 400
@@ -70,10 +74,14 @@ def register():
     twilio_client, service_sid = get_twilio_client()
     if twilio_client:
         try:
+            print(f"[TWILIO] Enviando SMS para {telefone}...")
             twilio_client.verify.v2.services(service_sid).verifications.create(to=telefone, channel='sms')
         except Exception as e:
-            print(f"[TWILIO ERROR] {e}")
-            # Fallback will allow account creation but might fail verification
+            print(f"[TWILIO ERROR] Erro crítico ao enviar para {telefone}: {str(e)}")
+            # Fallback for development if Twilio fails
+            if current_app.config.get('DEBUG'):
+                otp_code = str(random.randint(100000, 999999))
+                print(f"[DEBUG FALLBACK SMS] {telefone}: {otp_code}")
     else:
         # Fallback manual logic for testing/non-configured
         otp_code = str(random.randint(100000, 999999))
@@ -188,10 +196,23 @@ def login():
     if not data or 'email' not in data or 'password' not in data:
         return jsonify({'error': t('email_password_required')}), 400
 
-    email = data['email'].strip().lower()
+    identifier = data['email'].strip().lower() # Pode vir email ou telefone
     password = data['password']
 
-    user = User.query.filter_by(email=email).first()
+    # 1. Tentar busca por Email
+    user = User.query.filter_by(email=identifier).first()
+    
+    # 2. Se não achou, tentar busca por Telefone
+    if not user:
+        phone_id = identifier
+        # Normalizar telefone para a busca (remover espaços, dashes etc)
+        import re
+        phone_id = re.sub(r'[^\d+]', '', phone_id)
+        if not phone_id.startswith('+') and len(phone_id) >= 10:
+            phone_id = f"+55{phone_id}"
+        
+        user = User.query.filter_by(telefone=phone_id).first()
+
     if not user or not bcrypt.check_password_hash(user.password_hash, password):
         return jsonify({'error': t('invalid_email_password')}), 401
 
