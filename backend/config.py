@@ -14,10 +14,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
     
-    # ── Twilio Configuration ──────────────────────────────────────────
-    TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID', '')
-    TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN', '')
-    TWILIO_VERIFY_SERVICE_SID = os.getenv('TWILIO_VERIFY_SERVICE_SID', '')
+    # ── Firebase Configuration ────────────────────────────────────────
+    FIREBASE_CREDENTIALS_JSON = os.getenv('FIREBASE_CREDENTIALS_JSON', '')
     
     # ── Email (Flask-Mail) Configuration ──────────────────────────────
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')

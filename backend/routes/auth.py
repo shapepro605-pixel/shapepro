@@ -10,20 +10,25 @@ from flask_bcrypt import Bcrypt
 from database import db
 from models.user import User
 from services.i18n import t
-from twilio.rest import Client
+from firebase_init import is_firebase_initialized
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 bcrypt = Bcrypt() # Used as a utility for hashing/checking
 
-def get_twilio_client():
-    """Returns a Twilio client and the service SID if configured."""
-    account_sid = current_app.config.get('TWILIO_ACCOUNT_SID')
-    auth_token = current_app.config.get('TWILIO_AUTH_TOKEN')
-    service_sid = current_app.config.get('TWILIO_VERIFY_SERVICE_SID')
-    
-    if all([account_sid, auth_token, service_sid]):
-        return Client(account_sid, auth_token), service_sid
-    return None, None
+
+def _verify_firebase_token(id_token):
+    """Verify a Firebase ID token and return the decoded claims.
+    Returns None if Firebase is not configured or verification fails."""
+    if not is_firebase_initialized():
+        return None
+    try:
+        from firebase_admin import auth as firebase_auth
+        decoded = firebase_auth.verify_id_token(id_token)
+        return decoded
+    except Exception as e:
+        print(f"[FIREBASE] Token verification failed: {e}")
+        return None
+
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -46,7 +51,6 @@ def register():
 
     # Formatar telefone para E.164 (ex: +5511999999999) se necessário
     if telefone:
-        # Remover caracteres não numéricos exceto o +
         import re
         clean_phone = re.sub(r'[^\d+]', '', telefone)
         if not clean_phone.startswith('+') and len(clean_phone) >= 10:
@@ -67,29 +71,13 @@ def register():
         if existing_phone:
             return jsonify({'error': t('phone_already_registered')}), 409
 
-    # Create user
+    # Create user (phone verification will be done via Firebase on the client)
     password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-    
-    # Twilio SMS Verification
-    twilio_client, service_sid = get_twilio_client()
-    if twilio_client:
-        try:
-            print(f"[TWILIO] Enviando SMS para {telefone}...")
-            twilio_client.verify.v2.services(service_sid).verifications.create(to=telefone, channel='sms')
-        except Exception as e:
-            error_msg = str(e)
-            print(f"[TWILIO ERROR] Erro crítico ao enviar para {telefone}: {error_msg}")
-            # Fallback debug mode: Return the error to the response for identification
-            return jsonify({'error': f'Falha no SMS (Twilio): {error_msg}'}), 500
-    else:
-        # Fallback manual logic for testing/non-configured
-        otp_code = str(random.randint(100000, 999999))
-        print(f"\n[MOCK SMS] PARA {telefone}: {otp_code}\n")
 
     new_user = User(
         email=email,
         telefone=telefone,
-        otp_code=None if twilio_client else otp_code, # Use None for Twilio
+        otp_code=None,
         password_hash=password_hash,
         nome=nome,
         idade=data.get('idade'),
@@ -119,7 +107,6 @@ def register():
         'user': new_user.to_dict(),
         'access_token': access_token,
         'refresh_token': refresh_token,
-        'debug_otp': None if twilio_client else otp_code # TEMPORÁRIO PARA DEBUG
     }), 201
 
 
@@ -128,64 +115,70 @@ def register():
 @auth_bp.route('/verify_sms', methods=['POST'])
 @jwt_required()
 def verify_sms():
+    """Verify phone via Firebase ID token.
+    The Flutter app sends the Firebase ID token after successful phone verification.
+    """
     data = request.get_json()
-    if not data or 'code' not in data:
-        return jsonify({'error': 'Código inválido'}), 400
+    if not data:
+        return jsonify({'error': 'Dados não fornecidos'}), 400
 
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
     
     if not user:
         return jsonify({'error': 'Usuário não encontrado'}), 404
-    
-    code = str(data['code']).strip()
-    
-    # Twilio Verification
-    twilio_client, service_sid = get_twilio_client()
-    if twilio_client:
-        try:
-            check = twilio_client.verify.v2.services(service_sid).verification_checks.create(to=user.telefone, code=code)
-            if check.status == 'approved':
+
+    # Firebase token-based verification
+    firebase_id_token = data.get('firebase_id_token')
+    if firebase_id_token and is_firebase_initialized():
+        decoded = _verify_firebase_token(firebase_id_token)
+        if decoded:
+            # Token is valid — extract phone number from Firebase claims
+            firebase_phone = decoded.get('phone_number', '')
+            
+            # Validate that the Firebase-verified phone matches the user's phone
+            if firebase_phone and (firebase_phone == user.telefone or firebase_phone.endswith(user.telefone[-9:])):
                 user.telefone_verificado = True
                 db.session.commit()
                 return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
             else:
-                return jsonify({'error': 'Código incorreto ou expirado'}), 400
-        except Exception as e:
-            return jsonify({'error': f'Erro na verificação: {str(e)}'}), 500
-    
-    # Fallback to local OTP
-    if user.otp_code == code:
+                return jsonify({'error': 'O número verificado não corresponde ao cadastrado.'}), 400
+        else:
+            return jsonify({'error': 'Token Firebase inválido ou expirado.'}), 400
+
+    # Fallback: local OTP code verification (for dev/testing without Firebase)
+    code = str(data.get('code', '')).strip()
+    if code and user.otp_code and user.otp_code == code:
         user.telefone_verificado = True
         user.otp_code = None
         db.session.commit()
         return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
-    
-    return jsonify({'error': 'Código incorreto'}), 400
+
+    return jsonify({'error': 'Verificação falhou. Tente novamente.'}), 400
 
 
 @auth_bp.route('/resend_sms', methods=['POST'])
 @jwt_required()
 def resend_sms():
+    """Resend SMS verification.
+    With Firebase, the resend is handled client-side.
+    This endpoint exists for backward compatibility and fallback.
+    """
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
     
     if not user:
         return jsonify({'error': 'Usuário não encontrado'}), 404
     
-    twilio_client, service_sid = get_twilio_client()
-    if twilio_client:
-        try:
-            twilio_client.verify.v2.services(service_sid).verifications.create(to=user.telefone, channel='sms')
-        except Exception as e:
-            error_msg = str(e)
-            print(f"[TWILIO ERROR] Falha ao reenviar: {error_msg}")
-            return jsonify({'error': f'Erro Twilio: {error_msg}'}), 500
+    if is_firebase_initialized():
+        # Firebase handles resend on the client side
+        return jsonify({'success': True, 'message': 'Use o app para reenviar o código via Firebase.'}), 200
     else:
+        # Fallback: generate local OTP for testing
         user.otp_code = str(random.randint(100000, 999999))
         print(f"\n[REENVIO MOCK] PARA {user.telefone}: {user.otp_code}\n")
+        db.session.commit()
     
-    db.session.commit()
     return jsonify({'success': True, 'message': 'Código reenviado'}), 200
 
 
@@ -206,7 +199,6 @@ def login():
     # 2. Se não achou, tentar busca por Telefone
     if not user:
         phone_id = identifier
-        # Normalizar telefone para a busca (remover espaços, dashes etc)
         import re
         phone_id = re.sub(r'[^\d+]', '', phone_id)
         if not phone_id.startswith('+') and len(phone_id) >= 10:

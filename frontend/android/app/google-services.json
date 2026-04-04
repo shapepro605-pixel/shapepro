@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1078312308182",
+    "project_id": "shapepro-d6801",
+    "storage_bucket": "shapepro-d6801.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078312308182:android:36824f7e1d87cfc3f76877",
+        "android_client_info": {
+          "package_name": "com.shapepro.fitness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaLcs64LeaCkArs3ws2qGWYSwIHW0cOm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

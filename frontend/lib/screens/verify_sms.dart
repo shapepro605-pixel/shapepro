@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 
@@ -16,17 +17,20 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   bool _isLoading = false;
   bool _isResending = false;
+  bool _isSendingCode = true; // Firebase sending the initial code
   String? _errorMessage;
   String? _successMessage;
+
+  // Firebase phone auth state
+  String? _verificationId;
+  int? _resendToken;
 
   @override
   void initState() {
     super.initState();
-    // Auto-focus the first OTP field after build
+    // Start Firebase phone verification after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_focusNodes.isNotEmpty && mounted) {
-        _focusNodes[0].requestFocus();
-      }
+      _startPhoneVerification();
     });
   }
 
@@ -41,38 +45,116 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
     super.dispose();
   }
 
-  /// Verify the OTP code entered by user against the backend
-  Future<void> _verify() async {
-    String code = _controllers.map((c) => c.text).join();
-    if (code.length < 6) {
-      setState(() => _errorMessage = 'Digite o código completo de 6 dígitos.');
+  /// Start Firebase phone verification flow
+  Future<void> _startPhoneVerification() async {
+    final api = Provider.of<ApiService>(context, listen: false);
+    final phone = api.currentUser?['telefone'] ?? '';
+
+    if (phone.isEmpty) {
+      setState(() {
+        _isSendingCode = false;
+        _errorMessage = 'Número de telefone não encontrado. Volte e cadastre novamente.';
+      });
       return;
     }
 
     setState(() {
-      _isLoading = true;
+      _isSendingCode = true;
       _errorMessage = null;
-      _successMessage = null;
     });
 
     try {
-      final api = Provider.of<ApiService>(context, listen: false);
-      final result = await api.verifySms(code);
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
+        forceResendingToken: _resendToken,
+        timeout: const Duration(seconds: 60),
 
-      if (!mounted) return;
+        // Called when Firebase auto-resolves the SMS (Android only)
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          debugPrint('[FIREBASE] Auto-verification completed!');
+          await _signInWithCredential(credential);
+        },
 
-      if (result['success'] == true) {
-        setState(() => _isLoading = false);
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      } else {
+        // Called when verification fails
+        verificationFailed: (FirebaseAuthException e) {
+          debugPrint('[FIREBASE] Verification failed: ${e.message}');
+          if (mounted) {
+            setState(() {
+              _isSendingCode = false;
+              _errorMessage = _translateFirebaseError(e.code);
+            });
+          }
+        },
+
+        // Called when SMS is sent — user must enter code manually
+        codeSent: (String verificationId, int? resendToken) {
+          debugPrint('[FIREBASE] Code sent! verificationId: $verificationId');
+          if (mounted) {
+            setState(() {
+              _verificationId = verificationId;
+              _resendToken = resendToken;
+              _isSendingCode = false;
+              _successMessage = 'Código enviado! Verifique seu celular.';
+            });
+            // Focus first OTP field
+            _focusNodes[0].requestFocus();
+          }
+        },
+
+        // Called on timeout
+        codeAutoRetrievalTimeout: (String verificationId) {
+          if (mounted) {
+            _verificationId = verificationId;
+          }
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isSendingCode = false;
+          _errorMessage = 'Erro ao enviar SMS: ${e.toString()}';
+        });
+      }
+    }
+  }
+
+  /// Sign in with Firebase credential and notify backend
+  Future<void> _signInWithCredential(PhoneAuthCredential credential) async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final idToken = await userCredential.user?.getIdToken();
+
+      if (idToken != null && mounted) {
+        // Send Firebase ID token to our backend for verification
+        final api = Provider.of<ApiService>(context, listen: false);
+        final result = await api.verifyPhoneWithFirebase(idToken);
+
+        if (!mounted) return;
+
+        if (result['success'] == true) {
+          // Sign out from Firebase (we only use it for phone verification, not auth)
+          await FirebaseAuth.instance.signOut();
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        } else {
+          setState(() {
+            _isLoading = false;
+            _errorMessage = result['error'] ?? 'Falha na verificação.';
+          });
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = result['error'] ?? AppLocalizations.of(context)!.invalidCode;
+          _errorMessage = _translateFirebaseError(e.code);
         });
-        // Clear fields on error so user can retry
-        for (var c in _controllers) {
-          c.clear();
-        }
+        // Clear fields
+        for (var c in _controllers) { c.clear(); }
         _focusNodes[0].requestFocus();
       }
     } catch (e) {
@@ -85,7 +167,28 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
     }
   }
 
-  /// Resend OTP via backend
+  /// Verify the OTP code entered by user
+  Future<void> _verify() async {
+    String code = _controllers.map((c) => c.text).join();
+    if (code.length < 6) {
+      setState(() => _errorMessage = 'Digite o código completo de 6 dígitos.');
+      return;
+    }
+
+    if (_verificationId == null) {
+      setState(() => _errorMessage = 'Erro: código de verificação não recebido. Tente reenviar.');
+      return;
+    }
+
+    final credential = PhoneAuthProvider.credential(
+      verificationId: _verificationId!,
+      smsCode: code,
+    );
+
+    await _signInWithCredential(credential);
+  }
+
+  /// Resend OTP via Firebase
   Future<void> _resend() async {
     setState(() {
       _isResending = true;
@@ -93,35 +196,35 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
       _successMessage = null;
     });
 
-    try {
-      final api = Provider.of<ApiService>(context, listen: false);
-      final result = await api.resendSms();
+    // Clear fields
+    for (var c in _controllers) { c.clear(); }
 
-      if (!mounted) return;
+    await _startPhoneVerification();
 
-      for (var c in _controllers) {
-        c.clear();
-      }
-      _focusNodes[0].requestFocus();
+    if (mounted) {
+      setState(() {
+        _isResending = false;
+      });
+    }
+  }
 
-      if (result['success'] == true) {
-        setState(() {
-          _isResending = false;
-          _successMessage = 'Novo código enviado! Verifique seu celular.';
-        });
-      } else {
-        setState(() {
-          _isResending = false;
-          _errorMessage = result['error'] ?? 'Erro ao reenviar código.';
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isResending = false;
-          _errorMessage = 'Erro de conexão. Tente novamente.';
-        });
-      }
+  /// Translate Firebase error codes to user-friendly messages
+  String _translateFirebaseError(String code) {
+    switch (code) {
+      case 'invalid-phone-number':
+        return 'Número de telefone inválido. Verifique o formato.';
+      case 'too-many-requests':
+        return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
+      case 'invalid-verification-code':
+        return 'Código incorreto. Verifique e tente novamente.';
+      case 'session-expired':
+        return 'Sessão expirada. Reenvie o código.';
+      case 'quota-exceeded':
+        return 'Limite de SMS excedido. Tente novamente mais tarde.';
+      case 'network-request-failed':
+        return 'Erro de rede. Verifique sua conexão.';
+      default:
+        return 'Erro na verificação ($code). Tente novamente.';
     }
   }
 
@@ -183,42 +286,59 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
                 if (_errorMessage != null) _buildError(),
                 if (_successMessage != null) _buildSuccess(),
 
-                // ── OTP Fields ──────────────────────────────────────
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(6, (index) => _buildOtpBox(index)),
-                ),
-                
-                const SizedBox(height: 40),
-                _buildVerifyButton(),
-                const SizedBox(height: 24),
-                Center(
-                  child: TextButton(
-                    onPressed: (_isLoading || _isResending) ? null : _resend,
-                    child: _isResending
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(
-                                width: 14, height: 14,
-                                child: CircularProgressIndicator(color: Color(0xFF6C5CE7), strokeWidth: 2),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Reenviando...',
-                                style: GoogleFonts.inter(color: const Color(0xFF6C5CE7), fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          )
-                        : Text(
-                            AppLocalizations.of(context)!.resendCode,
-                            style: GoogleFonts.inter(
-                              color: const Color(0xFF6C5CE7),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                // Show loading while Firebase sends the code
+                if (_isSendingCode)
+                  Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 30),
+                        const CircularProgressIndicator(color: Color(0xFF6C5CE7)),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Enviando código SMS...',
+                          style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  )
+                else ...[
+                  // ── OTP Fields ──────────────────────────────────────
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(6, (index) => _buildOtpBox(index)),
                   ),
-                ),
+                  
+                  const SizedBox(height: 40),
+                  _buildVerifyButton(),
+                  const SizedBox(height: 24),
+                  Center(
+                    child: TextButton(
+                      onPressed: (_isLoading || _isResending) ? null : _resend,
+                      child: _isResending
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(
+                                  width: 14, height: 14,
+                                  child: CircularProgressIndicator(color: Color(0xFF6C5CE7), strokeWidth: 2),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Reenviando...',
+                                  style: GoogleFonts.inter(color: const Color(0xFF6C5CE7), fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              AppLocalizations.of(context)!.resendCode,
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFF6C5CE7),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

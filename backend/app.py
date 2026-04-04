@@ -46,6 +46,10 @@ def create_app(config_name=None):
     # ── Initialize database ───────────────────────────────────────────
     init_db(app)
 
+    # ── Initialize Firebase Admin SDK ─────────────────────────────────
+    from firebase_init import init_firebase
+    init_firebase()
+
     # ── Register blueprints ───────────────────────────────────────────
     from routes.auth import auth_bp
     from routes.plan import plan_bp

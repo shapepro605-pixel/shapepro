@@ -253,6 +253,19 @@ class ApiService extends ChangeNotifier {
     return result;
   }
 
+  /// Verify phone via Firebase ID token.
+  /// After Firebase phone auth succeeds, send the idToken to our backend.
+  Future<Map<String, dynamic>> verifyPhoneWithFirebase(String firebaseIdToken) async {
+    final result = await _request('POST', '/auth/verify_sms', body: {
+      'firebase_id_token': firebaseIdToken,
+    });
+    if (result['success'] == true && result['user'] != null) {
+      await _saveUser(result['user']);
+    }
+    return result;
+  }
+
+  /// Legacy verify SMS (fallback for dev/testing without Firebase)
   Future<Map<String, dynamic>> verifySms(String code) async {
     final result = await _request('POST', '/auth/verify_sms', body: {'code': code});
     if (result['success'] == true && result['user'] != null) {
