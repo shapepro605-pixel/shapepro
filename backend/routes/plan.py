@@ -155,36 +155,26 @@ def get_dieta():
 
     # FREE TRIAL LOGIC (PAYWALL)
     user = User.query.get(int(user_id))
-    is_free = not getattr(user, 'assinatura_ativa', False) or getattr(user, 'plano_assinatura', 'free') == 'free'
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+        
+    limit = user.get_paywall_limit(content_type='dieta')
     
-    # Conditional Trial: 3 days with card, 2 days without
-    has_card = getattr(user, 'cartao_cadastrado', False)
-    trial_days = 3 if has_card else 2
-    
-    from datetime import datetime
-    days_active = (datetime.utcnow() - user.data_criacao).days
-    trial_active = days_active < trial_days
-            
-    if is_free:
-        # Full access during trial IF card is registered. 
-        # Content locks ONLY if trial is expired OR if it's the basic (no-card) trial.
-        if (not trial_active) or (not has_card):
-            if 'refeicoes' in plan_dict['refeicoes'][0]: 
-                # 7-day plan structure
-                for day in plan_dict['refeicoes']:
-                    for i, refeicao in enumerate(day['refeicoes']):
-                        # Basic trial (no card) only shows first 2 meals. Expired trial shows 0.
-                        limit = 2 if trial_active else -1
-                        if i > limit:
-                            refeicao['alimentos'] = []
-                            refeicao['is_locked'] = True
-            else:
-                # 1-day plan structure
-                for i, refeicao in enumerate(plan_dict['refeicoes']):
-                    limit = 2 if trial_active else -1
+    # If not full access (limit 999)
+    if limit < 999:
+        if 'refeicoes' in plan_dict['refeicoes'][0]: 
+            # 7-day plan structure
+            for day in plan_dict['refeicoes']:
+                for i, refeicao in enumerate(day['refeicoes']):
                     if i > limit:
                         refeicao['alimentos'] = []
                         refeicao['is_locked'] = True
+        else:
+            # 1-day plan structure
+            for i, refeicao in enumerate(plan_dict['refeicoes']):
+                if i > limit:
+                    refeicao['alimentos'] = []
+                    refeicao['is_locked'] = True
 
     return jsonify({'dieta': plan_dict}), 200
 
@@ -234,23 +224,13 @@ def get_treinos():
             treinos.append(t_dict)
             
         # FREE TRIAL LOGIC (PAYWALL)
-        is_free = not getattr(user, 'assinatura_ativa', False) or getattr(user, 'plano_assinatura', 'free') == 'free'
-        has_card = getattr(user, 'cartao_cadastrado', False)
-        trial_days = 3 if has_card else 2
+        limit = user.get_paywall_limit(content_type='treino')
         
-        from datetime import datetime
-        days_active = (datetime.utcnow() - user.data_criacao).days
-        trial_active = days_active < trial_days
-                
-        if is_free:
-            # If trial with card, full access (is_locked=False). 
-            # If no card or trial expired, only Treino A (index 0) is available during trial.
-            if (not trial_active) or (not has_card):
-                for i, t_dict in enumerate(treinos):
-                    limit = 0 if trial_active else -1 # One workout during trial. None after.
-                    if i > limit:
-                        t_dict['exercicios'] = []
-                        t_dict['is_locked'] = True
+        if limit < 999:
+            for i, t_dict in enumerate(treinos):
+                if i > limit:
+                    t_dict['exercicios'] = []
+                    t_dict['is_locked'] = True
 
         return jsonify({'treinos': treinos, 'custom': True}), 200
 

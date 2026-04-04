@@ -76,13 +76,35 @@ class User(db.Model, SerialMixin):
 
     def is_in_trial(self):
         """Check if user is currently in their 2 or 3 day trial period."""
-        if self.assinatura_ativa and self.plano_assinatura != 'free':
+        if getattr(self, 'assinatura_ativa', False) and getattr(self, 'plano_assinatura', 'free') != 'free':
             return False
             
         from datetime import datetime
-        trial_days = 2
+        # 3 days with card, 2 days without
+        trial_days = 3 if getattr(self, 'cartao_cadastrado', False) else 2
         days_active = (datetime.utcnow() - self.data_criacao).days
         return days_active < trial_days
+
+    def get_paywall_limit(self, content_type='dieta'):
+        """
+        Returns the index limit for visible items. 
+        Any item with index > limit will be locked.
+        Returns 999 for unlimited access.
+        """
+        # Premium users have full access
+        if getattr(self, 'assinatura_ativa', False) and getattr(self, 'plano_assinatura', 'free') != 'free':
+            return 999
+        
+        # Trial with card has full access
+        if self.is_in_trial() and getattr(self, 'cartao_cadastrado', False):
+            return 999
+            
+        # Basic trial (no card) has limited access
+        if self.is_in_trial():
+            return 2 if content_type == 'dieta' else 0
+            
+        # Trial expired and no subscription = NO access
+        return -1
 
     def calcular_imc(self):
         """Calculate BMI (IMC)."""

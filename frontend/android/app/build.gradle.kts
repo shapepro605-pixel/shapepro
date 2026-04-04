@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.shapepro.fitness"
-    compileSdk = 36 // Required for latest local_auth plugins
+    compileSdk = 35 // Stable version for Android 15
     ndkVersion = "28.2.13676358" // Match ndk.dir in local.properties
 
     compileOptions {
@@ -21,12 +21,13 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xlint:deprecation", "-Xlint:unchecked")
     }
 
     defaultConfig {
         applicationId = "com.shapepro.fitness"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
@@ -74,8 +75,8 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

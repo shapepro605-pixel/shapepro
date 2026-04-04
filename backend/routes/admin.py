@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request, render_template
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from models.user import User
 from models.payment import SubscriptionPlan, PromoCode
+from models.challenge import Challenge
 from database import db
 from routes.auth import bcrypt
 from services.i18n import t
@@ -211,3 +212,82 @@ def reset_test_users():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Falha no reset: {str(e)}'}), 500
+
+
+# --- CHALLENGE MANAGEMENT ---
+
+@admin_bp.route('/api/admin/challenges', methods=['GET'])
+@jwt_required()
+def admin_get_challenges():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+    
+    challenges = Challenge.query.order_by(Challenge.id.desc()).all()
+    return jsonify({'success': True, 'challenges': [c.to_dict() for c in challenges]}), 200
+
+@admin_bp.route('/api/admin/challenges', methods=['POST'])
+@jwt_required()
+def admin_create_or_update_challenge():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    data = request.get_json()
+    challenge_id = data.get('id')
+    
+    if challenge_id:
+        challenge = Challenge.query.get(challenge_id)
+        if not challenge:
+            return jsonify({'error': 'Desafio não encontrado'}), 404
+    else:
+        challenge = Challenge()
+        db.session.add(challenge)
+
+    challenge.nome = data.get('nome', challenge.nome)
+    challenge.descricao = data.get('descricao', challenge.descricao)
+    challenge.tipo = data.get('tipo', challenge.tipo)
+    challenge.categoria = data.get('categoria', challenge.categoria)
+    challenge.icone = data.get('icone', challenge.icone or '🏆')
+    challenge.meta_valor = float(data.get('meta_valor', challenge.meta_valor or 0))
+    challenge.meta_unidade = data.get('meta_unidade', challenge.meta_unidade)
+    challenge.pontos_xp = int(data.get('pontos_xp', challenge.pontos_xp or 50))
+    challenge.dificuldade = data.get('dificuldade', challenge.dificuldade or 'medio')
+    challenge.ativo = data.get('ativo', challenge.ativo if challenge_id else True)
+
+    try:
+        db.session.commit()
+        return jsonify({'success': True, 'challenge': challenge.to_dict()}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@admin_bp.route('/api/admin/challenges/<int:cid>/toggle', methods=['PUT'])
+@jwt_required()
+def admin_toggle_challenge(cid):
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    challenge = Challenge.query.get(cid)
+    if not challenge:
+        return jsonify({'error': 'Desafio não encontrado'}), 404
+
+    challenge.ativo = not challenge.ativo
+    db.session.commit()
+    return jsonify({'success': True, 'ativo': challenge.ativo}), 200
+
+@admin_bp.route('/api/admin/challenges/<int:cid>', methods=['DELETE'])
+@jwt_required()
+def admin_delete_challenge(cid):
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    challenge = Challenge.query.get(cid)
+    if not challenge:
+        return jsonify({'error': 'Desafio não encontrado'}), 404
+
+    db.session.delete(challenge)
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Desafio removido'}), 200

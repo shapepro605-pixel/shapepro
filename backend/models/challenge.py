@@ -44,7 +44,7 @@ class UserChallenge(db.Model, SerialMixin):
     data_conclusao = db.Column(db.DateTime, nullable=True)
 
     # Relationship to user
-    user = db.relationship('User', backref=db.backref('desafios', lazy=True))
+    user = db.relationship('User', backref=db.backref('desafios', lazy=True, cascade='all, delete-orphan'))
 
     def to_dict(self):
         d = super().to_dict()
@@ -83,7 +83,7 @@ class UserAchievement(db.Model, SerialMixin):
     data_desbloqueio = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
-    user = db.relationship('User', backref=db.backref('conquistas', lazy=True))
+    user = db.relationship('User', backref=db.backref('conquistas', lazy=True, cascade='all, delete-orphan'))
     achievement = db.relationship('Achievement', backref='usuarios')
 
     def to_dict(self):
@@ -107,7 +107,7 @@ class SleepLog(db.Model, SerialMixin):
     data = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationship to user
-    user = db.relationship('User', backref=db.backref('registros_sono', lazy=True))
+    user = db.relationship('User', backref=db.backref('registros_sono', lazy=True, cascade='all, delete-orphan'))
 
     # Uses default to_dict from SerialMixin
 
@@ -126,7 +126,7 @@ class JournalEntry(db.Model, SerialMixin):
     data = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationship to user
-    user = db.relationship('User', backref=db.backref('diario', lazy=True))
+    user = db.relationship('User', backref=db.backref('diario', lazy=True, cascade='all, delete-orphan'))
 
     def to_dict(self):
         d = super().to_dict()

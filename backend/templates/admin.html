@@ -78,13 +78,13 @@
                     <i class="fas fa-money-bill-wave"></i>
                     <span>Planos & Cupons</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition" onclick="alert('Funcionalidade em breve!')">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Estatísticas (Em breve)</span>
+                <a href="#" id="menu-challenges" onclick="switchView('challenges')" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition">
+                    <i class="fas fa-trophy"></i>
+                    <span>Desafios Ativos</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition" onclick="alert('Configurações do App (Em breve)')">
-                    <i class="fas fa-cog"></i>
-                    <span>Configurações App</span>
+                <a href="#" id="menu-system" onclick="switchView('system')" class="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition">
+                    <i class="fas fa-server"></i>
+                    <span>Sistema & Reset</span>
                 </a>
             </nav>
             <div class="p-4 border-t border-darkBorder">
@@ -181,28 +181,146 @@
                     <!-- Rendered by JS -->
                 </div>
 
-                <div class="bg-darkCard border border-darkBorder rounded-xl p-6">
-                    <h2 class="text-xl font-bold mb-4"><i class="fas fa-ticket-alt mr-2 text-primary"></i> Gerador de Cupons (Promo Codes)</h2>
-                    <form id="promo-form" class="flex flex-wrap gap-4 mb-6">
-                        <input type="text" id="promo-code" placeholder="CÓDIGO (ex: VIP100)" class="bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white font-bold uppercase" required>
-                        <input type="number" id="promo-perc" placeholder="% Desconto" class="bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white w-32" min="0" max="100">
-                        <label class="flex items-center space-x-2 text-gray-300">
-                            <input type="checkbox" id="promo-free" class="w-5 h-5 rounded border-darkBorder text-primary focus:ring-primary">
-                            <span>100% Gratuito</span>
-                        </label>
-                        <input type="number" id="promo-uses" placeholder="Max Usos" class="bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white w-32" value="1" min="1">
-                        <button type="submit" class="btn-gradient px-6 py-2 rounded-lg font-bold text-white shadow-lg">Criar Cupom</button>
-                    </form>
-                    <div class="overflow-auto border border-darkBorder rounded-lg">
-                        <table class="w-full text-left border-collapse">
-                            <thead><tr class="bg-darkBg/80 text-gray-400 text-xs border-b border-darkBorder">
-                                <th class="py-3 px-4">Código</th><th class="py-3 px-4">Benefício</th><th class="py-3 px-4">Usos</th><th class="py-3 px-4">Status</th><th class="py-3 px-4 text-right">Ação</th>
-                            </tr></thead>
-                            <tbody id="promos-tbody" class="divide-y divide-darkBorder text-sm"></tbody>
-                        </table>
-                    </div>
                 </div>
             </div> <!-- end view plans -->
+
+            <!-- VIEW CHALLENGES -->
+            <div id="view-challenges" class="hidden max-w-7xl mx-auto space-y-8">
+                <header class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-1">Central de Desafios</h1>
+                        <p class="text-gray-400">Engaje usuários com metas diárias, semanais ou mensais.</p>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Form Column -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-darkCard border border-darkBorder rounded-xl p-6 sticky top-8">
+                            <h2 class="text-xl font-bold mb-4" id="challenge-form-title">Criar Novo Desafio</h2>
+                            <form id="challenge-form" class="space-y-4">
+                                <input type="hidden" id="challenge-id">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Nome do Desafio</label>
+                                    <input type="text" id="challenge-nome" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white focus:border-primary outline-none" placeholder="Ex: Hidratação Máxima">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Tipo</label>
+                                        <select id="challenge-tipo" class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white outline-none">
+                                            <option value="diario">Diário</option>
+                                            <option value="semanal">Semanal</option>
+                                            <option value="mensal">Mensal</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Categoria</label>
+                                        <select id="challenge-categoria" class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white outline-none">
+                                            <option value="agua">Água</option>
+                                            <option value="treino">Treino</option>
+                                            <option value="passos">Passos</option>
+                                            <option value="peso">Peso</option>
+                                            <option value="sono">Sono</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Meta</label>
+                                        <input type="number" id="challenge-meta" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white outline-none" placeholder="2000">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Unidade</label>
+                                        <input type="text" id="challenge-unidade" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white outline-none" placeholder="ml">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Pontos XP</label>
+                                        <input type="number" id="challenge-xp" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white outline-none" value="50">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1 uppercase font-bold">Ícone</label>
+                                        <input type="text" id="challenge-icone" class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-2 text-white outline-none" placeholder="🏆">
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full btn-gradient py-3 rounded-lg font-bold shadow-lg">Salvar Desafio</button>
+                                <button type="button" id="challenge-cancel" class="hidden w-full py-2 text-gray-400 hover:text-white transition">Cancelar Edição</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Table Column -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-darkCard border border-darkBorder rounded-xl overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-darkBg/50 text-gray-500 text-xs border-b border-darkBorder uppercase">
+                                    <tr>
+                                        <th class="p-4">Desafio</th>
+                                        <th class="p-4">Meta</th>
+                                        <th class="p-4">XP</th>
+                                        <th class="p-4 text-right">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="challenges-tbody" class="divide-y divide-darkBorder">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end view challenges -->
+
+            <!-- VIEW SYSTEM -->
+            <div id="view-system" class="hidden max-w-4xl mx-auto space-y-12 py-12">
+                <header class="text-center">
+                    <i class="fas fa-tools text-64 text-primary mb-4 opacity-50"></i>
+                    <h1 class="text-4xl font-black mb-2">Manutenção do Sistema</h1>
+                    <p class="text-gray-400">Ferramentas de depuração e limpeza de banco de dados.</p>
+                </header>
+
+                <div class="grid grid-cols-1 gap-8">
+                    <div class="bg-darkCard border-2 border-danger/30 rounded-2xl p-8 space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="p-4 bg-danger/10 rounded-full text-danger">
+                                <i class="fas fa-radiation text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white">Zona de Perigo: Reset Total</h3>
+                                <p class="text-gray-400">Remove todos os usuários, planos de treinos e históricos. <span class="text-danger font-bold">Esta ação é irreversível.</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-darkBg p-6 rounded-xl border border-darkBorder">
+                            <ul class="text-sm text-gray-400 space-y-2">
+                                <li><i class="fas fa-check text-success mr-2"></i> Mantém contas administrativas</li>
+                                <li><i class="fas fa-times text-danger mr-2"></i> Deleta todos os usuários de teste</li>
+                                <li><i class="fas fa-times text-danger mr-2"></i> Limpa tabelas de treino e nutrição</li>
+                                <li><i class="fas fa-times text-danger mr-2"></i> Reseta contadores de cupons</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="systemReset()" class="w-full py-4 bg-danger hover:bg-danger/80 text-white font-black rounded-xl shadow-2xl shadow-danger/20 transition transform hover:scale-[1.01] active:scale-95 flex items-center justify-center space-x-3">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>EXECUTAR LIMPEZA COMPLETA (RESET)</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-darkCard border border-darkBorder rounded-xl p-6">
+                        <h3 class="font-bold text-gray-300 mb-4 uppercase text-xs">Informações do Servidor</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="p-4 bg-darkBg rounded-lg border border-darkBorder">
+                                <p class="text-gray-500">Versão API</p>
+                                <p class="text-white font-mono">v1.2.0-prod</p>
+                            </div>
+                            <div class="p-4 bg-darkBg rounded-lg border border-darkBorder">
+                                <p class="text-gray-500">Ambiente</p>
+                                <p class="text-success font-bold">GOOGLE PLAY CANDIDATE</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end view system -->
 
         </main>
     </div>
@@ -217,17 +335,21 @@
         function switchView(view) {
             document.getElementById('view-dash').classList.toggle('hidden', view !== 'dash');
             document.getElementById('view-plans').classList.toggle('hidden', view !== 'plans');
+            document.getElementById('view-challenges').classList.toggle('hidden', view !== 'challenges');
+            document.getElementById('view-system').classList.toggle('hidden', view !== 'system');
             
-            document.getElementById('menu-dash').className = view === 'dash' 
-                ? "flex items-center space-x-3 px-4 py-3 bg-primary/20 text-primary font-bold rounded-lg border border-primary/30 transition"
-                : "flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition";
-                
-            document.getElementById('menu-plans').className = view === 'plans' 
-                ? "flex items-center space-x-3 px-4 py-3 bg-primary/20 text-primary font-bold rounded-lg border border-primary/30 transition"
-                : "flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition";
+            const menus = ['menu-dash', 'menu-plans', 'menu-challenges', 'menu-system'];
+            menus.forEach(m => {
+                const el = document.getElementById(m);
+                if(!el) return;
+                el.className = m === 'menu-' + view 
+                    ? "flex items-center space-x-3 px-4 py-3 bg-primary/20 text-primary font-bold rounded-lg border border-primary/30 transition"
+                    : "flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-darkBorder hover:text-white rounded-lg transition";
+            });
 
             if(view === 'dash') loadDashboard();
             if(view === 'plans') loadPlansView();
+            if(view === 'challenges') loadChallengesView();
         }
 
         // Router Logic
@@ -502,6 +624,131 @@
                 const res = await fetchWithAuth(API_BASE + '/promos/' + id + '/toggle', {method: 'PUT'});
                 if(res.success) loadPlansView();
             } catch(e){}
+        }
+
+        // --- Challenges Logic ---
+
+        async function loadChallengesView() {
+            try {
+                const data = await fetchWithAuth(API_BASE + '/challenges');
+                if(data.success) renderChallengesTable(data.challenges);
+            } catch(e) {}
+        }
+
+        function renderChallengesTable(challenges) {
+            const tbody = document.getElementById('challenges-tbody');
+            tbody.innerHTML = challenges.map(c => `
+                <tr class="hover:bg-darkBorder/20 transition">
+                    <td class="p-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">${c.icone || '🏆'}</span>
+                            <div>
+                                <p class="font-bold text-white">${c.nome}</p>
+                                <p class="text-xs text-gray-500 uppercase">${c.tipo} | ${c.categoria}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4 font-mono text-primary font-bold">
+                        ${c.meta_valor} ${c.meta_unidade}
+                    </td>
+                    <td class="p-4">
+                        <span class="px-2 py-1 bg-primary/10 text-primary rounded-lg text-xs font-bold">${c.pontos_xp} XP</span>
+                    </td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick='editChallenge(${JSON.stringify(c).replace(/'/g, "&apos;")})' class="p-2 text-gray-400 hover:text-white transition"><i class="fas fa-edit"></i></button>
+                        <button onclick="toggleChallenge(${c.id})" class="p-2 ${c.ativo ? 'text-success' : 'text-gray-600'} hover:opacity-80 transition"><i class="fas ${c.ativo ? 'fa-eye' : 'fa-eye-slash'}"></i></button>
+                        <button onclick="deleteChallenge(${c.id})" class="p-2 text-danger hover:opacity-80 transition"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('challenge-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerText = 'Salvando...';
+
+            const payload = {
+                id: document.getElementById('challenge-id').value || null,
+                nome: document.getElementById('challenge-nome').value,
+                tipo: document.getElementById('challenge-tipo').value,
+                categoria: document.getElementById('challenge-categoria').value,
+                meta_valor: parseFloat(document.getElementById('challenge-meta').value),
+                meta_unidade: document.getElementById('challenge-unidade').value,
+                pontos_xp: parseInt(document.getElementById('challenge-xp').value),
+                icone: document.getElementById('challenge-icone').value,
+                dificuldade: 'medio'
+            };
+
+            try {
+                const res = await fetchWithAuth(API_BASE + '/challenges', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if(res.success) {
+                    resetChallengeForm();
+                    loadChallengesView();
+                } else alert(res.error);
+            } catch(e) {}
+            btn.disabled = false;
+            btn.innerText = 'Salvar Desafio';
+        });
+
+        function editChallenge(c) {
+            document.getElementById('challenge-id').value = c.id;
+            document.getElementById('challenge-nome').value = c.nome;
+            document.getElementById('challenge-tipo').value = c.tipo;
+            document.getElementById('challenge-categoria').value = c.categoria;
+            document.getElementById('challenge-meta').value = c.meta_valor;
+            document.getElementById('challenge-unidade').value = c.meta_unidade;
+            document.getElementById('challenge-xp').value = c.pontos_xp;
+            document.getElementById('challenge-icone').value = c.icone;
+            
+            document.getElementById('challenge-form-title').innerText = "Editar Desafio #" + c.id;
+            document.getElementById('challenge-cancel').classList.remove('hidden');
+        }
+
+        document.getElementById('challenge-cancel').onclick = resetChallengeForm;
+
+        function resetChallengeForm() {
+            document.getElementById('challenge-form').reset();
+            document.getElementById('challenge-id').value = "";
+            document.getElementById('challenge-form-title').innerText = "Criar Novo Desafio";
+            document.getElementById('challenge-cancel').classList.add('hidden');
+        }
+
+        async function toggleChallenge(id) {
+            try {
+                await fetchWithAuth(API_BASE + `/challenges/${id}/toggle`, { method: 'PUT' });
+                loadChallengesView();
+            } catch(e){}
+        }
+
+        async function deleteChallenge(id) {
+            if(!confirm("CURIADO: Excluir um desafio irá removê-lo completamente do banco de dados. Deseja continuar?")) return;
+            try {
+                await fetchWithAuth(API_BASE + `/challenges/${id}`, { method: 'DELETE' });
+                loadChallengesView();
+            } catch(e){}
+        }
+
+        // --- System Logic ---
+
+        async function systemReset() {
+            const code = prompt("Para confirmar o RESET TOTAL, digite 'ESCAPE' abaixo:");
+            if(code !== 'ESCAPE') return;
+
+            try {
+                const res = await fetchWithAuth(API_BASE + '/system/reset_test_users', { method: 'POST' });
+                if(res.success) {
+                    alert("SISTEMA RESETADO COM SUCESSO. " + res.message);
+                    location.reload();
+                } else {
+                    alert("Erro no reset: " + res.error);
+                }
+            } catch(e) { alert("Falha na comunicação com o servidor."); }
         }
 
         // Init

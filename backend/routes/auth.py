@@ -49,13 +49,7 @@ def register():
     nome = data['nome'].strip()
     telefone = data.get('telefone', '').strip()
 
-    # Formatar telefone para E.164 (ex: +5511999999999) se necessário
-    if telefone:
-        import re
-        clean_phone = re.sub(r'[^\d+]', '', telefone)
-        if not clean_phone.startswith('+') and len(clean_phone) >= 10:
-            clean_phone = f"+55{clean_phone}"
-        telefone = clean_phone
+    telefone = data.get('telefone', '').strip()
 
     if len(password) < 6:
         return jsonify({'error': t('password_min_length')}), 400
@@ -198,13 +192,9 @@ def login():
     
     # 2. Se não achou, tentar busca por Telefone
     if not user:
-        phone_id = identifier
-        import re
-        phone_id = re.sub(r'[^\d+]', '', phone_id)
-        if not phone_id.startswith('+') and len(phone_id) >= 10:
-            phone_id = f"+55{phone_id}"
-        
-        user = User.query.filter_by(telefone=phone_id).first()
+        # Use a temporary User instance to benefit from phone normalization logic
+        temp_user = User(telefone=identifier)
+        user = User.query.filter_by(telefone=temp_user.telefone).first()
 
     if not user or not bcrypt.check_password_hash(user.password_hash, password):
         return jsonify({'error': t('invalid_email_password')}), 401
@@ -277,16 +267,9 @@ def delete_profile():
     if not user:
         return jsonify({'error': t('user_not_found')}), 404
 
-    # Manually delete orphans in challenge tables that don't have cascade setup
-    from models.challenge import UserChallenge, UserAchievement, SleepLog, JournalEntry
     try:
-        UserChallenge.query.filter_by(user_id=user.id).delete()
-        UserAchievement.query.filter_by(user_id=user.id).delete()
-        SleepLog.query.filter_by(user_id=user.id).delete()
-        JournalEntry.query.filter_by(user_id=user.id).delete()
-        
         # User deletion will cascade via db.relationship definitions 
-        # for dietas, treinos, weight_logs, water_logs, etc.
+        # for dietas, treinos, weight_logs, water_logs, desafios, conquistas, etc.
         db.session.delete(user)
         db.session.commit()
     except Exception as e:
