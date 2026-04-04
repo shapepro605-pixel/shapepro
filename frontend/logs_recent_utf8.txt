@@ -1,0 +1,534 @@
+﻿--------- beginning of main
+04-04 16:03:41.076  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:41.076  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:41.076  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:41.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:41.179  2208  7185 I sensors-hal: handle_sns_client_event:160, auto_rotation_event_2 event,0, duration,0, ts,2096882758614997, ts_diff,1368633
+04-04 16:03:41.179  2208  7185 I sensors-hal: handle_sns_client_event:165, auto_rotation_debug_2 acc,0.928,3.245,8.992, ar,0, ver,14, pedo,1,e,1,i,3
+--------- beginning of system
+04-04 16:03:41.180  3111  3249 D WindowOrientationListener: onSensorChanged device orientation: 0
+04-04 16:03:41.180  4705  4705 D AppController: AppControlSensorListener.onSensorChanged, Rotation: 0
+04-04 16:03:41.180  3111  3249 V WindowManager: Computed rotation=ROTATION_0 (0) for display id=0 based on lastOrientation=SCREEN_ORIENTATION_PORTRAIT (1) and oldRotation=ROTATION_0 (0), caller=com.android.server.wm.WindowManagerService.updateRotationUnchecked:72 com.android.server.wm.DisplayRotation$OrientationListener.onProposedRotationChanged:328 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.finalizeRotation:26 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.onSensorChanged:392 android.hardware.SystemSensorManager$SensorEventQueue.dispatchSensorEvent:1142 android.os.MessageQueue.nativePollOnce:-2 
+04-04 16:03:41.221  2208  7185 I sensors-hal: handle_sns_client_event:160, auto_rotation_event_2 event,255, duration,0, ts,2096882801250101, ts_diff,669206
+04-04 16:03:41.221  2208  7185 I sensors-hal: handle_sns_client_event:165, auto_rotation_debug_2 acc,0.445,3.173,9.121, ar,0, ver,14, pedo,1,e,1,i,3
+04-04 16:03:41.222  3111  3249 D WindowOrientationListener: onSensorChanged device orientation: -1
+04-04 16:03:41.222  4705  4705 D AppController: AppControlSensorListener.onSensorChanged, Rotation: -1
+04-04 16:03:41.223  3111  3249 V WindowManager: Computed rotation=ROTATION_0 (0) for display id=0 based on lastOrientation=SCREEN_ORIENTATION_PORTRAIT (1) and oldRotation=ROTATION_0 (0), caller=com.android.server.wm.WindowManagerService.updateRotationUnchecked:72 com.android.server.wm.DisplayRotation$OrientationListener.onProposedRotationChanged:328 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.finalizeRotation:26 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.onSensorChanged:392 android.hardware.SystemSensorManager$SensorEventQueue.dispatchSensorEvent:1142 android.os.MessageQueue.nativePollOnce:-2 
+04-04 16:03:41.286  2208  7185 I sensors-hal: handle_sns_client_event:160, auto_rotation_event_2 event,0, duration,0, ts,2096882865959892, ts_diff,1235145
+04-04 16:03:41.286  2208  7185 I sensors-hal: handle_sns_client_event:165, auto_rotation_debug_2 acc,0.890,3.302,9.389, ar,0, ver,14, pedo,1,e,1,i,3
+04-04 16:03:41.287  3111  3249 D WindowOrientationListener: onSensorChanged device orientation: 0
+04-04 16:03:41.287  3111  3249 V WindowManager: Computed rotation=ROTATION_0 (0) for display id=0 based on lastOrientation=SCREEN_ORIENTATION_PORTRAIT (1) and oldRotation=ROTATION_0 (0), caller=com.android.server.wm.WindowManagerService.updateRotationUnchecked:72 com.android.server.wm.DisplayRotation$OrientationListener.onProposedRotationChanged:328 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.finalizeRotation:26 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.onSensorChanged:392 android.hardware.SystemSensorManager$SensorEventQueue.dispatchSensorEvent:1142 android.os.MessageQueue.nativePollOnce:-2 
+04-04 16:03:41.288  4705  4705 D AppController: AppControlSensorListener.onSensorChanged, Rotation: 0
+04-04 16:03:41.350  2208  7185 I sensors-hal: handle_sns_client_event:160, auto_rotation_event_2 event,255, duration,0, ts,2096882930287861, ts_diff,289519
+04-04 16:03:41.350  2208  7185 I sensors-hal: handle_sns_client_event:165, auto_rotation_debug_2 acc,0.479,3.144,9.141, ar,0, ver,14, pedo,1,e,1,i,3
+04-04 16:03:41.351  3111  3249 D WindowOrientationListener: onSensorChanged device orientation: -1
+04-04 16:03:41.351  4705  4705 D AppController: AppControlSensorListener.onSensorChanged, Rotation: -1
+04-04 16:03:41.351  3111  3249 V WindowManager: Computed rotation=ROTATION_0 (0) for display id=0 based on lastOrientation=SCREEN_ORIENTATION_PORTRAIT (1) and oldRotation=ROTATION_0 (0), caller=com.android.server.wm.WindowManagerService.updateRotationUnchecked:72 com.android.server.wm.DisplayRotation$OrientationListener.onProposedRotationChanged:328 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.finalizeRotation:26 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.onSensorChanged:392 android.hardware.SystemSensorManager$SensorEventQueue.dispatchSensorEvent:1142 android.os.MessageQueue.nativePollOnce:-2 
+04-04 16:03:41.440  1161  1161 D io_stats: !@   8,0 r 70386414 2105658500 w 40082997 1068778112 d 5540401 1109569860 f 630616 2988494 iot 11647256 0 th 0 0 0 pt 0 inp 0 0 1004740.077
+04-04 16:03:41.440  1161  1161 D io_stats: !@ Write_top(KB): kworker/u17:1:/(32176) 1084 .gms.persistent:high(8325) 12
+04-04 16:03:42.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329422
+04-04 16:03:42.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:42.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:42.075  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:42.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:42.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:42.075  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:42.075  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:42.632  3111  3304 E Watchdog: !@Sync: 33471 heap(MB): 166 / 211 FD: 2160 [2026-04-04 16:03:42.631]
+04-04 16:03:43.057  2208 11620 I sensors-hal: handle_sns_client_event:379, [0][69423849] accel_sample [ 0.352,  3.092,  9.021] 2096884614231663
+04-04 16:03:43.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329423
+04-04 16:03:43.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:43.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:43.075  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:43.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:43.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:43.075  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:43.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:43.516  4684  5296 D SatelliteController: isInCarrierRoamingNbIotNtn: satellite is disabled
+04-04 16:03:43.634  3111  3686 D ActivityManager: freezing 11435 com.samsung.android.scpm
+04-04 16:03:43.642  3111  4437 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+04-04 16:03:43.645  3111  4437 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+04-04 16:03:43.645  3111  4437 D InetDiagMessage: Destroyed live tcp sockets for uids={5009} in 6ms
+04-04 16:03:43.736  1211 32163 I keystore2: system/security/keystore2/watchdog/src/lib.rs:377 - Watchdog thread idle -> terminating. Have a great day.
+04-04 16:03:43.858 30799 30799 I wpa_supplicant: Heartbeat 1204
+04-04 16:03:43.860  2643  2643 I CNSS    : /sys/wifi/max_chipset_log_size doesn't exist
+04-04 16:03:43.875  3111  4418 E WifiStaIfaceAidlImpl: getCachedScanData failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+04-04 16:03:43.878  3111  6916 D SemWifiUsabilityStatsMonitor: onWifiUsabilityStats - seqNum 220541, isSameBssidAndFreq true
+04-04 16:03:43.879  3111  4520 D InsDataManager: onOutageCountUpdate() - Outage Data: 0, LQ : Y. Outage Triggered: false
+04-04 16:03:43.879  3111  4520 D SemInsManager: {"bssid": "c7c7dce02412","rssi": -63.0,"latency": 0.0,"outage_count": 0,"lq_callback_triggered": true,"outage_log": "Unreliable statistics: -63.0 / 0 / 570 / 497 / 0 || c7c7dce02412: 0.000 / 0.000 / @ || N N / 0 0 / Y 2.0 / Y X 0 / 1004742515 0 || Invalid""Magnetic Sensor Events size": "0""Pressure Sensor Events size": "0"}
+04-04 16:03:44.059  2208 31929 I sensors-hal: handle_sns_std_sensor_event:408, [SSC_LIGHT] P: 32(32),c:0,b:62,m:13,cl:0,l:32,s:20,l0:5568,l1:0,s0:3500,s1:0,acl:1,opr:0.08,f(r):85,u(bl):100,if:85,wi:0,si:0,0(N:0)
+04-04 16:03:44.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329424
+04-04 16:03:44.076  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:44.077  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:44.077  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:44.077  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:44.077  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:44.077  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:44.077  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:44.243  8803 32671 D Volley  : [600] ahxk.a: HTTP response for request=<[ ] https://play-fe.googleapis.com/fdfe/integrity 0x4be64f9b NORMAL 49> [lifetime=10581], [size=1411], [rc=200], [retryCount=0]
+04-04 16:03:44.245  8803  8908 I Finsky  : [545] requestIntegrityToken() finished for com.shapepro.fitness.
+04-04 16:03:44.249 29679 32154 W System  : Ignoring header X-Firebase-Locale because its value was null.
+04-04 16:03:44.270  3111  7609 W ParceledListSlice: Element #435 is 16460 bytes.
+04-04 16:03:44.273  3111  4827 W ParceledListSlice: Element #517 is 35720 bytes.
+04-04 16:03:44.273  3111  4827 W ParceledListSlice: Element #526 is 17128 bytes.
+04-04 16:03:45.034  3111  4517 I SemWifiServiceDetector: Service det. resumed: T / T / 16687
+04-04 16:03:45.058  2208 11620 I sensors-hal: handle_sns_client_event:379, [0][69424083] accel_sample [ 0.438,  3.154,  9.114] 2096886621682392
+04-04 16:03:45.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329425
+04-04 16:03:45.074  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:45.074  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:45.074  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:45.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:45.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:45.075  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:45.075  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:45.175 29679 29679 I flutter : [FIREBASE] Verification failed: We have blocked all requests from this device due to unusual activity. Try again later.
+04-04 16:03:45.303  2236  2524 I SDM     : DisplayBase::CommitThread: Received idle timeout, panel: cmd, timeout: 70000 us
+04-04 16:03:45.442  1161  1161 D io_stats: !@   8,0 r 70386418 2105658548 w 40083021 1068778500 d 5540401 1109569860 f 630617 2988497 iot 11647260 0 th 0 0 0 pt 0 inp 0 0 1004744.080
+04-04 16:03:45.443  1161  1161 D io_stats: !@ Read_top(KB): android.vending:high(8803) 48
+04-04 16:03:45.443  1161  1161 D io_stats: !@ Write_top(KB): kworker/u17:1:/(32176) 328 android.vending:high(8803) 24 soft.appmanager:low(3322) 16
+04-04 16:03:45.977  2208  7185 I sensors-hal: handle_sns_std_sensor_event:127, [SSC_LIGHT] A: 33(33),c:0,b:62,m:13,cl:0,l:33,s:20,l0:5632,l1:0,s0:3500,s1:0,acl:1,opr:0.11,f(r):85,u(bl):100,if:85,wi:0,si:0,0(N:0)
+04-04 16:03:46.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329426
+04-04 16:03:46.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:46.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:46.075  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:46.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:46.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:46.075  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:46.075  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:46.583  2208  7185 I sensors-hal: handle_sns_client_event:160, auto_rotation_event_2 event,0, duration,0, ts,2096888163062444, ts_diff,495611
+04-04 16:03:46.583  2208  7185 I sensors-hal: handle_sns_client_event:165, auto_rotation_debug_2 acc,2.311,4.331,9.739, ar,0, ver,14, pedo,1,e,1,i,3
+04-04 16:03:46.583  3111  3249 D WindowOrientationListener: onSensorChanged device orientation: 0
+04-04 16:03:46.584  3111  3249 V WindowManager: Computed rotation=ROTATION_0 (0) for display id=0 based on lastOrientation=SCREEN_ORIENTATION_PORTRAIT (1) and oldRotation=ROTATION_0 (0), caller=com.android.server.wm.WindowManagerService.updateRotationUnchecked:72 com.android.server.wm.DisplayRotation$OrientationListener.onProposedRotationChanged:328 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.finalizeRotation:26 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.onSensorChanged:392 android.hardware.SystemSensorManager$SensorEventQueue.dispatchSensorEvent:1142 android.os.MessageQueue.nativePollOnce:-2 
+04-04 16:03:46.584  4705  4705 D AppController: AppControlSensorListener.onSensorChanged, Rotation: 0
+04-04 16:03:46.618  2208 31929 I sensors-hal: handle_sns_std_sensor_event:408, [SSC_LIGHT] P: 32(32),c:0,b:62,m:13,cl:0,l:32,s:20,l0:5536,l1:0,s0:3500,s1:0,acl:1,opr:0.11,f(r):85,u(bl):100,if:85,wi:0,si:0,0(N:0)
+04-04 16:03:46.916  3111  4418 E WifiStaIfaceAidlImpl: getCachedScanData failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+04-04 16:03:46.919  3111  6916 D SemWifiUsabilityStatsMonitor: onWifiUsabilityStats - seqNum 220542, isSameBssidAndFreq true
+04-04 16:03:46.920  3111  4519 I SemWifiLinkQualityMonitor: Link stat: 1063 / 791 / 1,11 (10) / 52 / -60.0 || 100.0 : 52,00 / B (B) || c7c7dce02412: 0,435 / 18,381 / N || N N / 0 0 / Y 2.0 / Y X 0 / 1004745557 0 || Invalid
+04-04 16:03:46.920  3111  4520 D InsDataManager: onOutageCountUpdate() - Outage Data: 0, LQ : Y. Outage Triggered: false
+04-04 16:03:46.921  3111  4520 D SemInsManager: {"bssid": "c7c7dce02412","rssi": -60.0,"latency": 0.4352285067873303,"outage_count": 0,"lq_callback_triggered": true,"outage_log": "Link stat: 1063 / 791 / 1,11 (10) / 52 / -60.0 || 100.0 : 52,00 / B (B) || c7c7dce02412: 0,435 / 18,381 / N || N N / 0 0 / Y 2.0 / Y X 0 / 1004745557 0 || Invalid""Magnetic Sensor Events size": "0""Pressure Sensor Events size": "0"}
+04-04 16:03:47.057  2208 11620 I sensors-hal: handle_sns_client_event:379, [0][69424317] accel_sample [ 2.948,  0.876,  6.279] 2096888629132028
+04-04 16:03:47.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329427
+04-04 16:03:47.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:47.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:47.075  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:47.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:47.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:47.076  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:47.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:47.484  2208  7185 I sensors-hal: handle_sns_client_event:160, auto_rotation_event_2 event,255, duration,0, ts,2096889064200882, ts_diff,278892
+04-04 16:03:47.484  2208  7185 I sensors-hal: handle_sns_client_event:165, auto_rotation_debug_2 acc,0.254,0.340,9.701, ar,0, ver,14, pedo,1,e,1,i,3
+04-04 16:03:47.484  4705  4705 D AppController: AppControlSensorListener.onSensorChanged, Rotation: -1
+04-04 16:03:47.484  3111  3249 D WindowOrientationListener: onSensorChanged device orientation: -1
+04-04 16:03:47.485  3111  3249 V WindowManager: Computed rotation=ROTATION_0 (0) for display id=0 based on lastOrientation=SCREEN_ORIENTATION_PORTRAIT (1) and oldRotation=ROTATION_0 (0), caller=com.android.server.wm.WindowManagerService.updateRotationUnchecked:72 com.android.server.wm.DisplayRotation$OrientationListener.onProposedRotationChanged:328 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.finalizeRotation:26 com.android.server.wm.WindowOrientationListener$OrientationSensorJudge.onSensorChanged:392 android.hardware.SystemSensorManager$SensorEventQueue.dispatchSensorEvent:1142 android.os.MessageQueue.nativePollOnce:-2 
+04-04 16:03:47.526  2296  2296 I seh_thermal_service: getTemperaturesWithType SehTemperatureType: 3
+04-04 16:03:47.526  2294  2359 E BatteryDump: !@new_battery_dump : 4357,405,475,550,93,315,312,321,315,0,319,321,0,Charging,NO_CHARGING,Normal,Good,USB,1,Normal,0,0,9050,0x0,0x10000,0x0,0,0,208,v0002,0000,0000,00000000,0,0,0,0,67,4333,9246,990,0,
+04-04 16:03:47.526  2294  2294 I sehhealth-service: updateLrpSysfs: write: 319
+04-04 16:03:47.599  3111  3686 D ActivityManager: freezing 1039 com.samsung.android.vtcamerasettings
+04-04 16:03:48.036  3111  4517 I SemWifiServiceDetector: Service det. suspended: T / T / 16687
+04-04 16:03:48.052  7732  7732 I SDHMS:LOAD: type: LoadsFreqs, value: 17:12:8:1017600:1017600:1017600:564864:960000:556800:160:160:160
+04-04 16:03:48.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329428
+04-04 16:03:48.074  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:48.074  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:48.074  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:48.074  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:48.074  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:48.074  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:48.074  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:48.284  8325  8325 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.play.integrity.api.service.IntegrityApiDisplayListenerApiService.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentApiServiceNoInstantApps }
+04-04 16:03:48.358  8325  8325 I SndPersonalSafety: (REDACTED) Peak of %f at %d, running m%d
+04-04 16:03:49.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329429
+04-04 16:03:49.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:49.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:49.075  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:49.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:49.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:49.075  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:49.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:49.077  2208 11620 I sensors-hal: handle_sns_client_event:379, [0][69424551] accel_sample [ 0.218,  0.926,  9.732] 2096890636585101
+04-04 16:03:49.271  2296  3152 I thermal_core: pivot(AP) : 320, skin : 319
+04-04 16:03:49.307  2212 21640 D AHAL_ModulePrimary_QTI: getVendorParameters: id count: 1
+04-04 16:03:49.307  2212 21640 I PAL: ResourceManager: getActiveStream_l: 6569: no active streams found for device 3 ret -2
+04-04 16:03:49.308  2212 21640 D AHAL_SecModulePrimary: onGetSECGenericParameters get temperature for g_hw_speaker_amp_temp_rcv: 0
+04-04 16:03:49.308  2212  7928 D AHAL_ModulePrimary_QTI: getVendorParameters: id count: 1
+04-04 16:03:49.308  2212  7928 I PAL: ResourceManager: getActiveStream_l: 6569: no active streams found for device 3 ret -2
+04-04 16:03:49.308  2212  7928 D AHAL_SecModulePrimary: onGetSECGenericParameters get temperature for g_hw_speaker_amp_temp_spk: 0
+04-04 16:03:49.310  7732  8374 I SDHMS:x : SIOP:: AP:320 BAT:315 USB:312 CHG:321 PA:329 WIFI:321 CF:322 BLK:0 SUBBAT:0 LRPTHM:319 SKIN:319 SKINF:314 SKINB:319 LRP:319 LRF:314 LRB:319 APT:314 APR:319 RCV:310 SPK:303 CHGF:313 CHGR:318 MEMF:314 MEMR:318 WIFIF:314 WIFIR:319 FCAM:311 UPSPK:317 DNSPK:311 VAP:318 VWIFI:319 AMB2:285 HIGH:0 AVGCUR:286 AVGSYS:226 POWER:1242
+04-04 16:03:49.310  7732  8374 I AudioManager: setParameters keyValuePairs = g_hw_speaker_amp_temp_spk=30
+04-04 16:03:49.311  2324  3159 D AudioFlinger: setParameters: filtered dev setParameters keyvalue g_hw_speaker_amp_temp_spk=30
+04-04 16:03:49.312  2212 21640 D AHAL_HFP_QTI: hfp_set_parameters enter
+04-04 16:03:49.312  2212 21640 D AHAL_HFP_QTI: hfp_set_parameters Exit
+04-04 16:03:49.312  2212 21640 D AHAL_SecModulePrimary: processSetVendorParameters: configured g_hw_speaker_amp_temp_spk
+04-04 16:03:49.312  2212 21640 D AHAL_SecModulePrimary: processSetVendorParameters: handler set on Feature:0
+04-04 16:03:49.312  2212 21640 D AHAL_SecModulePrimary: onSetSECGenericParameters set temperature for g_hw_speaker_amp_temp_spk: 30
+04-04 16:03:49.312  2212 21640 I PAL: API: pal_set_param: 1377: Enter: param id 3002
+04-04 16:03:49.312  2212 21640 I PAL: ResourceManager: getActiveStream_l: 6569: no active streams found for device 3 ret -2
+04-04 16:03:49.312  2324  3159 E ConversionHelperAidl: Function: parseAndSetVendorParameters Line: 94 Failed 
+04-04 16:03:49.313  2324  3159 E ConversionHelperAidl: Function: parseAndSetVendorParameters Line: 94 Failed 
+04-04 16:03:49.314  7732  8374 I AudioManager: setParameters keyValuePairs = g_hw_speaker_amp_temp_rcv=31
+04-04 16:03:49.314  2324  8412 D AudioFlinger: setParameters: filtered dev setParameters keyvalue g_hw_speaker_amp_temp_rcv=31
+04-04 16:03:49.315  2212 21640 D AHAL_HFP_QTI: hfp_set_parameters enter
+04-04 16:03:49.315  2212 21640 D AHAL_HFP_QTI: hfp_set_parameters Exit
+04-04 16:03:49.315  2212 21640 D AHAL_SecModulePrimary: processSetVendorParameters: configured g_hw_speaker_amp_temp_rcv
+04-04 16:03:49.315  2212 21640 D AHAL_SecModulePrimary: processSetVendorParameters: handler set on Feature:0
+04-04 16:03:49.315  2212 21640 D AHAL_SecModulePrimary: onSetSECGenericParameters set temperature for g_hw_speaker_amp_temp_rcv: 31
+04-04 16:03:49.315  2212 21640 I PAL: API: pal_set_param: 1377: Enter: param id 3001
+04-04 16:03:49.315  2212 21640 I PAL: ResourceManager: getActiveStream_l: 6569: no active streams found for device 3 ret -2
+04-04 16:03:49.315  2324  8412 E ConversionHelperAidl: Function: parseAndSetVendorParameters Line: 94 Failed 
+04-04 16:03:49.316  2324  8412 E ConversionHelperAidl: Function: parseAndSetVendorParameters Line: 94 Failed 
+04-04 16:03:49.444  1161  1161 D io_stats: !@   8,0 r 70386418 2105658548 w 40083032 1068779184 d 5540401 1109569860 f 630617 2988497 iot 11647264 0 th 0 0 0 pt 0 inp 0 0 1004748.081
+04-04 16:03:49.444  1161  1161 D io_stats: !@ Write_top(KB): kworker/u17:0:/(25783) 676 vendor.samsung.:normal(2294) 8
+04-04 16:03:49.956  3111  4418 E WifiStaIfaceAidlImpl: getCachedScanData failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+04-04 16:03:49.959  3111  6916 D SemWifiUsabilityStatsMonitor: onWifiUsabilityStats - seqNum 220543, isSameBssidAndFreq true
+04-04 16:03:49.960  3111  4520 D InsDataManager: onOutageCountUpdate() - Outage Data: 0, LQ : Y. Outage Triggered: false
+04-04 16:03:49.960  3111  4520 D SemInsManager: {"bssid": "c7c7dce02412","rssi": -58.0,"latency": 0.0,"outage_count": 0,"lq_callback_triggered": true,"outage_log": "Unreliable statistics: -58.0 / 0 / 0 / 0 / 0 || c7c7dce02412: 0.000 / 0.000 / @ || N N / 0 0 / Y 2.0 / Y X 0 / 1004748597 0 || Invalid""Magnetic Sensor Events size": "0""Pressure Sensor Events size": "0"}
+04-04 16:03:50.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329430
+04-04 16:03:50.074  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:50.074  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:50.074  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:50.074  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:50.074  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:50.074  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:50.074  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:50.272  2208  7185 I sensors-hal: handle_sns_client_event:202, auto_rotation_debug_2 mode,255, type,1,1 acc,0.191,0.871,9.739, ar,0, ver,14, pedo,1,e,1,i,3
+04-04 16:03:51.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329431
+04-04 16:03:51.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:51.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:51.075  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:51.075  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:51.075  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:51.075  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:51.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:51.077  2208 11620 I sensors-hal: handle_sns_client_event:379, [0][69424785] accel_sample [ 0.184,  0.943,  9.708] 2096892644038174
+04-04 16:03:51.635 10602 10602 I ezda    : (REDACTED) Created gRPC endpoint for service %s
+04-04 16:03:51.641 29494 29494 I ezda    : (REDACTED) Created gRPC endpoint for service %s
+04-04 16:03:51.688 19302 20104 V ClearcutMetricXmitter: Transmission is done.
+04-04 16:03:51.725 26886 26893 W hbox:interactor: Reducing the number of considered missed Gc histogram windows from 651 to 100
+04-04 16:03:51.740 26886 26902 V ClearcutMetricXmitter: Transmission is done.
+04-04 16:03:52.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329432
+04-04 16:03:52.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:52.076  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:52.076  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:52.076  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:52.076  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:52.076  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:52.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:52.537  2208 31929 I sensors-hal: handle_sns_std_sensor_event:408, [SSC_LIGHT] P: 35(35),c:0,b:62,m:13,cl:0,l:35,s:20,l0:5984,l1:0,s0:3500,s1:0,acl:1,opr:0.11,f(r):85,u(bl):100,if:85,wi:0,si:0,0(N:0)
+04-04 16:03:52.538  2208  7185 I sensors-hal: handle_sns_std_sensor_event:127, [SSC_LIGHT] A: 35(35),c:0,b:62,m:13,cl:0,l:35,s:20,l0:5984,l1:0,s0:3500,s1:0,acl:1,opr:0.11,f(r):85,u(bl):100,if:85,wi:0,si:0,0(N:0)
+04-04 16:03:52.587  3111  3409 D PowerManagerService: UserActivityState : 1 -> 2 groupId=0
+04-04 16:03:52.587  3111  3409 D PowerManagerService: displayReady: false groupId=0
+04-04 16:03:52.587  3111  3409 D DisplayPowerController[0]: animateScreenStateChange: target=ON, mIsEnabled=true
+04-04 16:03:52.588  3111  3409 W DisplayPowerController[0]: Animating brightness: target=12(0.05), rate=0,706, reason=automatic[69] -> dim[13] -> low_pwr[12]
+04-04 16:03:52.590  3111  3409 D DisplayManagerService: handleBrightnessAnimation: started=true
+04-04 16:03:52.590  3111  3409 D RefreshRateModeManager: set fix=3, brightness=62, lux=35.0325, mIsWirelessCharging=false
+04-04 16:03:52.590  3111  3409 D RefreshRateModeManager: setPassiveMode=true, brightness=62, lux=35.0325, PassiveModeToken=true
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager: Schedule to change HFRmode=REFRESH_RATE_MODE_PASSIVE, mDisplayToken=android.os.BinderProxy@b0e49cb
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:     -1:
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_LOW_POWER_MODE_RENDER_RATE -> CombinedVote{ mVotes=[PhysicalVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=60.0 } }, DisableRefreshRateSwitchingVote{ mDisableRefreshRateSwitching=false }] }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_REFRESH_RATE_MODE -> CombinedVote{ mVotes=[PhysicalVote{ RefreshRateVote{  mMinRefreshRate=10.0, mMaxRefreshRate=60.0 } }, DisableRefreshRateSwitchingVote{ mDisableRefreshRateSwitching=false }] }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:     0:
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_PEAK_RENDER_FRAME_RATE -> RenderVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=120.0 } }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_RESOLUTION -> SizeVote{ mWidth=1080, mHeight=2340, mMinWidth=1080, mMinHeight=2340 }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_PEAK_REFRESH_RATE -> CombinedVote{ mVotes=[PhysicalVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=120.0 } }, DisableRefreshRateSwitchingVote{ mDisableRefreshRateSwitching=false }] }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_DISPLAY_PREFERRED_SIZE -> SizeVote{ mWidth=1080, mHeight=2340, mMinWidth=1080, mMinHeight=2340 }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_MIN_RENDER_FRAME_RATE -> RenderVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=Infinity } }
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager: 
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:  mModeSwitchingType: SWITCHING_TYPE_WITHIN_GROUPS mAlwaysRespectAppRequest: false
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:  Current Mode mReportedRefreshRateMode(toSurfaceFlinger)=REFRESH_RATE_MODE_PASSIVE, mRefreshRateMode(fromSettings)=REFRESH_RATE_MODE_NORMAL
+04-04 16:03:52.591  3111  3409 I RefreshRateModeManager:  BrightnessState mPassive=true, PassiveModeToken=true, mLfd=3, mBrightness=62, mAmbientLux=35.0325, mIsWirelessCharing=false
+04-04 16:03:52.591  3111  3111 I MdnieScenarioControlService: action  :  com.samsung.server.PowerManagerService.action.USER_ACTIVITY
+04-04 16:03:52.591  3111  3252 D SurfaceControl: notifyHFRmode, displayToken=android.os.BinderProxy@b0e49cb, hfrMode=REFRESH_RATE_MODE_PASSIVE
+04-04 16:03:52.591  3111  3409 I RefreshRateTokenController: Adding refreshRateToken={ RefreshRateToken[->PassiveModeToken:BrightnessAnim, acquire at 1004751228 (1 ms ago)}, caller=com.android.server.display.mode.RefreshRateController.createPassiveModeToken:33 com.android.server.display.DisplayManagerService$$ExternalSyntheticLambda1.accept:365 com.android.server.display.DisplayPowerController.animateScreenBrightness:263 com.android.server.display.DisplayPowerController.updatePowerStateInternal:2573 com.android.server.display.DisplayPowerController.updatePowerState:9 
+04-04 16:03:52.592  2352  3052 I SurfaceFlinger: [4630947191136750483] HFR mode : 3
+04-04 16:03:52.600  2352  3530 I VSyncReactor: Current= 60, Period= 60, Distance= 0
+04-04 16:03:52.604  2352  2352 I HWComposer: [4630947191136750483] ActiveConfigToHWC, ID : 9
+04-04 16:03:52.604  2236  2852 I SDM     : SDMDisplay::SetActiveConfigWithConstraints: ActiveConfig: 9
+04-04 16:03:52.604  2236  2852 I SDM     : SDMDisplay::SetActiveConfigWithConstraints: reset pendingActiveConfig: -1, is_vconfig_fps_switched: 0, error: 0
+04-04 16:03:52.605  3111  3409 D AdaptiveBrightnessLongtermModelBuilder[0]: notifyBrightnessChanged(brightness=10,083038, userInitiated=false)
+04-04 16:03:52.605  3111  3409 D DisplayPowerController[0]: saveBrightnessInfo: brt:0.27058822 adjBrt:0.04588235 min:0.0 max:1.0 hbm:0 tp:1.0 throttler:0 isAnimating:true
+04-04 16:03:52.605  3111  3330 D AdaptiveBrightnessLongtermModelBuilder[0]: handleBrightnessChanged: brightness: 10.083038 userInitiated: false
+04-04 16:03:52.605  3111  3330 D AdaptiveBrightnessLongtermModelBuilder[0]: updateAdaptiveBrightnessStats: l:42.0 b:10.083038 u: false
+04-04 16:03:52.605  3111  3330 D AdaptiveBrightnessWeightStats: log: l:42.0 b:80.545494 t:13.104 u:false 
+04-04 16:03:52.605  3111  3330 D AdaptiveBrightnessWeightStats: updateTransientStats: 18.0 < 42.0 < 112.5  b:80.545494 t:13.104s
+04-04 16:03:52.605  3111  3409 V DisplayPowerController[0]: Brightness [0.04588235] reason changing to: 'automatic [ low_pwr dim ]', previous reason: 'automatic [ low_pwr ]'.
+04-04 16:03:52.605  3111  3330 D AdaptiveBrightnessWeightStats: updateTransientStats: b: 80.545494 ambientLux:42.0 currentBucketLux:45.0 mBrightnessMapper: 92.60929
+04-04 16:03:52.605  3111  3409 I DisplayPowerController[0]: BrightnessEvent: brt=0.04588235 (37.0%), nits= 10.083038, lux=42.0, reason=automatic [ low_pwr dim ], strat=AutomaticBrightnessStrategy, state=ON, stateReason=KEY, policy=DIM, flags=low_power_mode , initBrt=0.2435294, rcmdBrt=0.27058822, preBrt=NaN, preLux=NaN, wasShortTermModelActive=false, autoBrightness=true (default), unclampedBrt=0.27058822, hbmMax=1.0, hbmMode=off, thrmMax=1.0, rbcStrength=-1, powerFactor=0.9, physDisp=Tela integrada(local:4630947191136750483), logicalId=0, slowChange=false, rampSpeed=0.7058824
+04-04 16:03:52.606  3111  3409 D PowerManagerService: displayReady: true groupId=0
+04-04 16:03:52.607  3111  3252 D BrightnessSynchronizer: onDisplayChanged() : displayId=0
+04-04 16:03:52.607  3111  4576 D HdrSolution_HdrDisplayNitMapper: updataTargetNit--------------mLightSensorData: 1000.0, scaleRatio: 2.65, target: 75.423->200
+04-04 16:03:52.607  3111  3252 D BrightnessSynchronizer: updateScreenBrightness: displayId=0 type=2 mPreferredSettingValue=0.27058822(69) currentBrightnessInt=69 currentBrightnessIntFromFloat=69(0.27058822)
+04-04 16:03:52.608  3111  4576 D LocalDisplayAdapter: surface lcd : 59(0.046), 59(0.046), main +
+04-04 16:03:52.608  2352  2352 I SurfaceFlinger: setDisplayBrightness(4630947191136750483): displayBrightness: 0.046237, displayBrightnessNits: 75.345406, sdrWhitePointNits: 75.345490 , dimmingRatio: 1.000001
+04-04 16:03:52.608  3111  4576 D LocalDisplayAdapter: surface lcd : 59(0.046), 59(0.046), main -
+04-04 16:03:52.609  4705  4705 D SecBrightnessController: updateSlider() - BrightnessDialog resetTimer()
+04-04 16:03:52.609  4705  4705 D SecBrightnessController: updateSlider() - BrightnessDialog resetTimer()
+04-04 16:03:52.616  2236  2852 I SDM     : HWPeripheralDRM::SetPanelBrightness: Setting brightness to level 590 through sysfs node. primary(1), type_id(1)
+04-04 16:03:52.616  2352  3052 I VSyncReactor: Current= 60, Period= 60, Distance= 60
+04-04 16:03:52.616  2316  2316 I SSC_DAEMON: handleSensorTestReqMsg:88, Sensor type :4, Msg type:11
+04-04 16:03:52.617  2236  2852 I SDM     : AIScalerFeatureIntfImpl::LookupConfig: Scale ratio = 1.780000
+04-04 16:03:52.617  2236  2852 I SDM     : AIScalerParserIntfImpl::LookupConfig: Scale Ratio Match Found Here
+04-04 16:03:52.618  2316  4322 I SSC_DAEMON: light_event_log:170, light_msg(4/11): br 59 (lux 35,idx 0) - -1,-1,13
+04-04 16:03:52.623  3111  4576 D HdrSolution_HdrDisplayNitMapper: updataTargetNit--------------mLightSensorData: 1000.0, scaleRatio: 2.84, target: 70.541->200
+04-04 16:03:52.623  3111  4576 D LocalDisplayAdapter: surface lcd : 56(0.044), 56(0.044), main +
+04-04 16:03:52.623  2352  2352 I SurfaceFlinger: setDisplayBrightness(4630947191136750483): displayBrightness: 0.043884, displayBrightnessNits: 70.464622, sdrWhitePointNits: 70.464706 , dimmingRatio: 1.000001
+04-04 16:03:52.624  3111  4576 D LocalDisplayAdapter: surface lcd : 56(0.044), 56(0.044), main -
+04-04 16:03:52.642  2236  2852 I SDM     : HWPeripheralDRM::SetPanelBrightness: Setting brightness to level 560 through sysfs node. primary(1), type_id(1)
+04-04 16:03:52.643  2316  2316 I SSC_DAEMON: handleSensorTestReqMsg:88, Sensor type :4, Msg type:11
+04-04 16:03:52.644  2316  4322 I SSC_DAEMON: light_event_log:170, light_msg(4/11): br 56 (lux 35,idx 0) - -1,-1,13
+04-04 16:03:52.650  3111  4576 D HdrSolution_HdrDisplayNitMapper: updataTargetNit--------------mLightSensorData: 1000.0, scaleRatio: 3.2, target: 62.58->200
+04-04 16:03:52.650  3111  4576 D LocalDisplayAdapter: surface lcd : 51(0.040), 51(0.040), main +
+04-04 16:03:52.651  2352  2352 I SurfaceFlinger: setDisplayBrightness(4630947191136750483): displayBrightness: 0.040040, displayBrightnessNits: 62.683792, sdrWhitePointNits: 62.683887 , dimmingRatio: 1.000002
+04-04 16:03:52.651  3111  4576 D LocalDisplayAdapter: surface lcd : 51(0.040), 51(0.040), main -
+04-04 16:03:52.653  3111  3705 D InputReader: Btn_touch(5): value=1 when=1004751.291431
+04-04 16:03:52.653  3111  3705 I InputReader: Touch event's action is 0x0 (id=6, t=0) [pCnt=1, s=0.28988 ] when=1004751.291431
+04-04 16:03:52.654  3111  3704 I InputDispatcher: Delivering touch to (4705): action: 0x4, f=0x0, d=0, 'd6ecd3e', t=1 
+04-04 16:03:52.654  3111  3704 I InputDispatcher: Delivering touch to (29679): action: 0x0, f=0x0, d=0, '1043894', t=1 
+04-04 16:03:52.655  3111  3704 D PowerManagerService: [api] userActivityFromNative : touch displayId=0 eventTime=1004751291
+04-04 16:03:52.655  3111  3704 D PowerManagerService: UserActivityStateListenerState: 1
+04-04 16:03:52.655  3111  3704 D PowerManagerService: UserActivityState : 2 -> 1 groupId=0
+04-04 16:03:52.655  3111  3704 D PowerManagerService: displayReady: false groupId=0
+04-04 16:03:52.655  3111  3409 D DisplayPowerController[0]: animateScreenStateChange: target=ON, mIsEnabled=true
+04-04 16:03:52.655 29679 29679 I VRI[MainActivity]@4c14a3a: ViewPostIme pointer 0
+04-04 16:03:52.655  3111  3409 W DisplayPowerController[0]: Animating brightness: target=62(0.24), rate=5,000, reason=automatic[69] -> low_pwr[62]
+04-04 16:03:52.655 29679 29679 I VRI[MainActivity]@4c14a3a: call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@4c14a3a
+04-04 16:03:52.656  3111  3249 I GestureDetector: obtain mCurrentDownEvent. id: 317332039 caller: com.android.server.wm.SystemGesturesPointerEventListener.onPointerEvent:17 com.android.server.wm.PointerEventDispatcher.onInputEvent:51 android.view.InputEventReceiver.dispatchInputEvent:392 
+04-04 16:03:52.656  3111  3249 I GestureDetector: obtain mCurrentDownEvent. id: 317332039 caller: com.android.server.wm.SystemPerformancePointerEventListener.onPointerEvent:13 com.android.server.wm.PointerEventDispatcher.onInputEvent:51 android.view.InputEventReceiver.dispatchInputEvent:392 
+04-04 16:03:52.656  3111  3409 D AdaptiveBrightnessLongtermModelBuilder[0]: notifyBrightnessChanged(brightness=80,545494, userInitiated=false)
+04-04 16:03:52.656  3111  3409 D DisplayPowerController[0]: saveBrightnessInfo: brt:0.27058822 adjBrt:0.2435294 min:0.0 max:1.0 hbm:0 tp:1.0 throttler:0 isAnimating:true
+04-04 16:03:52.656  3111  3409 V DisplayPowerController[0]: Brightness [0.2435294] reason changing to: 'automatic [ low_pwr ]', previous reason: 'automatic [ low_pwr dim ]'.
+04-04 16:03:52.656  3111  3409 I DisplayPowerController[0]: BrightnessEvent: brt=0.2435294 (73.0%), nits= 80.545494, lux=42.0, reason=automatic [ low_pwr ], strat=AutomaticBrightnessStrategy, state=ON, stateReason=KEY, policy=BRIGHT, flags=low_power_mode , initBrt=0.04588235, rcmdBrt=0.27058822, preBrt=NaN, preLux=NaN, wasShortTermModelActive=false, autoBrightness=true (default), unclampedBrt=0.27058822, hbmMax=1.0, hbmMode=off, thrmMax=1.0, rbcStrength=-1, powerFactor=0.9, physDisp=Tela integrada(local:4630947191136750483), logicalId=0, slowChange=false, rampSpeed=5.0
+04-04 16:03:52.656  3111  3409 D PowerManagerService: displayReady: true groupId=0
+04-04 16:03:52.657  3111  3330 D AdaptiveBrightnessLongtermModelBuilder[0]: handleBrightnessChanged: brightness: 80.545494 userInitiated: false
+04-04 16:03:52.657  3111  3330 D AdaptiveBrightnessLongtermModelBuilder[0]: updateAdaptiveBrightnessStats: l:42.0 b:80.545494 u: false
+04-04 16:03:52.657  3111  3111 I MdnieScenarioControlService: action  :  com.samsung.server.PowerManagerService.action.USER_ACTIVITY
+04-04 16:03:52.658  3111  3330 D AdaptiveBrightnessWeightStats: log: l:42.0 b:10.083038 t:0.003 u:false 
+04-04 16:03:52.658  2352  2352 I SurfaceFlinger: [com.shapepro.fitness/com.shapepro.fitness.MainActivity$_29679#616683] setFrameRateCategory: HighHint
+04-04 16:03:52.658  3111  3330 D AdaptiveBrightnessWeightStats: updateTransientStats: 18.0 < 42.0 < 112.5  b:10.083038 t:0.003s
+04-04 16:03:52.658  4705  4705 D SecBrightnessController: updateSlider() - BrightnessDialog resetTimer()
+04-04 16:03:52.658  3111  3252 D BrightnessSynchronizer: onDisplayChanged() : displayId=0
+04-04 16:03:52.658  4705  4705 D SecBrightnessController: updateSlider() - BrightnessDialog resetTimer()
+04-04 16:03:52.658  3111  3252 D BrightnessSynchronizer: updateScreenBrightness: displayId=0 type=2 mPreferredSettingValue=0.27058822(69) currentBrightnessInt=69 currentBrightnessIntFromFloat=69(0.27058822)
+04-04 16:03:52.658  3111  3330 D AdaptiveBrightnessWeightStats: updateTransientStats: b: 10.083038 ambientLux:42.0 currentBucketLux:45.0 mBrightnessMapper: 92.60929
+04-04 16:03:52.659  3111  3111 D PowerManagerService: [api] setScreenDimDurationOverrideFromSqdInternal: mScreenDimDurationOverrideFromSQD: -1
+04-04 16:03:52.660  2316  2316 I SSC_DAEMON: handleSensorTestReqMsg:88, Sensor type :4, Msg type:11
+04-04 16:03:52.660  2236  2852 I SDM     : HWPeripheralDRM::SetPanelBrightness: Setting brightness to level 511 through sysfs node. primary(1), type_id(1)
+04-04 16:03:52.661  3111  3249 I GestureDetector: obtain mCurrentMotionEventRaw. action: 2 id: 343547607
+04-04 16:03:52.661  3111  3249 I GestureDetector: obtain mCurrentMotionEventRaw. action: 2 id: 343547607
+04-04 16:03:52.663  2316  4322 I SSC_DAEMON: light_event_log:170, light_msg(4/11): br 51 (lux 35,idx 0) - -1,-1,13
+04-04 16:03:52.667  3111  3409 D DisplayPowerController[0]: animateScreenStateChange: target=ON, mIsEnabled=true
+04-04 16:03:52.667  3111  4576 D HdrSolution_HdrDisplayNitMapper: updataTargetNit--------------mLightSensorData: 1000.0, scaleRatio: 2.49, target: 80.379->200
+04-04 16:03:52.668  3111  3409 D DisplayPowerController[0]: saveBrightnessInfo: brt:0.27058822 adjBrt:0.2435294 min:0.0 max:1.0 hbm:0 tp:1.0 throttler:0 isAnimating:false
+04-04 16:03:52.668  3111  4576 D LocalDisplayAdapter: surface lcd : 62(0.049), 62(0.049), main +
+04-04 16:03:52.668  2352  2352 I SurfaceFlinger: setDisplayBrightness(4630947191136750483): displayBrightness: 0.048706, displayBrightnessNits: 80.545494, sdrWhitePointNits: 80.545494 , dimmingRatio: 1.000000
+04-04 16:03:52.668  3111  4576 D LocalDisplayAdapter: surface lcd : 62(0.049), 62(0.049), main -
+04-04 16:03:52.668  3111  3252 D BrightnessSynchronizer: onDisplayChanged() : displayId=0
+04-04 16:03:52.669  3111  3252 D BrightnessSynchronizer: updateScreenBrightness: displayId=0 type=2 mPreferredSettingValue=0.27058822(69) currentBrightnessInt=69 currentBrightnessIntFromFloat=69(0.27058822)
+04-04 16:03:52.670  4705  4705 D SecBrightnessController: updateSlider() - BrightnessDialog resetTimer()
+04-04 16:03:52.670  4705  4705 D SecBrightnessController: updateSlider() - BrightnessDialog resetTimer()
+04-04 16:03:52.676  2316  2316 I SSC_DAEMON: handleSensorTestReqMsg:88, Sensor type :4, Msg type:11
+04-04 16:03:52.676  2236  2852 I SDM     : HWPeripheralDRM::SetPanelBrightness: Setting brightness to level 621 through sysfs node. primary(1), type_id(1)
+04-04 16:03:52.677  2316  4322 I SSC_DAEMON: light_event_log:170, light_msg(4/11): br 62 (lux 35,idx 0) - -1,-1,13
+04-04 16:03:52.720  3111  3705 D InputReader: Btn_touch(5): value=0 when=1004751.357692
+04-04 16:03:52.720  3111  3705 I InputReader: Touch event's action is 0x1 (id=6, t=0) [pCnt=1, s=] when=1004751.357692
+04-04 16:03:52.720  3111  3704 I InputDispatcher: Delivering touch to (29679): action: 0x1, f=0x0, d=0, '1043894', t=1 
+04-04 16:03:52.720 29679 29679 I VRI[MainActivity]@4c14a3a: ViewPostIme pointer 1
+04-04 16:03:52.723 29679 32154 W System  : Ignoring header X-Firebase-Locale because its value was null.
+04-04 16:03:52.867  3111  3409 D DisplayManagerService: handleBrightnessAnimation: started=false
+04-04 16:03:52.868  3111  3409 D RefreshRateModeManager: set fix=0, brightness=62, lux=35.0325, mIsWirelessCharging=false
+04-04 16:03:52.868  3111  3409 D RefreshRateModeManager: setPassiveMode=false, brightness=62, lux=35.0325, PassiveModeToken=false
+04-04 16:03:52.868  3111  3252 D SurfaceControl: notifyHFRmode, displayToken=android.os.BinderProxy@b0e49cb, hfrMode=REFRESH_RATE_MODE_SEAMLESS
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager: Schedule to change HFRmode=REFRESH_RATE_MODE_SEAMLESS, mDisplayToken=android.os.BinderProxy@b0e49cb
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:     -1:
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_LOW_POWER_MODE_RENDER_RATE -> CombinedVote{ mVotes=[PhysicalVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=60.0 } }, DisableRefreshRateSwitchingVote{ mDisableRefreshRateSwitching=false }] }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_REFRESH_RATE_MODE -> CombinedVote{ mVotes=[PhysicalVote{ RefreshRateVote{  mMinRefreshRate=10.0, mMaxRefreshRate=60.0 } }, DisableRefreshRateSwitchingVote{ mDisableRefreshRateSwitching=false }] }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:     0:
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_PEAK_RENDER_FRAME_RATE -> RenderVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=120.0 } }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_RESOLUTION -> SizeVote{ mWidth=1080, mHeight=2340, mMinWidth=1080, mMinHeight=2340 }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_PEAK_REFRESH_RATE -> CombinedVote{ mVotes=[PhysicalVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=120.0 } }, DisableRefreshRateSwitchingVote{ mDisableRefreshRateSwitching=false }] }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_DISPLAY_PREFERRED_SIZE -> SizeVote{ mWidth=1080, mHeight=2340, mMinWidth=1080, mMinHeight=2340 }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:       PRIORITY_USER_SETTING_MIN_RENDER_FRAME_RATE -> RenderVote{ RefreshRateVote{  mMinRefreshRate=0.0, mMaxRefreshRate=Infinity } }
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager: 
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:  mModeSwitchingType: SWITCHING_TYPE_WITHIN_GROUPS mAlwaysRespectAppRequest: false
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:  Current Mode mReportedRefreshRateMode(toSurfaceFlinger)=REFRESH_RATE_MODE_SEAMLESS, mRefreshRateMode(fromSettings)=REFRESH_RATE_MODE_NORMAL
+04-04 16:03:52.869  3111  3409 I RefreshRateModeManager:  BrightnessState mPassive=false, PassiveModeToken=false, mLfd=0, mBrightness=62, mAmbientLux=35.0325, mIsWirelessCharing=false
+04-04 16:03:52.869  3111  3409 I RefreshRateTokenController: Removing refreshRateToken={ RefreshRateToken[->PassiveModeToken:BrightnessAnim, acquire at 1004751228 (279 ms ago)}, caller=com.android.server.display.mode.RefreshRateToken.release:5 com.android.server.display.DisplayManagerService$$ExternalSyntheticLambda1.accept:405 com.android.server.display.DisplayPowerController$3.run:24 android.os.Handler.handleCallback:995 android.os.Handler.dispatchMessage:103 
+04-04 16:03:52.870  2352  3530 I SurfaceFlinger: [4630947191136750483] HFR mode : 1
+04-04 16:03:52.878  2352  2352 I HWComposer: [4630947191136750483] ActiveConfigToHWC, ID : 9
+04-04 16:03:52.878  2236  2852 I SDM     : SDMDisplay::SetActiveConfigWithConstraints: ActiveConfig: 9
+04-04 16:03:52.879  2236  2852 I SDM     : SDMDisplay::SetActiveConfigWithConstraints: reset pendingActiveConfig: -1, is_vconfig_fps_switched: 0, error: 0
+04-04 16:03:52.956  3111  3249 I GestureDetector: handleMessage TAP
+04-04 16:03:52.957  3111  3111 I GestureDetector: handleMessage TAP
+04-04 16:03:52.969  3111  4418 E WifiStaIfaceAidlImpl: getCachedScanData failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+04-04 16:03:52.971  3111  6916 D SemWifiUsabilityStatsMonitor: onWifiUsabilityStats - seqNum 220544, isSameBssidAndFreq true
+04-04 16:03:52.972  3111  4520 D InsDataManager: onOutageCountUpdate() - Outage Data: 0, LQ : Y. Outage Triggered: false
+04-04 16:03:52.972  3111  4520 D SemInsManager: {"bssid": "c7c7dce02412","rssi": -57.0,"latency": 0.0,"outage_count": 0,"lq_callback_triggered": true,"outage_log": "Unreliable statistics: -57.0 / 1 / 201 / 167 / 0 || c7c7dce02412: 0.000 / 0.000 / @ || N N / 0 0 / Y 2.0 / Y X 0 / 1004751609 0 || Invalid""Magnetic Sensor Events size": "0""Pressure Sensor Events size": "0"}
+04-04 16:03:53.064  3111  4497 D BackgroundInstallControlService: Package event received: 0
+04-04 16:03:53.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329433
+04-04 16:03:53.075  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:53.075  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:53.076  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:53.076  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:53.076  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:53.076  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:53.076  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100
+04-04 16:03:53.078  2208 11620 I sensors-hal: handle_sns_client_event:379, [0][69425019] accel_sample [ 0.179,  0.938,  9.823] 2096894651489580
+04-04 16:03:53.079  3111  5562 I RemoteProvisionSysSvc: getRegistration(android.hardware.security.keymint.IRemotelyProvisionedComponent/default)
+04-04 16:03:53.080  3111  5562 I ActivityManager: Changes in 10328 19 to 6, 0 to 128
+04-04 16:03:53.081  2643  2643 I CNSS    : /sys/wifi/max_chipset_log_size doesn't exist
+04-04 16:03:53.082  3111  4497 D BackgroundInstallControlService: Package event received: 0
+04-04 16:03:53.082  3111  4497 D BackgroundInstallControlService: Package event received: 0
+04-04 16:03:53.082  3111  3111 I RegistrationProxy: onServiceConnected: com.android.rkpdapp.service.RemoteProvisioningService
+04-04 16:03:53.084  3111  5562 I RegistrationProxy: IGetRegistrationCallback.onSuccess
+04-04 16:03:53.084  3111  5562 I ActivityManager: Changes in 10328 6 to 10, 128 to 0
+04-04 16:03:53.085  3111  5562 I RemoteProvisionSysSvc: Fetching key 10274 for client 54359568
+04-04 16:03:53.085  3111  5562 I RegistrationProxy: getKeyAsync operation started with callback 193221897
+04-04 16:03:53.085  6621 32164 I RkpdRegistrationBinder: Key requested for : android.hardware.security.keymint.IRemotelyProvisionedComponent/default, clientUid: 1017, keyId: 10274, callback: 65793139
+04-04 16:03:53.086  6621 32164 I RkpdRegistrationBinder: Key successfully assigned to client
+04-04 16:03:53.086  3111  3111 I RemoteProvisionSysSvc: Successfully fetched key for client 54359568
+04-04 16:03:53.089  3111  5562 W ParceledListSlice: Element #28 is 30404 bytes.
+04-04 16:03:53.091  3111  5316 W ParceledListSlice: Element #77 is 17228 bytes.
+04-04 16:03:53.093  3111  7608 W ParceledListSlice: Element #122 is 27416 bytes.
+04-04 16:03:53.094  1214  1214 D keymint_swd: keymint_swd keymint [WRN] (_swd_key_attest:2104) signkey = attestationKey
+04-04 16:03:53.094  3111  5562 W ParceledListSlice: Element #176 is 25572 bytes.
+04-04 16:03:53.094  1214  1214 D keymint_swd: keymint_swd keymint [WRN] (swd_run_cb:267) swd_generate_key() returns 0
+04-04 16:03:53.094  1214  1214 W keymint_tee: [WRN]ret OK PARAMS: A3, PP2, D6, NAR1, KS256, CD2026.04.04,16:03:53.087, 
+04-04 16:03:53.094  1214  1214 D android.hardware.security.keymint-service: generateKeyInternal: ret 0
+04-04 16:03:53.095  1211   495 I keystore2: system/security/keystore2/src/security_level.rs:757 - In generate_key. 10274, Some("integrity.api.key.alias")
+04-04 16:03:53.095  1211   495 I keystore2: system/security/keystore2/src/samsung/samsung_keystore_utils.rs:139 - get_package_name_from_pid : Error in fs::read_to_string = Os { code: 13, kind: PermissionDenied, message: "Permission denied" }
+04-04 16:03:53.095  1211   495 E keystore2: system/security/keystore2/src/samsung/samsung_keystore_utils.rs:170 - caller is unknown
+04-04 16:03:53.095  3111  7608 W ParceledListSlice: Element #190 is 21856 bytes.
+04-04 16:03:53.095  3111  7608 W ParceledListSlice: Element #192 is 16724 bytes.
+04-04 16:03:53.095  1211   495 I keystore2: system/security/keystore2/src/database.rs:2260 - In store_new_key "integrity.api.key.alias", uid=10274, cert=true, cert_chain=true rebound=true
+04-04 16:03:53.095  2208  2208 I sensors-hal: set_config:60, sample_period_ns is adjusted to 20000000 based on min/max delay_ns
+04-04 16:03:53.095  2208  2208 I sensors-hal: batch:368, android.sensor.linear_acceleration/101, period=20000000, max_latency=0 request completed
+04-04 16:03:53.095  2208  2208 I sensors-hal: activate:305, android.sensor.linear_acceleration/101 en=1
+04-04 16:03:53.095  2208  2208 I sensors-hal: acquire_qsh_interface:140, acquire_qsh_interface with sensor_id 27 , conn_type 3 
+04-04 16:03:53.096  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.096  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.097  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.097  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.097  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.097  3111  4827 W ParceledListSlice: Element #286 is 25312 bytes.
+04-04 16:03:53.097  3111  4827 W ParceledListSlice: Overly large reply size: 89832
+04-04 16:03:53.097  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.097  2208  2208 I sensors-hal: qsh_qmi:34, qsh_qmi
+04-04 16:03:53.097  2208  2208 I sensors-hal: send_sync_sensor_request:515, send sync request
+04-04 16:03:53.097  2208  2208 I sensors-hal: send_sync_sensor_request:544, wait for notification of response
+04-04 16:03:53.098  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.098  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.098  3111  7618 W ParceledListSlice: Element #295 is 92836 bytes.
+04-04 16:03:53.098  3111  7618 W ParceledListSlice: Overly large reply size: 117796
+04-04 16:03:53.098  2208 32248 I sensors-hal: qsh_conn_resp_cb:972, resp_value = 0 for gravity 
+04-04 16:03:53.099  3111  7608 W ParceledListSlice: Element #333 is 17640 bytes.
+04-04 16:03:53.099  2208  2208 I sensors-hal: send_sync_sensor_request:550, takes 1 ms to receive the response with 0
+04-04 16:03:53.099  2208  2208 I sensors-hal: activate:335, android.sensor.linear_acceleration/101 en=1 completed
+04-04 16:03:53.099 15535 16257 D SensorManager: registerListener :: 101, linear_acceleration, 20000, 0, 
+04-04 16:03:53.099  3111  4827 W ParceledListSlice: Element #341 is 20856 bytes.
+04-04 16:03:53.100  2208  2208 I sensors-hal: set_config:60, sample_period_ns is adjusted to 20000000 based on min/max delay_ns
+04-04 16:03:53.100  2208  2208 I sensors-hal: batch:368, android.sensor.rotation_vector/111, period=20000000, max_latency=0 request completed
+04-04 16:03:53.100  2208  2208 I sensors-hal: activate:305, android.sensor.rotation_vector/111 en=1
+04-04 16:03:53.100  2208  2208 I sensors-hal: acquire_qsh_interface:140, acquire_qsh_interface with sensor_id 16 , conn_type 3 
+04-04 16:03:53.100  3111  7609 W ParceledListSlice: Element #356 is 32436 bytes.
+04-04 16:03:53.100  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.100  3111  4827 W ParceledListSlice: Element #381 is 23872 bytes.
+04-04 16:03:53.100  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.100  8803 32162 I Finsky  : [907] Integrity key attestation record generated successfully.
+04-04 16:03:53.100  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.101  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.101  3111  7608 W ParceledListSlice: Element #403 is 23544 bytes.
+04-04 16:03:53.101  3111  7608 W ParceledListSlice: Overly large reply size: 82956
+04-04 16:03:53.101  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.101  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.101  2208  2208 I sensors-hal: qsh_qmi:34, qsh_qmi
+04-04 16:03:53.101  2208  2208 I sensors-hal: send_sync_sensor_request:515, send sync request
+04-04 16:03:53.101  2208  2208 I sensors-hal: send_sync_sensor_request:544, wait for notification of response
+04-04 16:03:53.101  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.101  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.102  2208 32250 I sensors-hal: qsh_conn_resp_cb:972, resp_value = 0 for rotv 
+04-04 16:03:53.102  3111  7618 W ParceledListSlice: Element #432 is 17240 bytes.
+04-04 16:03:53.102  2208  2208 I sensors-hal: send_sync_sensor_request:550, takes 0 ms to receive the response with 0
+04-04 16:03:53.102  2208  2208 I sensors-hal: activate:335, android.sensor.rotation_vector/111 en=1 completed
+04-04 16:03:53.102 15535 16257 D SensorManager: registerListener :: 111, Rotation Vector  Non-wakeup, 20000, 0, 
+04-04 16:03:53.102  3111  5316 W ParceledListSlice: Element #435 is 25420 bytes.
+04-04 16:03:53.103  3111  4827 W ParceledListSlice: Element #445 is 24124 bytes.
+04-04 16:03:53.104  3111  7618 W ParceledListSlice: Element #481 is 33972 bytes.
+04-04 16:03:53.104  3111  7618 W ParceledListSlice: Overly large reply size: 95300
+04-04 16:03:53.105  3111  5562 W ParceledListSlice: Element #526 is 17548 bytes.
+04-04 16:03:53.107  1211   495 E keystore2: system/security/keystore2/src/error.rs:185 - Rc(r#KEY_NOT_FOUND), "system/security/keystore2/src/service.rs:178: In get_key_entry, while trying to load key info. 10275, Some(\"unstable.c7202ece89390c490b1b94d5b71225e1.B9135308913849573257\")"
+04-04 16:03:53.107  1211  4866 E keystore2: system/security/keystore2/src/error.rs:185 - Rc(r#KEY_NOT_FOUND), "system/security/keystore2/src/service.rs:178: In get_key_entry, while trying to load key info. 10275, Some(\"unstable.c7202ece89390c490b1b94d5b71225e1.A9135308913849573257\")"
+04-04 16:03:53.109  3111  7617 I RemoteProvisionSysSvc: getRegistration(android.hardware.security.keymint.IRemotelyProvisionedComponent/default)
+04-04 16:03:53.110  3111  4497 D BackgroundInstallControlService: Package event received: 0
+04-04 16:03:53.111  3111  7617 I ActivityManager: Changes in 10328 19 to 6, 0 to 128
+04-04 16:03:53.111  3111  4497 D BackgroundInstallControlService: Package event received: 0
+04-04 16:03:53.111  3111  3111 I RegistrationProxy: onServiceConnected: com.android.rkpdapp.service.RemoteProvisioningService
+04-04 16:03:53.112  3111  7617 I RegistrationProxy: IGetRegistrationCallback.onSuccess
+04-04 16:03:53.112  3111  7617 I ActivityManager: Changes in 10328 6 to 10, 128 to 0
+04-04 16:03:53.112  3111  5562 I RemoteProvisionSysSvc: Fetching key 10275 for client 68734856
+04-04 16:03:53.112  3111  5562 I RegistrationProxy: getKeyAsync operation started with callback 150732065
+04-04 16:03:53.113  6621 32173 I RkpdRegistrationBinder: Key requested for : android.hardware.security.keymint.IRemotelyProvisionedComponent/default, clientUid: 1017, keyId: 10275, callback: 43895086
+04-04 16:03:53.113  6621 32173 I RkpdRegistrationBinder: Key successfully assigned to client
+04-04 16:03:53.113  3111  3111 I RemoteProvisionSysSvc: Successfully fetched key for client 68734856
+04-04 16:03:53.119  1214  1214 D keymint_swd: keymint_swd keymint [WRN] (_swd_key_attest:2104) signkey = attestationKey
+04-04 16:03:53.119  1214  1214 D keymint_swd: keymint_swd keymint [WRN] (swd_run_cb:267) swd_generate_key() returns 0
+04-04 16:03:53.119  1214  1214 W keymint_tee: [WRN]ret OK PARAMS: A3, PP2, D6, NAR1, KS256, CD2026.04.04,16:03:53.113, 
+04-04 16:03:53.119  1214  1214 D android.hardware.security.keymint-service: generateKeyInternal: ret 0
+04-04 16:03:53.120  1211  4866 I keystore2: system/security/keystore2/src/security_level.rs:757 - In generate_key. 10275, Some("unstable.c7202ece89390c490b1b94d5b71225e1.A9135308913849573257")
+04-04 16:03:53.120  1211  4866 I keystore2: system/security/keystore2/src/samsung/samsung_keystore_utils.rs:173 - caller : "com.google.android.gms.unstable"
+04-04 16:03:53.120  1211  4866 W samsung_keystore_utils: ExceptionLoggingCase unstable.c7202ece89390c490b1b94d5b71225e1.A9135308913849573257
+04-04 16:03:53.120  1211  4866 I keystore2: system/security/keystore2/src/database.rs:2260 - In store_new_key "unstable.c7202ece89390c490b1b94d5b71225e1.A9135308913849573257", uid=10275, cert=true, cert_chain=true rebound=false
+04-04 16:03:53.120  8325  8325 D BoundBrokerSvc: onRebind: Intent { act=com.google.android.gms.play.integrity.api.service.IntegrityApiDisplayListenerApiService.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentApiServiceNoInstantApps }
+04-04 16:03:53.123  1211  4866 I keystore2: system/security/keystore2/src/service.rs:403 - In delete_key. 10275, Some("unstable.c7202ece89390c490b1b94d5b71225e1.A9135308913849573257")
+04-04 16:03:53.124  1211 32170 I keystore2: system/security/keystore2/src/gc.rs:144 - In process_one_key: Success remove invalidate_key.
+04-04 16:03:53.131  1211   495 E keystore2: system/security/keystore2/src/error.rs:185 - Rc(r#KEY_NOT_FOUND), "system/security/keystore2/src/service.rs:401: In delete_key: Trying to unbind the key. 10275, Some(\"unstable.c7202ece89390c490b1b94d5b71225e1.B9135308913849573257\")"
+04-04 16:03:53.141  2208 32248 I sensors-hal: qsh_conn_event_cb:894, SCHED_FIFO(10) for qmi_cbk
+04-04 16:03:53.141  2208 32250 I sensors-hal: qsh_conn_event_cb:894, SCHED_FIFO(10) for qmi_cbk
+04-04 16:03:53.169 15535 16257 W libc    : Access denied finding property "persist.adb.tls_server.enable"
+04-04 16:03:53.169 15535 16257 W libc    : Access denied finding property "service.adb.tls.port"
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: QUALCOMM build                   : e4a2ccdb56, Icac6f3510c
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Build Date                       : 07/21/25
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: OpenGL ES Shader Compiler Version: E031.47.18.36
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Local Branch                     : 
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Remote Branch                    : refs/tags/AU_LINUX_ANDROID_LA.VENDOR.15.4.0.11.00.00.1088.743
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Remote Branch                    : NONE
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Reconstruct Branch               : NOTHING
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Build Config                     : S P 18.0.0 AArch64
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Driver Version                   : 0800.40.1
+04-04 16:03:53.170 15535 16257 I AdrenoGLES-0: Process Name                     : com.google.android.gms.unstable
+04-04 16:03:53.175 15535 16257 I AdrenoGLES-0: PFP: 0x01500077, ME: 0x01500014
+04-04 16:03:53.177 15535 16257 E Adreno-AppProfiles: QSPM AIDL service doesn't exist
+04-04 16:03:53.369  3111  4577 D NetdEventListenerService: DNS Requested by 563, 10275(com.google.android.gms), SUCCESS, 0ms
+04-04 16:03:53.409  8803  5518 D DGInternalHandle: maybeAddInteractionEvents(): The EventCollector is not initialized. This means that the client hasn't intended to collect any interaction events so far.
+04-04 16:03:53.445  1161  1161 D io_stats: !@   8,0 r 70386817 2105671888 w 40083277 1068780372 d 5540401 1109569860 f 630620 2988510 iot 11647336 0 th 0 0 0 pt 0 inp 0 0 1004752.083
+04-04 16:03:53.445  1161  1161 D io_stats: !@ Read_top(KB): kworker/u17:0:/(25783) 5632 hbox:interactor:high(26886) 5212 earchbox:search:low(19302) 1396
+04-04 16:03:53.445  1161  1161 D io_stats: !@ Write_top(KB): f2fs_ckpt-254:6:/(5480) 420 binder:1211_2:normal(1211) 368 kworker/3:1:/(31968) 268
+04-04 16:03:53.445  1161  1161 D io_stats: !@ fuse-log: WORST (10275 44 5 4 3) (0 29 0 2 0) (10275 27 0 2 0) TOTAL_LATENCY (10275 5 44 5 4 27 0 2 34 0 2) (0 0 29 0 2) TOTAL_CNT (10275 10 44 4 27 2 34 2) (0 2 29 2) 
+04-04 16:03:53.559  2208  2208 I sensors-hal: activate:305, android.sensor.rotation_vector/111 en=0
+04-04 16:03:53.559  2208  2208 I sensors-hal: send_sync_sensor_request:515, send sync request
+04-04 16:03:53.559  2208  2208 I sensors-hal: send_sync_sensor_request:544, wait for notification of response
+04-04 16:03:53.559  2208 32250 I sensors-hal: qsh_conn_resp_cb:972, resp_value = 0 for rotv 
+04-04 16:03:53.559  2208  2208 I sensors-hal: send_sync_sensor_request:550, takes 0 ms to receive the response with 0
+04-04 16:03:53.560  2208  2208 I sensors-hal: ~qsh_qmi:61, ~qsh_qmi
+04-04 16:03:53.560  2208  2208 I sensors-hal: activate:335, android.sensor.rotation_vector/111 en=0 completed
+04-04 16:03:53.560  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.560  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.560 15535 15570 D SensorManager: unregisterListener
+04-04 16:03:53.560  2208  2208 I sensors-hal: activate:305, android.sensor.linear_acceleration/101 en=0
+04-04 16:03:53.560  2208  2208 I sensors-hal: send_sync_sensor_request:515, send sync request
+04-04 16:03:53.560  2208  2208 I sensors-hal: send_sync_sensor_request:544, wait for notification of response
+04-04 16:03:53.561  2208 32248 I sensors-hal: qsh_conn_resp_cb:972, resp_value = 0 for gravity 
+04-04 16:03:53.561  2208  2208 I sensors-hal: send_sync_sensor_request:550, takes 0 ms to receive the response with 0
+04-04 16:03:53.561  2208  2208 I sensors-hal: ~qsh_qmi:61, ~qsh_qmi
+04-04 16:03:53.561  2208  2208 I sensors-hal: activate:335, android.sensor.linear_acceleration/101 en=0 completed
+04-04 16:03:53.561  2182  2270 E minksocket: MinkIPC ERROR: ( 2182:2270 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.561  2182  2276 E minksocket: MinkIPC ERROR: ( 2182:2276 ) MinkIPC_preProcess:272 Client down, but cannot find corresponding minksession
+04-04 16:03:53.561 15535 15570 D SensorManager: unregisterListener
+04-04 16:03:53.860 30799 30799 I wpa_supplicant: Heartbeat 1205
+04-04 16:03:54.045  3111  4517 I SemWifiServiceDetector: Service det. resumed: T / T / 16687
+04-04 16:03:54.072  2334  2360 E HeatmapThread: ECT Thread time in milliseconds: 1775329434
+04-04 16:03:54.074  2334  2360 D HeatmapThread: !@ batteryplugType : 2
+04-04 16:03:54.074  2334  2360 D HeatmapThread: !@ batteryLevel : 93  batteryTemperature : 315 
+04-04 16:03:54.074  2334  2360 D HeatmapThread: !@ Heatmap currtime: 29588823
+04-04 16:03:54.074  2334  2360 D HeatmapThread: !@ Heatmap prevtime: 29588818
+04-04 16:03:54.074  2334  2360 D HeatmapThread: !@ Heatmap plugstarttime: 29588765
+04-04 16:03:54.074  2334  2360 D HeatmapThread: !@ Heatmap prevv_dsoh_update_time: 29588395
+04-04 16:03:54.074  2334  2360 E HeatmapThread: !@ CAM New BSOH: 100

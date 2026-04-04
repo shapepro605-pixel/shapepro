@@ -259,8 +259,13 @@ class ApiService extends ChangeNotifier {
     final result = await _request('POST', '/auth/verify_sms', body: {
       'firebase_id_token': firebaseIdToken,
     });
-    if (result['success'] == true && result['user'] != null) {
-      await _saveUser(result['user']);
+    if (result['success'] == true) {
+      if (result['access_token'] != null) {
+        await _saveTokens(result['access_token']);
+      }
+      if (result['user'] != null) {
+        await _saveUser(result['user']);
+      }
     }
     return result;
   }

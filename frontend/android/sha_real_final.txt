@@ -1,0 +1,26 @@
+﻿Alias name: upload
+Creation date: Mar 29, 2026
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=ShapePro Developer, OU=Development, O=ShapePro, L=Sao Paulo, ST=SP, C=BR
+Issuer: CN=ShapePro Developer, OU=Development, O=ShapePro, L=Sao Paulo, ST=SP, C=BR
+Serial number: 5739080b81d43e47
+Valid from: Sun Mar 29 16:08:03 PDT 2026 until: Thu Aug 14 16:08:03 PDT 2053
+Certificate fingerprints:
+	 SHA1: 99:3D:BA:01:4E:E2:7E:B1:3A:CE:2F:3B:53:BC:D9:B8:35:CB:D6:C8
+	 SHA256: 55:A2:A4:4D:DB:69:5A:37:3E:E6:A9:50:99:C6:91:0A:38:19:15:BC:09:74:3A:84:C6:65:BF:34:9A:D7:0E:A8
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 5C FF 2A 85 CE D7 15 5C   A3 35 76 0E F5 25 F0 4C  \.*....\.5v..%.L
+0010: C3 A3 C5 D5                                        ....
+]
+]
+

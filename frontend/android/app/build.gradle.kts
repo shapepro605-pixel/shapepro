@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.shapepro.fitness"
-    compileSdk = 35 // Stable version for Android 15
+    compileSdk = 36 // Required for latest flutter plugins (androidx.browser 1.9.0)
     ndkVersion = "28.2.13676358" // Match ndk.dir in local.properties
 
     compileOptions {
@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId = "com.shapepro.fitness"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 

@@ -1,0 +1,3394 @@
+﻿
+04-04 15:17:32.545  3111  
+3727 D SGM:FgCheckThread: 
+onLooperPrepared(), msg: 
+MSG_APP_CREATE, pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:17:32.546  3111  
+5214 D SGM:FgCheckThread:  
+ sendRunningComponentFocus(
+), pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:17:32.546  3111  
+3727 D SGM:FgCheckThread: 
+onLooperPrepared(), msg: 
+MSG_TASK_FOCUSED, pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:17:32.546  3111  
+3727 D SGM:FgCheckThread:  
+ handleTaskFocused(), 
+pkgName: 
+com.shapepro.fitness, 
+userID:0
+04-04 15:17:32.546  3111  
+5214 D InputDispatcher: 
+Focused application(0): 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626}
+04-04 15:17:32.546  3111  
+3727 D SGM:FgCheckThread:  
+ handleResume(). pkgName: 
+com.shapepro.fitness, 
+userId: 0, category: 
+non-game
+04-04 15:17:32.546  3111  
+3727 D SGM:FgCheckThread: 
+notifyFocusInOut(). of 
+pkg: com.shapepro.fitness, 
+type: 4, isSecGameFamily: 
+false, userId: 0
+04-04 15:17:32.546  3111  
+5214 D WindowManager: 
+Changing focus from 
+Window{d50e93b u0 com.shape
+pro.fitness/com.shapepro.fi
+tness.MainActivity} to 
+null displayId=0 Callers=co
+m.android.server.wm.Activit
+yTaskManagerService.setLast
+ResumedActivityUncheckLocke
+d:264 com.android.server.wm
+.ActivityTaskSupervisor.upd
+ateTopResumedActivityIfNeed
+ed:51 com.android.server.wm
+.TaskFragment.setResumedAct
+ivity:30 com.android.server
+.wm.ActivityRecord.setState
+:100 
+04-04 15:17:32.546  3111  
+5214 D 
+ActivityTaskManager: schedu
+leTopResumedActivityChanged
+, onTop=true, 
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626}, caller=com.android.
+server.wm.ActivityTaskSuper
+visor.scheduleTopResumedAct
+ivityStateIfNeeded:18 com.a
+ndroid.server.wm.ActivityTa
+skSupervisor.updateTopResum
+edActivityIfNeeded:54 com.a
+ndroid.server.wm.TaskFragme
+nt.setResumedActivity:30 co
+m.android.server.wm.Activit
+yRecord.setState:100 com.an
+droid.server.wm.ActivityTas
+kSupervisor.realStartActivi
+tyLocked:477 com.android.se
+rver.wm.ActivityTaskSupervi
+sor.startSpecificActivity:2
+7 
+04-04 15:17:32.547  3111  
+5214 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.548  3111  
+5214 D 
+GraphicsStatsService: reque
+stRenderEngineFor(com.shape
+pro.fitness)
+04-04 15:17:32.548 21512 
+21512 D ActivityThread: 
+com.shapepro.fitness will 
+use render engine as VK
+04-04 15:17:32.548  3111  
+3252 D SGM:FgCheckThread: 
+notePauseComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:17:32.548  2352  
+2352 I SurfaceFlinger: 
+[ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626}#616065] attach to 
+parent LayerHierarchy{Reque
+stedLayerState{Task=2626#61
+6064 parentId=10} 1 
+children}
+04-04 15:17:32.549  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.549  3111  
+3253 D BLASTSyncEngine: 
+SyncGroup 55657:  
+Unfinished container: 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} 
+mSyncState=2
+04-04 15:17:32.550  3111  
+3252 D SGM:FgCheckThread: 
+noteResumeComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:17:32.550  3111  
+3727 D SGM:FgCheckThread: 
+onLooperPrepared(), msg: 
+MSG_APP_RESUME, pkgName: 
+com.shapepro.fitness, 
+userid: 0
+04-04 15:17:32.550  3111  
+3727 D SGM:FgCheckThread:  
+ handleResume(). pkgName: 
+com.shapepro.fitness, 
+userId: 0, category: 
+non-game
+04-04 15:17:32.550  3111  
+3727 D SGM:FgCheckThread: 
+notifyFocusInOut(). of 
+pkg: com.shapepro.fitness, 
+type: 4, isSecGameFamily: 
+false, userId: 0
+04-04 15:17:32.550  7732  
+8307 I SDHMS:k : 
+handleResumeComponent : 
+put = 
+com.shapepro.fitness, 
+userid = 0 instanceid 
+=201623046
+04-04 15:17:32.551 13246 
+13246 I HoneySpace.EdgePane
+l.EdgePanelContainerViewMod
+el: cocktailHostRepository.
+edgePanelOperation NoteResu
+meComponent(componentName=C
+omponentInfo{com.shapepro.f
+itness/com.google.firebase.
+auth.internal.RecaptchaActi
+vity})
+04-04 15:17:32.551 13246 
+13246 I HoneySpace.EdgePane
+l.ActivityUtils: 
+HomePackage : com.sec.andro
+id.app.launcher, 
+resumePackageName : 
+com.shapepro.fitness, 
+className : com.google.fire
+base.auth.internal.Recaptch
+aActivity
+04-04 15:17:32.553  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.553  3111  
+3253 D BLASTSyncEngine: 
+SyncGroup 55657:  
+Unfinished container: 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} 
+mSyncState=2
+04-04 15:17:32.566  3111  
+5693 D InputDispatcher: 
+Focus left window (0): 
+d50e93b com.shapepro.fitnes
+s/com.shapepro.fitness.Main
+Activity
+04-04 15:17:32.607  3111  
+5693 D WindowManager: 
+prepareSync <SYNC_STATE_WAI
+TING_FOR_DRAW>, 
+mPrepareSyncSeqId=0, 
+win=Window{7a04fde u0 com.s
+hapepro.fitness/com.google.
+firebase.auth.internal.Reca
+ptchaActivity}
+04-04 15:17:32.607  2352  
+2417 I SurfaceFlinger: 
+id=616066 createSurf, 
+flag=84004, 7a04fde com.sha
+pepro.fitness/com.google.fi
+rebase.auth.internal.Recapt
+chaActivity#616066
+04-04 15:17:32.608 21512 
+21512 I InsetsController: 
+onStateChanged: host=com.sh
+apepro.fitness/com.google.f
+irebase.auth.internal.Recap
+tchaActivity, from=android.
+view.ViewRootImpl.onInsetsS
+tateChanged:3026, 
+state=InsetsState: 
+{mDisplayFrame=Rect(0, 0 - 
+1080, 2340), mDisplayCutout
+=DisplayCutout{insets=Rect(
+0, 85 - 0, 0) 
+waterfall=Insets{left=0, 
+top=0, right=0, bottom=0} b
+oundingRect={Bounds=[Rect(0
+, 0 - 0, 0), Rect(514, 0 - 
+566, 85), Rect(0, 0 - 0, 
+0), Rect(0, 0 - 0, 0)]} cut
+outPathParserInfo={CutoutPa
+thParserInfo{displayWidth=1
+080 displayHeight=2340 
+physicalDisplayWidth=1080 
+physicalDisplayHeight=2340 
+density={2.8125} 
+cutoutSpec={M 0,0 H 
+-9.333333333333333 V 
+30.13333333333333 H 
+9.333333333333333 V 0 H 0 
+Z @dp} rotation={0} 
+scale={1.0} physicalPixelDi
+splaySizeRatio={1.0}}} 
+sideOverrides={}}, mRounded
+Corners=RoundedCorners{[Rou
+ndedCorner{position=TopLeft
+, radius=42, 
+center=Point(42, 42)}, Roun
+dedCorner{position=TopRight
+, radius=42, 
+center=Point(1038, 42)}, Ro
+undedCorner{position=Bottom
+Right, radius=42, 
+center=Point(1038, 2298)}, 
+RoundedCorner{position=Bott
+omLeft, radius=42, 
+center=Point(42, 2298)}]}  
+mRoundedCornerFrame=Rect(0,
+ 0 - 1080, 2340), mPrivacyI
+ndicatorBounds=PrivacyIndic
+atorBounds {static 
+bounds=Rect(956, 0 - 1080, 
+85) rotation=0}, mDisplaySh
+ape=DisplayShape{ 
+spec=-311912193 
+displayWidth=1080 
+displayHeight=2340 physical
+PixelDisplaySizeRatio=0.75 
+rotation=0 offsetX=0 
+offsetY=0 scale=1.0}, 
+mSources= { InsetsSource: 
+{81c60000 mType=statusBars 
+mFrame=[0,0][1080,85] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null}, 
+InsetsSource: {81c60005 mTy
+pe=mandatorySystemGestures 
+mFrame=[0,0][1080,119] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null}, 
+InsetsSource: {81c60006 
+mType=tappableElement 
+mFrame=[0,0][1080,85] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null}, 
+InsetsSource: {acd70001 
+mType=navigationBars 
+mFrame=[0,2205][1080,2340] 
+mVisible=true mFlags= 
+mSideHint=BOTTOM 
+mBoundingRects=null}, 
+InsetsSource: {acd70004 
+mType=systemGestures 
+mFrame=[0,0][0,0] 
+mVisible=true mFlags= 
+mSideHint=NONE 
+mBoundingRects=null}, 
+InsetsSource: {acd70005 mTy
+pe=mandatorySystemGestures 
+mFrame=[0,2205][1080,2340] 
+mVisible=true mFlags= 
+mSideHint=BOTTOM 
+mBoundingRects=null}, 
+InsetsSource: {acd70006 
+mType=tappableElement 
+mFrame=[0,2205][1080,2340] 
+mVisible=true mFlags= 
+mSideHint=BOTTOM 
+mBoundingRects=null}, 
+InsetsSource: {acd70024 
+mType=systemGestures 
+mFrame=[0,0][0,0] 
+mVisible=true mFlags= 
+mSideHint=NONE 
+mBoundingRects=null}, 
+InsetsSource: {27 
+mType=displayCutout 
+mFrame=[0,0][1080,85] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null} }
+04-04 15:17:32.614  2352  
+2352 I SurfaceFlinger: 
+[7a04fde com.shapepro.fitne
+ss/com.google.firebase.auth
+.internal.RecaptchaActivity
+#616066] attach to parent L
+ayerHierarchy{RequestedLaye
+rState{ActivityRecord{83664
+954 u0 com.shapepro.fitness
+/com.google.firebase.auth.i
+nternal.RecaptchaActivity 
+t2626}#616065 
+parentId=616064} 1 
+children}
+04-04 15:17:32.623  3111  
+5693 D CoreBackPreview: 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity}: Setting back 
+callback OnBackInvokedCallb
+ackInfo{mCallback=android.w
+indow.IOnBackInvokedCallbac
+k$Stub$Proxy@1a9ec51, 
+mPriority=-1, mIsAnimationC
+allback=false, 
+mOverrideBehavior=0}
+04-04 15:17:32.623  3111  
+5693 I WindowManager: 
+Relayout Window{7a04fde u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity}: 
+viewVisibility=0 
+req=1080x2340 ty=1 d0
+04-04 15:17:32.623  2352  
+2417 I SurfaceFlinger: 
+id=616067 createSurf, 
+flag=44004, com.shapepro.fi
+tness/com.google.firebase.a
+uth.internal.RecaptchaActiv
+ity$_21512#616067
+04-04 15:17:32.623  3111  
+5693 D WindowManager: 
+makeSurface duration=0 name
+=com.shapepro.fitness/com.g
+oogle.firebase.auth.interna
+l.RecaptchaActivity$_21512
+04-04 15:17:32.623  3111  
+5693 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.623  3111  
+5693 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.624  3111  
+5693 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.624  3111  
+5693 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.624  3111  
+5693 D BLASTSyncEngine: 
+SyncGroup 55657:  
+Unfinished container: 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} 
+mSyncState=2
+04-04 15:17:32.624  3111  
+5693 D WindowManager: 
+Changing focus from null 
+to Window{7a04fde u0 com.sh
+apepro.fitness/com.google.f
+irebase.auth.internal.Recap
+tchaActivity} displayId=0 C
+allers=com.android.server.w
+m.WindowManagerService.rela
+youtWindow:1350 com.android
+.server.wm.Session.relayout
+:27 android.view.IWindowSes
+sion$Stub.onTransact:829 co
+m.android.server.wm.Session
+.onTransact:1 
+04-04 15:17:32.624  3111  
+5693 D 
+InsetsSourceProvider: 
+updateControlForTarget: con
+trol=InsetsSourceControl: 
+{acd70001 
+mType=navigationBars 
+initiallyVisible 
+mSurfacePosition=Point(0, 
+2205) 
+mInsetsHint=Insets{left=0, 
+top=0, right=0, 
+bottom=135}}, 
+target=Window{7a04fde u0 co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity}, from=com
+.android.server.wm.InsetsSt
+ateController.onControlTarg
+etChanged:83 com.android.se
+rver.wm.InsetsPolicy.update
+BarControlTarget:225 com.an
+droid.server.wm.DisplayPoli
+cy.updateSystemBarAttribute
+s:262 com.android.server.wm
+.WindowManagerService.updat
+eFocusedWindowLocked:372 co
+m.android.server.wm.WindowM
+anagerService.relayoutWindo
+w:1350 
+04-04 15:17:32.624  3111  
+5693 D 
+InsetsSourceProvider: 
+updateControlForTarget: con
+trol=InsetsSourceControl: 
+{81c60000 mType=statusBars 
+initiallyVisible 
+mSurfacePosition=Point(0, 
+0) 
+mInsetsHint=Insets{left=0, 
+top=85, right=0, 
+bottom=0}}, 
+target=Window{7a04fde u0 co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity}, from=com
+.android.server.wm.InsetsSt
+ateController.onControlTarg
+etChanged:83 com.android.se
+rver.wm.InsetsPolicy.update
+BarControlTarget:212 com.an
+droid.server.wm.DisplayPoli
+cy.updateSystemBarAttribute
+s:262 com.android.server.wm
+.WindowManagerService.updat
+eFocusedWindowLocked:372 co
+m.android.server.wm.WindowM
+anagerService.relayoutWindo
+w:1350 
+04-04 15:17:32.624  3111  
+5693 V SystemKeyManager: 
+updateFocusedWindow() is 
+called, com.shapepro.fitnes
+s/com.google.firebase.auth.
+internal.RecaptchaActivity
+04-04 15:17:32.625 21512 
+21512 I InsetsController: 
+onStateChanged: host=com.sh
+apepro.fitness/com.google.f
+irebase.auth.internal.Recap
+tchaActivity, from=android.
+view.ViewRootImpl.onInsetsS
+tateChanged:3026, 
+state=InsetsState: 
+{mDisplayFrame=Rect(0, 0 - 
+1080, 2340), mDisplayCutout
+=DisplayCutout{insets=Rect(
+0, 85 - 0, 0) 
+waterfall=Insets{left=0, 
+top=0, right=0, bottom=0} b
+oundingRect={Bounds=[Rect(0
+, 0 - 0, 0), Rect(514, 0 - 
+566, 85), Rect(0, 0 - 0, 
+0), Rect(0, 0 - 0, 0)]} cut
+outPathParserInfo={CutoutPa
+thParserInfo{displayWidth=1
+080 displayHeight=2340 
+physicalDisplayWidth=1080 
+physicalDisplayHeight=2340 
+density={2.8125} 
+cutoutSpec={M 0,0 H 
+-9.333333333333333 V 
+30.13333333333333 H 
+9.333333333333333 V 0 H 0 
+Z @dp} rotation={0} 
+scale={1.0} physicalPixelDi
+splaySizeRatio={1.0}}} 
+sideOverrides={}}, mRounded
+Corners=RoundedCorners{[Rou
+ndedCorner{position=TopLeft
+, radius=42, 
+center=Point(42, 42)}, Roun
+dedCorner{position=TopRight
+, radius=42, 
+center=Point(1038, 42)}, Ro
+undedCorner{position=Bottom
+Right, radius=42, 
+center=Point(1038, 2298)}, 
+RoundedCorner{position=Bott
+omLeft, radius=42, 
+center=Point(42, 2298)}]}  
+mRoundedCornerFrame=Rect(0,
+ 0 - 1080, 2340), mPrivacyI
+ndicatorBounds=PrivacyIndic
+atorBounds {static 
+bounds=Rect(956, 0 - 1080, 
+85) rotation=0}, mDisplaySh
+ape=DisplayShape{ 
+spec=-311912193 
+displayWidth=1080 
+displayHeight=2340 physical
+PixelDisplaySizeRatio=0.75 
+rotation=0 offsetX=0 
+offsetY=0 scale=1.0}, 
+mSources= { InsetsSource: 
+{81c60000 mType=statusBars 
+mFrame=[0,0][1080,85] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null}, 
+InsetsSource: {81c60005 mTy
+pe=mandatorySystemGestures 
+mFrame=[0,0][1080,119] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null}, 
+InsetsSource: {81c60006 
+mType=tappableElement 
+mFrame=[0,0][1080,85] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null}, 
+InsetsSource: {acd70001 
+mType=navigationBars 
+mFrame=[0,2205][1080,2340] 
+mVisible=true mFlags= 
+mSideHint=BOTTOM 
+mBoundingRects=null}, 
+InsetsSource: {acd70004 
+mType=systemGestures 
+mFrame=[0,0][0,0] 
+mVisible=true mFlags= 
+mSideHint=NONE 
+mBoundingRects=null}, 
+InsetsSource: {acd70005 mTy
+pe=mandatorySystemGestures 
+mFrame=[0,2205][1080,2340] 
+mVisible=true mFlags= 
+mSideHint=BOTTOM 
+mBoundingRects=null}, 
+InsetsSource: {acd70006 
+mType=tappableElement 
+mFrame=[0,2205][1080,2340] 
+mVisible=true mFlags= 
+mSideHint=BOTTOM 
+mBoundingRects=null}, 
+InsetsSource: {acd70024 
+mType=systemGestures 
+mFrame=[0,0][0,0] 
+mVisible=true mFlags= 
+mSideHint=NONE 
+mBoundingRects=null}, 
+InsetsSource: {3 mType=ime 
+mFrame=[0,0][0,0] 
+mVisible=false mFlags= 
+mSideHint=NONE 
+mBoundingRects=null}, 
+InsetsSource: {27 
+mType=displayCutout 
+mFrame=[0,0][1080,85] 
+mVisible=true mFlags= 
+mSideHint=TOP 
+mBoundingRects=null} }
+04-04 15:17:32.628  2352  
+3800 I SurfaceFlinger: [com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity$_21512#6160
+67] setTransactionState 
+with the first frame. 
+bufferData(ID: 
+92393336471603, 
+frameNumber: 1)
+04-04 15:17:32.628  3111  
+5693 D WindowManager: 
+finishDrawingWindow: 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity} 
+mDrawState=DRAW_PENDING 
+seqId=0
+04-04 15:17:32.628  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.628  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.628  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.628  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.628  3111  
+3253 V WindowManager: 
+performShowLocked: 
+mDrawState=HAS_DRAWN in 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity}
+04-04 15:17:32.628  3111  
+3253 D ChangeTransitionCont
+roller:    
+ChangeInfo{991521d containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} flags=0x0}
+04-04 15:17:32.628  3111  
+3253 D ChangeTransitionCont
+roller:    
+ChangeInfo{c363663 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x0}
+04-04 15:17:32.628  3111  
+3253 V WindowManager: 
+Start calculating 
+TransitionInfo based on 
+participants: 
+{ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626}, Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}
+04-04 15:17:32.629  3111  
+3253 V WindowManager:   
+Final targets: 
+[ChangeInfo{c363663 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x10}]
+04-04 15:17:32.629  3111  
+3253 I 
+SurfaceControlRegistry: 
+show, t=StartTransaction_Sy
+ncId<55657> 
+sc=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626}, caller=android.view
+.SurfaceControl$Transaction
+.show:3557 com.android.serv
+er.wm.Transition.onTransact
+ionReady:2048 com.android.s
+erver.wm.BLASTSyncEngine$Sy
+ncGroup.finishNow:240 com.a
+ndroid.server.wm.BLASTSyncE
+ngine.onSurfacePlacement:26
+3 com.android.server.wm.Roo
+tWindowContainer.performSur
+facePlacementNoTrace:1083 c
+om.android.server.wm.Window
+SurfacePlacer.performSurfac
+ePlacement:166 
+04-04 15:17:32.629  3111  
+3253 V WindowManager:      
+   
+{WCT{RemoteToken{6624390 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}} m=OPEN f
+=TRANSLUCENT|EDGE_EXTENSION
+_RESTRICTION leash=Surface(
+name=Task=2626)/@0x78fae42 
+sb=Rect(0, 0 - 1080, 2340) 
+eb=Rect(0, 0 - 1080, 2340) 
+epz=Point(1080, 2340) d=0 
+taskParent=-1 
+inset=Rect(0, 85 - 0, 135)}
+04-04 15:17:32.630  3111  
+3247 I 
+ActivityTaskManager: 
+Displayed com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y for user 0: +97ms
+04-04 15:17:32.630  3111  
+3247 I Pageboost: Launch 
+time gathered : pid 21512 
+com.shapepro.fitness 97
+04-04 15:17:32.630  3111  
+3253 I 
+ActivityTaskManager: done c
+ause=notifyTransitionStarti
+ng drawn 
+timestamp=1001971267910639 
+info=TransitionInfo{9ccd489
+ a=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} d=true}
+04-04 15:17:32.630  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.630  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.630  3111  
+3247 V WindowManager: Sent 
+Transition (#55657) 
+createdAt=04-04 
+15:17:32.535 via request=Tr
+ansitionRequestInfo { type 
+= OPEN, triggerTask = 
+TaskInfo{userId=0 
+taskId=2626 
+effectiveUid=10403 
+displayId=0 isRunning=true 
+baseIntent=Intent { act=com
+.google.firebase.auth.inter
+nal.ACTION_SHOW_RECAPTCHA 
+flg=0x10800000 
+pkg=com.shapepro.fitness cm
+p=com.shapepro.fitness/com.
+google.firebase.auth.intern
+al.RecaptchaActivity } base
+Activity=ComponentInfo{com.
+shapepro.fitness/com.google
+.firebase.auth.internal.Rec
+aptchaActivity} topActivity
+=ComponentInfo{com.shapepro
+.fitness/com.google.firebas
+e.auth.internal.RecaptchaAc
+tivity} origActivity=null r
+ealActivity=ComponentInfo{c
+om.shapepro.fitness/com.goo
+gle.firebase.auth.internal.
+RecaptchaActivity} 
+numActivities=1 
+lastActiveTime=2094114122 
+supportsMultiWindow=true 
+resizeMode=1 
+isResizeable=true 
+minWidth=-1 minHeight=-1 
+maxWidth=-1 maxHeight=-1 
+defaultMinSize=220 
+desktopDefaultMinSize=304 t
+oken=WCT{RemoteToken{662439
+0 Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}} 
+topActivityType=1 pictureIn
+PictureParams=null shouldDo
+ckBigOverlays=false 
+launchIntoPipHostTaskId=-1 
+lastParentTaskIdBeforePip=-
+1 displayCutoutSafeInsets=R
+ect(0, 85 - 0, 0) topActivi
+tyInfo=ActivityInfo{fee6c8e
+ com.google.firebase.auth.i
+nternal.RecaptchaActivity} 
+launchCookies=[] 
+positionInParent=Point(0, 
+0) parentTaskId=-1 
+isFocused=false 
+isVisible=false 
+isVisibleRequested=false is
+TopActivityNoDisplay=false 
+isSleeping=false 
+locusId=null 
+displayAreaFeatureId=1 isTo
+pActivityTransparent=true i
+sActivityStackTransparent=t
+rue lastNonFullscreenBounds
+=Rect(81, 560 - 999, 1730) 
+capturedLink=null 
+capturedLinkTimestamp=0 
+requestedVisibleTypes=-9 to
+pActivityRequestOpenInBrows
+erEducationTimestamp=0 appC
+ompatTaskInfo=AppCompatTask
+Info { topActivityInSizeCom
+pat=false eligibleForLetter
+boxEducation= false isLette
+rboxEducationEnabled= 
+false isLetterboxDoubleTapE
+nabled= false eligibleForUs
+erAspectRatioButton= false 
+topActivityBoundsLetterboxe
+d= false 
+isFromLetterboxDoubleTap= 
+false topActivityLetterboxV
+erticalPosition= -1 topActi
+vityLetterboxHorizontalPosi
+tion= -1 topActivityLetterb
+oxWidth=-1 topActivityLette
+rboxHeight=-1 topActivityAp
+pBounds=Rect(0, 0 - 1080, 
+2340) isUserFullscreenOverr
+ideEnabled=false isSystemFu
+llscreenOverrideEnabled=fal
+se hasMinAspectRatioOverrid
+e=false topActivityLetterbo
+xBounds=null cameraCompatTa
+skInfo=CameraCompatTaskInfo
+ { freeformCameraCompatMode
+=inactive} 
+topActivityBounds=null topA
+ctivityInDisplayCompat=fals
+e singleTapFromLetterbox=fa
+lse} topActivityMainWindowF
+rame=null originallySupport
+edMultiWindow=true 
+hasWallpaper=false rootAffi
+nity=10403:com.shapepro.fit
+ness 
+isTopTaskInStage=false Cove
+rLauncherWidgetTask=false L
+aunchedFromAppsCoverLaunche
+rTask=false LaunchedFromMul
+tistarCoverLauncherTask=fal
+se isAllowedSeamlessRotatio
+n=false isTopTransparentAct
+ivity=false 
+isAliasManaged=false 
+hasConfigChanged=false 
+snappingGuideBounds=null 
+isAiKeyRemoveAppTask=false 
+lastDesktopWindowingBounds=
+null lastExternalDesktopWin
+dowingBounds=null 
+safeCutoutInsets=null}, 
+pipChange = null, 
+remoteTransition = null, 
+displayChange = null, 
+flags = 0, debugId = 55657 
+}
+04-04 15:17:32.630  3111  
+3247 V WindowManager:      
+   
+{WCT{RemoteToken{6624390 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}} m=OPEN f
+=TRANSLUCENT|EDGE_EXTENSION
+_RESTRICTION leash=Surface(
+name=Task=2626)/@0x78fae42 
+sb=Rect(0, 0 - 1080, 2340) 
+eb=Rect(0, 0 - 1080, 2340) 
+epz=Point(1080, 2340) d=0 
+taskParent=-1 
+inset=Rect(0, 85 - 0, 135)}
+04-04 15:17:32.630  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.630  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.631  2352  
+2352 I SurfaceFlinger: 
+RequestedLayer [7a04fde com
+.shapepro.fitness/com.goo[.
+..]th.internal.RecaptchaAct
+ivity#616066] hidden!! 
+flag  from(1) --> to(0)
+04-04 15:17:32.631  2352  
+2352 I SurfaceFlinger: 
+RequestedLayer [com.shapepr
+o.fitness/com.google.fire[.
+..]rnal.RecaptchaActivity$_
+21512#616067] hidden!! 
+flag  from(1) --> to(0)
+04-04 15:17:32.631  2352  
+2352 I SurfaceFlinger: [com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity$_21512#6160
+67] attach to parent LayerH
+ierarchy{RequestedLayerStat
+e{7a04fde com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y#616066 parentId=616065} 
+1 children}
+04-04 15:17:32.631  2352  
+2417 I SurfaceFlinger: 
+id=616071 createSurf, 
+flag=84000, f3e14eb 
+ActivityRecordInputSink com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity#616071
+04-04 15:17:32.648  2352  
+2352 I SurfaceFlinger: 
+[f3e14eb 
+ActivityRecordInputSink com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity#616071] 
+attach to parent LayerHiera
+rchy{RequestedLayerState{Ac
+tivityRecord{83664954 u0 co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity 
+t2626}#616065 
+parentId=616064} 2 
+children}
+04-04 15:17:32.649 21512 
+21512 I 
+InsetsSourceConsumer: apply
+RequestedVisibilityToContro
+l: visible=true, 
+type=navigationBars, host=c
+om.shapepro.fitness/com.goo
+gle.firebase.auth.internal.
+RecaptchaActivity
+04-04 15:17:32.649 21512 
+21512 I 
+InsetsSourceConsumer: apply
+RequestedVisibilityToContro
+l: visible=true, 
+type=statusBars, host=com.s
+hapepro.fitness/com.google.
+firebase.auth.internal.Reca
+ptchaActivity
+04-04 15:17:32.650  2352  
+2904 D SurfaceFlinger: 
+[input] setFocusedWindow: 
+7a04fde com.shapepro.fitnes
+s/com.google.firebase.auth.
+internal.RecaptchaActivity
+04-04 15:17:32.650  3111  
+5214 D InputDispatcher: 
+Once focus requested (0): 
+7a04fde com.shapepro.fitnes
+s/com.google.firebase.auth.
+internal.RecaptchaActivity
+04-04 15:17:32.650  3111  
+5214 D InputDispatcher: 
+Focus request (0): 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity but 
+waiting because NO_WINDOW
+04-04 15:17:32.667  2352  
+2352 D SurfaceFlinger:     
+   DEVICE |           
+92393336471602 | 00002100 
+| RGBA_8888    |    0.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:32.667  2352  
+2352 D SurfaceFlinger:     
+   DEVICE |           
+92393336471603 | 00002100 
+| RGBA_8888    |    0.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.google.fire[..
+.]rnal.RecaptchaActivity$_2
+1512#616067 (1)
+04-04 15:17:32.667  3111  
+5693 D InputDispatcher: 
+Focus entered window (0): 
+7a04fde com.shapepro.fitnes
+s/com.google.firebase.auth.
+internal.RecaptchaActivity
+04-04 15:17:32.668  3111  
+3720 I ImeTracker: com.shap
+epro.fitness:e8677fe: 
+onRequestHide at 
+ORIGIN_SERVER reason 
+HIDE_UNSPECIFIED_WINDOW 
+fromUser false
+04-04 15:17:32.668 21512 
+21512 I ImeTracker: com.sha
+pepro.fitness:e8677fe: 
+onCancelled at 
+PHASE_CLIENT_ALREADY_HIDDEN
+04-04 15:17:32.669  3111  
+5693 D 
+InsetsSourceProvider: 
+updateControlForTarget: con
+trol=InsetsSourceControl: 
+{3 mType=ime 
+mSurfacePosition=Point(0, 
+85) 
+mInsetsHint=Insets{left=0, 
+top=0, right=0, 
+bottom=1008}}, 
+target=Window{7a04fde u0 co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity}, from=com
+.android.server.wm.ImeInset
+sSourceProvider.updateContr
+olForTarget:17 com.android.
+server.wm.InsetsStateContro
+ller.onControlTargetChanged
+:83 com.android.server.wm.D
+isplayContent.updateImeCont
+rolTarget:21 com.android.se
+rver.wm.DisplayContent.upda
+teImeInputAndControlTarget:
+156 com.android.server.wm.W
+indowManagerService$LocalSe
+rvice.updateInputMethodTarg
+etWindow:64 
+04-04 15:17:32.670  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.670  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:32.671 22777 
+22777 I HBD     : b 
+[AiWriter] setContact : 
+com.shapepro.fitness
+04-04 15:17:32.698  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{ImeContainer#15 
+parentId=616065 
+relativeParentId=616066 
+z=1} 1 children}] reparent 
+to LayerHierarchy{Requested
+LayerState{ActivityRecord{8
+3664954 u0 com.shapepro.fit
+ness/com.google.firebase.au
+th.internal.RecaptchaActivi
+ty t2626}#616065 
+parentId=616064} 3 
+children}
+04-04 15:17:32.698  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{ImeContainer#15 
+parentId=616065 
+relativeParentId=616066 
+z=1} 1 children}] 
+RelativeParent to LayerHier
+archy{RequestedLayerState{7
+a04fde com.shapepro.fitness
+/com.google.firebase.auth.i
+nternal.RecaptchaActivity#6
+16066 parentId=616065} 2 
+children}
+04-04 15:17:32.741  3111  
+7671 V WindowManager:    
+ChangeInfo{991521d containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} flags=0x0}
+04-04 15:17:32.741  3111  
+7671 V WindowManager:    
+ChangeInfo{c363663 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x10}
+04-04 15:17:32.741  3111  
+7671 D ChangeTransitionCont
+roller:    
+ChangeInfo{991521d containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} flags=0x0}
+04-04 15:17:32.741  3111  
+7671 D ChangeTransitionCont
+roller:    
+ChangeInfo{c363663 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x10}
+04-04 15:17:32.750  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:32.750  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.013  3111  
+5214 D 
+ActivityTaskManager: schedu
+leTopResumedActivityChanged
+, onTop=false, 
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626}, caller=com.android.
+server.wm.ActivityTaskSuper
+visor.scheduleTopResumedAct
+ivityStateLossIfNeeded:19 c
+om.android.server.wm.Activi
+tyTaskSupervisor.updateTopR
+esumedActivityIfNeeded:20 c
+om.android.server.wm.TaskDi
+splayArea.positionChildAt:2
+52 com.android.server.wm.Ta
+sk.moveToFront:40 com.andro
+id.server.wm.ActivityStarte
+r.startActivityInner:315 co
+m.android.server.wm.Activit
+yStarter.startActivityUnche
+cked:111 
+04-04 15:17:33.019  3111  
+4927 D WindowManager: 
+Changing focus from 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity} to null 
+displayId=0 Callers=com.and
+roid.server.wm.ActivityTask
+ManagerService.setLastResum
+edActivityUncheckLocked:264
+ com.android.server.wm.Acti
+vityTaskSupervisor.updateTo
+pResumedActivityIfNeeded:51
+ com.android.server.wm.Task
+Fragment.setResumedActivity
+:30 com.android.server.wm.A
+ctivityRecord.setState:100 
+04-04 15:17:33.022  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.022  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.023  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.023  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.023  3111  
+3252 D SGM:FgCheckThread: 
+notePauseComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:17:33.025  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.025  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.034  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.034  3111  
+3253 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.048  3111  
+7671 D InputDispatcher: 
+Focus left window (0): 
+7a04fde com.shapepro.fitnes
+s/com.google.firebase.auth.
+internal.RecaptchaActivity
+04-04 15:17:33.086  3111  
+7618 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.086  3111  
+7618 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.096  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.096  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.097  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:17:33.097  3111  
+4927 D 
+SurfaceComposerClient: 
+setCornerRadius ## d50e93b 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+#615960 
+cornerRadius=0.000000
+04-04 15:17:33.097  3111  
+7617 V WindowManager: 
+Collecting in transition 
+55658: 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626}, 
+caller=com.android.server.w
+m.TransitionController.coll
+ect:7 com.android.server.wm
+.ActivityRecord.setVisibili
+ty:132 com.android.server.w
+m.ActivityRecord.makeInvisi
+ble:32 com.android.server.w
+m.EnsureActivitiesVisibleHe
+lper.process:542 com.androi
+d.server.wm.TaskFragment.up
+dateActivityVisibilities:12
+ 
+04-04 15:17:33.097  3111  
+7617 D WindowManager: 
+prepareSync <SYNC_STATE_WAI
+TING_FOR_DRAW>, 
+mPrepareSyncSeqId=0, 
+win=Window{7a04fde u0 com.s
+hapepro.fitness/com.google.
+firebase.auth.internal.Reca
+ptchaActivity}
+04-04 15:17:33.097  3111  
+7617 V WindowManager: 
+Collecting in transition 
+55658: 
+ActivityRecord{171122173 
+u0 com.shapepro.fitness/.Ma
+inActivity t2625}, caller=c
+om.android.server.wm.Transi
+tionController.collect:7 co
+m.android.server.wm.Activit
+yRecord.setVisibility:132 c
+om.android.server.wm.Activi
+tyRecord.makeInvisible:32 c
+om.android.server.wm.Ensure
+ActivitiesVisibleHelper.pro
+cess:542 com.android.server
+.wm.TaskFragment.updateActi
+vityVisibilities:12 
+04-04 15:17:33.097  3111  
+7617 D WindowManager: 
+prepareSync <SYNC_STATE_WAI
+TING_FOR_DRAW>, 
+mPrepareSyncSeqId=0, 
+win=Window{d50e93b u0 com.s
+hapepro.fitness/com.shapepr
+o.fitness.MainActivity}
+04-04 15:17:33.104  3111  
+3253 D ChangeTransitionCont
+roller:    
+ChangeInfo{318e3c5 containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} flags=0x0}
+04-04 15:17:33.104  3111  
+3253 D ChangeTransitionCont
+roller:    
+ChangeInfo{ec0044b 
+container=Task{9950af2 
+#2625 type=standard I=com.s
+hapepro.fitness/.MainActivi
+ty} flags=0x0}
+04-04 15:17:33.104  3111  
+3253 D ChangeTransitionCont
+roller:    
+ChangeInfo{612de28 containe
+r=ActivityRecord{171122173 
+u0 com.shapepro.fitness/.Ma
+inActivity t2625} 
+flags=0x0}
+04-04 15:17:33.104  3111  
+3253 D ChangeTransitionCont
+roller:    
+ChangeInfo{a8f741 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x0}
+04-04 15:17:33.104  3111  
+3253 V WindowManager: 
+Start calculating 
+TransitionInfo based on 
+participants: 
+{ActivityRecord{17179389 
+u0 com.android.chrome/com.g
+oogle.android.apps.chrome.I
+ntentDispatcher t2627 f}}, 
+Task{4ef6c47 #2628 
+type=standard A=10281:com.a
+ndroid.chrome}, 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626}, 
+Task{795b0c0 #2627 
+type=standard I=com.android
+.chrome/com.google.android.
+apps.chrome.IntentDispatche
+r}, 
+ActivityRecord{144804742 
+u0 com.android.chrome/org.c
+hromium.chrome.browser.cust
+omtabs.CustomTabActivity 
+t2628}, 
+ActivityRecord{171122173 
+u0 com.shapepro.fitness/.Ma
+inActivity t2625}}
+04-04 15:17:33.104  3111  
+3253 V WindowManager:   
+Final targets: 
+[ChangeInfo{dbc5a3c 
+container=Task{4ef6c47 
+#2628 type=standard A=10281
+:com.android.chrome} 
+flags=0x30}, 
+ChangeInfo{a8f741 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x10}, 
+ChangeInfo{ec0044b 
+container=Task{9950af2 
+#2625 type=standard I=com.s
+hapepro.fitness/.MainActivi
+ty} flags=0x10}]
+04-04 15:17:33.105  3111  
+3253 V WindowManager:      
+   
+{WCT{RemoteToken{6624390 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}} 
+m=TO_BACK f=TRANSLUCENT|EDG
+E_EXTENSION_RESTRICTION lea
+sh=Surface(name=Task=2626)/
+@0x78fae42 sb=Rect(0, 0 - 
+1080, 2340) eb=Rect(0, 0 - 
+1080, 2340) 
+epz=Point(1080, 2340) d=0 
+taskParent=-1 
+inset=Rect(0, 85 - 0, 
+135)},
+04-04 15:17:33.105  3111  
+3253 V WindowManager:      
+   
+{WCT{RemoteToken{1f2d45e 
+Task{9950af2 #2625 
+type=standard I=com.shapepr
+o.fitness/.MainActivity}}} 
+m=TO_BACK f=EDGE_EXTENSION_
+RESTRICTION leash=Surface(n
+ame=Task=2625)/@0x84a52e0 
+sb=Rect(0, 0 - 1080, 2340) 
+eb=Rect(0, 0 - 1080, 2340) 
+epz=Point(1080, 2340) d=0 
+taskParent=-1 
+inset=Rect(0, 85 - 0, 135) 
+allowAppBgLayer=true}
+04-04 15:17:33.106  2352  
+2417 I SurfaceFlinger: 
+Capture layer list: 	 
+Background for 1afd9e8 Surf
+aceView[com.shapepro.fitnes
+s/com.shapepro.fitness.Main
+Activity]@0#616056(seamless
+Transition:0)
+04-04 15:17:33.106  2352  
+2417 I SurfaceFlinger: 
+Capture layer list: 	 
+1afd9e8 SurfaceView[com.sha
+pepro.fitness/com.shapepro.
+fitness.MainActivity]@0(BLA
+ST)#616055(seamlessTransiti
+on:0)
+04-04 15:17:33.106  2352  
+2417 I SurfaceFlinger: 
+Capture layer list: 	 com.s
+hapepro.fitness/com.shapepr
+o.fitness.MainActivity$_215
+12#616052(seamlessTransitio
+n:0)
+04-04 15:17:33.107  2352  
+2464 D RenderEngine: 
+[SEC_SF_EFFECTS] 
+drawLayersInternal,1483, 
+Rendering layer 1afd9e8 Sur
+faceView[com.shapepro.fitne
+ss/com.shapepro.fitness.Mai
+nActivity]@0(BLAST)#616055 
+at index 1
+04-04 15:17:33.107  2352  
+2464 D RenderEngine: 
+[SEC_SF_EFFECTS] 
+drawLayersInternal,1483, 
+Rendering layer com.shapepr
+o.fitness/com.shapepro.fitn
+ess.MainActivity$_21512#616
+052 at index 2
+04-04 15:17:33.109  2352  
+2417 I SurfaceFlinger: 
+Capture layer list: 	 com.s
+hapepro.fitness/com.google.
+firebase.auth.internal.Reca
+ptchaActivity$_21512#616067
+(seamlessTransition:0)
+04-04 15:17:33.109  2352  
+2464 D RenderEngine: 
+[SEC_SF_EFFECTS] 
+drawLayersInternal,1483, 
+Rendering layer com.shapepr
+o.fitness/com.google.fireba
+se.auth.internal.RecaptchaA
+ctivity$_21512#616067 at 
+index 1
+04-04 15:17:33.111  3111  
+3247 V WindowManager:      
+   
+{WCT{RemoteToken{6624390 
+Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}} 
+m=TO_BACK f=TRANSLUCENT|EDG
+E_EXTENSION_RESTRICTION lea
+sh=Surface(name=Task=2626)/
+@0x78fae42 sb=Rect(0, 0 - 
+1080, 2340) eb=Rect(0, 0 - 
+1080, 2340) 
+epz=Point(1080, 2340) d=0 
+taskParent=-1 
+inset=Rect(0, 85 - 0, 
+135)},
+04-04 15:17:33.111  3111  
+3247 V WindowManager:      
+   
+{WCT{RemoteToken{1f2d45e 
+Task{9950af2 #2625 
+type=standard I=com.shapepr
+o.fitness/.MainActivity}}} 
+m=TO_BACK f=EDGE_EXTENSION_
+RESTRICTION leash=Surface(n
+ame=Task=2625)/@0x84a52e0 
+sb=Rect(0, 0 - 1080, 2340) 
+eb=Rect(0, 0 - 1080, 2340) 
+epz=Point(1080, 2340) d=0 
+taskParent=-1 
+inset=Rect(0, 85 - 0, 135) 
+allowAppBgLayer=true}
+04-04 15:17:33.149  2352  
+2352 D SurfaceFlinger:     
+   CLIENT |           
+92393336471602 | 00002100 
+| RGBA_8888    |   31.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:33.149  2352  
+2352 D SurfaceFlinger:     
+   DEVICE |           
+92393336471603 | 00002100 
+| RGBA_8888    |    0.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.google.fire[..
+.]rnal.RecaptchaActivity$_2
+1512#616067 (1)
+04-04 15:17:33.199  2352  
+2352 D SurfaceFlinger:     
+   CLIENT |           
+92393336471602 | 00002100 
+| RGBA_8888    |  177.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:33.199  2352  
+2352 D SurfaceFlinger:     
+   DEVICE |           
+92393336471603 | 00002100 
+| RGBA_8888    |    0.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.google.fire[..
+.]rnal.RecaptchaActivity$_2
+1512#616067 (1)
+04-04 15:17:33.216  2352  
+2352 D SurfaceFlinger:     
+   CLIENT |           
+92393336471602 | 00002100 
+| RGBA_8888    |  214.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:33.216  2352  
+2352 D SurfaceFlinger:     
+   DEVICE |           
+92393336471603 | 00002100 
+| RGBA_8888    |    0.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.google.fire[..
+.]rnal.RecaptchaActivity$_2
+1512#616067 (1)
+04-04 15:17:33.233  2352  
+2352 D SurfaceFlinger:     
+   CLIENT |           
+92393336471602 | 00002100 
+| RGBA_8888    |  240.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:33.250  2352  
+2352 D SurfaceFlinger:     
+   CLIENT |           
+92393336471602 | 00002100 
+| RGBA_8888    |  258.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:33.299  2352  
+2352 D SurfaceFlinger:     
+   CLIENT |           
+92393336471602 | 00002100 
+| RGBA_8888    |  293.0    
+0.0 1080.0 2340.0 |    0   
+ 0 1080 2340 | com.shapepro
+.fitness/com.shapepro.fitne
+ss.MainActivity$_21512#6160
+52 (2)
+04-04 15:17:33.589  3111  
+7618 V WindowManager:    
+ChangeInfo{318e3c5 containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} flags=0x0}
+04-04 15:17:33.589  3111  
+7618 V WindowManager:    
+ChangeInfo{ec0044b 
+container=Task{9950af2 
+#2625 type=standard I=com.s
+hapepro.fitness/.MainActivi
+ty} flags=0x10}
+04-04 15:17:33.589  3111  
+7618 V WindowManager:    
+ChangeInfo{612de28 containe
+r=ActivityRecord{171122173 
+u0 com.shapepro.fitness/.Ma
+inActivity t2625} 
+flags=0x0}
+04-04 15:17:33.589  3111  
+7618 V WindowManager:    
+ChangeInfo{a8f741 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x10}
+04-04 15:17:33.589  3111  
+7618 V WindowManager: 
+Setting visibility of 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity}: false, caller=c
+om.android.server.wm.Window
+Container.sendAppVisibility
+ToClients:19 com.android.se
+rver.wm.WindowToken.setClie
+ntVisible:48 com.android.se
+rver.wm.ActivityRecord.comm
+itVisibility:186 com.androi
+d.server.wm.TransitionContr
+oller.finishTransition:846 
+com.android.server.wm.Windo
+wOrganizerController.finish
+TransitionInner:31 
+04-04 15:17:33.589  3111  
+7618 V WindowManager: 
+Setting visibility of 
+Window{d50e93b u0 com.shape
+pro.fitness/com.shapepro.fi
+tness.MainActivity}: 
+false, caller=com.android.s
+erver.wm.WindowContainer.se
+ndAppVisibilityToClients:19
+ com.android.server.wm.Wind
+owToken.setClientVisible:48
+ com.android.server.wm.Acti
+vityRecord.commitVisibility
+:186 com.android.server.wm.
+TransitionController.finish
+Transition:846 com.android.
+server.wm.WindowOrganizerCo
+ntroller.finishTransitionIn
+ner:31 
+04-04 15:17:33.590  3111  
+7618 D ChangeTransitionCont
+roller:    
+ChangeInfo{318e3c5 containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626} flags=0x0}
+04-04 15:17:33.590  3111  
+7618 D ChangeTransitionCont
+roller:    
+ChangeInfo{ec0044b 
+container=Task{9950af2 
+#2625 type=standard I=com.s
+hapepro.fitness/.MainActivi
+ty} flags=0x10}
+04-04 15:17:33.590  3111  
+7618 D ChangeTransitionCont
+roller:    
+ChangeInfo{612de28 containe
+r=ActivityRecord{171122173 
+u0 com.shapepro.fitness/.Ma
+inActivity t2625} 
+flags=0x0}
+04-04 15:17:33.590  3111  
+7618 D ChangeTransitionCont
+roller:    
+ChangeInfo{a8f741 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x10}
+04-04 15:17:33.606  3111  
+4927 I WindowManager: 
+Relayout Window{7a04fde u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity}: 
+viewVisibility=8 
+req=1080x2340 ty=1 d0
+04-04 15:17:33.610 21512 
+21512 D VRI[RecaptchaActivi
+ty]@848f91d: WindowStopped 
+on com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity set 
+to true
+04-04 15:17:33.611 21512 
+21512 D 
+VRI[MainActivity]@bc72d65: 
+WindowStopped on com.shapep
+ro.fitness/com.shapepro.fit
+ness.MainActivity set to 
+true
+04-04 15:17:33.613 21512 
+21512 D 
+SurfaceComposerClient: 
+setCornerRadius ## 1afd9e8 
+SurfaceView[com.shapepro.fi
+tness/com.shapepro.fitness.
+MainActivity]@0#616054 
+cornerRadius=0.000000
+04-04 15:17:33.613  2352  
+2352 I SurfaceFlinger: 
+RequestedLayer [com.shapepr
+o.fitness/com.google.fire[.
+..]rnal.RecaptchaActivity$_
+21512#616067] hidden!! 
+flag  from(0) --> to(1)
+04-04 15:17:33.613  2352  
+2352 I SurfaceFlinger: 
+RequestedLayer [com.shapepr
+o.fitness/com.shapepro.fitn
+ess.MainActivity$_21512#616
+052] hidden!! flag  
+from(0) --> to(1)
+04-04 15:17:33.613  2352  
+2352 I SurfaceFlinger: 
+RequestedLayer 
+[ActivityRecord{171122173 
+u0 com.shapepro.fitness/.Ma
+inActivity t2625}#615952] 
+hidden!! flag  from(0) --> 
+to(1)
+04-04 15:17:33.623  3111  
+7671 I WindowManager: 
+Relayout Window{d50e93b u0 
+com.shapepro.fitness/com.sh
+apepro.fitness.MainActivity
+}: viewVisibility=8 
+req=1080x2340 ty=1 d0
+04-04 15:17:33.625  3111  
+7671 E WindowManager: 
+win=Window{7a04fde u0 com.s
+hapepro.fitness/com.google.
+firebase.auth.internal.Reca
+ptchaActivity} 
+destroySurfaces: 
+appStopped=true 
+cleanupOnResume=false win.m
+WindowRemovalAllowed=false 
+win.mRemoveOnExit=false 
+win.mViewVisibility=8 calle
+r=com.android.server.wm.Act
+ivityRecord.destroySurfaces
+:25 com.android.server.wm.A
+ctivityRecord.activityStopp
+ed:192 com.android.server.w
+m.ActivityClientController.
+activityStopped:97 android.
+app.IActivityClientControll
+er$Stub.onTransact:740 com.
+android.server.wm.ActivityC
+lientController.onTransact:
+1 android.os.Binder.execTra
+nsactInternal:1462 android.
+os.Binder.execTransact:1401
+ 
+04-04 15:17:33.625  3111  
+3252 D SGM:FgCheckThread: 
+pkgName: 
+com.shapepro.fitness is 
+not in foreground
+04-04 15:17:33.625  3111  
+3252 D SGM:FgCheckThread: 
+noteStopComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+focusedPkgName: 
+com.android.chrome, 
+userId: 0
+04-04 15:17:33.627  3111  
+4927 E WindowManager: 
+win=Window{d50e93b u0 com.s
+hapepro.fitness/com.shapepr
+o.fitness.MainActivity} 
+destroySurfaces: 
+appStopped=true 
+cleanupOnResume=false win.m
+WindowRemovalAllowed=false 
+win.mRemoveOnExit=false 
+win.mViewVisibility=8 calle
+r=com.android.server.wm.Act
+ivityRecord.destroySurfaces
+:25 com.android.server.wm.A
+ctivityRecord.activityStopp
+ed:192 com.android.server.w
+m.ActivityClientController.
+activityStopped:97 android.
+app.IActivityClientControll
+er$Stub.onTransact:740 com.
+android.server.wm.ActivityC
+lientController.onTransact:
+1 android.os.Binder.execTra
+nsactInternal:1462 android.
+os.Binder.execTransact:1401
+ 
+04-04 15:17:33.627  3111  
+3252 D SGM:FgCheckThread: 
+pkgName: 
+com.shapepro.fitness is 
+not in foreground
+04-04 15:17:33.627  3111  
+3252 D SGM:FgCheckThread: 
+noteStopComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+focusedPkgName: 
+com.android.chrome, 
+userId: 0
+04-04 15:17:33.628  3111  
+3249 D PkgPredictorService-
+SecIpmManagerServiceImpl: 
+bg information pid:21512 
+uid:10403 pkgName:com.shape
+pro.fitness
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{Background for 
+1afd9e8 SurfaceView[com.sha
+pepro.fitness/com.shapepro.
+fitness.MainActivity]@0#616
+056 z=-2147483648} no 
+children}] reparent to 
+OffscreenRoot
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{Background for 
+1afd9e8 SurfaceView[com.sha
+pepro.fitness/com.shapepro.
+fitness.MainActivity]@0#616
+056 z=-2147483648} no 
+children}] RelativeParent 
+to null
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{1afd9e8 SurfaceView[co
+m.shapepro.fitness/com.shap
+epro.fitness.MainActivity]@
+0#616054 z=-2} 1 
+children}] reparent to 
+OffscreenRoot
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{1afd9e8 SurfaceView[co
+m.shapepro.fitness/com.shap
+epro.fitness.MainActivity]@
+0#616054 z=-2} 1 
+children}] RelativeParent 
+to null
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{Bounds for - com.shape
+pro.fitness/com.shapepro.fi
+tness.MainActivity@2#616053
+} no children}] reparent 
+to OffscreenRoot
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{Bounds for - com.shape
+pro.fitness/com.shapepro.fi
+tness.MainActivity@2#616053
+} no children}] 
+RelativeParent to null
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{1afd9e8 SurfaceView[co
+m.shapepro.fitness/com.shap
+epro.fitness.MainActivity]@
+0(BLAST)#616055} no 
+children}] reparent to 
+OffscreenRoot
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{1afd9e8 SurfaceView[co
+m.shapepro.fitness/com.shap
+epro.fitness.MainActivity]@
+0(BLAST)#616055} no 
+children}] RelativeParent 
+to null
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{com.shapepro.fitness/c
+om.shapepro.fitness.MainAct
+ivity$_21512#616052} no 
+children}] reparent to 
+OffscreenRoot
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{com.shapepro.fitness/c
+om.shapepro.fitness.MainAct
+ivity$_21512#616052} no 
+children}] RelativeParent 
+to null
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{com.shapepro.fitness/c
+om.google.firebase.auth.int
+ernal.RecaptchaActivity$_21
+512#616067} no children}] 
+reparent to OffscreenRoot
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{com.shapepro.fitness/c
+om.google.firebase.auth.int
+ernal.RecaptchaActivity$_21
+512#616067} no children}] 
+RelativeParent to null
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: 
+id=616052 Removed com.shape
+pro.fitness/com.shapepro.fi
+tness.MainActivity$_21512#6
+16052 (324)
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: 
+id=616067 Removed com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity$_21512#616067 
+(324)
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: 
+id=616055 Removed 1afd9e8 S
+urfaceView[com.shapepro.fit
+ness/com.shapepro.fitness.M
+ainActivity]@0(BLAST)#61605
+5 (324)
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: 
+id=616054 Removed 1afd9e8 S
+urfaceView[com.shapepro.fit
+ness/com.shapepro.fitness.M
+ainActivity]@0#616054 (324)
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: 
+id=616056 Removed 
+Background for 1afd9e8 Surf
+aceView[com.shapepro.fitnes
+s/com.shapepro.fitness.Main
+Activity]@0#616056 (324)
+04-04 15:17:33.630  2352  
+2352 I SurfaceFlinger: 
+id=616053 Removed Bounds 
+for - com.shapepro.fitness/
+com.shapepro.fitness.MainAc
+tivity@2#616053 (324)
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+destroyed Background for 
+1afd9e8 SurfaceView[com.sha
+pepro.fitness/com.shapepro.
+fitness.MainActivity]@0#616
+056 form LifecycleManager
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+destroyed 1afd9e8 SurfaceVi
+ew[com.shapepro.fitness/com
+.shapepro.fitness.MainActiv
+ity]@0#616054 form 
+LifecycleManager
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+destroyed Bounds for - com.
+shapepro.fitness/com.shapep
+ro.fitness.MainActivity@2#6
+16053 form LifecycleManager
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+destroyed 1afd9e8 SurfaceVi
+ew[com.shapepro.fitness/com
+.shapepro.fitness.MainActiv
+ity]@0(BLAST)#616055 form 
+LifecycleManager
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+destroyed com.shapepro.fitn
+ess/com.shapepro.fitness.Ma
+inActivity$_21512#616052 
+form LifecycleManager
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+destroyed com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y$_21512#616067 form 
+LifecycleManager
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+id=616056 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{Backgro
+und for 1afd9e8 SurfaceView
+[com.shapepro.fitness/com.s
+hapepro.fitness.MainActivit
+y]@0#616056 !handle 
+z=-2147483648})
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+id=616054 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{1afd9e8
+ SurfaceView[com.shapepro.f
+itness/com.shapepro.fitness
+.MainActivity]@0#616054 
+!handle z=-2})
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+id=616053 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{Bounds 
+for - com.shapepro.fitness/
+com.shapepro.fitness.MainAc
+tivity@2#616053 !handle})
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+id=616055 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{1afd9e8
+ SurfaceView[com.shapepro.f
+itness/com.shapepro.fitness
+.MainActivity]@0(BLAST)#616
+055 !handle})
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+id=616052 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{com.sha
+pepro.fitness/com.shapepro.
+fitness.MainActivity$_21512
+#616052 !handle})
+04-04 15:17:33.646  2352  
+2352 I SurfaceFlinger: 
+id=616067 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{com.sha
+pepro.fitness/com.google.fi
+rebase.auth.internal.Recapt
+chaActivity$_21512#616067 
+!handle})
+04-04 15:17:33.647  2352  
+2352 I Layer   : id=616056 
+Destroyed Background for 
+1afd9e8 SurfaceView[com.sha
+pepro.fitness/com.shapepro.
+fitness.MainActivity]@0#616
+056
+04-04 15:17:33.647  2352  
+2352 I Layer   : id=616054 
+Destroyed 1afd9e8 SurfaceVi
+ew[com.shapepro.fitness/com
+.shapepro.fitness.MainActiv
+ity]@0#616054
+04-04 15:17:33.647  2352  
+2352 I Layer   : id=616053 
+Destroyed Bounds for - com.
+shapepro.fitness/com.shapep
+ro.fitness.MainActivity@2#6
+16053
+04-04 15:17:33.647  2352  
+2352 I Layer   : id=616055 
+Destroyed 1afd9e8 SurfaceVi
+ew[com.shapepro.fitness/com
+.shapepro.fitness.MainActiv
+ity]@0(BLAST)#616055
+04-04 15:17:33.647  2352  
+2352 I Layer   : id=616052 
+Destroyed com.shapepro.fitn
+ess/com.shapepro.fitness.Ma
+inActivity$_21512#616052
+04-04 15:17:33.647  2352  
+2352 I Layer   : id=616067 
+Destroyed com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y$_21512#616067
+04-04 15:17:39.635  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 2
+04-04 15:17:45.649  3111  
+5615 D 
+MARs:ActiveTrafficFilter: 
+filter : 
+com.shapepro.fitness(0)
+04-04 15:17:45.649  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 8
+04-04 15:17:51.655  3111  
+5615 D 
+MARs:ActiveTrafficFilter: 
+filter : 
+com.shapepro.fitness(0)
+04-04 15:17:51.655  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 8
+04-04 15:17:57.664  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 2
+04-04 15:18:00.760  3111  
+4927 D 
+ActivityTaskManager: 
+Non-opaque activity is 
+created, 
+styleTranslucent=true, 
+r=ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity
+04-04 15:18:00.760  3111  
+4927 V WindowManager: 
+Collecting in transition 
+55659: 
+ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t-1}, caller=com.android.se
+rver.wm.TransitionControlle
+r.collect:7 com.android.ser
+ver.wm.ActivityStarter.star
+tActivityUnchecked:98 com.a
+ndroid.server.wm.ActivitySt
+arter.executeRequest:3559 c
+om.android.server.wm.Activi
+tyStarter.execute:1752 com.
+android.server.wm.ActivityT
+askManagerService.startActi
+vityAsUser:95 
+04-04 15:18:00.760  3111  
+4927 D 
+ActivityTaskManager: Deskto
+pModeLaunchParamsModifier: 
+task=null activity=Activity
+Record{117921864 u0 com.sha
+pepro.fitness/com.google.fi
+rebase.auth.internal.Recapt
+chaActivity t-1} task 
+null, skipping
+04-04 15:18:00.760  3111  
+4927 D 
+ActivityTaskManager: TaskLa
+unchParamsModifier:task=nul
+l activity=ActivityRecord{1
+17921864 u0 com.shapepro.fi
+tness/com.google.firebase.a
+uth.internal.RecaptchaActiv
+ity t-1} display-area-from-
+source=DefaultTaskDisplayAr
+ea_d0@85358705 
+display-id=0 task-display-a
+rea-windowing-mode=1 sugges
+ted-display-area=DefaultTas
+kDisplayArea_d0@85358705
+04-04 15:18:00.760  3111  
+4927 D 
+ActivityTaskManager: Deskto
+pModeLaunchParamsModifier: 
+task=Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} activity=A
+ctivityRecord{117921864 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t-1} 
+non-desktop, skipping
+04-04 15:18:00.760  3111  
+4927 D 
+ActivityTaskManager: TaskLa
+unchParamsModifier:task=Tas
+k{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} activity=A
+ctivityRecord{117921864 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t-1} dis
+play-area-from-source=Defau
+ltTaskDisplayArea_d0@853587
+05 display-id=0 task-displa
+y-area-windowing-mode=1 sug
+gested-display-area=Default
+TaskDisplayArea_d0@85358705
+ inherit-from-source=fullsc
+reen non-freeform-task-disp
+lay-area display-area=Defau
+ltTaskDisplayArea_d0@853587
+05 default-portrait freefor
+m-size-mismatch=Rect(81, 
+560 - 999, 1730)
+04-04 15:18:00.761  3111  
+4927 D 
+ActivityTaskManager: Deskto
+pModeLaunchParamsModifier: 
+task=Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} activity=A
+ctivityRecord{117921864 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t-1} 
+non-desktop, skipping
+04-04 15:18:00.761  3111  
+4927 D 
+ActivityTaskManager: TaskLa
+unchParamsModifier:task=Tas
+k{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness} activity=A
+ctivityRecord{117921864 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t-1} dis
+play-area-from-source=Defau
+ltTaskDisplayArea_d0@853587
+05 display-id=0 task-displa
+y-area-windowing-mode=1 sug
+gested-display-area=Default
+TaskDisplayArea_d0@85358705
+ inherit-from-source=fullsc
+reen non-freeform-task-disp
+lay-area display-area=Defau
+ltTaskDisplayArea_d0@853587
+05 default-portrait freefor
+m-size-mismatch=Rect(81, 
+560 - 999, 1730)
+04-04 15:18:00.761  3111  
+4927 I Pageboost: 
+moveTaskToFront : 
+10403:com.shapepro.fitness
+04-04 15:18:00.762  3111  
+4927 V WindowManager: 
+Collecting in transition 
+55659: 
+ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t-1}, caller=com.android.se
+rver.wm.Transition.collectE
+xistenceChange:40 com.andro
+id.server.wm.ActivityStarte
+r.handleStartResult:761 com
+.android.server.wm.Activity
+Starter.startActivityUnchec
+ked:124 com.android.server.
+wm.ActivityStarter.executeR
+equest:3559 com.android.ser
+ver.wm.ActivityStarter.exec
+ute:1752 
+04-04 15:18:00.762  3111  
+4927 V WindowManager:    
+ChangeInfo{45db0f4 containe
+r=ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity t-1} 
+flags=0x0}
+04-04 15:18:00.762  4705  
+4784 V WindowManagerShell: 
+Transition requested 
+(#55659): android.os.Binder
+Proxy@23a6786 
+TransitionRequestInfo { 
+type = OPEN, triggerTask = 
+TaskInfo{userId=0 
+taskId=2626 
+effectiveUid=10403 
+displayId=0 isRunning=true 
+baseIntent=Intent { act=com
+.google.firebase.auth.inter
+nal.ACTION_SHOW_RECAPTCHA 
+flg=0x10800000 
+pkg=com.shapepro.fitness cm
+p=com.shapepro.fitness/com.
+google.firebase.auth.intern
+al.RecaptchaActivity } base
+Activity=ComponentInfo{com.
+shapepro.fitness/com.google
+.firebase.auth.internal.Rec
+aptchaActivity} topActivity
+=ComponentInfo{com.shapepro
+.fitness/com.google.firebas
+e.auth.internal.RecaptchaAc
+tivity} origActivity=null r
+ealActivity=ComponentInfo{c
+om.shapepro.fitness/com.goo
+gle.firebase.auth.internal.
+RecaptchaActivity} 
+numActivities=1 
+lastActiveTime=2094114594 
+supportsMultiWindow=true 
+resizeMode=1 
+isResizeable=true 
+minWidth=-1 minHeight=-1 
+maxWidth=-1 maxHeight=-1 
+defaultMinSize=220 
+desktopDefaultMinSize=304 t
+oken=WCT{android.window.IWi
+ndowContainerToken$Stub$Pro
+xy@60d1847} 
+topActivityType=1 pictureIn
+PictureParams=null shouldDo
+ckBigOverlays=false 
+launchIntoPipHostTaskId=-1 
+lastParentTaskIdBeforePip=-
+1 displayCutoutSafeInsets=R
+ect(0, 85 - 0, 0) topActivi
+tyInfo=ActivityInfo{ee32874
+ com.google.firebase.auth.i
+nternal.RecaptchaActivity} 
+launchCookies=[] 
+positionInParent=Point(0, 
+0) parentTaskId=-1 
+isFocused=false 
+isVisible=false 
+isVisibleRequested=false is
+TopActivityNoDisplay=false 
+isSleeping=false 
+locusId=null 
+displayAreaFeatureId=1 isTo
+pActivityTransparent=true i
+sActivityStackTransparent=t
+rue lastNonFullscreenBounds
+=Rect(81, 560 - 999, 1730) 
+capturedLink=null 
+capturedLinkTimestamp=0 
+requestedVisibleTypes=-9 to
+pActivityRequestOpenInBrows
+erEducationTimestamp=0 appC
+ompatTaskInfo=AppCompatTask
+Info { topActivityInSizeCom
+pat=false eligibleForLetter
+boxEducation= false isLette
+rboxEducationEnabled= 
+false isLetterboxDoubleTapE
+nabled= false eligibleForUs
+erAspectRatioButton= false 
+topActivityBoundsLetterboxe
+d= false 
+isFromLetterboxDoubleTap= 
+false topActivityLetterboxV
+erticalPosition= -1 topActi
+vityLetterboxHorizontalPosi
+tion= -1 topActivityLetterb
+oxWidth=-1 topActivityLette
+rboxHeight=-1 topActivityAp
+pBounds=Rect(0, 0 - 1080, 
+2340) isUserFullscreenOverr
+ideEnabled=false isSystemFu
+llscreenOverrideEnabled=fal
+se hasMinAspectRatioOverrid
+e=false topActivityLetterbo
+xBounds=null cameraCompatTa
+skInfo=CameraCompatTaskInfo
+ { freeformCameraCompatMode
+=inactive} 
+topActivityBounds=null topA
+ctivityInDisplayCompat=fals
+e singleTapFromLetterbox=fa
+lse} topActivityMainWindowF
+rame=null originallySupport
+edMultiWindow=true 
+hasWallpaper=false rootAffi
+nity=10403:com.shapepro.fit
+ness 
+isTopTaskInStage=false Cove
+rLauncherWidgetTask=false L
+aunchedFromAppsCoverLaunche
+rTask=false LaunchedFromMul
+tistarCoverLauncherTask=fal
+se isAllowedSeamlessRotatio
+n=false isTopTransparentAct
+ivity=false 
+isAliasManaged=false 
+hasConfigChanged=false 
+snappingGuideBounds=null 
+isAiKeyRemoveAppTask=false 
+lastDesktopWindowingBounds=
+null lastExternalDesktopWin
+dowingBounds=null 
+safeCutoutInsets=null}, 
+pipChange = null, 
+remoteTransition = null, 
+displayChange = null, 
+flags = 0, debugId = 55659 
+}
+04-04 15:18:00.762  3111  
+4927 I 
+ActivityTaskManager: START 
+u0 {act=android.intent.acti
+on.VIEW cat=[android.intent
+.category.BROWSABLE] dat=re
+captcha://firebase.auth/...
+ flg=0x14000000 xflg=0x4 
+pkg=com.shapepro.fitness cm
+p=com.shapepro.fitness/com.
+google.firebase.auth.intern
+al.RecaptchaActivity (has 
+extras)} with 
+LAUNCH_SINGLE_TASK from 
+uid 10281 (sr=144804742) 
+(BAL_ALLOW_VISIBLE_WINDOW) 
+result code=2
+04-04 15:18:00.764  4705  
+4784 D WindowManagerShell: 
+onActivityRestartAttempt: t
+opActivity=ComponentInfo{co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity}, 
+wasVisible=false
+04-04 15:18:00.764 13246 
+13660 I 
+HoneySpace.TopTaskUseCase: 
+topTasks 2626 ComponentInfo
+{com.shapepro.fitness/com.g
+oogle.firebase.auth.interna
+l.RecaptchaActivity}[displa
+yId=0]
+04-04 15:18:00.774  3111  
+3147 V WindowManager: 
+Collecting in transition 
+55659: 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626}, 
+caller=com.android.server.w
+m.TransitionController.coll
+ect:7 com.android.server.wm
+.ActivityRecord.setVisibili
+ty:132 com.android.server.w
+m.TaskFragment.resumeTopAct
+ivity:1662 com.android.serv
+er.wm.Task.resumeTopActivit
+yInnerLocked:119 com.androi
+d.server.wm.Task.resumeTopA
+ctivityUncheckedLocked:23 
+04-04 15:18:00.774  3111  
+3147 D WindowManager: 
+prepareSync <SYNC_STATE_WAI
+TING_FOR_DRAW>, 
+mPrepareSyncSeqId=0, 
+win=Window{7a04fde u0 com.s
+hapepro.fitness/com.google.
+firebase.auth.internal.Reca
+ptchaActivity}
+04-04 15:18:00.774  3111  
+3147 V WindowManager: 
+Setting visibility of 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity}: true, caller=co
+m.android.server.wm.WindowC
+ontainer.sendAppVisibilityT
+oClients:19 com.android.ser
+ver.wm.WindowToken.setClien
+tVisible:48 com.android.ser
+ver.wm.ActivityRecord.setVi
+sibility:486 com.android.se
+rver.wm.TaskFragment.resume
+TopActivity:1662 com.androi
+d.server.wm.Task.resumeTopA
+ctivityInnerLocked:119 
+04-04 15:18:00.774  3111  
+3147 D SGM:FgCheckThread:  
+ sendRunningComponentFocus(
+), pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:18:00.774  3111  
+3147 D InputDispatcher: 
+Focused application(0): 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626}
+04-04 15:18:00.774  3111  
+3727 D SGM:FgCheckThread: 
+onLooperPrepared(), msg: 
+MSG_TASK_FOCUSED, pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:18:00.774  3111  
+3727 D SGM:FgCheckThread:  
+ handleTaskFocused(), 
+pkgName: 
+com.shapepro.fitness, 
+userID:0 mResumedPkgMap 
+does not containsKey.
+04-04 15:18:00.776  3111  
+3147 D 
+ActivityTaskManager: schedu
+leTopResumedActivityChanged
+, onTop=true, 
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626}, caller=com.android.
+server.wm.ActivityTaskSuper
+visor.scheduleTopResumedAct
+ivityStateIfNeeded:18 com.a
+ndroid.server.wm.ActivityTa
+skSupervisor.updateTopResum
+edActivityIfNeeded:54 com.a
+ndroid.server.wm.TaskFragme
+nt.setResumedActivity:30 co
+m.android.server.wm.Activit
+yRecord.setState:100 com.an
+droid.server.wm.TaskFragmen
+t.resumeTopActivity:1705 co
+m.android.server.wm.Task.re
+sumeTopActivityInnerLocked:
+119 
+04-04 15:18:00.777  3111  
+3147 D 
+SurfaceComposerClient: 
+setCornerRadius ## 7a04fde 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity#616066 
+cornerRadius=0.000000
+04-04 15:18:00.777 21512 
+21512 D VRI[RecaptchaActivi
+ty]@848f91d: WindowStopped 
+on com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity set 
+to false
+04-04 15:18:00.777  3111  
+3147 D BLASTSyncEngine: 
+SyncGroup 55659:  
+Unfinished container: 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626} 
+mSyncState=2
+04-04 15:18:00.778  3111  
+3252 D SGM:FgCheckThread: 
+noteResumeComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:18:00.778  7732 
+11242 I SDHMS:k : 
+handleResumeComponent : 
+put = 
+com.shapepro.fitness, 
+userid = 0 instanceid 
+=201623046
+04-04 15:18:00.778  3111  
+3727 D SGM:FgCheckThread: 
+onLooperPrepared(), msg: 
+MSG_APP_RESUME, pkgName: 
+com.shapepro.fitness, 
+userid: 0
+04-04 15:18:00.778  3111  
+3727 D SGM:FgCheckThread:  
+ handleResume(). pkgName: 
+com.shapepro.fitness, 
+userId: 0, category: 
+non-game
+04-04 15:18:00.778  3111  
+3727 D SGM:FgCheckThread: 
+notifyFocusInOut(). of 
+pkg: com.shapepro.fitness, 
+type: 4, isSecGameFamily: 
+false, userId: 0
+04-04 15:18:00.778  3111  
+3252 D SGM:GameManager: 
+identifyGamePackage. 
+com.shapepro.fitness, 
+mCurrentUserId: 0, 
+callingMethodInfo: com.sams
+ung.android.game.SemGameMan
+ager.isGamePackage(SemGameM
+anager.java:106)
+04-04 15:18:00.779  3111  
+3252 D SGM:SemGameManager: 
+isGamePackage(), pkgName=co
+m.shapepro.fitness, 
+ret=false
+04-04 15:18:00.779  3111  
+3147 V WindowManager: 
+Collecting in transition 
+55659: Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}, caller=co
+m.android.server.wm.Transit
+ion.collectExistenceChange:
+40 com.android.server.wm.Tr
+ansition.collectClose:7 com
+.android.server.wm.Activity
+Record.finishIfPossible:50 
+com.android.server.wm.Activ
+ityClientController.finishA
+ctivity:268 android.app.IAc
+tivityClientController$Stub
+.onTransact:840 
+04-04 15:18:00.779 13246 
+13246 I HoneySpace.EdgePane
+l.EdgePanelContainerViewMod
+el: cocktailHostRepository.
+edgePanelOperation NoteResu
+meComponent(componentName=C
+omponentInfo{com.shapepro.f
+itness/com.google.firebase.
+auth.internal.RecaptchaActi
+vity})
+04-04 15:18:00.779 13246 
+13246 I HoneySpace.EdgePane
+l.ActivityUtils: 
+HomePackage : com.sec.andro
+id.app.launcher, 
+resumePackageName : 
+com.shapepro.fitness, 
+className : com.google.fire
+base.auth.internal.Recaptch
+aActivity
+04-04 15:18:00.779  3111  
+3147 D 
+ActivityTaskManager: schedu
+leTopResumedActivityChanged
+, onTop=false, 
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626 f}}, caller=com.andro
+id.server.wm.ActivityTaskSu
+pervisor.scheduleTopResumed
+ActivityStateLossIfNeeded:1
+9 com.android.server.wm.Act
+ivityTaskSupervisor.updateT
+opResumedActivityIfNeeded:2
+0 com.android.server.wm.Tas
+kDisplayArea.positionChildA
+t:252 com.android.server.wm
+.Task.moveToFront:40 com.an
+droid.server.wm.Task.adjust
+FocusToNextFocusableTask:13
+3 com.android.server.wm.Act
+ivityRecord.finishIfPossibl
+e:71 
+04-04 15:18:00.779  3111  
+3147 V WindowManager: 
+Collecting in transition 
+55659: 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity t2626 
+f}}, caller=com.android.ser
+ver.wm.TransitionController
+.collect:7 com.android.serv
+er.wm.ActivityRecord.setVis
+ibility:132 com.android.ser
+ver.wm.ActivityRecord.finis
+hIfPossible:87 com.android.
+server.wm.ActivityClientCon
+troller.finishActivity:268 
+android.app.IActivityClient
+Controller$Stub.onTransact:
+840 
+04-04 15:18:00.784  3111  
+3249 D SGM:GameManager: 
+identifyForegroundApp. 
+com.shapepro.fitness, 
+mCurrentUserId: 0, 
+callerUserId: 0
+04-04 15:18:00.785  3111  
+3249 D SGM:GameManager: 
+identifyForegroundApp. 
+com.shapepro.fitness, 
+mCurrentUserId: 0, 
+callerUserId: 0
+04-04 15:18:00.788  3111  
+3147 I WindowManager: 
+Relayout Window{7a04fde u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity}: 
+viewVisibility=0 
+req=1080x2340 ty=1 d0
+04-04 15:18:00.788  2352  
+2417 I SurfaceFlinger: 
+id=616099 createSurf, 
+flag=44004, com.shapepro.fi
+tness/com.google.firebase.a
+uth.internal.RecaptchaActiv
+ity$_21512#616099
+04-04 15:18:00.789  3111  
+3147 D WindowManager: 
+makeSurface duration=1 name
+=com.shapepro.fitness/com.g
+oogle.firebase.auth.interna
+l.RecaptchaActivity$_21512
+04-04 15:18:00.793  2352  
+2417 I SurfaceFlinger: [com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity$_21512#6160
+99] setTransactionState 
+with the first frame. 
+bufferData(ID: 
+92393336471607, 
+frameNumber: 1)
+04-04 15:18:00.793  3111  
+3147 D WindowManager: 
+finishDrawingWindow: 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity} 
+mDrawState=DRAW_PENDING 
+seqId=0
+04-04 15:18:00.795  3111  
+4927 D ChangeTransitionCont
+roller:    
+ChangeInfo{3592f68 containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626 f}} flags=0x0}
+04-04 15:18:00.795  3111  
+4927 D ChangeTransitionCont
+roller:    
+ChangeInfo{45db0f4 containe
+r=ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity t-1} 
+flags=0x0}
+04-04 15:18:00.795  3111  
+4927 D ChangeTransitionCont
+roller:    
+ChangeInfo{9c51826 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x0}
+04-04 15:18:00.795  3111  
+4927 V WindowManager: 
+Start calculating 
+TransitionInfo based on 
+participants: 
+{ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626 f}}, 
+ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t-1}, Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}
+04-04 15:18:00.796  3111  
+3247 V WindowManager: Sent 
+Transition (#55659) 
+createdAt=04-04 
+15:18:00.760 via request=Tr
+ansitionRequestInfo { type 
+= OPEN, triggerTask = 
+TaskInfo{userId=0 
+taskId=2626 
+effectiveUid=10403 
+displayId=0 isRunning=true 
+baseIntent=Intent { act=com
+.google.firebase.auth.inter
+nal.ACTION_SHOW_RECAPTCHA 
+flg=0x10800000 
+pkg=com.shapepro.fitness cm
+p=com.shapepro.fitness/com.
+google.firebase.auth.intern
+al.RecaptchaActivity } base
+Activity=ComponentInfo{com.
+shapepro.fitness/com.google
+.firebase.auth.internal.Rec
+aptchaActivity} topActivity
+=ComponentInfo{com.shapepro
+.fitness/com.google.firebas
+e.auth.internal.RecaptchaAc
+tivity} origActivity=null r
+ealActivity=ComponentInfo{c
+om.shapepro.fitness/com.goo
+gle.firebase.auth.internal.
+RecaptchaActivity} 
+numActivities=1 
+lastActiveTime=2094114594 
+supportsMultiWindow=true 
+resizeMode=1 
+isResizeable=true 
+minWidth=-1 minHeight=-1 
+maxWidth=-1 maxHeight=-1 
+defaultMinSize=220 
+desktopDefaultMinSize=304 t
+oken=WCT{RemoteToken{662439
+0 Task{f9e08e1 #2626 
+type=standard A=10403:com.s
+hapepro.fitness}}} 
+topActivityType=1 pictureIn
+PictureParams=null shouldDo
+ckBigOverlays=false 
+launchIntoPipHostTaskId=-1 
+lastParentTaskIdBeforePip=-
+1 displayCutoutSafeInsets=R
+ect(0, 85 - 0, 0) topActivi
+tyInfo=ActivityInfo{fee6c8e
+ com.google.firebase.auth.i
+nternal.RecaptchaActivity} 
+launchCookies=[] 
+positionInParent=Point(0, 
+0) parentTaskId=-1 
+isFocused=false 
+isVisible=false 
+isVisibleRequested=false is
+TopActivityNoDisplay=false 
+isSleeping=false 
+locusId=null 
+displayAreaFeatureId=1 isTo
+pActivityTransparent=true i
+sActivityStackTransparent=t
+rue lastNonFullscreenBounds
+=Rect(81, 560 - 999, 1730) 
+capturedLink=null 
+capturedLinkTimestamp=0 
+requestedVisibleTypes=-9 to
+pActivityRequestOpenInBrows
+erEducationTimestamp=0 appC
+ompatTaskInfo=AppCompatTask
+Info { topActivityInSizeCom
+pat=false eligibleForLetter
+boxEducation= false isLette
+rboxEducationEnabled= 
+false isLetterboxDoubleTapE
+nabled= false eligibleForUs
+erAspectRatioButton= false 
+topActivityBoundsLetterboxe
+d= false 
+isFromLetterboxDoubleTap= 
+false topActivityLetterboxV
+erticalPosition= -1 topActi
+vityLetterboxHorizontalPosi
+tion= -1 topActivityLetterb
+oxWidth=-1 topActivityLette
+rboxHeight=-1 topActivityAp
+pBounds=Rect(0, 0 - 1080, 
+2340) isUserFullscreenOverr
+ideEnabled=false isSystemFu
+llscreenOverrideEnabled=fal
+se hasMinAspectRatioOverrid
+e=false topActivityLetterbo
+xBounds=null cameraCompatTa
+skInfo=CameraCompatTaskInfo
+ { freeformCameraCompatMode
+=inactive} 
+topActivityBounds=null topA
+ctivityInDisplayCompat=fals
+e singleTapFromLetterbox=fa
+lse} topActivityMainWindowF
+rame=null originallySupport
+edMultiWindow=true 
+hasWallpaper=false rootAffi
+nity=10403:com.shapepro.fit
+ness 
+isTopTaskInStage=false Cove
+rLauncherWidgetTask=false L
+aunchedFromAppsCoverLaunche
+rTask=false LaunchedFromMul
+tistarCoverLauncherTask=fal
+se isAllowedSeamlessRotatio
+n=false isTopTransparentAct
+ivity=false 
+isAliasManaged=false 
+hasConfigChanged=false 
+snappingGuideBounds=null 
+isAiKeyRemoveAppTask=false 
+lastDesktopWindowingBounds=
+null lastExternalDesktopWin
+dowingBounds=null 
+safeCutoutInsets=null}, 
+pipChange = null, 
+remoteTransition = null, 
+displayChange = null, 
+flags = 0, debugId = 55659 
+}
+04-04 15:18:00.796  3111  
+3252 D SGM:FgCheckThread: 
+notePauseComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+userId: 0
+04-04 15:18:00.796  2352  
+2352 I SurfaceFlinger: [com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity$_21512#6160
+99] attach to parent LayerH
+ierarchy{RequestedLayerStat
+e{7a04fde com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y#616066 parentId=616065} 
+1 children}
+04-04 15:18:00.797  3111  
+7608 V WindowManager:    
+ChangeInfo{3592f68 containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626 f}} flags=0x0}
+04-04 15:18:00.797  3111  
+7608 V WindowManager:    
+ChangeInfo{45db0f4 containe
+r=ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity t-1} 
+flags=0x0}
+04-04 15:18:00.797  3111  
+7608 V WindowManager:    
+ChangeInfo{9c51826 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x0}
+04-04 15:18:00.797  3111  
+7608 D ChangeTransitionCont
+roller:    
+ChangeInfo{3592f68 containe
+r=ActivityRecord{83664954 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity 
+t2626 f}} flags=0x0}
+04-04 15:18:00.797  3111  
+7608 D ChangeTransitionCont
+roller:    
+ChangeInfo{45db0f4 containe
+r=ActivityRecord{117921864 
+u0 com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity t-1} 
+flags=0x0}
+04-04 15:18:00.797  3111  
+7608 D ChangeTransitionCont
+roller:    
+ChangeInfo{9c51826 
+container=Task{f9e08e1 
+#2626 type=standard A=10403
+:com.shapepro.fitness} 
+flags=0x0}
+04-04 15:18:00.801 21512 
+21512 D VRI[RecaptchaActivi
+ty]@848f91d: WindowStopped 
+on com.shapepro.fitness/com
+.google.firebase.auth.inter
+nal.RecaptchaActivity set 
+to true
+04-04 15:18:00.802  3111  
+4577 D 
+NetdEventListenerService: 
+DNS Requested by 563, 10403
+(com.shapepro.fitness), 
+4(FAIL), isBlocked=true, 
+0ms
+04-04 15:18:00.803  3111  
+5693 D CoreBackPreview: 
+Window{7a04fde u0 com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity}: Setting back 
+callback null
+04-04 15:18:00.807  3111  
+4927 V WindowManager: 
+Remove Window{7a04fde u0 co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity}: mSurface
+Control=Surface(name=com.sh
+apepro.fitness/com.google.f
+irebase.auth.internal.Recap
+tchaActivity$_21512)/@0x5e9
+2b5a mAnimatingExit=false 
+mRemoveOnExit=false 
+mHasSurface=true 
+surfaceShowing=false 
+animating=false 
+app-animation=false callers
+=com.android.server.wm.Sess
+ion.remove:16 android.view.
+IWindowSession$Stub.onTrans
+act:804 com.android.server.
+wm.Session.onTransact:1 and
+roid.os.Binder.execTransact
+Internal:1457 android.os.Bi
+nder.execTransact:1401 
+<bottom of call stack> 
+04-04 15:18:00.807  2352  
+3530 I SurfaceFlinger: 
+id=616071 Removed f3e14eb 
+ActivityRecordInputSink com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity#616071 
+(319)
+04-04 15:18:00.808  3111  
+3252 D SGM:FgCheckThread: 
+pkgName: 
+com.shapepro.fitness is 
+not in foreground
+04-04 15:18:00.808  3111  
+3252 D SGM:FgCheckThread: 
+noteStopComponent(), 
+received pkgName: 
+com.shapepro.fitness, 
+focusedPkgName: 
+com.android.chrome, 
+userId: 0
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{ActivityRecord{8366495
+4 u0 com.shapepro.fitness/c
+om.google.firebase.auth.int
+ernal.RecaptchaActivity 
+t2626}#616065} 2 
+children}] reparent to 
+OffscreenRoot
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{ActivityRecord{8366495
+4 u0 com.shapepro.fitness/c
+om.google.firebase.auth.int
+ernal.RecaptchaActivity 
+t2626}#616065} 2 
+children}] RelativeParent 
+to null
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{7a04fde com.shapepro.f
+itness/com.google.firebase.
+auth.internal.RecaptchaActi
+vity#616066} 1 children}] 
+reparent to OffscreenRoot
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{7a04fde com.shapepro.f
+itness/com.google.firebase.
+auth.internal.RecaptchaActi
+vity#616066} 1 children}] 
+RelativeParent to null
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{com.shapepro.fitness/c
+om.google.firebase.auth.int
+ernal.RecaptchaActivity$_21
+512#616099} no children}] 
+reparent to OffscreenRoot
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: [Lay
+erHierarchy{RequestedLayerS
+tate{com.shapepro.fitness/c
+om.google.firebase.auth.int
+ernal.RecaptchaActivity$_21
+512#616099} no children}] 
+RelativeParent to null
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: 
+id=616065 Removed 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity 
+t2626}#616065 (320)
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: 
+id=616066 Removed 7a04fde c
+om.shapepro.fitness/com.goo
+gle.firebase.auth.internal.
+RecaptchaActivity#616066 
+(320)
+04-04 15:18:00.830  2352  
+2352 I SurfaceFlinger: 
+id=616099 Removed com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity$_21512#616099 
+(320)
+04-04 15:18:00.840  3111  
+3249 D PkgPredictorService-
+SecIpmManagerServiceImpl: 
+bg information pid:21512 
+uid:10403 pkgName:com.shape
+pro.fitness
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+destroyed f3e14eb 
+ActivityRecordInputSink com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity#616071 
+form LifecycleManager
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+destroyed com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y$_21512#616099 form 
+LifecycleManager
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+destroyed 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity 
+t2626}#616065 form 
+LifecycleManager
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+destroyed 7a04fde com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity#616066 form 
+LifecycleManager
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+id=616071 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{f3e14eb
+ ActivityRecordInputSink co
+m.shapepro.fitness/com.goog
+le.firebase.auth.internal.R
+ecaptchaActivity#616071 
+!handle z=-2147483648})
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+id=616099 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{com.sha
+pepro.fitness/com.google.fi
+rebase.auth.internal.Recapt
+chaActivity$_21512#616099 
+!handle})
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+id=616065 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{Activit
+yRecord{83664954 u0 com.sha
+pepro.fitness/com.google.fi
+rebase.auth.internal.Recapt
+chaActivity t2626}#616065 
+!handle})
+04-04 15:18:00.846  2352  
+2352 I SurfaceFlinger: 
+id=616066 onLayerDestroyed 
+from LayerHierarchyBuilder(
+RequestedLayerState{7a04fde
+ com.shapepro.fitness/com.g
+oogle.firebase.auth.interna
+l.RecaptchaActivity#616066 
+!handle})
+04-04 15:18:00.847  2352  
+2352 I Layer   : id=616071 
+Destroyed f3e14eb 
+ActivityRecordInputSink com
+.shapepro.fitness/com.googl
+e.firebase.auth.internal.Re
+captchaActivity#616071
+04-04 15:18:00.847  2352  
+2352 I Layer   : id=616099 
+Destroyed com.shapepro.fitn
+ess/com.google.firebase.aut
+h.internal.RecaptchaActivit
+y$_21512#616099
+04-04 15:18:00.847  2352  
+2352 I Layer   : id=616065 
+Destroyed 
+ActivityRecord{83664954 u0 
+com.shapepro.fitness/com.go
+ogle.firebase.auth.internal
+.RecaptchaActivity 
+t2626}#616065
+04-04 15:18:00.847  2352  
+2352 I Layer   : id=616066 
+Destroyed 7a04fde com.shape
+pro.fitness/com.google.fire
+base.auth.internal.Recaptch
+aActivity#616066
+04-04 15:18:03.666  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 37
+04-04 15:18:03.765  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 2
+04-04 15:18:09.777  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 2
+04-04 15:18:15.788  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 2
+04-04 15:18:21.801  3111  
+5615 D FreecessHandler: 
+freeze com.shapepro.fitness
+(10403) result : 2
+
+

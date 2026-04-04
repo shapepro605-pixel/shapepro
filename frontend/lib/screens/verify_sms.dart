@@ -139,7 +139,14 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
         if (result['success'] == true) {
           // Sign out from Firebase (we only use it for phone verification, not auth)
           await FirebaseAuth.instance.signOut();
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          
+          if (result['needs_registration'] == true) {
+            // User found in Firebase but not in our DB -> Send to signup
+            Navigator.pushReplacementNamed(context, '/register', arguments: {'phone': result['phone']});
+          } else {
+            // Success! Go to home
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          }
         } else {
           setState(() {
             _isLoading = false;

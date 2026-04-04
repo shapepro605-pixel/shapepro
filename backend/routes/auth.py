@@ -107,46 +107,70 @@ def register():
 
 
 @auth_bp.route('/verify_sms', methods=['POST'])
-@jwt_required()
 def verify_sms():
-    """Verify phone via Firebase ID token.
-    The Flutter app sends the Firebase ID token after successful phone verification.
+    """Verify phone via Firebase ID token or local code.
+    If Firebase token is valid, logs in the user directly.
     """
     data = request.get_json()
     if not data:
         return jsonify({'error': 'Dados não fornecidos'}), 400
 
-    user_id = get_jwt_identity()
-    user = User.query.get(int(user_id))
-    
-    if not user:
-        return jsonify({'error': 'Usuário não encontrado'}), 404
-
-    # Firebase token-based verification
     firebase_id_token = data.get('firebase_id_token')
+    
+    # 1. Firebase token-based verification (Primary)
     if firebase_id_token and is_firebase_initialized():
         decoded = _verify_firebase_token(firebase_id_token)
         if decoded:
             # Token is valid — extract phone number from Firebase claims
             firebase_phone = decoded.get('phone_number', '')
+            if not firebase_phone:
+                return jsonify({'error': 'Número de telefone não encontrado no token Firebase.'}), 400
             
-            # Validate that the Firebase-verified phone matches the user's phone
-            if firebase_phone and (firebase_phone == user.telefone or firebase_phone.endswith(user.telefone[-9:])):
+            # Find user by phone (normalized via temp User object)
+            temp_user = User(telefone=firebase_phone)
+            user = User.query.filter_by(telefone=temp_user.telefone).first()
+            
+            if user:
                 user.telefone_verificado = True
                 db.session.commit()
-                return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
+                
+                # Generate Tokens for Login
+                access_token = create_access_token(identity=str(user.id))
+                refresh_token = create_refresh_token(identity=str(user.id))
+                
+                return jsonify({
+                    'success': True, 
+                    'message': 'Login via telefone realizado!',
+                    'user': user.to_dict(),
+                    'access_token': access_token,
+                    'refresh_token': refresh_token
+                }), 200
             else:
-                return jsonify({'error': 'O número verificado não corresponde ao cadastrado.'}), 400
+                # User exists in Firebase but not in our DB -> Should Register
+                return jsonify({
+                    'success': True,
+                    'needs_registration': True,
+                    'phone': firebase_phone,
+                    'message': 'Usuário não encontrado. Prossiga para o cadastro.'
+                }), 200
         else:
             return jsonify({'error': 'Token Firebase inválido ou expirado.'}), 400
 
-    # Fallback: local OTP code verification (for dev/testing without Firebase)
-    code = str(data.get('code', '')).strip()
-    if code and user.otp_code and user.otp_code == code:
-        user.telefone_verificado = True
-        user.otp_code = None
-        db.session.commit()
-        return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
+    # 2. Fallback: local OTP code verification (Requires JWT)
+    from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+    try:
+        verify_jwt_in_request()
+        user_id = get_jwt_identity()
+        user = User.query.get(int(user_id))
+        
+        code = str(data.get('code', '')).strip()
+        if user and code and user.otp_code and user.otp_code == code:
+            user.telefone_verificado = True
+            user.otp_code = None
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
+    except:
+        pass
 
     return jsonify({'error': 'Verificação falhou. Tente novamente.'}), 400
 
