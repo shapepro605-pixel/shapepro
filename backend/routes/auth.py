@@ -473,18 +473,26 @@ def send_verification_email():
     # Create verification link
     verify_url = f"{current_app.config.get('APP_UPDATE_URL', 'http://localhost:5000')}/api/auth/verify_email?token={token}&uid={user.id}"
 
-    try:
-        msg = Message(
-            subject="Verificação de E-mail - ShapePro",
-            recipients=[user.email],
-            body=f"Olá {user.nome},\n\nBem-vindo ao ShapePro! Para começar a usar sua conta, por favor confirme seu e-mail clicando no link abaixo:\n\n{verify_url}\n\nSe você não criou esta conta, ignore este e-mail.\n\nAtenciosamente,\nEquipe ShapePro"
-        )
-        current_app.mail.send(msg)
-        return jsonify({'success': True, 'message': 'E-mail de verificação enviado!'}), 200
-    except Exception as e:
-        print(f"Error sending email: {str(e)}")
-        # If the environment lacks SMTP, just return the token for testing during dev
-        return jsonify({'success': False, 'error': f'Falha ao enviar e-mail. Se for ambiente de testes, o link simulado é: {verify_url}'}), 500
+    msg = Message(
+        subject="Verificação de E-mail - ShapePro",
+        recipients=[user.email],
+        body=f"Olá {user.nome},\n\nBem-vindo ao ShapePro! Para começar a usar sua conta, por favor confirme seu e-mail clicando no link abaixo:\n\n{verify_url}\n\nSe você não criou esta conta, ignore este e-mail.\n\nAtenciosamente,\nEquipe ShapePro"
+    )
+
+    from threading import Thread
+
+    def send_async_email(app, message):
+        with app.app_context():
+            try:
+                app.mail.send(message)
+                print(f"✅ Email enviado com sucesso para {message.recipients[0]}")
+            except Exception as e:
+                print(f"❌ Erro assíncrono ao enviar email: {str(e)}")
+
+    app_instance = current_app._get_current_object()
+    Thread(target=send_async_email, args=(app_instance, msg)).start()
+
+    return jsonify({'success': True, 'message': 'E-mail de verificação enviado! Pode fechar esta tela.'}), 200
 
 @auth_bp.route('/verify_email', methods=['GET'])
 def verify_email_endpoint():
