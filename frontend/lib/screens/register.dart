@@ -85,8 +85,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _isLoading = false;
         if (result['success'] == true || result.containsKey('access_token')) {
           _errorMessage = null;
-          // Redirect to the dedicated VerifySmsScreen after successful registration
-          Navigator.pushNamedAndRemoveUntil(context, '/verify_sms', (route) => false);
+          // Redirect to the choice screen (Email vs SMS) after successful registration
+          Navigator.pushNamedAndRemoveUntil(context, '/verify_choice', (route) => false);
         } else {
           _errorMessage = result['error'] ?? l10n.fillAllFields;
           // Show a Snackbar for double visibility

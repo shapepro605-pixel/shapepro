@@ -49,8 +49,6 @@ def register():
     nome = data['nome'].strip()
     telefone = data.get('telefone', '').strip()
 
-    telefone = data.get('telefone', '').strip()
-
     if len(password) < 6:
         return jsonify({'error': t('password_min_length')}), 400
 
@@ -157,22 +155,77 @@ def verify_sms():
             return jsonify({'error': 'Token Firebase inválido ou expirado.'}), 400
 
     # 2. Fallback: local OTP code verification (Requires JWT)
-    from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+    from flask_jwt_extended import verify_jwt_in_request as _verify_jwt
     try:
-        verify_jwt_in_request()
+        _verify_jwt()
         user_id = get_jwt_identity()
         user = User.query.get(int(user_id))
-        
+
         code = str(data.get('code', '')).strip()
         if user and code and user.otp_code and user.otp_code == code:
             user.telefone_verificado = True
             user.otp_code = None
             db.session.commit()
             return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
-    except:
+    except Exception:
         pass
 
     return jsonify({'error': 'Verificação falhou. Tente novamente.'}), 400
+
+
+@auth_bp.route('/google_login', methods=['POST'])
+def google_login():
+    """Authenticate user via Google Sign-In (Firebase ID token).
+    Finds existing user by email or auto-registers a new account.
+    Uses proper bcrypt hash for password (not a stub).
+    """
+    data = request.get_json()
+    if not data or 'id_token' not in data:
+        return jsonify({'error': 'ID Token não fornecido'}), 400
+
+    id_token = data['id_token']
+    if not is_firebase_initialized():
+        return jsonify({'error': 'Firebase não configurado no servidor.'}), 500
+
+    decoded = _verify_firebase_token(id_token)
+    if not decoded:
+        return jsonify({'error': 'Token inválido ou expirado.'}), 401
+
+    # Extract info from Google/Firebase claims
+    email = decoded.get('email', '').lower()
+    name = decoded.get('name', 'Usuário Google')
+
+    if not email:
+        return jsonify({'error': 'E-mail não encontrado no token Google.'}), 400
+
+    # Find or create user
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        # Auto-register Google users — generate a real random bcrypt hash
+        temp_pass = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(20))
+        password_hash = bcrypt.generate_password_hash(temp_pass).decode('utf-8')
+
+        user = User(
+            email=email,
+            nome=name,
+            telefone=decoded.get('phone_number', ''),
+            password_hash=password_hash,
+            telefone_verificado=True  # Google accounts are pre-verified
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    # Generate tokens
+    access_token = create_access_token(identity=str(user.id))
+    refresh_token = create_refresh_token(identity=str(user.id))
+
+    return jsonify({
+        'success': True,
+        'message': 'Login via Google realizado!',
+        'user': user.to_dict(),
+        'access_token': access_token,
+        'refresh_token': refresh_token
+    }), 200
 
 
 @auth_bp.route('/resend_sms', methods=['POST'])
@@ -236,6 +289,7 @@ def login():
         'access_token': access_token,
         'refresh_token': refresh_token,
     }), 200
+
 
 
 
@@ -393,3 +447,77 @@ def reset_password():
         'success': True,
         'message': 'Se o email estiver cadastrado, você receberá instruções para redefinir sua senha.'
     }), 200
+
+@auth_bp.route('/send_verification_email', methods=['POST'])
+@jwt_required()
+def send_verification_email():
+    """Send a magic link to the user's email."""
+    import secrets
+    from flask_mail import Message
+    from flask import current_app
+
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+
+    if user.email_verificado:
+        return jsonify({'success': True, 'message': 'Email já verificado.'}), 200
+
+    # Generate an OTP / Token
+    token = secrets.token_urlsafe(16)
+    user.otp_code = token
+    db.session.commit()
+
+    # Create verification link
+    verify_url = f"{current_app.config.get('APP_UPDATE_URL', 'http://localhost:5000')}/api/auth/verify_email?token={token}&uid={user.id}"
+
+    try:
+        msg = Message(
+            subject="Verificação de E-mail - ShapePro",
+            recipients=[user.email],
+            body=f"Olá {user.nome},\n\nBem-vindo ao ShapePro! Para começar a usar sua conta, por favor confirme seu e-mail clicando no link abaixo:\n\n{verify_url}\n\nSe você não criou esta conta, ignore este e-mail.\n\nAtenciosamente,\nEquipe ShapePro"
+        )
+        current_app.mail.send(msg)
+        return jsonify({'success': True, 'message': 'E-mail de verificação enviado!'}), 200
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+        # If the environment lacks SMTP, just return the token for testing during dev
+        return jsonify({'success': False, 'error': f'Falha ao enviar e-mail. Se for ambiente de testes, o link simulado é: {verify_url}'}), 500
+
+@auth_bp.route('/verify_email', methods=['GET'])
+def verify_email_endpoint():
+    """Endpoint for user to click and verify their email."""
+    user_id = request.args.get('uid')
+    token = request.args.get('token')
+
+    if not user_id or not token:
+        return "Link inválido ou expirado.", 400
+
+    user = User.query.get(int(user_id))
+    if not user or user.otp_code != token:
+        return "Link inválido ou conta não existe.", 400
+
+    user.email_verificado = True
+    user.otp_code = None  # consume token
+    db.session.commit()
+
+    return f'''
+    <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+                body {{ font-family: sans-serif; text-align: center; background-color: #0A0A1A; color: white; padding: 40px; }}
+                h1 {{ color: #6C5CE7; }}
+                p {{ font-size: 18px; color: #aaa; }}
+                .btn {{ display: inline-block; padding: 12px 24px; background-color: #6C5CE7; color: white; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }}
+            </style>
+        </head>
+        <body>
+            <h1>✔ CONTA VERIFICADA</h1>
+            <p>Seu e-mail <b>{user.email}</b> foi confirmado com sucesso!</p>
+            <p>Você já pode fechar esta tela e voltar para o aplicativo ShapePro.</p>
+        </body>
+    </html>
+    '''

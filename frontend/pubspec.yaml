@@ -1,7 +1,7 @@
 name: shapepro
 description: ShapePro - App profissional de dieta e treino personalizado
 publish_to: 'none'
-version: 1.0.1+11
+version: 1.0.1+12
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -23,6 +23,7 @@ dependencies:
   # Firebase
   firebase_core: ^3.13.0
   firebase_auth: ^5.6.0
+  google_sign_in: ^6.2.1
 
   # Networking & Storage
   http: ^1.2.2
@@ -46,7 +47,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  lints: ^5.1.1
   flutter_launcher_icons: ^0.14.1
 
 flutter_launcher_icons:

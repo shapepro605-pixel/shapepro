@@ -146,8 +146,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Check if phone is verified
     if (api.currentUser != null && api.currentUser!['telefone_verificado'] == false) {
        if (mounted) {
-         Navigator.pushReplacementNamed(context, '/register'); 
-         // Note: register.dart now handles _isVerifying state if user is logged in
+         Navigator.pushReplacementNamed(context, '/verify_sms'); 
          return;
        }
     }

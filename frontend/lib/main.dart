@@ -16,6 +16,7 @@ import 'screens/checkout.dart';
 import 'screens/profile_edit.dart';
 import 'screens/challenges.dart';
 import 'screens/verify_sms.dart';
+import 'screens/verify_choice.dart';
 import 'screens/privacy_policy.dart';
 
 
@@ -98,6 +99,7 @@ class ShapeProApp extends StatelessWidget {
               '/checkout': (context) => const CheckoutScreen(),
               '/profile_edit': (context) => const ProfileEditScreen(),
               '/challenges': (context) => const ChallengesScreen(),
+              '/verify_choice': (context) => const VerifyChoiceScreen(),
               '/verify_sms': (context) => const VerifySmsScreen(),
               '/privacy': (context) => const PrivacyPolicyScreen(),
 

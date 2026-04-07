@@ -199,13 +199,14 @@ class ApiService extends ChangeNotifier {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return {'success': true, ...data};
       } else {
+        debugPrint('⚠️ API ERROR RESPONSE: ${response.body}');
         return {
           'success': false,
           'error': data['error'] ?? 'Erro desconhecido',
         };
       }
     } catch (e) {
-      debugPrint('🔥 API ERROR: $e');
+      debugPrint('🔥 CRITICAL API ERROR: $e');
       return {
         'success': false,
         'error': 'Erro de conexão ou tempo de resposta excedido.',
@@ -270,6 +271,23 @@ class ApiService extends ChangeNotifier {
     return result;
   }
 
+  /// Login via Google.
+  /// Sends the Google Identity token to our backend for validation and sign-in.
+  Future<Map<String, dynamic>> loginWithGoogle(String firebaseIdToken) async {
+    final result = await _request('POST', '/auth/google_login', body: {
+      'id_token': firebaseIdToken,
+    });
+    if (result['success'] == true) {
+      if (result['access_token'] != null) {
+        await _saveTokens(result['access_token']);
+      }
+      if (result['user'] != null) {
+        await _saveUser(result['user']);
+      }
+    }
+    return result;
+  }
+
   /// Legacy verify SMS (fallback for dev/testing without Firebase)
   Future<Map<String, dynamic>> verifySms(String code) async {
     final result = await _request('POST', '/auth/verify_sms', body: {'code': code});
@@ -281,6 +299,10 @@ class ApiService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> resendSms() async {
     return await _request('POST', '/auth/resend_sms');
+  }
+
+  Future<Map<String, dynamic>> sendVerificationEmail() async {
+    return await _request('POST', '/auth/send_verification_email');
   }
 
   Future<Map<String, dynamic>> resetPassword(String email) async {

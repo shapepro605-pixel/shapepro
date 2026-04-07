@@ -25,13 +25,34 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
   String? _verificationId;
   int? _resendToken;
 
+  bool _initialized = false;
+  String _phoneToVerify = '';
+
   @override
-  void initState() {
-    super.initState();
-    // Start Firebase phone verification after build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startPhoneVerification();
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      final api = Provider.of<ApiService>(context, listen: false);
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      
+      _phoneToVerify = args?['phone'] as String? ?? api.currentUser?['telefone'] ?? '';
+
+      if (args != null && args.containsKey('verificationId')) {
+         setState(() {
+           _verificationId = args['verificationId'];
+           _isSendingCode = false;
+           _successMessage = 'Código enviado! Verifique seu celular.';
+         });
+         WidgetsBinding.instance.addPostFrameCallback((_) {
+             if (mounted) _focusNodes[0].requestFocus();
+         });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _startPhoneVerification();
+        });
+      }
+    }
   }
 
   @override
@@ -47,8 +68,21 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
 
   /// Start Firebase phone verification flow
   Future<void> _startPhoneVerification() async {
-    final api = Provider.of<ApiService>(context, listen: false);
-    final phone = api.currentUser?['telefone'] ?? '';
+    String phone = _phoneToVerify;
+    
+    // Normalize phone number for Firebase (Add +55 if missing, ensure + is present)
+    if (phone.isNotEmpty) {
+      phone = phone.replaceAll(RegExp(r'[^0-9+]'), ''); // Remove spaces, dashes, etc
+      if (!phone.startsWith('+')) {
+        if (!phone.startsWith('55')) {
+          phone = '+55$phone';
+        } else {
+          phone = '+$phone';
+        }
+      }
+    }
+    
+    debugPrint('[DEBUG] Starting SMS verification for: $phone');
 
     if (phone.isEmpty) {
       setState(() {
@@ -71,13 +105,13 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
 
         // Called when Firebase auto-resolves the SMS (Android only)
         verificationCompleted: (PhoneAuthCredential credential) async {
-          debugPrint('[FIREBASE] Auto-verification completed!');
+          debugPrint('[FIREBASE SUCCESS] Auto-verification completed!');
           await _signInWithCredential(credential);
         },
 
         // Called when verification fails
         verificationFailed: (FirebaseAuthException e) {
-          debugPrint('[FIREBASE] Verification failed: ${e.message}');
+          debugPrint('[FIREBASE ERROR] Code: ${e.code}, Message: ${e.message}, InternalData: ${e.plugin}');
           if (mounted) {
             setState(() {
               _isSendingCode = false;
@@ -88,7 +122,7 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
 
         // Called when SMS is sent — user must enter code manually
         codeSent: (String verificationId, int? resendToken) {
-          debugPrint('[FIREBASE] Code sent! verificationId: $verificationId');
+          debugPrint('[FIREBASE SENT] Code sent! ID: $verificationId');
           if (mounted) {
             setState(() {
               _verificationId = verificationId;
@@ -103,12 +137,14 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
 
         // Called on timeout
         codeAutoRetrievalTimeout: (String verificationId) {
+          debugPrint('[FIREBASE TIMEOUT] Timeout reached for: $verificationId');
           if (mounted) {
             _verificationId = verificationId;
           }
         },
       );
     } catch (e) {
+      debugPrint('[CRITICAL ERROR] Failed to call verifyPhoneNumber: $e');
       if (mounted) {
         setState(() {
           _isSendingCode = false;
@@ -237,8 +273,7 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final api = Provider.of<ApiService>(context);
-    final phone = api.currentUser?['telefone'] ?? '';
+    final phone = _phoneToVerify;
 
     return Scaffold(
       body: Container(

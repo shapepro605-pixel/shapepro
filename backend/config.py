@@ -41,11 +41,11 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     """Production configuration."""
-    DEBUG = False
-    # Move database to the root for maximum reliability on Railway
-    _base_dir = os.path.abspath(os.path.dirname(__file__))
-    _db_path = os.path.join(_base_dir, 'shapepro.db')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f'sqlite:///{_db_path}')
+    _db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'shapepro.db'))
+    db_url = os.getenv('DATABASE_URL')
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_DATABASE_URI = db_url or f'sqlite:///{_db_path}'
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen>
   bool _obscurePassword = true;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isPhoneMode = false;
 
   final LocalAuthentication _localAuth = LocalAuthentication();
   bool _canCheckBiometrics = false;
@@ -44,6 +47,16 @@ class _LoginScreenState extends State<LoginScreen>
     );
     _checkBiometrics();
     _animController.forward();
+
+    _emailController.addListener(_onIdentifierChanged);
+  }
+
+  void _onIdentifierChanged() {
+    final text = _emailController.text.trim();
+    final isPhone = text.isNotEmpty && (RegExp(r'^[+0-9]').hasMatch(text));
+    if (isPhone != _isPhoneMode) {
+      setState(() => _isPhoneMode = isPhone);
+    }
   }
 
   Future<void> _checkBiometrics() async {
@@ -121,21 +134,9 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  @override
-  void dispose() {
-    _animController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+    setState(() { _isLoading = true; _errorMessage = null; });
 
     final api = Provider.of<ApiService>(context, listen: false);
     final result = await api.login(
@@ -145,7 +146,6 @@ class _LoginScreenState extends State<LoginScreen>
 
     if (mounted) {
       setState(() => _isLoading = false);
-
       if (result['success'] == true) {
         if (_canCheckBiometrics && !_hasBiometricToken) {
           _showBiometricPrompt(api);
@@ -155,6 +155,65 @@ class _LoginScreenState extends State<LoginScreen>
       } else {
         setState(() => _errorMessage = result['error'] ?? 'Erro ao fazer login');
       }
+    }
+  }
+
+  Future<void> _handlePhoneSignIn() async {
+    final phone = _emailController.text.trim();
+    if (phone.isEmpty) return;
+    setState(() => _isLoading = true);
+    
+    String normalizedPhone = phone.replaceAll(RegExp(r'[^0-9+]'), '');
+    if (!normalizedPhone.startsWith('+')) {
+      normalizedPhone = normalizedPhone.startsWith('55') ? '+$normalizedPhone' : '+55$normalizedPhone';
+    }
+
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: normalizedPhone,
+        verificationCompleted: (credential) async {
+          final userToken = await FirebaseAuth.instance.signInWithCredential(credential);
+          final idToken = await userToken.user?.getIdToken();
+          if (idToken != null) {
+            final api = Provider.of<ApiService>(context, listen: false);
+            final result = await api.verifyPhoneWithFirebase(idToken);
+            if (mounted && result['success'] == true) Navigator.pushReplacementNamed(context, '/home');
+          }
+        },
+        verificationFailed: (e) => setState(() { _isLoading = false; _errorMessage = 'Erro SMS: ${e.message}'; }),
+        codeSent: (id, token) {
+          setState(() => _isLoading = false);
+          Navigator.pushNamed(context, '/verify_sms', arguments: {'verificationId': id, 'phone': normalizedPhone});
+        },
+        codeAutoRetrievalTimeout: (id) {},
+      );
+    } catch (e) {
+      setState(() { _isLoading = false; _errorMessage = 'Falha: $e'; });
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isLoading = true);
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) { setState(() => _isLoading = false); return; }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final idToken = await userCredential.user?.getIdToken();
+
+      if (idToken != null) {
+        final api = Provider.of<ApiService>(context, listen: false);
+        final result = await api.loginWithGoogle(idToken);
+        if (mounted) {
+          setState(() => _isLoading = false);
+          if (result['success'] == true) Navigator.pushReplacementNamed(context, '/home');
+          else setState(() => _errorMessage = result['error'] ?? 'Erro Google');
+        }
+      }
+    } catch (e) {
+      if (mounted) setState(() { _isLoading = false; _errorMessage = 'Erro Google: $e'; });
     }
   }
 
@@ -169,103 +228,42 @@ class _LoginScreenState extends State<LoginScreen>
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: const Color(0xFF16162A),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Row(
-            children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.lock_reset_rounded, color: Color(0xFF6C5CE7), size: 22),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text('Redefinir Senha', style: GoogleFonts.inter(
-                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18,
-                )),
-              ),
-            ],
-          ),
+          title: Text('Redefinir Senha', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Informe seu email cadastrado. Enviaremos instruções para redefinir sua senha.',
-                style: GoogleFonts.inter(color: Colors.white60, fontSize: 13, height: 1.5),
-              ),
-              const SizedBox(height: 20),
+              Text('Informe seu email cadastrado.', style: GoogleFonts.inter(color: Colors.white60, fontSize: 13)),
+              const SizedBox(height: 15),
               TextFormField(
                 controller: resetEmailController,
-                keyboardType: TextInputType.emailAddress,
                 style: GoogleFonts.inter(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.emailHint,
-                  prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF6C5CE7)),
-                  filled: true,
-                  fillColor: const Color(0xFF1E1E38),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xFF2A2A4A)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xFF2A2A4A)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xFF6C5CE7), width: 2),
-                  ),
-                ),
+                decoration: const InputDecoration(hintText: 'email@exemplo.com'),
               ),
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: isSending ? null : () => Navigator.pop(dialogContext),
-              child: Text('Cancelar', style: GoogleFonts.inter(color: Colors.white54)),
-            ),
+            TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancelar')),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6C5CE7),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
               onPressed: isSending ? null : () async {
-                final email = resetEmailController.text.trim();
-                if (email.isEmpty || !email.contains('@')) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Informe um email válido')),
-                  );
-                  return;
-                }
                 setDialogState(() => isSending = true);
                 final api = Provider.of<ApiService>(context, listen: false);
-                final result = await api.resetPassword(email);
-                setDialogState(() => isSending = false);
-                if (dialogContext.mounted) {
-                  Navigator.pop(dialogContext);
-                }
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(result['message'] ?? 'Verifique seu email.'),
-                      backgroundColor: const Color(0xFF2ED573),
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                  );
-                }
+                await api.resetPassword(resetEmailController.text);
+                if (mounted) Navigator.pop(dialogContext);
               },
-              child: isSending
-                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : Text('Enviar', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: const Text('Enviar'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -278,11 +276,7 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0A0A1A),
-              Color(0xFF12122A),
-              Color(0xFF0A0A1A),
-            ],
+            colors: [Color(0xFF0A0A1A), Color(0xFF12122A), Color(0xFF0A0A1A)],
           ),
         ),
         child: SafeArea(
@@ -296,54 +290,26 @@ class _LoginScreenState extends State<LoginScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 60),
-
-                    // ── Logo ───────────────────────────────────────
                     Center(
                       child: Container(
-                        width: 80,
-                        height: 80,
+                        width: 80, height: 80,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(22),
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
-                              blurRadius: 25,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
+                          gradient: const LinearGradient(colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)]),
                         ),
                         child: const Icon(Icons.fitness_center_rounded, size: 40, color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 30),
-
-                    // ── Title ──────────────────────────────────────
                     Center(
                       child: Text(
                         AppLocalizations.of(context)!.welcomeBack,
-                        style: GoogleFonts.inter(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.loginSubtitle,
-                        style: GoogleFonts.inter(fontSize: 15, color: Colors.white54),
+                        style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.w800, color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 45),
-
-                    // ── Error message ─────────────────────────────
                     if (_errorMessage != null)
                       Container(
-                        width: double.infinity,
                         padding: const EdgeInsets.all(14),
                         margin: const EdgeInsets.only(bottom: 20),
                         decoration: BoxDecoration(
@@ -351,159 +317,77 @@ class _LoginScreenState extends State<LoginScreen>
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: const Color(0xFFFD4556).withValues(alpha: 0.3)),
                         ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.error_outline, color: Color(0xFFFD4556), size: 20),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                _errorMessage!,
-                                style: GoogleFonts.inter(color: const Color(0xFFFD4556), fontSize: 13),
-                              ),
-                            ),
-                          ],
-                        ),
+                        child: Text(_errorMessage!, style: GoogleFonts.inter(color: const Color(0xFFFD4556), fontSize: 13)),
                       ),
-
-                    // ── Form ──────────────────────────────────────
                     Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(AppLocalizations.of(context)!.email, style: GoogleFonts.inter(
-                            fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white70,
-                          )),
+                          Text(_isPhoneMode ? 'Número de Telefone' : 'E-mail', style: GoogleFonts.inter(color: Colors.white70, fontSize: 13)),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: _isPhoneMode ? TextInputType.phone : TextInputType.emailAddress,
                             style: GoogleFonts.inter(color: Colors.white),
                             decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.emailHint,
-                              prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF6C5CE7)),
+                              hintText: _isPhoneMode ? '(00) 00000-0000' : 'seu@email.com',
+                              prefixIcon: Icon(_isPhoneMode ? Icons.phone_android_outlined : Icons.email_outlined),
                             ),
-                            validator: (v) {
-                              if (v == null || v.isEmpty) return AppLocalizations.of(context)!.emailRequired;
-                              if (!v.contains('@')) return AppLocalizations.of(context)!.emailInvalid;
-                              return null;
-                            },
                           ),
-                          const SizedBox(height: 22),
-
-                          Text(AppLocalizations.of(context)!.password, style: GoogleFonts.inter(
-                            fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white70,
-                          )),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _obscurePassword,
-                            style: GoogleFonts.inter(color: Colors.white),
-                            decoration: InputDecoration(
-                              hintText: '••••••••',
-                              prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF6C5CE7)),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                                  color: Colors.white38,
+                          if (!_isPhoneMode) ...[
+                            const SizedBox(height: 22),
+                            Text('Senha', style: GoogleFonts.inter(color: Colors.white70, fontSize: 13)),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              style: GoogleFonts.inter(color: Colors.white),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.lock_outline),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                                 ),
-                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                               ),
                             ),
-                            validator: (v) {
-                              if (v == null || v.isEmpty) return 'Informe sua senha';
-                              if (v.length < 6) return 'Mínimo 6 caracteres';
-                              return null;
-                            },
-                          ),
+                          ],
                         ],
                       ),
                     ),
                     const SizedBox(height: 14),
-
-                    // ── Forgot password ───────────────────────────
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: _showForgotPasswordDialog,
-                        child: Text(
-                          AppLocalizations.of(context)!.forgotPassword,
-                          style: GoogleFonts.inter(
-                            color: const Color(0xFF6C5CE7),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                    if (!_isPhoneMode)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(onPressed: _showForgotPasswordDialog, child: const Text('Esqueceu a senha?')),
                       ),
-                    ),
                     const SizedBox(height: 20),
-
-                    // ── Login button ──────────────────────────────
                     SizedBox(
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _login,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6C5CE7),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2.5,
-                                ),
-                              )
-                            : Text(
-                                AppLocalizations.of(context)!.login,
-                                style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
+                        onPressed: _isLoading ? null : (_isPhoneMode ? _handlePhoneSignIn : _login),
+                        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6C5CE7)),
+                        child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : Text(_isPhoneMode ? 'Enviar SMS' : 'Entrar'),
                       ),
                     ),
                     const SizedBox(height: 30),
-
-                    // ── Divider ───────────────────────────────────
                     Row(
                       children: [
                         Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text('ou', style: GoogleFonts.inter(color: Colors.white30, fontSize: 13)),
-                        ),
+                        const Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('ou', style: TextStyle(color: Colors.white30))),
                         Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
                       ],
                     ),
                     const SizedBox(height: 30),
-
-                    // ── Biometric & Social buttons ────────────────────────────
                     if (_canCheckBiometrics && _hasBiometricToken) ...[
                       SizedBox(
                         width: double.infinity,
                         height: 56,
                         child: OutlinedButton.icon(
                           onPressed: _loginWithBiometrics,
-                          icon: const Icon(Icons.fingerprint, size: 28),
-                          label: Text(
-                            'Entrar com Face ID / Digital',
-                            style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Color(0xFF6C5CE7)),
-                            backgroundColor: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
+                          icon: const Icon(Icons.fingerprint),
+                          label: const Text('Entrar com Biometria'),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -512,72 +396,18 @@ class _LoginScreenState extends State<LoginScreen>
                       width: double.infinity,
                       height: 56,
                       child: OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.g_mobiledata_rounded, size: 28),
-                        label: Text(
-                          'Continuar com Google',
-                          style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white70,
-                          side: const BorderSide(color: Color(0xFF2A2A4A)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
+                        onPressed: _isLoading ? null : _handleGoogleSignIn,
+                        icon: const Icon(Icons.g_mobiledata_rounded, size: 32),
+                        label: const Text('Continuar com Google'),
                       ),
                     ),
                     const SizedBox(height: 40),
-
-                    // ── Register link ────────────────────────────
                     Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Não tem conta? ',
-                            style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
-                          ),
-                          GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/register'),
-                            child: Text(
-                              'Criar conta grátis',
-                              style: GoogleFonts.inter(
-                                color: const Color(0xFF6C5CE7),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: TextButton(
+                        onPressed: () => Navigator.pushNamed(context, '/register'),
+                        child: const Text('Não tem conta? Criar conta grátis'),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/privacy'),
-                            child: Text(
-                              'Privacidade',
-                              style: GoogleFonts.inter(color: Colors.white38, fontSize: 11, decoration: TextDecoration.underline),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text('•', style: GoogleFonts.inter(color: Colors.white38, fontSize: 11)),
-                          const SizedBox(width: 12),
-                          GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/privacy'),
-                            child: Text(
-                              'Termos de Uso',
-                              style: GoogleFonts.inter(color: Colors.white38, fontSize: 11, decoration: TextDecoration.underline),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
                   ],
                 ),
               ),
