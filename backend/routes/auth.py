@@ -428,71 +428,30 @@ def reset_password():
     # In production, send via email service.
     from flask_mail import Message
     from flask import current_app
-    
-    try:
-        msg = Message(
-            subject="Recuperação de Senha - ShapePro",
-            recipients=[email],
-            body=f"Olá,\n\nRecebemos uma solicitação de redefinição de senha para sua conta ShapePro.\n\nSua nova senha temporária é: {temp_password}\n\nRecomendamos que você altere esta senha imediatamente após entrar no aplicativo.\n\nAtenciosamente,\nEquipe ShapePro"
-        )
-        current_app.mail.send(msg)
-        print(f"\n[RESET SENHA] 📧 E-mail enviado para {email}\n")
-    except Exception as e:
-        print(f"\n[RESET SENHA] ❌ Erro ao enviar e-mail para {email}: {str(e)}\n")
-        # Log temp password for emergency even if email fails
-        print(f"[FALLBACK] Senha: {temp_password}")
-
-
-    return jsonify({
-        'success': True,
-        'message': 'Se o email estiver cadastrado, você receberá instruções para redefinir sua senha.'
-    }), 200
-
-@auth_bp.route('/send_verification_email', methods=['POST'])
-@jwt_required()
-def send_verification_email():
-    """Send a magic link to the user's email."""
-    import secrets
-    from flask_mail import Message
-    from flask import current_app
-
-    user_id = get_jwt_identity()
-    user = User.query.get(int(user_id))
-
-    if not user:
-        return jsonify({'error': t('user_not_found')}), 404
-
-    if user.email_verificado:
-        return jsonify({'success': True, 'message': 'Email já verificado.'}), 200
-
-    # Generate an OTP / Token
-    token = secrets.token_urlsafe(16)
-    user.otp_code = token
-    db.session.commit()
-
-    # Create verification link
-    verify_url = f"{current_app.config.get('APP_UPDATE_URL', 'http://localhost:5000')}/api/auth/verify_email?token={token}&uid={user.id}"
-
-    msg = Message(
-        subject="Verificação de E-mail - ShapePro",
-        recipients=[user.email],
-        body=f"Olá {user.nome},\n\nBem-vindo ao ShapePro! Para começar a usar sua conta, por favor confirme seu e-mail clicando no link abaixo:\n\n{verify_url}\n\nSe você não criou esta conta, ignore este e-mail.\n\nAtenciosamente,\nEquipe ShapePro"
-    )
-
     from threading import Thread
 
-    def send_async_email(app, message):
+    msg = Message(
+        subject="Recuperacao de Senha - ShapePro",
+        recipients=[email],
+        body=f"Ola,\n\nRecebemos uma solicitacao de redefinicao de senha para sua conta ShapePro.\n\nSua nova senha temporaria e: {temp_password}\n\nRecomendamos que voce altere esta senha imediatamente apos entrar no aplicativo.\n\nAtenciosamente,\nEquipe ShapePro"
+    )
+
+    def send_async_email(app, message, temp_pwd):
         with app.app_context():
             try:
                 app.mail.send(message)
-                print(f"[OK] Email enviado com sucesso para {message.recipients[0]}")
+                print(f"\n[RESET SENHA] [OK] E-mail enviado para {message.recipients[0]}\n")
             except Exception as e:
-                print(f"[ERROR] Erro assincrono ao enviar email: {str(e)}")
+                print(f"\n[RESET SENHA] [ERROR] Erro ao enviar e-mail para {message.recipients[0]}: {str(e)}\n")
+                print(f"[FALLBACK] Senha: {temp_pwd}")
 
     app_instance = current_app._get_current_object()
-    Thread(target=send_async_email, args=(app_instance, msg)).start()
+    Thread(target=send_async_email, args=(app_instance, msg, temp_password)).start()
 
-    return jsonify({'success': True, 'message': 'E-mail de verificação enviado! Pode fechar esta tela.'}), 200
+    return jsonify({
+        'success': True,
+        'message': 'Se o email estiver cadastrado, voce recebera instrucoes para redefinir sua senha.'
+    }), 200
 
 @auth_bp.route('/verify_email', methods=['GET'])
 def verify_email_endpoint():
@@ -529,3 +488,4 @@ def verify_email_endpoint():
         </body>
     </html>
     '''
+
