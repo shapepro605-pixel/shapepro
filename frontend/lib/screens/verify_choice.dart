@@ -54,7 +54,7 @@ class _VerifyChoiceScreenState extends State<VerifyChoiceScreen> {
       _isLoading = false;
     });
     
-    if (user != null && user['email_verificado'] == true) {
+    if (user['email_verificado'] == true) {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       setState(() {

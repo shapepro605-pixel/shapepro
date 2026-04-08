@@ -127,10 +127,10 @@ def create_app(config_name=None):
         return render_template('index.html')
 
     print("""
-    ╔══════════════════════════════════════════╗
-    ║          🏋️ ShapePro API v1.0           ║
-    ║   Dieta & Treino Personalizado          ║
-    ╚══════════════════════════════════════════╝
+    ==========================================
+              [ShapePro API v1.0]          
+         Dieta & Treino Personalizado      
+    ==========================================
     """)
 
     return app

@@ -10,4 +10,4 @@ def init_db(app):
         # Import models so they are registered with SQLAlchemy
         from models.user import User, DietPlan, TrainingPlan, WeightLog, BodyMetric, WaterLog  # noqa: F401
         db.create_all()
-        print("[ShapePro] ✅ Database initialized successfully.")
+        print("[ShapePro] [OK] Database initialized successfully.")

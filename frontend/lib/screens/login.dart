@@ -208,8 +208,11 @@ class _LoginScreenState extends State<LoginScreen>
         final result = await api.loginWithGoogle(idToken);
         if (mounted) {
           setState(() => _isLoading = false);
-          if (result['success'] == true) Navigator.pushReplacementNamed(context, '/home');
-          else setState(() => _errorMessage = result['error'] ?? 'Erro Google');
+          if (result['success'] == true) {
+            Navigator.pushReplacementNamed(context, '/home');
+          } else {
+            setState(() => _errorMessage = result['error'] ?? 'Erro Google');
+          }
         }
       }
     } catch (e) {

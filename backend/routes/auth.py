@@ -485,9 +485,9 @@ def send_verification_email():
         with app.app_context():
             try:
                 app.mail.send(message)
-                print(f"✅ Email enviado com sucesso para {message.recipients[0]}")
+                print(f"[OK] Email enviado com sucesso para {message.recipients[0]}")
             except Exception as e:
-                print(f"❌ Erro assíncrono ao enviar email: {str(e)}")
+                print(f"[ERROR] Erro assincrono ao enviar email: {str(e)}")
 
     app_instance = current_app._get_current_object()
     Thread(target=send_async_email, args=(app_instance, msg)).start()

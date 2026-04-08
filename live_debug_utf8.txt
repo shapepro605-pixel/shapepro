@@ -1,37 +1,8 @@
 ﻿--------- beginning of main
-04-07 16:46:56.868 I/flutter ( 7478): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/login
-04-07 16:46:57.827 I/flutter ( 7478): Γ£à API RESPONSE [POST] 401: {"error":"Email ou senha incorretos"}
-04-07 16:46:57.827 I/flutter ( 7478): 
-04-07 16:46:57.827 I/flutter ( 7478): ΓÜá∩╕Å API ERROR RESPONSE: {"error":"Email ou senha incorretos"}
-04-07 16:46:57.827 I/flutter ( 7478): 
-04-07 16:47:07.806 I/flutter ( 7478): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/login
-04-07 16:47:08.779 I/flutter ( 7478): Γ£à API RESPONSE [POST] 401: {"error":"Email ou senha incorretos"}
-04-07 16:47:08.779 I/flutter ( 7478): 
-04-07 16:47:08.779 I/flutter ( 7478): ΓÜá∩╕Å API ERROR RESPONSE: {"error":"Email ou senha incorretos"}
-04-07 16:47:08.779 I/flutter ( 7478): 
-04-07 16:47:26.892 I/flutter ( 7478): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/login
-04-07 16:47:27.929 I/flutter ( 7478): Γ£à API RESPONSE [POST] 401: {"error":"Email ou senha incorretos"}
-04-07 16:47:27.929 I/flutter ( 7478): 
-04-07 16:47:27.929 I/flutter ( 7478): ΓÜá∩╕Å API ERROR RESPONSE: {"error":"Email ou senha incorretos"}
-04-07 16:47:27.929 I/flutter ( 7478): 
-04-07 16:47:49.998 I/flutter ( 7478): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/login
-04-07 16:47:50.982 I/flutter ( 7478): Γ£à API RESPONSE [POST] 401: {"error":"Email ou senha incorretos"}
-04-07 16:47:50.982 I/flutter ( 7478): 
-04-07 16:47:50.982 I/flutter ( 7478): ΓÜá∩╕Å API ERROR RESPONSE: {"error":"Email ou senha incorretos"}
-04-07 16:47:50.982 I/flutter ( 7478): 
-04-07 16:49:22.676 I/AndroidRuntime(12240): VM exiting with result code 0, cleanup skipped.
-04-07 16:49:24.742 W/FirebaseApp(16252): Default FirebaseApp failed to initialize because no default options were found. This usually means that com.google.gms:google-services was not applied to your gradle project.
-04-07 16:49:24.800 I/FirebaseApp(16252): Device unlocked: initializing all Firebase APIs for app [DEFAULT]
-04-07 16:49:24.803 I/FirebaseApp(16252): Device unlocked: initializing all Firebase APIs for app thl-mcs-d-odccsm
-04-07 16:49:45.901 I/flutter ( 7478): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/login
-04-07 16:49:47.089 I/flutter ( 7478): Γ£à API RESPONSE [POST] 401: {"error":"Email ou senha incorretos"}
-04-07 16:49:47.089 I/flutter ( 7478): 
-04-07 16:49:47.089 I/flutter ( 7478): ΓÜá∩╕Å API ERROR RESPONSE: {"error":"Email ou senha incorretos"}
-04-07 16:49:47.089 I/flutter ( 7478): 
-04-07 16:49:51.146 I/flutter ( 7478): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/login
-04-07 16:49:52.106 I/flutter ( 7478): Γ£à API RESPONSE [POST] 401: {"error":"Email ou senha incorretos"}
-04-07 16:49:52.107 I/flutter ( 7478): 
-04-07 16:49:52.107 I/flutter ( 7478): ΓÜá∩╕Å API ERROR RESPONSE: {"error":"Email ou senha incorretos"}
-04-07 16:49:52.107 I/flutter ( 7478): 
-04-07 16:50:18.543 I/flutter ( 7478): [DEBUG] Starting SMS verification for: 
-
+04-08 16:54:30.812 24856 24856 I flutter : [DEBUG] Starting SMS verification for: +5537991380204
+04-08 16:54:32.738 24856 24856 I flutter : [FIREBASE SENT] Code sent! ID: AD8T5IvcFX6PQ5zzkhJxgW9y57Pggihip17aSmU6U5PVrcS1yo83gyF8N-khhhsqWAo79fEufqJ_xXQ51sHqmn0S3GiVtGK9SkogKzsCps3rrZPRkzs3ubVTAsFQKqxXdmEHGF4f87RGnLcv4N88oeU5JaFCfSwkPg
+04-08 16:55:28.943 24856 24856 I flutter : [DEBUG] Starting SMS verification for: +5537991380204
+04-08 16:55:30.836 24856 24856 I flutter : [FIREBASE SENT] Code sent! ID: AD8T5It4GL-c_N0XURTM8dqOMG6iSPgKPG5T0f0nxjWlGzkJcDgpzBJ-U2EgJqdPEBiYQFK692yvtLGuyKIOZ7ArZIsb3x9_4T2WKD_ecD3xqPv3tp5vnFaDn0nA7Wmvn29n1taba1VVSkUrvlARiiHeyZxwZuUDNg
+04-08 16:56:30.330 24856 24856 I flutter : [FIREBASE TIMEOUT] Timeout reached for: AD8T5It4GL-c_N0XURTM8dqOMG6iSPgKPG5T0f0nxjWlGzkJcDgpzBJ-U2EgJqdPEBiYQFK692yvtLGuyKIOZ7ArZIsb3x9_4T2WKD_ecD3xqPv3tp5vnFaDn0nA7Wmvn29n1taba1VVSkUrvlARiiHeyZxwZuUDNg
+04-08 16:57:17.743 24856 24856 I flutter : [DEBUG] Starting SMS verification for: +5537991380204
+04-08 16:57:20.087 24856 24856 I flutter : [FIREBASE SENT] Code sent! ID: AD8T5It_7owCXwZOijum1edFdwvYghtxMY5g7rjhqt4SsLlewtZB9xq6GBDhPFi8o976iU6P8E-xoQPjy6w3vPVvX2D5jyy967nPpBNiq9EOsac1Yo2zAR_cGOxNoaBXqiy0n8B6chRQ_afZRWH3TekZWVpsucNnmg

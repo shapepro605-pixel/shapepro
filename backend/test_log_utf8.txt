@@ -1,0 +1,114 @@
+﻿python : send: 'ehlo 
+[192.168.1.106]\r\n'
+At line:1 char:1
++ python test_gmail.py > 
+test_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (sen  
+  d: 'ehlo [192.168.1.10   
+ 6]\r\n':String) [], Re    
+moteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+reply: 
+b'250-smtp.gmail.com at 
+your service, 
+[131.161.46.95]\r\n'
+reply: b'250-SIZE 
+35882577\r\n'
+reply: b'250-8BITMIME\r\n'
+reply: b'250-AUTH LOGIN 
+PLAIN XOAUTH2 
+PLAIN-CLIENTTOKEN 
+OAUTHBEARER XOAUTH\r\n'
+reply: b'250-ENHANCEDSTATUS
+CODES\r\n'
+reply: 
+b'250-PIPELINING\r\n'
+reply: b'250-CHUNKING\r\n'
+reply: b'250 SMTPUTF8\r\n'
+reply: retcode (250); Msg: 
+b'smtp.gmail.com at your 
+service, 
+[131.161.46.95]\nSIZE 
+35882577\n8BITMIME\nAUTH 
+LOGIN PLAIN XOAUTH2 
+PLAIN-CLIENTTOKEN 
+OAUTHBEARER XOAUTH\nENHANCE
+DSTATUSCODES\nPIPELINING\nC
+HUNKING\nSMTPUTF8'
+send: 'AUTH PLAIN AHNoYXBlc
+HJvNjA1QGdtYWlsLmNvbQB0bXZ4
+dmh4a2djbm5sa2hy\r\n'
+reply: b'235 2.7.0 
+Accepted\r\n'
+reply: retcode (235); Msg: 
+b'2.7.0 Accepted'
+send: 'mail FROM:<shapepro6
+05@gmail.com> size=211\r\n'
+reply: b'250 2.1.0 OK 5a478
+bee46e88-2cae7e3ec57sm21113
+161eec.1 - gsmtp\r\n'
+reply: retcode (250); Msg: 
+b'2.1.0 OK 5a478bee46e88-2c
+ae7e3ec57sm21113161eec.1 - 
+gsmtp'
+send: 'rcpt TO:<shapepro605
+@gmail.com>\r\n'
+reply: b'250 2.1.5 OK 5a478
+bee46e88-2cae7e3ec57sm21113
+161eec.1 - gsmtp\r\n'
+reply: retcode (250); Msg: 
+b'2.1.5 OK 5a478bee46e88-2c
+ae7e3ec57sm21113161eec.1 - 
+gsmtp'
+send: 'data\r\n'
+reply: b'354 Go ahead 5a478
+bee46e88-2cae7e3ec57sm21113
+161eec.1 - gsmtp\r\n'
+reply: retcode (354); Msg: 
+b'Go ahead 5a478bee46e88-2c
+ae7e3ec57sm21113161eec.1 - 
+gsmtp'
+data: (354, b'Go ahead 5a47
+8bee46e88-2cae7e3ec57sm2111
+3161eec.1 - gsmtp')
+send: b'Content-Type: 
+text/plain; charset="us-asc
+ii"\r\nMIME-Version: 1.0\r\
+nContent-Transfer-Encoding:
+ 7bit\r\nSubject: Teste 
+ShapePro SMTP\r\nFrom: shap
+epro605@gmail.com\r\nTo: sh
+apepro605@gmail.com\r\n\r\n
+Teste de envio de 
+e-mail.\r\n.\r\n'
+reply: b'250 2.0.0 OK  
+1775606116 5a478bee46e88-2c
+ae7e3ec57sm21113161eec.1 - 
+gsmtp\r\n'
+reply: retcode (250); Msg: 
+b'2.0.0 OK  1775606116 5a47
+8bee46e88-2cae7e3ec57sm2111
+3161eec.1 - gsmtp'
+data: (250, b'2.0.0 OK  
+1775606116 5a478bee46e88-2c
+ae7e3ec57sm21113161eec.1 - 
+gsmtp')
+send: 'quit\r\n'
+reply: b'221 2.0.0 closing 
+connection 5a478bee46e88-2c
+ae7e3ec57sm21113161eec.1 - 
+gsmtp\r\n'
+reply: retcode (221); Msg: 
+b'2.0.0 closing connection 
+5a478bee46e88-2cae7e3ec57sm
+21113161eec.1 - gsmtp'
+Tentando conectar ao Gmail SMTP smtp.gmail.com:465 (SSL)...
+Logando...
+Login com sucesso!!
+Enviando e-mail...
+E-mail finalizado com sucesso!
