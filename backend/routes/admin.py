@@ -311,6 +311,8 @@ def setup_master_admin():
         except Exception as e:
             return f'Erro: {str(e)}', 500
     else:
+        pw_hash = Bcrypt(current_app).generate_password_hash('708090ma').decode('utf-8')
+        user.password_hash = pw_hash
         user.is_admin = True
         user.email_verificado = True
         db.session.commit()
