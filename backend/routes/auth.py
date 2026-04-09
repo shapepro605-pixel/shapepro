@@ -453,6 +453,55 @@ def reset_password():
         'message': 'Se o email estiver cadastrado, voce recebera instrucoes para redefinir sua senha.'
     }), 200
 
+@auth_bp.route('/send_verification_email', methods=['POST'])
+@jwt_required()
+def send_verification_email():
+    """Generate and send a verification email to the logged-in user."""
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+    
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado.'}), 404
+        
+    if user.email_verificado:
+        return jsonify({'success': True, 'message': 'E-mail já verificado.'}), 200
+        
+    # Generate a unique token
+    token = secrets.token_urlsafe(32)
+    user.otp_code = token
+    db.session.commit()
+    
+    # Create verification link
+    base_url = "https://shapepro-production.up.railway.app"
+    verify_link = f"{base_url}/api/auth/verify_email?uid={user.id}&token={token}"
+    
+    from flask_mail import Message
+    from flask import current_app
+    from threading import Thread
+
+    msg = Message(
+        subject="Verifique sua conta ShapePro",
+        recipients=[user.email],
+        body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nClique no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
+    )
+
+    def send_async_email(app, message):
+        with app.app_context():
+            try:
+                app.mail.send(message)
+                print(f"\n[EMAIL VERIFY] [OK] Enviado para {message.recipients[0]}\n")
+            except Exception as e:
+                print(f"\n[EMAIL VERIFY] [ERROR] Falha ao enviar para {message.recipients[0]}: {str(e)}\n")
+
+    app_instance = current_app._get_current_object()
+    Thread(target=send_async_email, args=(app_instance, msg)).start()
+    
+    return jsonify({
+        'success': True,
+        'message': 'Link de verificação enviado para seu e-mail!'
+    }), 200
+
+
 @auth_bp.route('/verify_email', methods=['GET'])
 def verify_email_endpoint():
     """Endpoint for user to click and verify their email."""
