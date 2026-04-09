@@ -30,6 +30,32 @@ def _verify_firebase_token(id_token):
         return None
 
 
+def _send_async_email(app, message, diagnostic_prefix="EMAIL"):
+    """Internal helper to send email in a background thread with diagnostics."""
+    from threading import Thread
+    
+    def send_thread(app_ctx, msg):
+        with app_ctx.app_context():
+            try:
+                recipient = msg.recipients[0] if msg.recipients else "desconhecido"
+                print(f"\n[{diagnostic_prefix}] 📨 Iniciando envio para {recipient}...")
+                print(f"  - Servidor: {app_ctx.config.get('MAIL_SERVER')}:{app_ctx.config.get('MAIL_PORT')}")
+                print(f"  - SSL: {app_ctx.config.get('MAIL_USE_SSL')}, TLS: {app_ctx.config.get('MAIL_USE_TLS')}")
+                
+                app_ctx.mail.send(msg)
+                print(f"[{diagnostic_prefix}] ✅ E-MAIL ENVIADO COM SUCESSO!\n")
+            except Exception as e:
+                print(f"[{diagnostic_prefix}] ❌ FALHA CRÍTICA NO ENVIO: {str(e)}\n")
+
+    # Obter o objeto real do app (lidando com LocalProxy se necessário)
+    try:
+        app_instance = app._get_current_object()
+    except AttributeError:
+        app_instance = app
+        
+    Thread(target=send_thread, args=(app_instance, message)).start()
+
+
 @auth_bp.route('/register', methods=['POST'])
 def register():
     """Register a new user."""
@@ -84,6 +110,26 @@ def register():
     try:
         db.session.add(new_user)
         db.session.commit()
+        
+        # --- Trigger Verification Email ---
+        # Generate a unique token
+        token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+        new_user.otp_code = token
+        db.session.commit()
+
+        # Create verification link
+        base_url = "https://shapepro-production.up.railway.app"
+        verify_link = f"{base_url}/api/auth/verify_email?uid={new_user.id}&token={token}"
+        
+        from flask_mail import Message
+        msg = Message(
+            subject="Bem-vindo ao ShapePro - Verifique sua conta",
+            recipients=[email],
+            body=f"Olá {nome},\n\nSua conta foi criada com sucesso! Falta apenas um passo para você começar sua jornada fitness.\n\nClique no link abaixo para verificar seu e-mail e ativar todas as funcionalidades:\n\n{verify_link}\n\nSe você não solicitou este cadastro, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
+        )
+        _send_async_email(current_app, msg, "REGISTRO")
+        # ---------------------------------
+
     except Exception as e:
         db.session.rollback()
         print(f"[ERRO] Falha ao criar usuário: {e}")
@@ -427,26 +473,13 @@ def reset_password():
 
     # In production, send via email service.
     from flask_mail import Message
-    from flask import current_app
-    from threading import Thread
-
     msg = Message(
         subject="Recuperacao de Senha - ShapePro",
         recipients=[email],
         body=f"Ola,\n\nRecebemos uma solicitacao de redefinicao de senha para sua conta ShapePro.\n\nSua nova senha temporaria e: {temp_password}\n\nRecomendamos que voce altere esta senha imediatamente apos entrar no aplicativo.\n\nAtenciosamente,\nEquipe ShapePro"
     )
 
-    def send_async_email(app, message, temp_pwd):
-        with app.app_context():
-            try:
-                app.mail.send(message)
-                print(f"\n[RESET SENHA] [OK] E-mail enviado para {message.recipients[0]}\n")
-            except Exception as e:
-                print(f"\n[RESET SENHA] [ERROR] Erro ao enviar e-mail para {message.recipients[0]}: {str(e)}\n")
-                print(f"[FALLBACK] Senha: {temp_pwd}")
-
-    app_instance = current_app._get_current_object()
-    Thread(target=send_async_email, args=(app_instance, msg, temp_password)).start()
+    _send_async_email(current_app, msg, "PASSWORD_RESET")
 
     return jsonify({
         'success': True,
@@ -476,25 +509,13 @@ def send_verification_email():
     verify_link = f"{base_url}/api/auth/verify_email?uid={user.id}&token={token}"
     
     from flask_mail import Message
-    from flask import current_app
-    from threading import Thread
-
     msg = Message(
         subject="Verifique sua conta ShapePro",
         recipients=[user.email],
         body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nClique no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
     )
 
-    def send_async_email(app, message):
-        with app.app_context():
-            try:
-                app.mail.send(message)
-                print(f"\n[EMAIL VERIFY] [OK] Enviado para {message.recipients[0]}\n")
-            except Exception as e:
-                print(f"\n[EMAIL VERIFY] [ERROR] Falha ao enviar para {message.recipients[0]}: {str(e)}\n")
-
-    app_instance = current_app._get_current_object()
-    Thread(target=send_async_email, args=(app_instance, msg)).start()
+    _send_async_email(current_app, msg, "VERIFY_EMAIL")
     
     return jsonify({
         'success': True,
@@ -537,4 +558,5 @@ def verify_email_endpoint():
         </body>
     </html>
     '''
+
 

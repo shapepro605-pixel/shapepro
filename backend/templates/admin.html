@@ -477,10 +477,14 @@
 
                 const adminIcon = user.is_admin ? '<i class="fas fa-user-shield text-primary ml-2" title="Administrador"></i>' : '';
 
-                // Phone Info & SMS Status
+                // Email Info & Status
+                const emailStatus = user.email_verificado 
+                    ? '<i class="fas fa-check-circle text-success ml-1" title="E-mail Verificado"></i>' 
+                    : '<i class="fas fa-hourglass-half text-orange-400 ml-1" title="E-mail Pendente"></i>';
+
                 const phoneStatus = user.telefone_verificado 
-                    ? '<i class="fas fa-check-circle text-success ml-1" title="Verificado"></i>' 
-                    : '<i class="fas fa-hourglass-half text-orange-400 ml-1" title="Aguardando Verificação"></i>';
+                    ? '<i class="fas fa-check-circle text-success ml-1" title="Telefone Verificado"></i>' 
+                    : '<i class="fas fa-hourglass-half text-orange-400 ml-1" title="Telefone Pendente"></i>';
                 
                 const phoneDisplay = user.telefone 
                     ? `<span class="text-white font-mono">${user.telefone}</span> ${phoneStatus}`
@@ -490,7 +494,7 @@
                     <td class="py-4 px-6 font-mono text-gray-500">#${user.id}</td>
                     <td class="py-4 px-6">
                         <p class="font-bold text-white flex items-center">${user.nome} ${adminIcon}</p>
-                        <p class="text-gray-500 text-xs">${user.email}</p>
+                        <p class="text-gray-500 text-xs flex items-center mt-1">${user.email} ${emailStatus}</p>
                         <p class="text-gray-600 text-[10px] mt-1 text-gray-700">Registrado em: ${user.data_criacao}</p>
                     </td>
                     <td class="py-4 px-6">${phoneDisplay}</td>
