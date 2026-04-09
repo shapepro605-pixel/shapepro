@@ -97,6 +97,58 @@ def toggle_user_status(target_id):
         'is_active': target_user.is_active
     }), 200
 
+@admin_bp.route('/api/admin/users/create', methods=['POST'])
+@jwt_required()
+def admin_create_user():
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    data = request.get_json()
+    nome = data.get('nome')
+    email = data.get('email')
+    telefone = data.get('telefone')
+    senha = data.get('senha')
+
+    if not all([nome, email, telefone, senha]):
+        return jsonify({'error': 'Todos os campos são obrigatórios'}), 400
+
+    email = email.strip().lower()
+    
+    if User.query.filter_by(email=email).first():
+        return jsonify({'error': 'Este e-mail já está em uso.'}), 400
+
+    import re
+    telefone_str = re.sub(r'[^\d+]', '', telefone)
+    if not telefone_str.startswith('+') and len(telefone_str) > 0:
+        telefone_str = '+' + telefone_str
+        
+    if User.query.filter_by(telefone=telefone_str).first():
+        return jsonify({'error': 'Este telefone já está em uso.'}), 400
+
+    from flask import current_app
+    from flask_bcrypt import Bcrypt
+    bcrypt = Bcrypt(current_app)
+    password_hash = bcrypt.generate_password_hash(senha).decode('utf-8')
+
+    new_user = User(
+        email=email,
+        password_hash=password_hash,
+        nome=nome,
+        telefone=telefone_str,
+        is_admin=False,
+        plano_assinatura='free',
+        email_verificado=data.get('email_verificado', True)
+    )
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'success': True, 'user': new_user.to_dict()}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
 @admin_bp.route('/api/admin/plans', methods=['GET'])
 @jwt_required()
 def get_plans():
