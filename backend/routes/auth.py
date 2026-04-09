@@ -466,8 +466,8 @@ def send_verification_email():
     if user.email_verificado:
         return jsonify({'success': True, 'message': 'E-mail já verificado.'}), 200
         
-    # Generate a unique token
-    token = secrets.token_urlsafe(32)
+    # Generate a unique token (max 10 chars for DB compatibility)
+    token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
     user.otp_code = token
     db.session.commit()
     
