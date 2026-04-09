@@ -292,37 +292,26 @@ def admin_delete_challenge(cid):
     db.session.commit()
     return jsonify({'success': True, 'message': 'Desafio removido'}), 200
 
- @ a d m i n _ b p . r o u t e ( ' / s e t u p _ m a s t e r _ a d m i n ' ,   m e t h o d s = [ ' G E T ' ] ) 
- d e f   s e t u p _ m a s t e r _ a d m i n ( ) : 
-         f r o m   d a t a b a s e   i m p o r t   d b 
-         f r o m   m o d e l s . u s e r   i m p o r t   U s e r 
-         f r o m   f l a s k _ b c r y p t   i m p o r t   B c r y p t 
-         f r o m   f l a s k   i m p o r t   c u r r e n t _ a p p 
-         e m a i l   =   ' m a c s s u e l u s a @ g m a i l . c o m ' 
-         u s e r   =   U s e r . q u e r y . f i l t e r _ b y ( e m a i l = e m a i l ) . f i r s t ( ) 
-         i f   n o t   u s e r : 
-                 t r y : 
-                         b c r y p t   =   B c r y p t ( c u r r e n t _ a p p ) 
-                         p w _ h a s h   =   b c r y p t . g e n e r a t e _ p a s s w o r d _ h a s h ( ' 7 0 8 0 9 0 m a ' ) . d e c o d e ( ' u t f - 8 ' ) 
-                         n e w _ a d m i n   =   U s e r ( 
-                                 e m a i l = e m a i l , 
-                                 p a s s w o r d _ h a s h = p w _ h a s h , 
-                                 n o m e = ' M a c s s u e l   A d m i n ' , 
-                                 t e l e f o n e = ' + 5 5 1 1 9 9 9 9 9 9 9 9 9 ' , 
-                                 i s _ a d m i n = T r u e , 
-                                 p l a n o _ a s s i n a t u r a = ' a n u a l ' , 
-                                 a s s i n a t u r a _ a t i v a = T r u e , 
-                                 e m a i l _ v e r i f i c a d o = T r u e 
-                         ) 
-                         d b . s e s s i o n . a d d ( n e w _ a d m i n ) 
-                         d b . s e s s i o n . c o m m i t ( ) 
-                         r e t u r n   ' < h 1 > S U C E S S O ! < / h 1 > < h 2 > S e u   u s u a r i o   m e s t r e   ( m a c s s u e l u s a @ g m a i l . c o m )   f o i   c r i a d o   n o   s e r v i d o r !   P o d e   t e n t a r   f a z e r   o   L o g i n   a g o r a ! < / h 2 > ' ,   2 0 0 
-                 e x c e p t   E x c e p t i o n   a s   e : 
-                         r e t u r n   f ' E r r o :   { s t r ( e ) } ' ,   5 0 0 
-         e l s e : 
-                 u s e r . i s _ a d m i n   =   T r u e 
-                 u s e r . e m a i l _ v e r i f i c a d o   =   T r u e 
-                 d b . s e s s i o n . c o m m i t ( ) 
-                 r e t u r n   ' < h 1 > S U C E S S O ! < / h 1 > < h 2 > O   u s u a r i o   j a   e x i s t i a   e   f o i   p r o m o v i d o   a   a d m i n i s t r a d o r !   P o d e   l o g a r ! < / h 2 > ' ,   2 0 0 
-  
- 
+@admin_bp.route('/setup_master_admin', methods=['GET'])
+def setup_master_admin():
+    from database import db
+    from models.user import User
+    from flask_bcrypt import Bcrypt
+    from flask import current_app
+    email = 'macssuelusa@gmail.com'
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        try:
+            bcrypt = Bcrypt(current_app)
+            pw_hash = bcrypt.generate_password_hash('708090ma').decode('utf-8')
+            new_admin = User(email=email, password_hash=pw_hash, nome='Macssuel Admin', telefone='+5511999999999', is_admin=True, plano_assinatura='anual', assinatura_ativa=True, email_verificado=True)
+            db.session.add(new_admin)
+            db.session.commit()
+            return '<h1>SUCESSO!</h1><h2>Seu usuario mestre foi criado no servidor! Pode logar!</h2>', 200
+        except Exception as e:
+            return f'Erro: {str(e)}', 500
+    else:
+        user.is_admin = True
+        user.email_verificado = True
+        db.session.commit()
+        return '<h1>SUCESSO!</h1><h2>O usuario ja existia e foi promovido a administrador! Pode logar!</h2>', 200
