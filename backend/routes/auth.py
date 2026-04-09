@@ -151,6 +151,20 @@ def register():
 
 
 @auth_bp.route('/verify_sms', methods=['POST'])
+
+@auth_bp.route('/api/auth/debug_firebase', methods=['GET'])
+def debug_firebase():
+    import os
+    from firebase_init import is_firebase_initialized
+    creds = os.getenv('FIREBASE_CREDENTIALS_JSON')
+    return jsonify({
+        'initialized': is_firebase_initialized(),
+        'has_creds': creds is not None,
+        'creds_len': len(creds) if creds else 0,
+        'creds_start': creds[:50] if creds else None
+    })
+
+@auth_bp.route('/verify_sms', methods=['POST'])
 def verify_sms():
     """Verify phone via Firebase ID token or local code.
     If Firebase token is valid, logs in the user directly.
