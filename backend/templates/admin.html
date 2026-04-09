@@ -7,6 +7,37 @@
     <!-- Tailwind CSS para Estilização Premium Dark -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Create User Modal -->
+    <div id="createUserModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-darkCard border border-darkBorder rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-darkBorder flex justify-between items-center">
+                <h3 class="text-xl font-bold">Cadastrar Novo Usuário</h3>
+                <button onclick="document.getElementById('createUserModal').classList.add('hidden')" class="text-gray-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="createUserForm" class="p-6 space-y-4" onsubmit="createUser(event)">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Nome Completo</label>
+                    <input type="text" id="cu_nome" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">E-mail</label>
+                    <input type="email" id="cu_email" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Telefone</label>
+                    <input type="text" id="cu_telefone" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Senha de Acesso</label>
+                    <input type="text" id="cu_senha" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white rounded-lg px-4 py-3 font-bold transition shadow-lg shadow-primary/20">
+                    Salvar e Cadastrar
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
         tailwind.config = {
             theme: {
@@ -326,6 +357,37 @@
             </div> <!-- end view system -->
 
         </main>
+    </div>
+
+    <!-- Create User Modal -->
+    <div id="createUserModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-darkCard border border-darkBorder rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-darkBorder flex justify-between items-center">
+                <h3 class="text-xl font-bold">Cadastrar Novo Usuário</h3>
+                <button onclick="document.getElementById('createUserModal').classList.add('hidden')" class="text-gray-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="createUserForm" class="p-6 space-y-4" onsubmit="createUser(event)">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Nome Completo</label>
+                    <input type="text" id="cu_nome" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">E-mail</label>
+                    <input type="email" id="cu_email" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Telefone</label>
+                    <input type="text" id="cu_telefone" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">Senha de Acesso</label>
+                    <input type="text" id="cu_senha" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white rounded-lg px-4 py-3 font-bold transition shadow-lg shadow-primary/20">
+                    Salvar e Cadastrar
+                </button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -756,6 +818,42 @@
                     alert("Erro no reset: " + res.error);
                 }
             } catch(e) { alert("Falha na comunicação com o servidor."); }
+        }
+
+                async function createUser(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+
+            const payload = {
+                nome: document.getElementById('cu_nome').value,
+                email: document.getElementById('cu_email').value,
+                telefone: document.getElementById('cu_telefone').value,
+                senha: document.getElementById('cu_senha').value
+            };
+
+            try {
+                const res = await fetchWithAuth(API_BASE + '/users/create', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                
+                if (res.success) {
+                    alert('Usuário cadastrado com Sucesso!');
+                    document.getElementById('createUserModal').classList.add('hidden');
+                    document.getElementById('createUserForm').reset();
+                    loadUsers();
+                } else {
+                    alert('Erro: ' + res.error);
+                }
+            } catch(err) {
+                alert('Falha na comunicação com servidor.');
+            }
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         }
 
         // Init
