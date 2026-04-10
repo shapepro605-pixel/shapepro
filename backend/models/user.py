@@ -101,9 +101,9 @@ class User(db.Model, SerialMixin):
         if self.is_in_trial() and getattr(self, 'cartao_cadastrado', False):
             return 999
             
-        # Basic trial (no card) has limited access
+        # Basic trial (no card) has FULL access during the trial window
         if self.is_in_trial():
-            return 2 if content_type == 'dieta' else 0
+            return 999  # Allow everything during the 2-day taste period
             
         # Trial expired and no subscription = NO access
         return -1

@@ -6,6 +6,7 @@ import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/upgrade_sheet.dart';
 import 'workout_active.dart';
+import 'workout_details.dart';
 
 class DietaScreen extends StatefulWidget {
   const DietaScreen({super.key});
@@ -469,7 +470,7 @@ class _DietaScreenState extends State<DietaScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => WorkoutActiveScreen(
+                  builder: (_) => WorkoutDetailsScreen(
                     treino: treino,
                     accentColor: color,
                   ),

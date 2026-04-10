@@ -51,3 +51,12 @@ debug_s25.ps1
 reparar_sdk.ps1
 diagnosticar_e_compilar.ps1
 *.ps1
+# New Debug Files
+phone_logs*.txt
+live_debug*.txt
+debug_filtered.txt
+shapepro_clean_debug.txt
+firebase_single_line.txt
+frontend/flutter_live_debug_current.txt
+verify_email_fix.py
+test_gmail_local.py

@@ -72,10 +72,6 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
 
   void _nextExercise() {
     _endRest();
-    if (_isTrial) {
-      showUpgradeSheet(context);
-      return;
-    }
     if (_currentIndex < exercicios.length - 1) {
       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
@@ -94,6 +90,12 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
     await api.concluirTreino();
     
     if (!mounted) return;
+    
+    // Show premium upgrade if they were in trial
+    if (_isTrial) {
+      showUpgradeSheet(context);
+    }
+
     Navigator.pop(context); // close workout
     
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -210,6 +212,8 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
   }
 
   Widget _buildExerciseView(Map<String, dynamic> ex, int index) {
+    final imgUrl = ex['imagem']?.toString();
+    
     return Padding(
       padding: const EdgeInsets.all(22),
       child: Column(
@@ -223,8 +227,18 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
               color: const Color(0xFF16162A),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: const Color(0xFF2A2A4A)),
+              image: (imgUrl != null && imgUrl.isNotEmpty) 
+                ? DecorationImage(
+                    image: imgUrl.startsWith('assets/') 
+                      ? AssetImage(imgUrl) 
+                      : NetworkImage(imgUrl) as ImageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : null,
             ),
-            child: Icon(Icons.fitness_center, color: widget.accentColor.withValues(alpha: 0.3), size: 100),
+            child: (imgUrl == null || imgUrl.isEmpty) 
+              ? Icon(Icons.fitness_center, color: widget.accentColor.withValues(alpha: 0.3), size: 100)
+              : null,
           ),
           const SizedBox(height: 30),
           

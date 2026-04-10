@@ -6,6 +6,7 @@ import '../services/api.dart';
 import '../widgets/exercise_card.dart';
 import '../widgets/upgrade_sheet.dart';
 import 'workout_active.dart';
+import 'workout_details.dart';
 
 class TreinoScreen extends StatefulWidget {
   const TreinoScreen({super.key});
@@ -306,11 +307,11 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: () async {
-          await Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => WorkoutActiveScreen(
+              builder: (_) => WorkoutDetailsScreen(
                 treino: _treinos[index],
                 accentColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
               ),
@@ -318,17 +319,17 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: isTrial ? Colors.grey[800] : (_treinoColors[tipo] ?? const Color(0xFF6C5CE7)),
+          backgroundColor: _treinoColors[tipo] ?? const Color(0xFF6C5CE7),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: isTrial ? 0 : 8,
+          elevation: 8,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(isTrial ? Icons.lock : Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
             const SizedBox(width: 8),
             Text(
-              isTrial ? "BLOQUEADO (TRIAL)" : AppLocalizations.of(context)!.startWorkout,
+              AppLocalizations.of(context)!.startWorkout,
               style: GoogleFonts.inter(
                 color: Colors.white,
                 fontSize: 16,
