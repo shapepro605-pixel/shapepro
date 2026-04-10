@@ -91,17 +91,73 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
     
     if (!mounted) return;
     
-    // Show premium upgrade if they were in trial
-    if (_isTrial) {
-      showUpgradeSheet(context);
-    }
+    setState(() => _isCompleting = false);
+    _showSuccessDialog();
+  }
 
-    Navigator.pop(context); // close workout
-    
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)!.workoutFinished),
-      backgroundColor: const Color(0xFF2ED573),
-    ));
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF16162A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2ED573).withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Text('🚀', style: TextStyle(fontSize: 50)),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'PARABÉNS! 🏆',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                letterSpacing: 1,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Você finalizou seu treino com sucesso! Mais um passo rumo ao seu objetivo. 🔥',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: Colors.white70,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+                Navigator.pop(context); // Close workout screen
+                if (_isTrial) {
+                  showUpgradeSheet(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6C5CE7),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              child: Text(
+                'VOLTAR PARA HOME',
+                style: GoogleFonts.inter(fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -360,26 +416,28 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (index > 0)
-              IconButton(
+              TextButton.icon(
                 onPressed: _previousExercise,
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white54),
-                iconSize: 22,
-              ),
-            const Spacer(),
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white54, size: 16),
+                label: Text('ANTERIOR', style: GoogleFonts.inter(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.bold)),
+              )
+            else
+              const SizedBox(width: 80),
+            
             if (!isLast)
               ElevatedButton.icon(
                 onPressed: _startRest,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: widget.accentColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
-                icon: const Icon(Icons.check, color: Colors.white),
+                icon: const Icon(Icons.check, color: Colors.white, size: 20),
                 label: Text(AppLocalizations.of(context)!.seriesDone, style: GoogleFonts.inter(
-                  color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800,
+                  color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800,
                 )),
               )
             else
@@ -397,13 +455,15 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
                   color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800,
                 )),
               ),
-            const Spacer(),
+
             if (!isLast)
-              IconButton(
+              TextButton.icon(
                 onPressed: _nextExercise,
-                icon: const Icon(Icons.arrow_forward_ios, color: Colors.white54),
-                iconSize: 22,
-              ),
+                icon: Text('PRÓXIMO', style: GoogleFonts.inter(color: widget.accentColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                label: Icon(Icons.arrow_forward_ios, color: widget.accentColor, size: 16),
+              )
+            else
+              const SizedBox(width: 80),
           ],
         ),
       ],

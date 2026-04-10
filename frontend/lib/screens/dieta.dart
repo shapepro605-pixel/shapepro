@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
+import '../services/notification_service.dart';
 import '../widgets/upgrade_sheet.dart';
 import 'workout_details.dart';
 
@@ -45,6 +46,9 @@ class _DietaScreenState extends State<DietaScreen> {
         _isLoading = false;
         if (result['success'] == true) {
           _dieta = result['dieta'];
+          
+          // Re-schedule notifications on load
+          NotificationService.scheduleDietNotifications(_dieta?['refeicoes'] ?? []);
         }
       });
       if (result['success'] == true) {
@@ -87,6 +91,9 @@ class _DietaScreenState extends State<DietaScreen> {
         if (result['success'] == true) {
           _dieta = result['dieta'];
           _loadTreinosSincronizados();
+          
+          // Re-schedule notifications for the new diet
+          NotificationService.scheduleDietNotifications(_dieta?['refeicoes'] ?? []);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Row(
               children: [

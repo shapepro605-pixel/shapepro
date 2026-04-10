@@ -7,7 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api.dart';
-
+import '../services/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,10 +20,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentIndex = 0;
   Map<String, dynamic>? _progresso;
   bool _isLoading = true;
+  bool _notificationsEnabled = false;
 
   @override
   void initState() {
     super.initState();
+    _loadNotificationPreference();
     _loadData();
     _checkUpdate();
     _showMedicalDisclaimer();
@@ -139,6 +141,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
+  Future<void> _loadNotificationPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _notificationsEnabled = prefs.getBool('notifications_enabled') ?? false;
+    });
+  }
+
+  Future<void> _toggleNotifications() async {
+    // If turning ON, request permission first
+    if (!_notificationsEnabled) {
+      final granted = await NotificationService.requestPermissions();
+      if (!granted) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Permissão de notificação negada.')),
+          );
+        }
+        return;
+      }
+    }
+
+    final newState = !_notificationsEnabled;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notifications_enabled', newState);
+    setState(() => _notificationsEnabled = newState);
+
+    if (newState && _progresso?['dieta_ativa'] != null) {
+      await NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes']);
+    } else {
+      await NotificationService.cancelAllNotifications();
+    }
+  }
+
   Future<void> _loadData() async {
     final api = Provider.of<ApiService>(context, listen: false);
     await api.init();
@@ -157,6 +192,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _isLoading = false;
         if (result['success'] == true) {
           _progresso = result['progresso'];
+          
+          // Re-schedule notifications if enabled on data load
+          if (_notificationsEnabled && _progresso?['dieta_ativa'] != null) {
+            NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes']);
+          }
         }
       });
     }
@@ -239,6 +279,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        _buildHeaderButton(
+                          _notificationsEnabled ? Icons.notifications_active : Icons.notifications_none,
+                          _toggleNotifications,
+                          color: _notificationsEnabled ? const Color(0xFF6C5CE7) : Colors.white54,
+                        ),
                         _buildHeaderButton(
                           Provider.of<ApiService>(context).isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
                           () => Provider.of<ApiService>(context, listen: false).toggleTheme(),
@@ -439,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHeaderButton(IconData icon, VoidCallback onTap, {bool isEmoji = false, String? emoji}) {
+  Widget _buildHeaderButton(IconData icon, VoidCallback onTap, {bool isEmoji = false, String? emoji, Color? color}) {
     return Container(
       margin: const EdgeInsets.only(left: 8),
       width: 38,
@@ -453,7 +498,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onPressed: onTap,
         icon: isEmoji 
           ? Text(emoji!, style: const TextStyle(fontSize: 18))
-          : Icon(icon, color: Colors.white54, size: 18),
+          : Icon(icon, color: color ?? Colors.white54, size: 18),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'services/api.dart';
+import 'services/notification_service.dart';
 import 'screens/login.dart';
 import 'screens/register.dart';
 import 'screens/home.dart';
@@ -25,6 +26,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Notification Service
+  await NotificationService.init();
   
   // Initialize Firebase
   await Firebase.initializeApp();
