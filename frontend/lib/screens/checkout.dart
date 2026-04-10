@@ -186,10 +186,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               child: ElevatedButton(
                                 onPressed: _isLoading ? null : _aplicarCupom,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF2A2A4A),
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  backgroundColor: const Color(0xFF6C5CE7), // Brand Purple
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 4,
                                 ),
-                                child: const Text('Aplicar'),
+                                child: Text(
+                                  'Ativar', // Changed to "Ativar" as requested
+                                  style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           ],
