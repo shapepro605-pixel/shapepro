@@ -150,18 +150,16 @@ def register():
 
 
 
-@auth_bp.route('/verify_sms', methods=['POST'])
-
-@auth_bp.route('/api/auth/debug_firebase', methods=['GET'])
+@auth_bp.route('/debug_firebase', methods=['GET'])
 def debug_firebase():
+    """Diagnostic route to check Firebase status."""
     import os
-    from firebase_init import is_firebase_initialized
     creds = os.getenv('FIREBASE_CREDENTIALS_JSON')
     return jsonify({
         'initialized': is_firebase_initialized(),
         'has_creds': creds is not None,
         'creds_len': len(creds) if creds else 0,
-        'creds_start': creds[:50] if creds else None
+        'creds_start': (creds[:20] + "...") if creds else None
     })
 
 @auth_bp.route('/verify_sms', methods=['POST'])
@@ -227,10 +225,11 @@ def verify_sms():
             user.otp_code = None
             db.session.commit()
             return jsonify({'success': True, 'message': 'Telefone verificado!', 'user': user.to_dict()}), 200
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[VERIFY ERROR] Erro na rota verify_sms: {str(e)}")
+        return jsonify({'error': f'Falha técnica: {str(e)}'}), 500
 
-    return jsonify({'error': 'Verificação falhou. Tente novamente.'}), 400
+    return jsonify({'error': 'Verificação falhou. Verifique o código enviado.'}), 400
 
 
 @auth_bp.route('/google_login', methods=['POST'])
