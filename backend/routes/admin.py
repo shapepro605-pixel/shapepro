@@ -138,7 +138,8 @@ def admin_create_user():
         telefone=telefone_str,
         is_admin=False,
         plano_assinatura='free',
-        email_verificado=data.get('email_verificado', True)
+        email_verificado=True,
+        telefone_verificado=True
     )
 
     try:

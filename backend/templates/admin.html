@@ -363,7 +363,10 @@
     <div id="createUserModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-darkCard border border-darkBorder rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-darkBorder flex justify-between items-center">
-                <h3 class="text-xl font-bold">Cadastrar Novo Usuário</h3>
+                <div>
+                    <h3 class="text-xl font-bold">Cadastrar Novo Usuário</h3>
+                    <p class="text-xs text-primary font-medium mt-1"><i class="fas fa-check-circle mr-1"></i> Verificação automática habilitada</p>
+                </div>
                 <button onclick="document.getElementById('createUserModal').classList.add('hidden')" class="text-gray-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
             </div>
             <form id="createUserForm" class="p-6 space-y-4" onsubmit="createUser(event)">
