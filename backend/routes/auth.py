@@ -155,11 +155,12 @@ def debug_firebase():
     """Diagnostic route to check Firebase status."""
     import os
     creds = os.getenv('FIREBASE_CREDENTIALS_JSON')
+    env_keys = list(os.environ.keys())
     return jsonify({
         'initialized': is_firebase_initialized(),
         'has_creds': creds is not None,
         'creds_len': len(creds) if creds else 0,
-        'creds_start': (creds[:20] + "...") if creds else None
+        'env_keys': [k for k in env_keys if 'FIREBASE' in k or 'DATABASE' in k or 'MAIL' in k]
     })
 
 @auth_bp.route('/verify_sms', methods=['POST'])
