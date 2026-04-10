@@ -259,13 +259,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         id: 'shapepro_mensal',
         title: 'Plano Mensal (TESTE)',
         desc: 'Acesso total por 1 mês',
-        price: 'R$ 29,90',
+        price: 'R\$ 29,90',
       ),
       _buildMockCard(
         id: 'shapepro_anual',
         title: 'Plano Anual (TESTE)',
         desc: 'Melhor custo-benefício',
-        price: 'R$ 199,90',
+        price: 'R\$ 199,90',
         isBest: true,
       ),
     ];
