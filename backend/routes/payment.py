@@ -48,20 +48,32 @@ def verify_purchase():
 
     data = request.get_json()
     product_id = data.get('product_id')
+    is_test = data.get('is_test', False)
+
+    # ── MOCK/TEST LOGIC ──
+    # If is_test is True, we skip external verification and grant access immediately.
+    # This is useful for internal testing or manual GIFTS.
+    if is_test:
+        if product_id == 'shapepro_anual':
+            user.plano_assinatura = 'anual'
+        else:
+            user.plano_assinatura = 'mensal'
+            
+        user.assinatura_ativa = True
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'message': 'Simulação de compra bem-sucedida!',
+            'user': user.to_dict()
+        }), 200
+
+    # ── REAL GOOGLE PLAY LOGIC (FUTURE) ──
     # server_verification_data = data.get('server_verification_data')
+    # ... verification logic here ...
 
-    # PRODUCTION: Integrate with google-api-python-client here
-    # 1. Verify token with Google Play Developer API
-    # 2. Check if purchase is valid
-    # 3. Update user subscription status
-
-    # CURRENT BUILD: Mark user as premium upon receiving a purchase token from Flutter
-    if product_id == 'shapepro_anual':
-        user.plano_assinatura = 'anual'
-    else:
-        user.plano_assinatura = 'mensal'
-        
+    # Fallback status for non-test requests during dev
     user.assinatura_ativa = True
+    user.plano_assinatura = 'mensal'
     db.session.commit()
 
     return jsonify({
@@ -84,5 +96,34 @@ def register_card():
     return jsonify({
         'success': True,
         'message': 'Cartão cadastrado! Agora você tem 3 dias de acesso total grátis.',
+        'user': user.to_dict()
+    }), 200
+
+@payment_bp.route('/api/payment/apply-coupon', methods=['POST'])
+@jwt_required()
+def apply_coupon():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+
+    data = request.get_json()
+    code = data.get('code', '').upper()
+    
+    promo = PromoCode.query.filter_by(code=code).first()
+    if not promo or not promo.is_valid():
+        return jsonify({'success': False, 'error': 'Cupom inválido ou expirado.'}), 400
+
+    # Apply benefit
+    if promo.is_free:
+        user.assinatura_ativa = True
+        user.plano_assinatura = 'anual' # Or special VIP plan
+    
+    promo.current_uses += 1
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'message': 'Cupom aplicado com sucesso!',
         'user': user.to_dict()
     }), 200

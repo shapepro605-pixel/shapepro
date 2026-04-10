@@ -206,16 +206,94 @@
             <div id="view-plans" class="hidden max-w-7xl mx-auto space-y-8">
                 <header class="flex justify-between items-center mb-8">
                     <div>
-                        <h1 class="text-3xl font-bold mb-1">Planos & Cupons</h1>
-                        <p class="text-gray-400">Configure os valores cobrados no app e gere acessos vips.</p>
+                        <h1 class="text-3xl font-bold mb-1">Planos & Acessos VIP</h1>
+                        <p class="text-gray-400">Gerencie a exibição de preços e gere códigos de acesso gratuito.</p>
                     </div>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="plans-container">
+                <!-- Warning Banner -->
+                <div class="bg-primary/10 border border-primary/30 p-4 rounded-xl flex items-start space-x-4 mb-8">
+                    <i class="fas fa-info-circle text-primary text-xl mt-1"></i>
+                    <div>
+                        <p class="text-sm font-bold text-primary">Atenção sobre Pagamentos:</p>
+                        <p class="text-xs text-gray-400 mt-1 leading-relaxed">
+                            Alterações de preço abaixo são apenas para <b>exibição</b> no aplicativo. Os valores reais cobrados dos usuários devem ser configurados no <b>Google Play Console</b>. Cupons gerados aqui funcionam como "Acessos VIP" (100% grátis).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" id="plans-container">
                     <!-- Rendered by JS -->
                 </div>
 
+                <!-- Coupons Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Create Coupon Form -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-darkCard border-2 border-primary/50 shadow-lg shadow-primary/10 rounded-xl p-6">
+                            <h2 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fas fa-magic text-primary mr-2"></i> Gerar Novo Cupom VIP
+                            </h2>
+                            <form id="promo-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Código do Cupom</label>
+                                    <input type="text" id="promo-code" required class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white focus:border-primary outline-none font-mono" placeholder="Ex: VIP2024">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Desconto (%)</label>
+                                        <input type="number" id="promo-perc" value="100" class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white outline-none" min="0" max="100">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Máx Usos</label>
+                                        <input type="number" id="promo-uses" value="100" class="w-full bg-darkBg border border-darkBorder rounded-lg px-4 py-3 text-white outline-none" min="1">
+                                    </div>
+                                </div>
+                                <label class="flex items-center space-x-2 cursor-pointer pt-2">
+                                    <input type="checkbox" id="promo-free" checked class="w-5 h-5 accent-primary">
+                                    <span class="text-sm text-gray-300">Liberar Acesso Total (VIP)</span>
+                                </label>
+                                <button type="submit" class="w-full btn-gradient py-4 rounded-xl font-black text-lg shadow-lg mt-4">
+                                    CRIAR CUPOM AGORA
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Coupons List -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-darkCard border border-darkBorder rounded-xl overflow-hidden shadow-xl">
+                            <div class="p-4 border-b border-darkBorder bg-darkBg/50 flex justify-between items-center">
+                                <h3 class="font-bold text-gray-300 uppercase text-xs tracking-wider">Cupons Ativos no Sistema</h3>
+                                <button onclick="loadPlansView()" class="text-primary text-xs hover:underline"><i class="fas fa-sync mr-1"></i> Atualizar Lista</button>
+                            </div>
+                            <div class="max-h-[350px] overflow-y-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="bg-darkBg/30 text-gray-500 text-[10px] uppercase font-bold sticky top-0 z-10">
+                                        <tr>
+                                            <th class="py-3 px-6">Código</th>
+                                            <th class="py-3 px-6">Benefício</th>
+                                            <th class="py-3 px-6">Usos</th>
+                                            <th class="py-3 px-6 text-center">Status</th>
+                                            <th class="py-3 px-6 text-center">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="promos-tbody" class="divide-y divide-darkBorder">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="p-4 border-b border-darkBorder">
+                    <h2 class="text-xl font-bold italic text-gray-500">Configuração de Preços (Exibição no App)</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" id="plans-container">
+                    <!-- Rendered by JS -->
+                </div>
+            </div> <!-- end view plans -->
             </div> <!-- end view plans -->
 
             <!-- VIEW CHALLENGES -->

@@ -31,13 +31,59 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _assinar(ProductDetails product) async {
-    final promoCode = _promoController.text.trim();
-    if (promoCode.isNotEmpty) {
-       // Optional: verify promo code with backend first
-    }
-    
+    setState(() => _isLoading = true);
     final api = Provider.of<ApiService>(context, listen: false);
-    await api.buyProduct(product);
+    
+    // ── TEST MODE ──
+    // Instead of real Google Play, we simulate the backend verification.
+    final result = await api.simulatePurchase(product.id);
+    
+    if (mounted) {
+      setState(() => _isLoading = false);
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Acesso Premium Liberado! (Modo de Teste)'),
+            backgroundColor: Color(0xFF2ED573),
+          ),
+        );
+        Navigator.pop(context); // Return home
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro: ${result['error']}')),
+        );
+      }
+    }
+  }
+
+  Future<void> _aplicarCupom() async {
+    final code = _promoController.text.trim();
+    if (code.isEmpty) return;
+    
+    setState(() => _isLoading = true);
+    final api = Provider.of<ApiService>(context, listen: false);
+    
+    final result = await api.applyVipCoupon(code);
+    
+    if (mounted) {
+      setState(() => _isLoading = false);
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message'] ?? 'Cupom Aplicado!'),
+            backgroundColor: const Color(0xFF2ED573),
+          ),
+        );
+        Navigator.pop(context); // Return home with premium
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['error'] ?? 'Erro ao aplicar cupom'),
+            backgroundColor: const Color(0xFFFD4556),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -95,8 +141,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  
-                  ...Provider.of<ApiService>(context).products.map((p) => _buildProductCard(p)),
+                  // Store Products or Mock Plans for testing
+                  ...(_loadPlansList(Provider.of<ApiService>(context).products)),
 
                   const SizedBox(height: 32),
                   Container(
@@ -118,17 +164,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        TextField(
-                          controller: _promoController,
-                          textCapitalization: TextCapitalization.characters,
-                          decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.promoCodeHint,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          ),
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _promoController,
+                                textCapitalization: TextCapitalization.characters,
+                                decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!.promoCodeHint,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                ),
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            SizedBox(
+                              height: 52,
+                              child: ElevatedButton(
+                                onPressed: _isLoading ? null : _aplicarCupom,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF2A2A4A),
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                ),
+                                child: const Text('Aplicar'),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -174,6 +238,129 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ),
     );
+  }
+
+  List<Widget> _loadPlansList(List<ProductDetails> products) {
+    if (products.isNotEmpty) {
+      return products.map((p) => _buildProductCard(p)).toList();
+    }
+    
+    // Fallback: MOCK PLANS FOR TESTING
+    return [
+      _buildMockCard(
+        id: 'shapepro_mensal',
+        title: 'Plano Mensal (TESTE)',
+        desc: 'Acesso total por 1 mês',
+        price: 'R$ 29,90',
+      ),
+      _buildMockCard(
+        id: 'shapepro_anual',
+        title: 'Plano Anual (TESTE)',
+        desc: 'Melhor custo-benefício',
+        price: 'R$ 199,90',
+        isBest: true,
+      ),
+    ];
+  }
+
+  Widget _buildMockCard({
+    required String id, 
+    required String title, 
+    required String desc, 
+    required String price, 
+    bool isBest = false
+  }) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: () => _simulateMockPurchase(id),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF16162A),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isBest ? const Color(0xFF6C5CE7) : const Color(0xFF2A2A4A),
+                width: isBest ? 2 : 1,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      desc,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      price,
+                      style: GoogleFonts.inter(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: isBest ? const Color(0xFF6C5CE7) : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (isBest)
+          Positioned(
+            top: -10,
+            right: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF6C5CE7),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                'MELHOR VALOR',
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _simulateMockPurchase(String productId) async {
+    setState(() => _isLoading = true);
+    final api = Provider.of<ApiService>(context, listen: false);
+    final result = await api.simulatePurchase(productId);
+    
+    if (mounted) {
+      setState(() => _isLoading = false);
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Acesso Premium Liberado! (MOCK)'), backgroundColor: Colors.green),
+        );
+        Navigator.pop(context);
+      }
+    }
   }
 
   Widget _buildProductCard(ProductDetails product) {
