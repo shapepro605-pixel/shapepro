@@ -5,7 +5,6 @@ import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/exercise_card.dart';
 import '../widgets/upgrade_sheet.dart';
-import 'workout_active.dart';
 import 'workout_details.dart';
 
 class TreinoScreen extends StatefulWidget {

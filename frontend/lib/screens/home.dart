@@ -177,36 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildBody() {
-    switch (_currentIndex) {
-      case 0:
-        return _buildHomeDashboard();
-      case 1:
-        return _buildNavigateScreen('/treino');
-      case 2:
-        return _buildNavigateScreen('/dieta');
-      case 3:
-        return _buildNavigateScreen('/resultado');
-      default:
-        return _buildHomeDashboard();
-    }
-  }
-
-  Widget _buildNavigateScreen(String route) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = Provider.of<ApiService>(context, listen: false).currentUser;
-      final isFree = user?['plano_assinatura'] == 'free';
-      
-      if ((route == '/treino' || route == '/dieta') && isFree) {
-        Navigator.pushNamed(context, '/checkout').then((_) {
-          if (mounted) setState(() => _currentIndex = 0);
-        });
-      } else {
-        Navigator.pushNamed(context, route).then((_) {
-          if (mounted) setState(() => _currentIndex = 0);
-        });
-      }
-    });
-    return const SizedBox();
+    return _buildHomeDashboard();
   }
 
   // ── Dashboard ────────────────────────────────────────────────────────────
@@ -870,10 +841,36 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
         unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
         onTap: (i) {
-          if (i == 0 && _currentIndex == 0) {
-            Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData());
+          if (i == 0) {
+            if (_currentIndex == 0) {
+              Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData());
+            } else {
+              setState(() => _currentIndex = 0);
+            }
+            return;
           }
-          setState(() => _currentIndex = i);
+
+          final api = Provider.of<ApiService>(context, listen: false);
+          final user = api.currentUser;
+          final isFree = user?['plano_assinatura'] == 'free';
+
+          String route;
+          switch (i) {
+            case 1: route = '/treino'; break;
+            case 2: route = '/dieta'; break;
+            case 3: route = '/resultado'; break;
+            default: route = '/home';
+          }
+
+          if ((route == '/treino' || route == '/dieta') && isFree) {
+            Navigator.pushNamed(context, '/checkout').then((_) {
+              if (mounted) setState(() => _currentIndex = 0);
+            });
+          } else {
+            Navigator.pushNamed(context, route).then((_) {
+              if (mounted) setState(() => _currentIndex = 0);
+            });
+          }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),

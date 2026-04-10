@@ -5,7 +5,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/upgrade_sheet.dart';
-import 'workout_active.dart';
 import 'workout_details.dart';
 
 class DietaScreen extends StatefulWidget {
