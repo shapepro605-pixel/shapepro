@@ -51,3 +51,8 @@
 -dontwarn com.google.android.gms.**
 -dontwarn com.google.android.play.core.**
 -dontwarn com.google.firebase.**
+
+# ML Kit Pose Detection
+-keep class com.google.mlkit.vision.pose.** { *; }
+-keep class com.google.android.gms.vision.** { *; }
+-keep class com.google.mlkit.common.** { *; }

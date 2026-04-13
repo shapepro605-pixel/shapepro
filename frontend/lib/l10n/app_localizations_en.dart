@@ -96,10 +96,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weightEvolution => 'Weight evolution';
 
   @override
-  String get activeDiet => 'Active diet';
+  String get dietaAtiva => 'Active diet';
 
   @override
-  String get weeklyTraining => 'Weekly workouts';
+  String get treinosSemana => 'Weekly workouts';
 
   @override
   String get calories => 'Calories';
@@ -417,6 +417,18 @@ class AppLocalizationsEn extends AppLocalizations {
       '🎉 Workout Finished! You are amazing! +1 on the count!';
 
   @override
+  String get executionTime => 'EXECUTION TIME';
+
+  @override
+  String get stop => 'STOP';
+
+  @override
+  String get skipBtn => 'SKIP';
+
+  @override
+  String get start => 'START';
+
+  @override
   String get noExercisesFound => 'No exercises found';
 
   @override
@@ -581,4 +593,167 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diet_generated => 'Your diet has been generated successfully!';
+
+  @override
+  String get bodyScanAI => 'Body Scan AI';
+
+  @override
+  String get trackBodyEvolution => 'Track your body evolution';
+
+  @override
+  String get open => 'OPEN';
+
+  @override
+  String get evolutionAnalysis => 'Evolution Analysis';
+
+  @override
+  String get selectPoseType =>
+      'Select the type of photo you want to take today.';
+
+  @override
+  String get front => 'Front';
+
+  @override
+  String get side => 'Side';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get sendPhoto => 'SEND PHOTO';
+
+  @override
+  String get photoSentSuccess =>
+      'Photo sent successfully! Your progress is being tracked.';
+
+  @override
+  String get takeAnother => 'TAKE ANOTHER';
+
+  @override
+  String get finish => 'FINISH';
+
+  @override
+  String get fullBodyNotDetected => 'Full body not detected. Step back.';
+
+  @override
+  String get centerYourBody => 'Center your body';
+
+  @override
+  String get stayStraight => 'Stay straight (don\'t tilt shoulders)';
+
+  @override
+  String get invalidDistance => 'Inadequate distance from camera';
+
+  @override
+  String get poseFront => 'Stand facing the camera';
+
+  @override
+  String get poseSide => 'Stand sideways';
+
+  @override
+  String get poseBack => 'Stand with your back to the camera';
+
+  @override
+  String get startingCamera => 'Starting camera...';
+
+  @override
+  String get noBodyDetected => 'No body detected';
+
+  @override
+  String get perfectCapture => 'PERFECT! YOU CAN TAKE THE PHOTO';
+
+  @override
+  String get state => 'State';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get monthlyIncome => 'Monthly Income (R\$)';
+
+  @override
+  String get dietBudget => 'Monthly Diet Budget (R\$)';
+
+  @override
+  String get reportPrice => 'Report Price';
+
+  @override
+  String get howMuchDoesThisCost => 'How much does this cost in your city?';
+
+  @override
+  String get pricePlaceholder => 'Ex: 25.50';
+
+  @override
+  String get savePrice => 'SAVE PRICE';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get newVersion => 'New Version!';
+
+  @override
+  String get updateAvailable =>
+      'An important update for ShapePro is available. Improve your experience!';
+
+  @override
+  String get mandatoryUpdate =>
+      'This update is required to continue using the app.';
+
+  @override
+  String get later => 'LATER';
+
+  @override
+  String get updateNow => 'UPDATE NOW';
+
+  @override
+  String get notificationDenied => 'Notification permission denied.';
+
+  @override
+  String get priceReported => 'Thank you! Price registered to help the AI.';
+
+  @override
+  String get trainingCoordination => 'Coordinated workouts!';
+
+  @override
+  String get chestTriceps => 'Chest & Triceps';
+
+  @override
+  String get backBiceps => 'Back & Biceps';
+
+  @override
+  String get legsGlutes => 'Legs & Glutes';
+
+  @override
+  String get shouldersAbs => 'Shoulders & Abs';
+
+  @override
+  String get fullBodyFunctional => 'Full Body / Functional';
+
+  @override
+  String get logWeightToChart => 'Log your weight to see the chart';
+
+  @override
+  String get noChampionships => 'No championships available';
+
+  @override
+  String get joinedSuccess => 'Successfully joined!';
+
+  @override
+  String get joinError => 'Error joining championship';
+
+  @override
+  String get participate => 'JOIN';
+
+  @override
+  String get changeProfilePhoto => 'My profile photo';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseGallery => 'Choose from gallery';
+
+  @override
+  String get uploading => 'Uploading...';
 }

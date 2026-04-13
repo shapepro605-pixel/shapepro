@@ -381,7 +381,7 @@ def update_profile():
         return jsonify({'error': t('data_not_provided')}), 400
 
     # Updatable fields
-    updatable = ['nome', 'idade', 'altura', 'peso', 'sexo', 'objetivo', 'nivel_atividade', 'ritmo_meta']
+    updatable = ['nome', 'idade', 'altura', 'peso', 'sexo', 'objetivo', 'nivel_atividade', 'ritmo_meta', 'foto_perfil']
     for field in updatable:
         if field in data:
             setattr(user, field, data[field])

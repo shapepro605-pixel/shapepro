@@ -19,13 +19,21 @@ import 'screens/challenges.dart';
 import 'screens/verify_sms.dart';
 import 'screens/verify_choice.dart';
 import 'screens/privacy_policy.dart';
+import 'features/body_scan/body_scan_page.dart';
 
 
 import 'package:shapepro/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:shapepro/utils/logger.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Google Sign In (Version 7.x requirement)
+  await GoogleSignIn.instance.initialize();
   
   // Initialize Notification Service
   await NotificationService.init();
@@ -63,7 +71,7 @@ class ShapeProApp extends StatelessWidget {
       create: (context) {
         final api = ApiService();
         api.init().catchError((e) {
-          debugPrint('Error initializing ApiService: $e');
+          Log.e('Error initializing ApiService: $e');
         });
         return api;
       },
@@ -106,6 +114,7 @@ class ShapeProApp extends StatelessWidget {
               '/verify_choice': (context) => const VerifyChoiceScreen(),
               '/verify_sms': (context) => const VerifySmsScreen(),
               '/privacy': (context) => const PrivacyPolicyScreen(),
+              '/body_scan': (context) => const BodyScanPage(),
 
 
             },
@@ -202,6 +211,7 @@ class ShapeProApp extends StatelessWidget {
             fontWeight: FontWeight.w700,
             letterSpacing: 0.5,
           ),
+          splashFactory: InkSparkle.splashFactory,
         ),
       ),
       cardTheme: CardThemeData(
@@ -324,9 +334,19 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () async {
+      if (!mounted) return;
+      
+      final api = Provider.of<ApiService>(context, listen: false);
+      // Ensure API is initialized before moving
+      await api.init();
+      
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/login');
+        if (api.isLoggedIn) {
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
       }
     });
   }

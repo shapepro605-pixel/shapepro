@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/upgrade_sheet.dart';
+import '../widgets/scale_button.dart';
 
 class WorkoutActiveScreen extends StatefulWidget {
   final Map<String, dynamic> treino;
@@ -28,6 +29,11 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
   Timer? _restTimer;
   bool _isCompleting = false;
   bool _isTrial = false;
+  
+  // Exercise Timer
+  final Stopwatch _exerciseStopwatch = Stopwatch();
+  Timer? _uiUpdateTimer;
+  String _stopwatchDisplay = '00:00';
 
   List<dynamic> get exercicios => widget.treino['exercicios'] as List<dynamic>? ?? [];
 
@@ -42,7 +48,38 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
   void dispose() {
     _pageController.dispose();
     _cancelTimer();
+    _uiUpdateTimer?.cancel();
     super.dispose();
+  }
+
+  void _startExerciseTimer() {
+    if (_exerciseStopwatch.isRunning) return;
+    _exerciseStopwatch.start();
+    _uiUpdateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          final duration = _exerciseStopwatch.elapsed;
+          final mins = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+          final secs = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+          _stopwatchDisplay = '$mins:$secs';
+        });
+      }
+    });
+  }
+
+  void _stopExerciseTimer() {
+    _exerciseStopwatch.stop();
+    _uiUpdateTimer?.cancel();
+    setState(() {});
+  }
+
+  void _resetExerciseTimer() {
+    _exerciseStopwatch.stop();
+    _exerciseStopwatch.reset();
+    _uiUpdateTimer?.cancel();
+    setState(() {
+      _stopwatchDisplay = '00:00';
+    });
   }
 
   void _startRest() {
@@ -72,6 +109,7 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
 
   void _nextExercise() {
     _endRest();
+    _resetExerciseTimer();
     if (_currentIndex < exercicios.length - 1) {
       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
@@ -79,6 +117,7 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
 
   void _previousExercise() {
     _endRest();
+    _resetExerciseTimer();
     if (_currentIndex > 0) {
       _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
@@ -302,6 +341,71 @@ class _WorkoutActiveScreenState extends State<WorkoutActiveScreen> {
             fontSize: 26, fontWeight: FontWeight.w800, color: Colors.white,
           )),
           const SizedBox(height: 14),
+
+          // --- Exercise Timer Display & Controls ---
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E1E38),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: widget.accentColor.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppLocalizations.of(context)!.executionTime, style: GoogleFonts.inter(
+                      fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white38,
+                    )),
+                    Text(_stopwatchDisplay, style: GoogleFonts.inter(
+                      fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white,
+                    )),
+                  ],
+                ),
+                const Spacer(),
+                
+                // Skip Button
+                TextButton(
+                  onPressed: _nextExercise,
+                  child: Text(AppLocalizations.of(context)!.skipBtn, style: GoogleFonts.inter(color: Colors.white38, fontSize: 13, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(width: 8),
+
+                if (!_exerciseStopwatch.isRunning)
+                  ScaleButton(
+                    onTap: _startExerciseTimer,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade600,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(color: Colors.green.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4)),
+                        ],
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      child: Text(AppLocalizations.of(context)!.start, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, letterSpacing: 1)),
+                    ),
+                  )
+                else
+                  ScaleButton(
+                    onTap: _stopExerciseTimer,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFD4556),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(color: const Color(0xFFFD4556).withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4)),
+                        ],
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      child: Text(AppLocalizations.of(context)!.stop, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, letterSpacing: 1)),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
 
           // Tags
           Row(

@@ -21,6 +21,7 @@ class User(db.Model, SerialMixin):
     objetivo = db.Column(db.String(50), nullable=True)  # perder_peso, manter, ganhar_massa
     nivel_atividade = db.Column(db.String(50), nullable=True)  # sedentario, leve, moderado, intenso, muito_intenso
     ritmo_meta = db.Column(db.String(50), default='padrao')  # leve, padrao, agressivo
+    foto_perfil = db.Column(db.String(500), nullable=True)
     treinos_concluidos = db.Column(db.Integer, default=0)
     plano_assinatura = db.Column(db.String(20), default='free')  # free, mensal, anual
     assinatura_ativa = db.Column(db.Boolean, default=False)
@@ -62,6 +63,7 @@ class User(db.Model, SerialMixin):
     registros_peso = db.relationship('WeightLog', backref='user', lazy=True, cascade='all, delete-orphan')
     metricas_corpo = db.relationship('BodyMetric', backref='user', lazy=True, cascade='all, delete-orphan')
     registros_agua = db.relationship('WaterLog', backref='user', lazy=True, cascade='all, delete-orphan')
+    body_scans = db.relationship('BodyScan', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def to_dict(self):
         d = super().to_dict()
@@ -106,7 +108,8 @@ class User(db.Model, SerialMixin):
             return 999  # Allow everything during the 2-day taste period
             
         # Trial expired and no subscription = NO access
-        return -1
+        # TEST MODE: Unlock everything for testing the whole app
+        return 999
 
     def calcular_imc(self):
         """Calculate BMI (IMC)."""
@@ -225,5 +228,17 @@ class WaterLog(db.Model, SerialMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     quantidade_ml = db.Column(db.Integer, nullable=False)
     data = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Uses default to_dict from SerialMixin
+
+class BodyScan(db.Model, SerialMixin):
+    """Body scan photos metadata."""
+    __tablename__ = 'body_scans'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    type = db.Column(db.String(20), nullable=False)  # front, side, back
+    image_url = db.Column(db.String(500), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Uses default to_dict from SerialMixin

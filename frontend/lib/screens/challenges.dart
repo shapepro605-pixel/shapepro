@@ -56,7 +56,9 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return const SizedBox.shrink();
+    
     final api = Provider.of<ApiService>(context);
     final isPremium = api.currentUser?['plano_assinatura'] != 'free';
 
@@ -89,13 +91,14 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
   }
 
   Widget _buildChallengeList(String type, bool isPremium) {
+    final l10n = AppLocalizations.of(context)!;
     final filtered = _allChallenges.where((c) => c['tipo'] == type).toList();
 
     if (filtered.isEmpty) {
       return Center(
         child: Text(
-          "Nenhum campeonato disponível",
-          style: TextStyle(color: Colors.white38),
+          l10n.noChampionships,
+          style: const TextStyle(color: Colors.white38),
         ),
       );
     }
@@ -107,12 +110,13 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
         final challenge = filtered[index];
         final isActive = _activeChallengeIds.contains(challenge['id']);
 
-        return _buildChallengeCard(challenge, isPremium, isActive);
+        return _buildChallengeCard(context, challenge, isPremium, isActive);
       },
     );
   }
 
-  Widget _buildChallengeCard(dynamic challenge, bool isPremium, bool isActive) {
+  Widget _buildChallengeCard(BuildContext context, dynamic challenge, bool isPremium, bool isActive) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -209,7 +213,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
                         );
                       },
                       icon: const Icon(Icons.flash_on_rounded, size: 16),
-                      label: const Text("INICIAR", style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+                      label: Text(l10n.start, style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF00D2FF),
                         foregroundColor: Colors.white,
@@ -239,7 +243,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
                         minimumSize: const Size(100, 36),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                       ),
-                      child: const Text("PARTICIPAR"),
+                      child: Text(l10n.participate),
                     ),
                 ],
               ),
@@ -258,7 +262,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
       if (result['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['message'] ?? "Inscrito com sucesso!"),
+            content: Text(result['message'] ?? AppLocalizations.of(context)!.joinedSuccess),
             backgroundColor: const Color(0xFF6C5CE7),
           ),
         );
@@ -266,7 +270,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['error'] ?? "Erro ao entrar no campeonato"),
+            content: Text(result['error'] ?? AppLocalizations.of(context)!.joinError),
             backgroundColor: Colors.redAccent,
           ),
         );

@@ -272,17 +272,17 @@ abstract class AppLocalizations {
   /// **'Evolução do peso'**
   String get weightEvolution;
 
-  /// No description provided for @activeDiet.
+  /// No description provided for @dietaAtiva.
   ///
   /// In pt, this message translates to:
   /// **'Dieta ativa'**
-  String get activeDiet;
+  String get dietaAtiva;
 
-  /// No description provided for @weeklyTraining.
+  /// No description provided for @treinosSemana.
   ///
   /// In pt, this message translates to:
   /// **'Treinos da semana'**
-  String get weeklyTraining;
+  String get treinosSemana;
 
   /// No description provided for @calories.
   ///
@@ -890,6 +890,30 @@ abstract class AppLocalizations {
   /// **'🎉 Treino Finalizado! Você é incrível! +1 na conta!'**
   String get workoutFinished;
 
+  /// No description provided for @executionTime.
+  ///
+  /// In pt, this message translates to:
+  /// **'TEMPO DE EXECUÇÃO'**
+  String get executionTime;
+
+  /// No description provided for @stop.
+  ///
+  /// In pt, this message translates to:
+  /// **'STOP'**
+  String get stop;
+
+  /// No description provided for @skipBtn.
+  ///
+  /// In pt, this message translates to:
+  /// **'PULAR'**
+  String get skipBtn;
+
+  /// No description provided for @start.
+  ///
+  /// In pt, this message translates to:
+  /// **'INICIAR'**
+  String get start;
+
   /// No description provided for @noExercisesFound.
   ///
   /// In pt, this message translates to:
@@ -1195,6 +1219,324 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Sua dieta foi gerada com sucesso!'**
   String get diet_generated;
+
+  /// No description provided for @bodyScanAI.
+  ///
+  /// In pt, this message translates to:
+  /// **'Body Scan AI'**
+  String get bodyScanAI;
+
+  /// No description provided for @trackBodyEvolution.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registre sua evolução corporal'**
+  String get trackBodyEvolution;
+
+  /// No description provided for @open.
+  ///
+  /// In pt, this message translates to:
+  /// **'ABRIR'**
+  String get open;
+
+  /// No description provided for @evolutionAnalysis.
+  ///
+  /// In pt, this message translates to:
+  /// **'Análise de Evolução'**
+  String get evolutionAnalysis;
+
+  /// No description provided for @selectPoseType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione o tipo de foto que deseja tirar hoje.'**
+  String get selectPoseType;
+
+  /// No description provided for @front.
+  ///
+  /// In pt, this message translates to:
+  /// **'Frente'**
+  String get front;
+
+  /// No description provided for @side.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lado'**
+  String get side;
+
+  /// No description provided for @back.
+  ///
+  /// In pt, this message translates to:
+  /// **'Costas'**
+  String get back;
+
+  /// No description provided for @sendPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'ENVIAR FOTO'**
+  String get sendPhoto;
+
+  /// No description provided for @photoSentSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto enviada com sucesso! Seu progresso está sendo rastreado.'**
+  String get photoSentSuccess;
+
+  /// No description provided for @takeAnother.
+  ///
+  /// In pt, this message translates to:
+  /// **'TIRAR OUTRA'**
+  String get takeAnother;
+
+  /// No description provided for @finish.
+  ///
+  /// In pt, this message translates to:
+  /// **'CONCLUIR'**
+  String get finish;
+
+  /// No description provided for @fullBodyNotDetected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Corpo inteiro não detectado. Afaste-se.'**
+  String get fullBodyNotDetected;
+
+  /// No description provided for @centerYourBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Centralize seu corpo'**
+  String get centerYourBody;
+
+  /// No description provided for @stayStraight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fique reto (não incline os ombros)'**
+  String get stayStraight;
+
+  /// No description provided for @invalidDistance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Distância inadequada da câmera'**
+  String get invalidDistance;
+
+  /// No description provided for @poseFront.
+  ///
+  /// In pt, this message translates to:
+  /// **'Posicione-se de frente'**
+  String get poseFront;
+
+  /// No description provided for @poseSide.
+  ///
+  /// In pt, this message translates to:
+  /// **'Posicione-se de lado'**
+  String get poseSide;
+
+  /// No description provided for @poseBack.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fique de costas'**
+  String get poseBack;
+
+  /// No description provided for @startingCamera.
+  ///
+  /// In pt, this message translates to:
+  /// **'Iniciando câmera...'**
+  String get startingCamera;
+
+  /// No description provided for @noBodyDetected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum corpo detectado'**
+  String get noBodyDetected;
+
+  /// No description provided for @perfectCapture.
+  ///
+  /// In pt, this message translates to:
+  /// **'PERFEITO! PODE TIRAR A FOTO'**
+  String get perfectCapture;
+
+  /// No description provided for @state.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estado'**
+  String get state;
+
+  /// No description provided for @city.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cidade'**
+  String get city;
+
+  /// No description provided for @monthlyIncome.
+  ///
+  /// In pt, this message translates to:
+  /// **'Renda Mensal (R\$)'**
+  String get monthlyIncome;
+
+  /// No description provided for @dietBudget.
+  ///
+  /// In pt, this message translates to:
+  /// **'Orçamento para Dieta (R\$)'**
+  String get dietBudget;
+
+  /// No description provided for @reportPrice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informar Preço'**
+  String get reportPrice;
+
+  /// No description provided for @howMuchDoesThisCost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto custa este alimento na sua cidade?'**
+  String get howMuchDoesThisCost;
+
+  /// No description provided for @pricePlaceholder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: 25.50'**
+  String get pricePlaceholder;
+
+  /// No description provided for @savePrice.
+  ///
+  /// In pt, this message translates to:
+  /// **'SALVAR PREÇO'**
+  String get savePrice;
+
+  /// No description provided for @time.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tempo'**
+  String get time;
+
+  /// No description provided for @newVersion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova Versão!'**
+  String get newVersion;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Uma atualização importante para o ShapePro já está disponível. Melhore sua experiência!'**
+  String get updateAvailable;
+
+  /// No description provided for @mandatoryUpdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta atualização é obrigatória para continuar usando o app.'**
+  String get mandatoryUpdate;
+
+  /// No description provided for @later.
+  ///
+  /// In pt, this message translates to:
+  /// **'DEPOIS'**
+  String get later;
+
+  /// No description provided for @updateNow.
+  ///
+  /// In pt, this message translates to:
+  /// **'ATUALIZAR AGORA'**
+  String get updateNow;
+
+  /// No description provided for @notificationDenied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permissão de notificação negada.'**
+  String get notificationDenied;
+
+  /// No description provided for @priceReported.
+  ///
+  /// In pt, this message translates to:
+  /// **'Obrigado! Preço registrado para ajudar a IA.'**
+  String get priceReported;
+
+  /// No description provided for @trainingCoordination.
+  ///
+  /// In pt, this message translates to:
+  /// **'Treinos coordenados!'**
+  String get trainingCoordination;
+
+  /// No description provided for @chestTriceps.
+  ///
+  /// In pt, this message translates to:
+  /// **'Peito e Tríceps'**
+  String get chestTriceps;
+
+  /// No description provided for @backBiceps.
+  ///
+  /// In pt, this message translates to:
+  /// **'Costas e Bíceps'**
+  String get backBiceps;
+
+  /// No description provided for @legsGlutes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pernas e Glúteos'**
+  String get legsGlutes;
+
+  /// No description provided for @shouldersAbs.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ombros e Abdômen'**
+  String get shouldersAbs;
+
+  /// No description provided for @fullBodyFunctional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Full Body / Funcional'**
+  String get fullBodyFunctional;
+
+  /// No description provided for @logWeightToChart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registre seu peso para ver o gráfico'**
+  String get logWeightToChart;
+
+  /// No description provided for @noChampionships.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum campeonato disponível'**
+  String get noChampionships;
+
+  /// No description provided for @joinedSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inscrito com sucesso!'**
+  String get joinedSuccess;
+
+  /// No description provided for @joinError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao entrar no campeonato'**
+  String get joinError;
+
+  /// No description provided for @participate.
+  ///
+  /// In pt, this message translates to:
+  /// **'PARTICIPAR'**
+  String get participate;
+
+  /// No description provided for @changeProfilePhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minha foto de perfil'**
+  String get changeProfilePhoto;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tirar foto'**
+  String get takePhoto;
+
+  /// No description provided for @chooseGallery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolher da galeria'**
+  String get chooseGallery;
+
+  /// No description provided for @uploading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviando...'**
+  String get uploading;
 }
 
 class _AppLocalizationsDelegate

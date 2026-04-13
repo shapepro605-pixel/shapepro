@@ -62,7 +62,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Treino $tipo',
+                        AppLocalizations.of(context)!.treinoNum(tipo),
                         style: GoogleFonts.inter(
                           color: accentColor,
                           fontWeight: FontWeight.w800,
@@ -92,7 +92,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildStat(context, Icons.timer_outlined, tempo, "Tempo"),
+                  _buildStat(context, Icons.timer_outlined, tempo, AppLocalizations.of(context)!.time),
                   _buildStat(context, Icons.format_list_numbered, '${exercicios.length}', AppLocalizations.of(context)!.exercises),
                   _buildStat(context, Icons.bar_chart, nivel.toUpperCase(), AppLocalizations.of(context)!.difficulty),
                 ],

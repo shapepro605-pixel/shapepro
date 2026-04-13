@@ -22,3 +22,23 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+allprojects {
+    tasks.withType<JavaCompile>().configureEach {
+        options.isWarnings = false
+        options.isDeprecation = false
+        // Using -nowarn and -Xlint:none to completely suppress compiler notes
+        options.compilerArgs.addAll(listOf("-nowarn", "-Xlint:none", "-Xlint:-deprecation", "-Xlint:-unchecked"))
+    }
+    
+    plugins.withType<org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper> {
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+            compilerOptions {
+                jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+                allWarningsAsErrors = false
+                // Suppressing Kotlin compiler warnings using supported flags
+                freeCompilerArgs.addAll("-nowarn", "-Xlint:-deprecation")
+            }
+        }
+    }
+}

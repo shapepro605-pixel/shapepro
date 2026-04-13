@@ -20,6 +20,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String? _sexo;
   String? _objetivo;
   String? _nivelAtividade;
+  late TextEditingController _estadoController;
+  late TextEditingController _cidadeController;
+  late TextEditingController _rendaController;
+  late TextEditingController _orcamentoDietaController;
 
   bool _isSubmitting = false;
 
@@ -34,6 +38,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _sexo = user['sexo'];
     _objetivo = user['objetivo'];
     _nivelAtividade = user['nivel_atividade'];
+    _estadoController = TextEditingController(text: user['estado'] ?? '');
+    _cidadeController = TextEditingController(text: user['cidade'] ?? '');
+    _rendaController = TextEditingController(text: user['renda_mensal']?.toString() ?? '');
+    _orcamentoDietaController = TextEditingController(text: user['orcamento_dieta']?.toString() ?? '');
   }
 
   @override
@@ -42,6 +50,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _idadeController.dispose();
     _alturaController.dispose();
     _pesoController.dispose();
+    _estadoController.dispose();
+    _cidadeController.dispose();
+    _rendaController.dispose();
+    _orcamentoDietaController.dispose();
     super.dispose();
   }
 
@@ -59,6 +71,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       'sexo': _sexo,
       'objetivo': _objetivo,
       'nivel_atividade': _nivelAtividade,
+      'estado': _estadoController.text.trim(),
+      'cidade': _cidadeController.text.trim(),
+      'renda_mensal': double.tryParse(_rendaController.text.trim()),
+      'orcamento_dieta': double.tryParse(_orcamentoDietaController.text.trim()),
     };
 
     final result = await api.updateProfile(data);
@@ -212,6 +228,57 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 isSelected: _objetivo == 'ganhar_massa',
                 onTap: () => setState(() => _objetivo = 'ganhar_massa'),
               ),
+
+              const SizedBox(height: 32),
+              FormSectionHeader(
+                title: 'Localização e Finanças',
+                subtitle: 'Esses dados ajudam a IA a sugerir alimentos com melhor custo-benefício na sua região.',
+              ),
+
+              Row(
+                children: [
+                   Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomLabel(label: l10n.state),
+                        TextFormField(
+                          controller: _estadoController,
+                          decoration: const InputDecoration(hintText: 'Ex: SP'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomLabel(label: l10n.city),
+                        TextFormField(
+                          controller: _cidadeController,
+                          decoration: const InputDecoration(hintText: 'Ex: São Paulo'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              CustomLabel(label: l10n.monthlyIncome),
+              TextFormField(
+                controller: _rendaController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'Ex: 3500.00'),
+              ),
+              const SizedBox(height: 20),
+              CustomLabel(label: l10n.dietBudget),
+              TextFormField(
+                controller: _orcamentoDietaController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'Quanto pode gastar com a dieta?'),
+              ),
+              const SizedBox(height: 20),
               const SizedBox(height: 20),
 
               // Nível de Atividade

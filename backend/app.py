@@ -58,6 +58,7 @@ def create_app(config_name=None):
     from routes.tracking import tracking_bp
     from routes.challenge import challenge_bp
     from routes.journal import journal_bp
+    from routes.body_scan import body_scan_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(plan_bp)
     app.register_blueprint(admin_bp)
@@ -65,6 +66,7 @@ def create_app(config_name=None):
     app.register_blueprint(tracking_bp)
     app.register_blueprint(challenge_bp)
     app.register_blueprint(journal_bp)
+    app.register_blueprint(body_scan_bp)
 
     # ── Import new models so tables are created ───────────────────────
     with app.app_context():

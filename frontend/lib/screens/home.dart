@@ -8,6 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api.dart';
 import '../services/notification_service.dart';
+import '../widgets/scale_button.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:shapepro/utils/logger.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,18 +104,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             const Icon(Icons.system_update_rounded, color: Color(0xFF6C5CE7)),
             const SizedBox(width: 12),
-            Text('Nova Versão!', style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(AppLocalizations.of(context)!.newVersion, style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Uma atualização importante para o ShapePro já está disponível. Melhore sua experiência!', 
+            Text(AppLocalizations.of(context)!.updateAvailable, 
               style: GoogleFonts.inter(color: Colors.white70, fontSize: 14)),
             const SizedBox(height: 10),
             if (isMandatory)
-              Text('Esta atualização é obrigatória para continuar usando o app.', 
+              Text(AppLocalizations.of(context)!.mandatoryUpdate, 
                 style: GoogleFonts.inter(color: const Color(0xFFFD4556), fontSize: 13, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -119,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           if (!isMandatory)
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('DEPOIS', style: TextStyle(color: Colors.white54)),
+              child: Text(AppLocalizations.of(context)!.later, style: const TextStyle(color: Colors.white54)),
             ),
           ElevatedButton(
             onPressed: () async {
@@ -134,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text('ATUALIZAR AGORA'),
+            child: Text(AppLocalizations.of(context)!.updateNow),
           ),
         ],
       ),
@@ -155,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (!granted) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Permissão de notificação negada.')),
+            SnackBar(content: Text(AppLocalizations.of(context)?.notificationDenied ?? 'Notification denied.')),
           );
         }
         return;
@@ -223,10 +227,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // ── Dashboard ────────────────────────────────────────────────────────────
 
   Widget _buildHomeDashboard() {
-    final user = _progresso?['usuario'] ?? {};
-    final nome = user['nome'] ?? 'Atleta';
-    final imc = _progresso?['imc'];
+    final api = Provider.of<ApiService>(context);
+    final userFromProgresso = _progresso?['usuario'] as Map<String, dynamic>? ?? {};
+    final nome = userFromProgresso['nome'] ?? api.currentUser?['nome'] ?? AppLocalizations.of(context)!.atleta;
+    
     final classificacao = _progresso?['classificacao_imc'] ?? '';
+    final imc = _progresso?['imc'];
+    final user = userFromProgresso;
 
     return Container(
       decoration: BoxDecoration(
@@ -301,6 +308,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           isEmoji: true,
                           emoji: Provider.of<ApiService>(context).locale.languageCode == 'pt' ? '🇺🇸' : '🇧🇷',
                         ),
+                        _buildHeaderButton(
+                          Icons.logout,
+                          () async {
+                             final api = Provider.of<ApiService>(context, listen: false);
+                             await api.logout();
+                             if (mounted) Navigator.pushReplacementNamed(context, '/login');
+                          },
+                          color: const Color(0xFFFD4556),
+                        ),
                       ],
                     ),
                     const SizedBox(width: 12),
@@ -308,26 +324,57 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       onTap: _showProfileMenu,
                       child: Hero(
                         tag: 'avatar',
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)],
-                            ),
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: [
-                              BoxShadow(color: const Color(0xFF6C5CE7).withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              nome.isNotEmpty ? nome[0].toUpperCase() : AppLocalizations.of(context)!.atleta[0].toUpperCase(),
-                              style: GoogleFonts.inter(
-                                fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: user['foto_perfil'] == null 
+                                  ? const LinearGradient(colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)])
+                                  : null,
+                                border: Border.all(color: const Color(0xFF6C5CE7).withValues(alpha: 0.5), width: 2),
+                                boxShadow: [
+                                  BoxShadow(color: const Color(0xFF6C5CE7).withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                                ],
+                                image: (user['foto_perfil'] != null && user['foto_perfil'].toString().startsWith('http'))
+                                    ? DecorationImage(
+                                        image: NetworkImage(user['foto_perfil']),
+                                        fit: BoxFit.cover,
+                                        onError: (exception, stackTrace) {
+                                          Log.e('Erro ao carregar imagem de perfil: $exception');
+                                        },
+                                      )
+                                    : null,
                               ),
+                              child: (user['foto_perfil'] == null || !user['foto_perfil'].toString().startsWith('http'))
+                                  ? Center(
+                                      child: Text(
+                                        nome.isNotEmpty ? nome[0].toUpperCase() : AppLocalizations.of(context)!.atleta[0].toUpperCase(),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
                             ),
-                          ),
+                            if (api.isLoading && _currentIndex == 0)
+                              Positioned.fill(
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black45,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: const EdgeInsets.all(12),
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ),
@@ -408,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '${AppLocalizations.of(context)!.peso}: ${user['peso'] ?? '--'} kg  •  ${AppLocalizations.of(context)!.altura}: ${user['altura'] ?? '--'} cm',
+                              '${AppLocalizations.of(context)!.peso}: ${userFromProgresso['peso'] ?? '--'} kg  •  ${AppLocalizations.of(context)!.altura}: ${userFromProgresso['altura'] ?? '--'} cm',
                               style: GoogleFonts.inter(fontSize: 13, color: Colors.white60),
                             ),
                           ],
@@ -419,10 +466,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ).animate().fadeIn(duration: 600.ms).moveY(begin: 20, end: 0, curve: Curves.easeOutQuad),
                 const SizedBox(height: 22),
 
+                // ── Body Scan Banner ───────────────────────────
+                _buildBodyScanBanner(),
+                const SizedBox(height: 22),
+
                 // ── Quick Actions ───────────────────────────────
                 Row(
                   children: [
-                    _buildQuickAction('Treino', Icons.fitness_center_rounded, const Color(0xFF00D2FF), () {
+                    _buildQuickAction(AppLocalizations.of(context)!.treino, Icons.fitness_center_rounded, const Color(0xFF00D2FF), () {
                       final isFree = _progresso?['usuario']?['plano_assinatura'] == 'free';
                       if (isFree) {
                         Navigator.pushNamed(context, '/checkout');
@@ -431,7 +482,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       }
                     }),
                     const SizedBox(width: 14),
-                    _buildQuickAction('Dieta', Icons.restaurant_menu, const Color(0xFF6C5CE7), () {
+                    _buildQuickAction(AppLocalizations.of(context)!.dieta, Icons.restaurant_menu, const Color(0xFF6C5CE7), () {
                       final isFree = _progresso?['usuario']?['plano_assinatura'] == 'free';
                       if (isFree) {
                         Navigator.pushNamed(context, '/checkout');
@@ -439,7 +490,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         Navigator.pushNamed(context, '/dieta');
                       }
                     }),
-                    _buildQuickAction('Campeonatos', Icons.emoji_events_rounded, const Color(0xFFFFD93D), () {
+                    _buildQuickAction(AppLocalizations.of(context)!.championshipsTitle, Icons.emoji_events_rounded, const Color(0xFFFFD93D), () {
                       Navigator.pushNamed(context, '/challenges');
                     }),
                     const SizedBox(width: 14),
@@ -451,7 +502,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 const SizedBox(height: 28),
 
                 // ── Weight Chart ────────────────────────────────
-                Text('Evolução do peso', style: GoogleFonts.inter(
+                Text(AppLocalizations.of(context)!.weightEvolution, style: GoogleFonts.inter(
                   fontSize: 18, fontWeight: FontWeight.w700, 
                   color: Provider.of<ApiService>(context).isDarkMode ? Colors.white : const Color(0xFF1A1A2E),
                 )),
@@ -461,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                 // ── Diet Summary ────────────────────────────────
                 if (_progresso?['dieta_ativa'] != null) ...[
-                  Text('Dieta ativa', style: GoogleFonts.inter(
+                  Text(AppLocalizations.of(context)!.dietaAtiva, style: GoogleFonts.inter(
                     fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white,
                   )),
                   const SizedBox(height: 16),
@@ -470,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ],
 
                 // ── Training Days ───────────────────────────────
-                Text('Treinos da semana', style: GoogleFonts.inter(
+                Text(AppLocalizations.of(context)!.treinosSemana, style: GoogleFonts.inter(
                   fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white,
                 )),
                 const SizedBox(height: 16),
@@ -570,6 +621,75 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Widget _buildBodyScanBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF16162A),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFF6C5CE7).withValues(alpha: 0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6C5CE7).withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Icon(Icons.camera_enhance_rounded, color: Color(0xFF6C5CE7), size: 28),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.bodyScanAI,
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.trackBodyEvolution,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: Colors.white54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ScaleButton(
+            onTap: () => Navigator.pushNamed(context, '/body_scan'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFF6C5CE7), width: 1),
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.open, 
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF6C5CE7))
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 100.ms, duration: 600.ms).moveY(begin: 20, end: 0, curve: Curves.easeOutQuad);
   }
 
   Widget _buildWeightChart() {
@@ -703,12 +823,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildTrainingDays() {
+    final l10n = AppLocalizations.of(context);
     final days = [
-      {'tipo': 'A', 'nome': 'Peito e Tríceps', 'icon': Icons.fitness_center},
-      {'tipo': 'B', 'nome': 'Costas e Bíceps', 'icon': Icons.fitness_center},
-      {'tipo': 'C', 'nome': 'Pernas e Glúteos', 'icon': Icons.directions_run},
-      {'tipo': 'D', 'nome': 'Ombros e Abdômen', 'icon': Icons.accessibility_new},
-      {'tipo': 'E', 'nome': 'Full Body', 'icon': Icons.sports_gymnastics},
+      {'tipo': 'A', 'nome': l10n?.chestTriceps ?? 'Chest & Triceps', 'icon': Icons.fitness_center},
+      {'tipo': 'B', 'nome': l10n?.backBiceps ?? 'Back & Biceps', 'icon': Icons.fitness_center},
+      {'tipo': 'C', 'nome': l10n?.legsGlutes ?? 'Legs & Glutes', 'icon': Icons.directions_run},
+      {'tipo': 'D', 'nome': l10n?.shouldersAbs ?? 'Shoulders & Abs', 'icon': Icons.accessibility_new},
+      {'tipo': 'E', 'nome': l10n?.fullBodyFunctional ?? 'Full Body', 'icon': Icons.sports_gymnastics},
     ];
 
     return SizedBox(
@@ -726,14 +847,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const Color(0xFFFFA502),
             const Color(0xFF2ED573),
           ];
-          return GestureDetector(
+          return ScaleButton(
             onTap: () {
-              final isFree = _progresso?['usuario']?['plano_assinatura'] == 'free';
-              if (isFree) {
-                Navigator.pushNamed(context, '/checkout');
-              } else {
-                Navigator.pushNamed(context, '/treino');
-              }
+              Navigator.pushNamed(context, '/treino', arguments: day['tipo']);
             },
             child: Container(
               width: 130,
@@ -796,6 +912,61 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 22),
+            // Header com Foto e Opção de Trocar
+            StatefulBuilder(
+              builder: (context, setMenuState) {
+                final api = Provider.of<ApiService>(context);
+                final curUser = api.currentUser ?? {};
+                return Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF6C5CE7), Color(0xFF00D2FF)],
+                            ),
+                            image: curUser['foto_perfil'] != null
+                                ? DecorationImage(
+                                    image: NetworkImage(curUser['foto_perfil']),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                          ),
+                          child: curUser['foto_perfil'] == null
+                              ? Center(
+                                  child: Text(
+                                    (curUser['nome'] ?? '')[0].toUpperCase(),
+                                    style: GoogleFonts.inter(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+                                  ),
+                                )
+                              : null,
+                        ),
+                        if (api.isLoading)
+                          const Positioned.fill(
+                            child: CircularProgressIndicator(color: Colors.white),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton.icon(
+                      onPressed: () => _pickPhoto(setMenuState),
+                      icon: const Icon(Icons.camera_alt, size: 18, color: Color(0xFF6C5CE7)),
+                      label: Text(
+                        AppLocalizations.of(context)!.changeProfilePhoto,
+                        style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFF6C5CE7)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Divider(color: Colors.white10),
+                  ],
+                );
+              },
+            ),
             _buildMenuItem(Icons.person_outline, 'Meu perfil', () {
               Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData());
             }),
@@ -925,5 +1096,75 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  Future<void> _pickPhoto(StateSetter setMenuState) async {
+    Log.i('[_pickPhoto] Iniciando seletor de foto...');
+    final l10n = AppLocalizations.of(context)!;
+    
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: const Color(0xFF16162A),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera_alt, color: Colors.white),
+            title: Text(l10n.takePhoto, style: const TextStyle(color: Colors.white)),
+            onTap: () => Navigator.pop(ctx, ImageSource.camera),
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library, color: Colors.white),
+            title: Text(l10n.chooseGallery, style: const TextStyle(color: Colors.white)),
+            onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+          ),
+          if (api.currentUser?['foto_perfil'] != null)
+            ListTile(
+              leading: const Icon(Icons.delete_outline, color: Color(0xFFFD4556)),
+              title: const Text('Remover foto atual', style: TextStyle(color: Color(0xFFFD4556))),
+              onTap: () async {
+                Navigator.pop(ctx);
+                await api.updateProfile({'foto_perfil': null});
+                _loadData();
+              },
+            ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+
+    if (source != null) {
+      final picker = ImagePicker();
+      Log.i('[_pickPhoto] Abrindo seletor para fonte: $source');
+      final pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 85,
+      ).catchError((e) {
+        Log.e('[_pickPhoto] ERRO AO ABRIR PICKER: $e');
+        return null;
+      });
+
+      if (pickedFile != null && mounted) {
+        final api = Provider.of<ApiService>(context, listen: false);
+        setMenuState(() {}); // Force loading indicator in menu
+        final url = await api.uploadFotoPerfil(File(pickedFile.path));
+        
+        if (url != null && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Foto de perfil atualizada!'), backgroundColor: Colors.green),
+          );
+          _loadData();
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Erro ao carregar foto.'), backgroundColor: Colors.red),
+          );
+        }
+      }
+    }
   }
 }

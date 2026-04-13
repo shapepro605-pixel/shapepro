@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 
+import 'package:shapepro/utils/logger.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -79,7 +81,8 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       final authenticated = await _localAuth.authenticate(
         localizedReason: 'Autentique-se para acessar o ShapePro',
-        options: const AuthenticationOptions(stickyAuth: true, biometricOnly: true),
+        biometricOnly: true,
+        persistAcrossBackgrounding: true,
       );
       if (authenticated) {
         setState(() => _isLoading = true);
@@ -98,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen>
         }
       }
     } catch (e) {
-      debugPrint(e.toString());
+      Log.e(e.toString());
     }
   }
 
@@ -195,11 +198,12 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) { setState(() => _isLoading = false); return; }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      // Using the singleton instance and authenticate() for version 7.x
+      final googleUser = await GoogleSignIn.instance.authenticate();
+      final googleAuth = googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
       final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       final idToken = await userCredential.user?.getIdToken();
 

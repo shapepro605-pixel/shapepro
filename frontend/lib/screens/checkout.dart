@@ -141,6 +141,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
+                  // DEBUG BUTTON FOR QUICK TESTING
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => _simulateMockPurchase('shapepro_mensal'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2ED573).withValues(alpha: 0.1),
+                        side: const BorderSide(color: Color(0xFF2ED573), width: 1.5),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.bug_report, color: Color(0xFF2ED573)),
+                          SizedBox(width: 10),
+                          Text(
+                            'DEBUG: LIBERAR TUDO AGORA',
+                            style: TextStyle(color: Color(0xFF2ED573), fontWeight: FontWeight.w900, letterSpacing: 1),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
                   // Store Products or Mock Plans for testing
                   ...(_loadPlansList(Provider.of<ApiService>(context).products)),
 

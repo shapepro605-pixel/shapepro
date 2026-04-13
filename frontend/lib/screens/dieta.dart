@@ -72,6 +72,7 @@ class _DietaScreenState extends State<DietaScreen> {
   Future<void> _gerarNovaDieta() async {
     setState(() => _isGenerating = true);
     final api = Provider.of<ApiService>(context, listen: false);
+    final l10n = AppLocalizations.of(context);
 
     // Save profile if things changed so the diet generator uses them
     if (_selectedObjetivo != api.currentUser?['objetivo'] || 
@@ -85,7 +86,7 @@ class _DietaScreenState extends State<DietaScreen> {
     }
 
     final result = await api.gerarDieta(orcamento: _selectedOrcamento);
-    if (mounted) {
+    if (result['success'] == true) {
       setState(() {
         _isGenerating = false;
         if (result['success'] == true) {
@@ -99,7 +100,7 @@ class _DietaScreenState extends State<DietaScreen> {
               children: [
                 const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
                 const SizedBox(width: 12),
-                Text("${AppLocalizations.of(context)!.diet_generated} & Treinos atualizados!"),
+                Text("${l10n?.diet_generated ?? ''} & ${l10n?.trainingCoordination ?? 'Treinos atualizados!'}"),
               ],
             ),
             backgroundColor: const Color(0xFF2ED573),
@@ -107,12 +108,69 @@ class _DietaScreenState extends State<DietaScreen> {
           ));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(result['error'] ?? AppLocalizations.of(context)!.paymentError), // Using paymentError as a generic fallback error string if needed
+            content: Text(result['error'] ?? AppLocalizations.of(context)?.paymentError ?? 'Erro'),
             backgroundColor: const Color(0xFFFD4556),
           ));
         }
       });
     }
+  }
+
+  void _showPriceDialog(String foodName) {
+    final TextEditingController priceController = TextEditingController();
+    final api = Provider.of<ApiService>(context, listen: false);
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF16162A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        title: Text(l10n.reportPrice, style: GoogleFonts.inter(color: Colors.white)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.howMuchDoesThisCost, style: GoogleFonts.inter(color: Colors.white70, fontSize: 13)),
+            const SizedBox(height: 16),
+            TextField(
+              controller: priceController,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                prefixText: 'R\$ ',
+                hintText: l10n.pricePlaceholder,
+                hintStyle: const TextStyle(color: Colors.white24),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel, style: const TextStyle(color: Colors.white38)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final price = double.tryParse(priceController.text.replaceAll(',', '.'));
+              if (price != null) {
+                final city = api.currentUser?['cidade'] ?? 'N/A';
+                await api.reportFoodPrice(foodName: foodName, price: price, city: city);
+                if (mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(l10n.priceReported),
+                    backgroundColor: const Color(0xFF2ED573),
+                  ));
+                }
+              }
+            },
+            child: Text(l10n.savePrice),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -419,9 +477,19 @@ class _DietaScreenState extends State<DietaScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+              Row(
+                children: [
+                   const Icon(Icons.info_outline, color: Colors.white38, size: 14),
+                   const SizedBox(width: 6),
+                   Text(
+                     "* Valores aproximados de peso e medidas.",
+                     style: GoogleFonts.inter(fontSize: 11, color: Colors.white38, fontStyle: FontStyle.italic),
+                   ),
+                ],
+              ),
+              const SizedBox(height: 24),
 
-          // ── Meals ───────────────────────────────────
+              // ── Meals ───────────────────────────────────
           Text(AppLocalizations.of(context)!.meals, style: GoogleFonts.inter(
             fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white,
           )),
@@ -431,6 +499,10 @@ class _DietaScreenState extends State<DietaScreen> {
             final refeicao = entry.value as Map<String, dynamic>;
             return _buildRefeicaoCard(refeicao, entry.key);
           }),
+
+          const SizedBox(height: 24),
+          _buildBudgetSummary(),
+          const SizedBox(height: 24),
 
           const SizedBox(height: 30),
 
@@ -700,12 +772,86 @@ class _DietaScreenState extends State<DietaScreen> {
                     Text('${a['calorias'] ?? 0} kcal', style: GoogleFonts.inter(
                       color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w600,
                     )),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _showPriceDialog(a['nome'] ?? ''),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Icon(Icons.add_circle_outline, color: Color(0xFF2ED573), size: 16),
+                      ),
+                    ),
                   ],
                 ),
               );
             }).toList(),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBudgetSummary() {
+    final api = Provider.of<ApiService>(context, listen: false);
+    final userBudget = api.currentUser?['orcamento_dieta']?.toDouble() ?? 0.0;
+    
+    if (userBudget == 0) return const SizedBox.shrink();
+
+    // Estimativa bruta de custo mensal (simulada baseada no orçamento e calorias)
+    final estimatedDailyCost = (_dieta!['calorias_totais'] as num).toDouble() / 200 * 2.5; // Heurística
+    final estimatedMonthlyCost = estimatedDailyCost * 30;
+    final percent = (estimatedMonthlyCost / userBudget).clamp(0.0, 1.2);
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF16162A),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: percent > 1.0 ? Colors.redAccent : const Color(0xFF2A2A4A)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.account_balance_wallet, color: Color(0xFF2ED573), size: 20),
+              const SizedBox(width: 10),
+              Text('Controle de Orçamento', style: GoogleFonts.inter(
+                fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white,
+              )),
+            ],
+          ),
+          const SizedBox(height: 16),
+          LinearProgressIndicator(
+            value: percent,
+            backgroundColor: Colors.white10,
+            color: percent > 1.0 ? Colors.redAccent : const Color(0xFF2ED573),
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Estimado: R\$ ${estimatedMonthlyCost.toStringAsFixed(2)}', style: GoogleFonts.inter(color: Colors.white70, fontSize: 13)),
+              Text('Meta: R\$ ${userBudget.toStringAsFixed(2)}', style: GoogleFonts.inter(
+                color: percent > 1.0 ? Colors.redAccent : Colors.white38, 
+                fontSize: 13,
+                fontWeight: percent > 1.0 ? FontWeight.bold : FontWeight.normal,
+              )),
+            ],
+          ),
+          if (percent > 1.0) ...[
+            const SizedBox(height: 8),
+            const Text(
+              '⚠️ Dieta acima do orçamento! Tente gerar uma versão "Econômica".',
+              style: TextStyle(color: Colors.redAccent, fontSize: 11, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ],
       ),
     );
   }

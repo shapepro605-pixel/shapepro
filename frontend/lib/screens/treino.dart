@@ -28,6 +28,8 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
     'E': const Color(0xFF2ED573),
   };
 
+  bool _isInitialTabSet = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +42,22 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
       }
     });
     _loadTreinos();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialTabSet) {
+      final args = ModalRoute.of(context)?.settings.arguments as String?;
+      if (args != null) {
+        final index = ['A', 'B', 'C', 'D', 'E'].indexOf(args.toUpperCase());
+        if (index != -1) {
+          _tabController.index = index;
+          _selectedTreino = args.toUpperCase();
+        }
+      }
+      _isInitialTabSet = true;
+    }
   }
 
   @override

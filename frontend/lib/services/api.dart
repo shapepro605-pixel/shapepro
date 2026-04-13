@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'dart:async';
+import 'package:shapepro/utils/logger.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class ApiService extends ChangeNotifier {
   // Base URL for the API.
@@ -132,6 +135,18 @@ class ApiService extends ChangeNotifier {
     await _iap.buyNonConsumable(purchaseParam: purchaseParam);
   }
 
+  Future<Map<String, dynamic>> reportFoodPrice({
+    required String foodName,
+    required double price,
+    required String city,
+  }) async {
+    return await _request('POST', '/diet/report-price', body: {
+      'food_name': foodName,
+      'price': price,
+      'city': city,
+    });
+  }
+
   @override
   void dispose() {
     _subscription?.cancel();
@@ -163,7 +178,7 @@ class ApiService extends ChangeNotifier {
 
     try {
       final uri = Uri.parse('$baseUrl$endpoint');
-      debugPrint('🚀 API REQUEST [$method]: $uri');
+      Log.i('API REQUEST [$method]: $uri');
       
       http.Response response;
 
@@ -192,21 +207,30 @@ class ApiService extends ChangeNotifier {
           throw Exception('Método HTTP não suportado: $method');
       }
 
-      debugPrint('✅ API RESPONSE [$method] ${response.statusCode}: ${response.body}');
+      Log.s('API RESPONSE [$method] ${response.statusCode}: ${response.body}');
 
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body) as Map<String, dynamic>;
+      } catch (e) {
+        Log.e('Failed to parse JSON response: ${response.body}');
+        return {
+          'success': false,
+          'error': 'O servidor retornou uma resposta inválida.',
+        };
+      }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return {'success': true, ...data};
       } else {
-        debugPrint('⚠️ API ERROR RESPONSE: ${response.body}');
+        Log.e('API ERROR RESPONSE: ${response.body}');
         return {
           'success': false,
           'error': data['error'] ?? 'Erro desconhecido',
         };
       }
     } catch (e) {
-      debugPrint('🔥 CRITICAL API ERROR: $e');
+      Log.e('CRITICAL API ERROR: $e');
       return {
         'success': false,
         'error': 'Erro de conexão ou tempo de resposta excedido.',
@@ -373,6 +397,51 @@ class ApiService extends ChangeNotifier {
       await _saveUser(result['user']);
     }
     return result;
+  }
+
+  /// Uploads a profile photo to Firebase Storage and returns the download URL.
+  Future<String?> uploadFotoPerfil(File file) async {
+    if (_currentUser == null) {
+      Log.e('Erro uploadFotoPerfil: Usuário não logado');
+      return null;
+    }
+    
+    try {
+      final userId = _currentUser!['id'].toString();
+      Log.i('Iniciando upload para Firebase Storage. ID Usuário: $userId');
+      
+      final storageRef = FirebaseStorage.instance.ref();
+      final photoRef = storageRef.child('perfil/$userId.jpg');
+      
+      Log.i('Reference Path: ${photoRef.fullPath}');
+      
+      final uploadTask = photoRef.putFile(file);
+      
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        Log.i('Upload progress [$userId]: ${((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toStringAsFixed(2)}%');
+      }, onError: (e) => Log.e('Erro durante o stream de upload: $e'));
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      Log.s('Upload concluído com sucesso [$userId]. URL: $downloadUrl');
+      
+      Log.i('Enviando link para o backend /auth/profile...');
+      final result = await updateProfile({'foto_perfil': downloadUrl});
+      
+      if (result['success'] == true) {
+        Log.s('Tudo OK! Foto salva no perfil do banco de dados.');
+        return downloadUrl;
+      } else {
+        Log.e('Backend falhou em salvar a URL: ${result['error']}');
+        return null;
+      }
+    } catch (e) {
+      Log.e('!!! ERRO CRÍTICO NO UPLOAD: $e');
+      if (e.toString().contains('permission-denied')) {
+        Log.e('DICA: Verifique as Regras de Segurança do Firebase Storage no console!');
+      }
+      return null;
+    }
   }
 
   Future<Map<String, dynamic>> deleteAccount() async {
