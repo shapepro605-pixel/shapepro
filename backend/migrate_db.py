@@ -17,10 +17,10 @@ def migrate():
                 db.session.execute(text("ALTER TABLE users ADD COLUMN foto_perfil TEXT;"))
                 
             db.session.commit()
-            print("Migração concluída com sucesso! Coluna 'foto_perfil' adicionada.")
+            return {"success": True, "message": "Migração incluída com sucesso."}
         except Exception as e:
             db.session.rollback()
-            print(f"Erro durante a migração (a coluna pode já existir): {e}")
+            return {"success": False, "error": str(e)}
 
 if __name__ == "__main__":
     migrate()

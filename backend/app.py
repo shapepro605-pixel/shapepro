@@ -100,8 +100,8 @@ def create_app(config_name=None):
         """Route to manually trigger DB migration in prod."""
         from migrate_db import migrate
         try:
-            migrate()
-            return jsonify({'success': True, 'message': 'Migração concluída com sucesso.'}), 200
+            res = migrate()
+            return jsonify(res), 200
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)}), 500
 
