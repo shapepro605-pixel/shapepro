@@ -150,13 +150,6 @@ def create_app(config_name=None):
     ==========================================
     """)
 
-    # List all registered routes for debugging
-    with app.app_context():
-        print("\n>>> ROTAS REGISTRADAS NO SERVIDOR:")
-        for rule in app.url_map.iter_rules():
-            print(f"Route: {rule.endpoint} | Path: {rule.rule} | Methods: {rule.methods}")
-        print(">>> FIM DA LISTAGEM DE ROTAS\n")
-
     return app
 
 
