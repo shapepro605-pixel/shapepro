@@ -239,6 +239,7 @@ class BodyScan(db.Model, SerialMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     type = db.Column(db.String(20), nullable=False)  # front, side, back
     image_url = db.Column(db.String(500), nullable=False)
+    metrics = db.Column(db.JSON, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Uses default to_dict from SerialMixin

@@ -70,6 +70,9 @@ def create_app(config_name=None):
 
     # ── Import new models so tables are created ───────────────────────
     with app.app_context():
+        from models.user import (
+            User, BodyScan
+        )
         from models.challenge import (
             Challenge, UserChallenge, Achievement,
             UserAchievement, SleepLog, JournalEntry
@@ -124,6 +127,18 @@ def create_app(config_name=None):
         return jsonify({'status': 'healthy', 'version': app.config.get('APP_VERSION')}), 200
 
     # ── Web Frontend ──────────────────────────────────────────────────
+    @app.route('/api/debug-routes', methods=['GET'])
+    def list_routes_json():
+        """Returns all registered routes for debugging purposes."""
+        routes = []
+        for rule in app.url_map.iter_rules():
+            routes.append({
+                'endpoint': rule.endpoint,
+                'path': str(rule.rule),
+                'methods': list(rule.methods)
+            })
+        return jsonify({'routes': routes}), 200
+
     @app.route('/', methods=['GET'])
     def index():
         return render_template('index.html')
@@ -134,6 +149,13 @@ def create_app(config_name=None):
          Dieta & Treino Personalizado      
     ==========================================
     """)
+
+    # List all registered routes for debugging
+    with app.app_context():
+        print("\n>>> ROTAS REGISTRADAS NO SERVIDOR:")
+        for rule in app.url_map.iter_rules():
+            print(f"Route: {rule.endpoint} | Path: {rule.rule} | Methods: {rule.methods}")
+        print(">>> FIM DA LISTAGEM DE ROTAS\n")
 
     return app
 

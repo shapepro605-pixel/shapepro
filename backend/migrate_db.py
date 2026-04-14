@@ -12,9 +12,24 @@ def migrate():
             
             # Executa o ALTER TABLE de acordo com o banco
             if engine.name == 'postgresql':
-                db.session.execute(text("ALTER TABLE users ADD COLUMN foto_perfil VARCHAR(500);"))
+                # Update users table
+                try:
+                    db.session.execute(text("ALTER TABLE users ADD COLUMN foto_perfil VARCHAR(500);"))
+                except: pass
+                
+                # Update body_scans table
+                try:
+                    db.session.execute(text("ALTER TABLE body_scans ADD COLUMN metrics JSON;"))
+                except: pass
             else:
-                db.session.execute(text("ALTER TABLE users ADD COLUMN foto_perfil TEXT;"))
+                # SQLite
+                try:
+                    db.session.execute(text("ALTER TABLE users ADD COLUMN foto_perfil TEXT;"))
+                except: pass
+                
+                try:
+                    db.session.execute(text("ALTER TABLE body_scans ADD COLUMN metrics JSON;"))
+                except: pass
                 
             db.session.commit()
             return {"success": True, "message": "Migração incluída com sucesso."}
