@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from database import db
 from models.user import BodyScan, User
 
-body_scan_bp = Blueprint('body_scan', __name__, url_prefix='/api/body-scan', strict_slashes=False)
+body_scan_bp = Blueprint('body_scan', __name__, url_prefix='/api/body-scan')
 
 @body_scan_bp.route('', methods=['POST'])
 @jwt_required()
