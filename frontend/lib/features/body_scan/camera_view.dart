@@ -6,10 +6,11 @@ import '../../services/api.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import 'pose_validator.dart';
 import 'overlay_guide.dart';
+import 'pose_metrics_helper.dart';
 
 class CameraView extends StatefulWidget {
   final String poseType;
-  final Function(XFile, Map<String, double>?) onImageCaptured;
+  final Function(XFile, Map<String, double>?, Pose?, Size?) onImageCaptured;
 
   const CameraView({
     super.key,
@@ -167,7 +168,9 @@ class _CameraViewState extends State<CameraView> {
     setState(() => _isCapturing = true);
 
     try {
-      final metrics = _calculateEstimatedMetrics();
+      final api = Provider.of<ApiService>(context, listen: false);
+      final userHeight = api.currentUser?['altura']?.toDouble() ?? 170.0;
+      final metrics = PoseMetricsHelper.calculateEstimatedMetrics(_lastPose, userHeight);
       
       // Flash effect (UI only)
       if (mounted) {
@@ -188,7 +191,12 @@ class _CameraViewState extends State<CameraView> {
       }
       
       final file = await _controller!.takePicture();
-      widget.onImageCaptured(file, metrics);
+      widget.onImageCaptured(
+        file, 
+        metrics, 
+        _lastPose, 
+        Size(_lastImageWidth, _lastImageHeight)
+      );
     } catch (e) {
       debugPrint("Capture Error: $e");
       if (mounted) {
@@ -250,6 +258,34 @@ class _CameraViewState extends State<CameraView> {
           statusMessage: _isValid 
             ? AppLocalizations.of(context)!.perfectCapture 
             : (_validationErrors.isNotEmpty ? _getLocalizedError(_validationErrors.first) : ""),
+        ),
+
+        // Distance Instruction Tip
+        Positioned(
+          top: 100,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.straighten, color: Colors.cyanAccent, size: 16),
+                  SizedBox(width: 8),
+                  Text(
+                    "Afaste-se ~2.5m para mais precisão",
+                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         
         // Capture Button (Only active if valid)
@@ -343,45 +379,4 @@ class _CameraViewState extends State<CameraView> {
     }
   }
 
-  Map<String, double>? _calculateEstimatedMetrics() {
-    if (_lastPose == null) return null;
-    
-    final api = Provider.of<ApiService>(context, listen: false);
-    final userHeight = api.currentUser?['altura']?.toDouble() ?? 170.0;
-    
-    final nose = _lastPose!.landmarks[PoseLandmarkType.nose];
-    final leftAnkle = _lastPose!.landmarks[PoseLandmarkType.leftAnkle];
-    final rightAnkle = _lastPose!.landmarks[PoseLandmarkType.rightAnkle];
-    
-    if (nose == null || leftAnkle == null || rightAnkle == null) return null;
-    
-    // Altura em pixels
-    final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
-    final bodyHeightPixels = (avgAnkleY - nose.y).abs();
-    
-    // Proporção pixel para cm
-    final pixelToCm = userHeight / bodyHeightPixels;
-    
-    final shoulderL = _lastPose!.landmarks[PoseLandmarkType.leftShoulder];
-    final shoulderR = _lastPose!.landmarks[PoseLandmarkType.rightShoulder];
-    final hipL = _lastPose!.landmarks[PoseLandmarkType.leftHip];
-    final hipR = _lastPose!.landmarks[PoseLandmarkType.rightHip];
-    
-    if (shoulderL == null || shoulderR == null || hipL == null || hipR == null) return null;
-    
-    // Cálculo de larguras em pixels
-    final shoulderWidthPixels = (shoulderL.x - shoulderR.x).abs();
-    final hipWidthPixels = (hipL.x - hipR.x).abs();
-    
-    // Heurística de conversão de largura frontal para circunferência (aprox. 2.6x a 2.8x a largura frontal)
-    double widthToCircumference(double widthPixels, double factor) {
-      return (widthPixels * pixelToCm * factor).roundToDouble(); 
-    }
-
-    return {
-      'chest': widthToCircumference(shoulderWidthPixels, 2.7),
-      'waist': widthToCircumference((shoulderWidthPixels + hipWidthPixels) / 2 * 0.85, 2.6),
-      'hips': widthToCircumference(hipWidthPixels, 2.8),
-    };
-  }
 }

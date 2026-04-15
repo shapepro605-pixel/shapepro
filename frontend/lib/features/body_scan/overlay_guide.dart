@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'neon_pose_painter.dart';
 
 class OverlayGuide extends StatelessWidget {
   final bool isValid;
@@ -32,13 +33,23 @@ class OverlayGuide extends StatelessWidget {
             painter: SilhouettePainter(
               isValid: isValid,
               poseType: poseType,
-              pose: currentPose,
-              metrics: realtimeMetrics,
-              isFrontCamera: isFrontCamera,
-              imageSize: imageSize,
             ),
           ),
         ),
+        
+        // Exibir métricas e marcações neon maravilhosas ao vivo
+        if (currentPose != null && realtimeMetrics != null)
+          Positioned.fill(
+            child: CustomPaint(
+              painter: NeonPosePainter(
+                pose: currentPose,
+                imageSize: imageSize,
+                metrics: realtimeMetrics,
+                isFrontCamera: isFrontCamera,
+              ),
+            ),
+          ),
+
         
         // Status Text
         Positioned(
@@ -85,18 +96,10 @@ class OverlayGuide extends StatelessWidget {
 class SilhouettePainter extends CustomPainter {
   final bool isValid;
   final String poseType;
-  final Pose? pose;
-  final Map<String, double>? metrics;
-  final bool isFrontCamera;
-  final Size imageSize;
 
   SilhouettePainter({
     required this.isValid,
     required this.poseType,
-    this.pose,
-    this.metrics,
-    required this.isFrontCamera,
-    required this.imageSize,
   });
 
   @override
@@ -121,11 +124,6 @@ class SilhouettePainter extends CustomPainter {
     }
 
     canvas.drawPath(path, paint);
-
-    // Dynamic Tracing Lines if pose detected
-    if (pose != null) {
-      _drawRealtimeTracing(canvas, size);
-    }
   }
 
   void _drawBrackets(Canvas canvas, Size size) {
@@ -145,62 +143,6 @@ class SilhouettePainter extends CustomPainter {
     canvas.drawPath(Path()..moveTo(margin, size.height - margin - bLen)..lineTo(margin, size.height - margin)..lineTo(margin + bLen, size.height - margin), bracketPaint);
     // Bottom Right
     canvas.drawPath(Path()..moveTo(size.width - margin - bLen, size.height - margin)..lineTo(size.width - margin, size.height - margin)..lineTo(size.width - margin, size.height - margin - bLen), bracketPaint);
-  }
-
-  void _drawRealtimeTracing(Canvas canvas, Size size) {
-    if (imageSize.width == 0 || imageSize.height == 0) return;
-
-    final tracePaint = Paint()
-      ..color = const Color(0xFF6C5CE7).withValues(alpha: 0.8)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-
-    final glowPaint = Paint()
-      ..color = const Color(0xFF6C5CE7).withValues(alpha: 0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-
-    void drawMeasurementLine(PoseLandmarkType left, PoseLandmarkType right, String? value) {
-      final l = pose!.landmarks[left];
-      final r = pose!.landmarks[right];
-      if (l != null && r != null && l.likelihood > 0.5 && r.likelihood > 0.5) {
-        
-        // Map image coordinates to screen coordinates
-        double lx = l.x * (size.width / imageSize.width);
-        double ly = l.y * (size.height / imageSize.height);
-        double rx = r.x * (size.width / imageSize.width);
-        double ry = r.y * (size.height / imageSize.height);
-
-        // Mirror X if front camera
-        if (isFrontCamera) {
-          lx = size.width - lx;
-          rx = size.width - rx;
-        }
-
-        final p1 = Offset(lx, ly);
-        final p2 = Offset(rx, ry);
-        
-        canvas.drawLine(p1, p2, glowPaint);
-        canvas.drawLine(p1, p2, tracePaint);
-
-        if (value != null) {
-          final textPainter = TextPainter(
-            text: TextSpan(
-              text: "$value cm",
-              style: GoogleFonts.inter(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-            ),
-            textDirection: TextDirection.ltr,
-          )..layout();
-          textPainter.paint(canvas, Offset((p1.dx + p2.dx) / 2 + 10, (p1.dy + p2.dy) / 2 - 10));
-        }
-      }
-    }
-
-    if (metrics != null) {
-      drawMeasurementLine(PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder, metrics!['chest']?.toStringAsFixed(1));
-      drawMeasurementLine(PoseLandmarkType.leftHip, PoseLandmarkType.rightHip, metrics!['hips']?.toStringAsFixed(1));
-    }
   }
 
   void _drawFrontSilhouette(Path path, Size size) {

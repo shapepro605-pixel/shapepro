@@ -20,21 +20,49 @@ def save_body_scan():
         return jsonify({'error': 'Tipo de pose inválido'}), 400
 
     try:
+        # Cast to int for DB compatibility and safety
+        u_id = int(user_id)
+        
         scan = BodyScan(
-            user_id=user_id,
+            user_id=u_id,
             type=scan_type,
             image_url=data['image_url'],
             metrics=data.get('metrics')
         )
 
         db.session.add(scan)
+        
+        # --- AUTO-SYNC with BodyMetric history ---
+        # If we have metrics, we also save them to the official tracking table
+        metrics = data.get('metrics')
+        if metrics:
+            from models.user import BodyMetric
+            # Map common AI metric keys to BodyMetric columns
+            new_metric = BodyMetric(
+                user_id=u_id,
+                peito=metrics.get('chest'),
+                cintura=metrics.get('waist'),
+                braco_esq=metrics.get('left_arm'),
+                braco_dir=metrics.get('right_arm'),
+                coxa_esq=metrics.get('left_thigh'),
+                coxa_dir=metrics.get('right_thigh'),
+            )
+            db.session.add(new_metric)
+            print(f">>> SYNC: Medições da IA sincronizadas com BodyMetric para usuário {u_id}")
+
         db.session.commit()
-        print(f">>> SCORES SALVOS COM SUCESSO PARA USUÁRIO {user_id}")
-        return jsonify({'message': 'Foto registrada!', 'scan': scan.to_dict()}), 201
+        print(f">>> SCORES SALVOS COM SUCESSO PARA USUÁRIO {u_id}")
+        return jsonify({'message': 'Foto e medidas registradas!', 'scan': scan.to_dict()}), 201
     except Exception as e:
         db.session.rollback()
-        print(f">>> ERRO AO SALVAR SCAN NO BANCO: {str(e)}")
-        return jsonify({'error': 'Erro ao salvar no banco de dados', 'details': str(e)}), 500
+        import traceback
+        error_details = traceback.format_exc()
+        print(f">>> ERRO CRÍTICO AO SALVAR NO BANCO:\n{error_details}")
+        return jsonify({
+            'error': 'Erro ao salvar no banco de dados', 
+            'details': str(e),
+            'suggestion': 'Verifique se a migração de banco foi executada.'
+        }), 500
 
 @body_scan_bp.route('', methods=['GET'])
 @jwt_required()

@@ -597,7 +597,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get diet_generated => 'Sua dieta foi gerada com sucesso!';
 
   @override
-  String get bodyScanAI => 'Body Scan AI';
+  String get bodyScanAI => 'Scanner Corporal';
 
   @override
   String get trackBodyEvolution => 'Registre sua evolução corporal';

@@ -490,6 +490,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         Navigator.pushNamed(context, '/dieta');
                       }
                     }),
+                    const SizedBox(width: 14),
                     _buildQuickAction(AppLocalizations.of(context)!.championshipsTitle, Icons.emoji_events_rounded, const Color(0xFFFFD93D), () {
                       Navigator.pushNamed(context, '/challenges');
                     }),
@@ -613,9 +614,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Icon(icon, color: color, size: 24),
               ),
               const SizedBox(height: 10),
-              Text(label, style: GoogleFonts.inter(
-                fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white70,
-              )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(label, 
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white70, height: 1.1,
+                  )
+                ),
+              ),
             ],
           ),
         ),
@@ -1101,6 +1110,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> _pickPhoto(StateSetter setMenuState) async {
     Log.i('[_pickPhoto] Iniciando seletor de foto...');
     final l10n = AppLocalizations.of(context)!;
+    final api = Provider.of<ApiService>(context, listen: false);
     
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
@@ -1150,7 +1160,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       });
 
       if (pickedFile != null && mounted) {
-        final api = Provider.of<ApiService>(context, listen: false);
         setMenuState(() {}); // Force loading indicator in menu
         final url = await api.uploadFotoPerfil(File(pickedFile.path));
         

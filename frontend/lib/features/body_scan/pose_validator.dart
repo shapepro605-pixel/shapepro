@@ -84,8 +84,9 @@ class PoseValidator {
     final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
     final bodyHeight = (avgAnkleY - nose.y).abs();
     
-    // Body should take up between 35% and 95% of screen height
-    return bodyHeight > (frameHeight * 0.35) && bodyHeight < (frameHeight * 0.95);
+    // Body should take up between 35% and 80% of screen height
+    // 80% forces the user to stand at a distance (apprx 2.5m) to avoid perspective distortion
+    return bodyHeight > (frameHeight * 0.35) && bodyHeight < (frameHeight * 0.80);
   }
 
   static bool isCorrectPose(Pose pose, String type) {

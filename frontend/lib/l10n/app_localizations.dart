@@ -1223,7 +1223,7 @@ abstract class AppLocalizations {
   /// No description provided for @bodyScanAI.
   ///
   /// In pt, this message translates to:
-  /// **'Body Scan AI'**
+  /// **'Scanner Corporal'**
   String get bodyScanAI;
 
   /// No description provided for @trackBodyEvolution.
