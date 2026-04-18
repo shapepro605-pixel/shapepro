@@ -27,6 +27,13 @@ def migrate():
                 safe_execute("ALTER TABLE users ADD COLUMN foto_perfil TEXT;")
                 safe_execute("ALTER TABLE body_scans ADD COLUMN metrics JSON;")
                 
+            # Run the other migrations securely
+            from migrate_global import migrate as migrate_global
+            migrate_global()
+
+            from migrate_food_prices import migrate as migrate_food_prices
+            migrate_food_prices()
+                
             return {"success": True, "message": "Migração incluída com sucesso."}
         except Exception as e:
             return {"success": False, "error": str(e)}
