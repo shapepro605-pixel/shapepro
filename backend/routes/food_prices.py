@@ -1,13 +1,16 @@
 from flask import Blueprint, request, jsonify
 from database import db
 from models.food_price import FoodPrice
-from services.auth import token_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from models.user import User
 
 food_prices_bp = Blueprint('food_prices', __name__)
 
 @food_prices_bp.route('/api/food-prices/report', methods=['POST'])
-@token_required
-def report_price(current_user):
+@jwt_required()
+def report_price():
+    user_id = get_jwt_identity()
+    current_user = User.query.get(user_id)
     data = request.get_json()
     alimento = data.get('alimento')
     preco = data.get('preco')
@@ -33,8 +36,10 @@ def report_price(current_user):
     return jsonify({"success": True, "message": "Preço registrado com sucesso"}), 201
 
 @food_prices_bp.route('/api/food-prices/search', methods=['GET'])
-@token_required
-def get_prices(current_user):
+@jwt_required()
+def get_prices():
+    user_id = get_jwt_identity()
+    current_user = User.query.get(user_id)
     alimentos = request.args.getlist('alimentos')
     cidade = request.args.get('cidade', current_user.cidade)
     pais = request.args.get('pais', current_user.pais or 'BR')
