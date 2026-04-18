@@ -24,6 +24,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late TextEditingController _cidadeController;
   late TextEditingController _rendaController;
   late TextEditingController _orcamentoDietaController;
+  String? _pais;
+  String? _moeda;
 
   bool _isSubmitting = false;
 
@@ -42,6 +44,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _cidadeController = TextEditingController(text: user['cidade'] ?? '');
     _rendaController = TextEditingController(text: user['renda_mensal']?.toString() ?? '');
     _orcamentoDietaController = TextEditingController(text: user['orcamento_dieta']?.toString() ?? '');
+    _pais = user['pais'] ?? 'BR';
+    _moeda = user['moeda'] ?? 'BRL';
   }
 
   @override
@@ -58,6 +62,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
@@ -75,6 +80,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       'cidade': _cidadeController.text.trim(),
       'renda_mensal': double.tryParse(_rendaController.text.trim()),
       'orcamento_dieta': double.tryParse(_orcamentoDietaController.text.trim()),
+      'pais': _pais,
+      'moeda': _moeda,
+      'estado': _estadoController.text.trim(),
+      'cidade': _cidadeController.text.trim(),
     };
 
     final result = await api.updateProfile(data);
@@ -83,16 +92,16 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       setState(() => _isSubmitting = false);
       if (result['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Perfil atualizado com sucesso!'),
-            backgroundColor: Color(0xFF2ED573),
+          SnackBar(
+            content: Text(l10n.profileUpdateSuccess),
+            backgroundColor: const Color(0xFF2ED573),
           ),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['error'] ?? 'Erro ao atualizar perfil'),
+            content: Text(result['error'] ?? l10n.profileUpdateError),
             backgroundColor: const Color(0xFFFD4556),
           ),
         );
@@ -106,7 +115,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Perfil'),
+        title: Text(l10n.editProfile),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -116,16 +125,16 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FormSectionHeader(
-                title: 'Informações Pessoais', // Use l10n if available, or keep if consistent
-                subtitle: 'Mantenha seus dados atualizados para melhores resultados.',
+                title: l10n.personalInfo,
+                subtitle: l10n.profileIncompleteDesc,
               ),
 
               // Nome
               CustomLabel(label: l10n.fullName),
               TextFormField(
                 controller: _nomeController,
-                decoration: const InputDecoration(hintText: 'Ex: João Silva'),
-                validator: (v) => v == null || v.isEmpty ? 'Informe seu nome' : null,
+                decoration: InputDecoration(hintText: l10n.yourName),
+                validator: (v) => v == null || v.isEmpty ? l10n.fillAllFields : null,
               ),
               const SizedBox(height: 20),
 
@@ -134,8 +143,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               TextFormField(
                 controller: _idadeController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: 'Ex: 25'),
-                validator: (v) => v == null || v.isEmpty ? 'Informe sua idade' : null,
+                decoration: InputDecoration(hintText: l10n.ageHint),
+                validator: (v) => v == null || v.isEmpty ? l10n.fillAllFields : null,
               ),
               const SizedBox(height: 20),
 
@@ -150,8 +159,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         TextFormField(
                           controller: _alturaController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(hintText: 'Ex: 175'),
-                          validator: (v) => v == null || v.isEmpty ? 'Obrigatório' : null,
+                          decoration: InputDecoration(hintText: l10n.heightHint),
+                          validator: (v) => v == null || v.isEmpty ? l10n.mandatory : null,
                         ),
                       ],
                     ),
@@ -166,8 +175,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         TextFormField(
                           controller: _pesoController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(hintText: 'Ex: 70.5'),
-                          validator: (v) => v == null || v.isEmpty ? 'Obrigatório' : null,
+                          decoration: InputDecoration(hintText: l10n.weightHint),
+                          validator: (v) => v == null || v.isEmpty ? l10n.mandatory : null,
                         ),
                       ],
                     ),
@@ -231,9 +240,37 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
               const SizedBox(height: 32),
               FormSectionHeader(
-                title: 'Localização e Finanças',
-                subtitle: 'Esses dados ajudam a IA a sugerir alimentos com melhor custo-benefício na sua região.',
+                title: l10n.locationAndFinance,
+                subtitle: l10n.locationAndFinanceSubtitle,              ),
+
+              // País
+              CustomLabel(label: l10n.country),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                value: _pais,
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+                items: [
+                  DropdownMenuItem(value: 'BR', child: Text('🇧🇷 ${l10n.brazil}')),
+                  DropdownMenuItem(value: 'US', child: Text('🇺🇸 ${l10n.usa}')),
+                  DropdownMenuItem(value: 'CA', child: Text('🇨🇦 ${l10n.canada}')),
+                  DropdownMenuItem(value: 'GB', child: Text('🇬🇧 ${l10n.uk}')),
+                ],
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {
+                      _pais = val;
+                      // Atualiza moeda automaticamente
+                      if (val == 'BR') _moeda = 'BRL';
+                      else if (val == 'US') _moeda = 'USD';
+                      else if (val == 'CA') _moeda = 'CAD';
+                      else if (val == 'GB') _moeda = 'GBP';
+                    });
+                  }
+                },
               ),
+              const SizedBox(height: 20),
 
               Row(
                 children: [
@@ -244,7 +281,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         CustomLabel(label: l10n.state),
                         TextFormField(
                           controller: _estadoController,
-                          decoration: const InputDecoration(hintText: 'Ex: SP'),
+                          decoration: InputDecoration(hintText: l10n.stateHint),
                         ),
                       ],
                     ),
@@ -257,7 +294,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         CustomLabel(label: l10n.city),
                         TextFormField(
                           controller: _cidadeController,
-                          decoration: const InputDecoration(hintText: 'Ex: São Paulo'),
+                          decoration: InputDecoration(hintText: l10n.cityHint),
                         ),
                       ],
                     ),
@@ -265,18 +302,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              CustomLabel(label: l10n.monthlyIncome),
+              CustomLabel(label: l10n.monthlyIncome(_moeda ?? 'BRL')),
               TextFormField(
                 controller: _rendaController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: 'Ex: 3500.00'),
+                decoration: InputDecoration(hintText: l10n.incomeHint),
               ),
               const SizedBox(height: 20),
-              CustomLabel(label: l10n.dietBudget),
+              CustomLabel(label: l10n.dietBudget(_moeda ?? 'BRL')),
               TextFormField(
                 controller: _orcamentoDietaController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: 'Quanto pode gastar com a dieta?'),
+                decoration: InputDecoration(hintText: l10n.budgetHint),
               ),
               const SizedBox(height: 20),
               const SizedBox(height: 20),
@@ -303,7 +340,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    : const Text('SALVAR ALTERAÇÕES'),
+                    : Text(l10n.saveChanges),
               ),
               const SizedBox(height: 20),
             ],

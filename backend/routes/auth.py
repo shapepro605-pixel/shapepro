@@ -381,12 +381,28 @@ def update_profile():
         return jsonify({'error': t('data_not_provided')}), 400
 
     # Updatable fields
-    updatable = ['nome', 'idade', 'altura', 'peso', 'sexo', 'objetivo', 'nivel_atividade', 'ritmo_meta', 'foto_perfil']
+    updatable = [
+        'nome', 'idade', 'altura', 'peso', 'sexo', 'objetivo', 
+        'nivel_atividade', 'ritmo_meta', 'foto_perfil',
+        'pais', 'moeda', 'estado', 'cidade', 'renda_mensal', 'orcamento_dieta'
+    ]
+    location_changed = False
+    if 'pais' in data and data['pais'] != user.pais: location_changed = True
+    if 'cidade' in data and data['cidade'] != user.cidade: location_changed = True
+
     for field in updatable:
         if field in data:
             setattr(user, field, data[field])
 
     db.session.commit()
+
+    # Trigger regional price research if location changed
+    if location_changed:
+        try:
+            from services.food_price_service import FoodPriceService
+            FoodPriceService.simulate_ai_research(user.pais, user.cidade)
+        except Exception as e:
+            print(f"[ShapePro AI] Price research trigger error: {e}")
 
     return jsonify({
         'success': True,

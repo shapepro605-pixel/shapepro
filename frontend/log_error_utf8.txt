@@ -1,2 +1,0 @@
-﻿Showing SM S938U logs:
-I/flutter (30437): ≡ƒÜÇ API REQUEST [POST]: https://shapepro-production.up.railway.app/api/auth/send_verification_email

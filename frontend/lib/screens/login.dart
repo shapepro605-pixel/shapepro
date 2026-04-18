@@ -124,10 +124,22 @@ class _LoginScreenState extends State<LoginScreen>
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6C5CE7)),
             onPressed: () async {
-              await api.enableBiometric();
-              if (mounted) {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/home');
+              bool authenticated = false;
+              try {
+                authenticated = await _localAuth.authenticate(
+                  localizedReason: 'Confirme sua biometria para Habilitar',
+                  biometricOnly: true,
+                );
+              } catch (e) {
+                // If it fails, ignore and let user login via pass
+              }
+              
+              if (authenticated) {
+                await api.enableBiometric();
+                if (mounted) {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/home');
+                }
               }
             },
             child: Text('Habilitar', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),

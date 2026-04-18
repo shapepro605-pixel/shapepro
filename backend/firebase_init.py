@@ -20,7 +20,7 @@ def init_firebase():
     creds_json = os.getenv('FIREBASE_CREDENTIALS_JSON', '').strip()
 
     if not creds_json:
-        print("[FIREBASE] ⚠️ FIREBASE_CREDENTIALS_JSON not set. Phone verification will use fallback mode.")
+        print("[FIREBASE] WARNING: FIREBASE_CREDENTIALS_JSON not set. Phone verification will use fallback mode.")
         return None
 
     # Handle cases where Railway adds extra quotes or escapes
@@ -35,10 +35,10 @@ def init_firebase():
         creds_dict = json.loads(creds_json)
         cred = credentials.Certificate(creds_dict)
         _firebase_app = firebase_admin.initialize_app(cred)
-        print("[FIREBASE] ✅ Firebase Admin SDK initialized successfully.")
+        print("[FIREBASE] Firebase Admin SDK initialized successfully.")
         return _firebase_app
     except Exception as e:
-        print(f"[FIREBASE] ❌ Failed to initialize: {e}")
+        print(f"[FIREBASE] Failed to initialize: {e}")
         return None
 
 

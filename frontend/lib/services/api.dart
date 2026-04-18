@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:shapepro/utils/logger.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 class ApiService extends ChangeNotifier {
   // Base URL for the API.
@@ -62,8 +63,24 @@ class ApiService extends ChangeNotifier {
       _currentUser = jsonDecode(userJson);
     }
     
-    final lang = prefs.getString('language_code') ?? 'pt';
-    final country = prefs.getString('country_code') ?? 'BR';
+    String? lang = prefs.getString('language_code');
+    String? country = prefs.getString('country_code');
+
+    if (lang == null) {
+      // Auto-detect system language
+      final systemLocale = ui.PlatformDispatcher.instance.locale;
+      lang = systemLocale.languageCode;
+      country = systemLocale.countryCode ?? '';
+      
+      // Default to English for international markets (non-PT)
+      if (lang != 'pt' && lang != 'en') {
+        lang = 'en';
+      }
+      
+      // Save it once detected to avoid re-detection logic overhead if desired, 
+      // but keeping it dynamic as fallback is safer if they change system lang later without having set a preference.
+    }
+    
     _locale = Locale(lang, country);
     
     _isDarkMode = prefs.getBool('is_dark_mode') ?? true;
@@ -139,12 +156,23 @@ class ApiService extends ChangeNotifier {
     required String foodName,
     required double price,
     required String city,
+    String? pais,
+    String? moeda,
   }) async {
-    return await _request('POST', '/diet/report-price', body: {
-      'food_name': foodName,
-      'price': price,
-      'city': city,
+    return await _request('POST', '/food-prices/report', body: {
+      'alimento': foodName,
+      'preco': price,
+      'cidade': city,
+      'pais': pais,
+      'moeda': moeda,
     });
+  }
+
+  Future<Map<String, dynamic>> getFoodPrices(List<String> alimentos, {String? cidade, String? pais}) async {
+    final query = alimentos.map((a) => 'alimentos=$a').join('&');
+    final cityParam = cidade != null ? '&cidade=$cidade' : '';
+    final countryParam = pais != null ? '&pais=$pais' : '';
+    return await _request('GET', '/food-prices/search?$query$cityParam$countryParam');
   }
 
   @override
@@ -379,7 +407,8 @@ class ApiService extends ChangeNotifier {
     _accessToken = null;
     _currentUser = null;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.remove('access_token');
+    await prefs.remove('current_user');
     notifyListeners();
   }
 

@@ -130,6 +130,22 @@ TRANSLATIONS = {
         'diet_expired_title': 'Diet Expired 🍎',
         'diet_expired_desc': 'Your 7-day diet has expired. How about renewing to stay on track?',
         'btn_renew': 'Renew Diet',
+        'Treino do Dia': 'Workout of the Day',
+        'Complete 1 treino hoje': 'Complete 1 workout today',
+        'Hidratação Total': 'Total Hydration',
+        'Beba 2 litros de água hoje': 'Drink 2 liters of water today',
+        'Sono Reparador': 'Restful Sleep',
+        'Durma pelo menos 7 horas': 'Sleep at least 7 hours',
+        'Semana de Ferro': 'Iron Week',
+        'Complete 5 treinos nesta semana': 'Complete 5 workouts this week',
+        'Rios de Água': 'Rivers of Water',
+        'Beba 14L de água na semana': 'Drink 14L of water this week',
+        'Semana Zen': 'Zen Week',
+        'Registre sono 7 dias seguidos': 'Log your sleep for 7 days in a row',
+        'Transformação': 'Transformation',
+        'Complete 20 treinos no mês': 'Complete 20 workouts this month',
+        'Diário Completo': 'Complete Journal',
+        'Escreva 30 entradas no diário': 'Write 30 journal entries',
     }
 }
 

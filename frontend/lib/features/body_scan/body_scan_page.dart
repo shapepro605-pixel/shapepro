@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,7 +66,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
         _showSuccess();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result['error'] ?? 'Erro no upload')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.uploadError(result['error'] ?? 'Network Error'))),
         );
       }
     }
@@ -112,7 +113,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A1A),
       appBar: _capturedImage == null ? AppBar(
-        title: Text("Scanner Corporal", style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.bodyScannerTitle, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
         elevation: 0,
         actions: [
           IconButton(
@@ -159,7 +160,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
               },
               icon: const Icon(Icons.history, color: Color(0xFF6C5CE7)),
               label: Text(
-                "Ver Meu Histórico de Evolução",
+                AppLocalizations.of(context)!.viewEvolutionHistory,
                 style: GoogleFonts.inter(
                   color: const Color(0xFF6C5CE7),
                   fontWeight: FontWeight.bold,
@@ -186,7 +187,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
                     );
                   },
                   icon: const Icon(Icons.camera_alt),
-                  label: const Text("Câmera"),
+                  label: Text(AppLocalizations.of(context)!.camera),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6C5CE7),
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -198,7 +199,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
                 child: ElevatedButton.icon(
                   onPressed: _pickFromGallery,
                   icon: const Icon(Icons.photo_library),
-                  label: const Text("Galeria"),
+                  label: Text(AppLocalizations.of(context)!.gallery),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2A2A4A),
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -235,17 +236,17 @@ class _BodyScanPageState extends State<BodyScanPage> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            Text("Como Funciona o Scanner?", style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(AppLocalizations.of(context)!.howItWorks, style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 8),
-            Text("Siga as posições abaixo para a Inteligência Artificial extrair suas medidas baseadas na sua foto.", 
+            Text(AppLocalizations.of(context)!.scannerTutorialSubtitle, 
               textAlign: TextAlign.center, style: GoogleFonts.inter(color: Colors.white54, fontSize: 13)),
             const SizedBox(height: 20),
             Expanded(
               child: PageView(
                 children: [
-                  _buildTutorialPage("assets/images/bodyscan_front.png", "Frente", "Fique de frente, pés separados e braços abertos mostrando a cintura."),
-                  _buildTutorialPage("assets/images/bodyscan_side.png", "Lado", "Fique de lado, coluna reta, braços ao lado do corpo."),
-                  _buildTutorialPage("assets/images/bodyscan_back.png", "Costas", "Fique de costas para a câmera, mesma postura da frente."),
+                  _buildTutorialPage("assets/images/bodyscan_front.png", AppLocalizations.of(context)!.front, AppLocalizations.of(context)!.frontDesc),
+                  _buildTutorialPage("assets/images/bodyscan_side.png", AppLocalizations.of(context)!.side, AppLocalizations.of(context)!.sideDesc),
+                  _buildTutorialPage("assets/images/bodyscan_back.png", AppLocalizations.of(context)!.back, AppLocalizations.of(context)!.backDesc),
                 ],
               ),
             ),
@@ -254,7 +255,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
-                child: const Text("Entendi!"),
+                child: Text(AppLocalizations.of(context)!.understood.toUpperCase()),
               ),
             ),
           ],
@@ -373,7 +374,11 @@ class _BodyScanPageState extends State<BodyScanPage> {
             return Stack(
               fit: StackFit.expand,
               children: [
-                Image.file(File(_capturedImage!.path), fit: BoxFit.cover),
+                // Blur leve no fundo para não poluir visualmente
+                ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                  child: Image.file(File(_capturedImage!.path), fit: BoxFit.cover),
+                ),
                 if (_lastPose != null && _imageSize != null)
                   CustomPaint(
                     size: Size(constraints.maxWidth, constraints.maxHeight),
@@ -454,7 +459,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Relatório do Scanner", style: GoogleFonts.inter(
+                  Text(AppLocalizations.of(context)!.scannerReport, style: GoogleFonts.inter(
                     color: const Color(0xFF6C5CE7), fontWeight: FontWeight.w800, fontSize: 18,
                   )),
                   const Icon(Icons.analytics_outlined, color: Color(0xFF6C5CE7), size: 24),
@@ -465,11 +470,11 @@ class _BodyScanPageState extends State<BodyScanPage> {
               const Divider(height: 32, color: Colors.white10),
               
               // Measurements
-              _buildResultRow("Peito (Estimado)", "${_metrics!['chest']?.toStringAsFixed(1)} cm"),
+              _buildResultRow(AppLocalizations.of(context)!.chestEstimated, "${_metrics!['chest']?.toStringAsFixed(1)} cm"),
               const SizedBox(height: 12),
-              _buildResultRow("Cintura (Estimada)", "${_metrics!['waist']?.toStringAsFixed(1)} cm"),
+              _buildResultRow(AppLocalizations.of(context)!.waistEstimated, "${_metrics!['waist']?.toStringAsFixed(1)} cm"),
               const SizedBox(height: 12),
-              _buildResultRow("Quadril (Estimado)", "${_metrics!['hips']?.toStringAsFixed(1)} cm"),
+              _buildResultRow(AppLocalizations.of(context)!.hipsEstimated, "${_metrics!['hips']?.toStringAsFixed(1)} cm"),
               
               const Divider(height: 32, color: Colors.white10),
               
@@ -477,14 +482,14 @@ class _BodyScanPageState extends State<BodyScanPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildMiniInfo("Idade", "${user!['idade'] ?? '--'}y"),
-                  _buildMiniInfo("Altura", "${user['altura'] ?? '--'}cm"),
-                  _buildMiniInfo("Peso", "${user['peso'] ?? '--'}kg"),
+                  _buildMiniInfo(AppLocalizations.of(context)!.age, "${user!['idade'] ?? '--'}y"),
+                  _buildMiniInfo(AppLocalizations.of(context)!.height, "${user['altura'] ?? '--'}cm"),
+                  _buildMiniInfo(AppLocalizations.of(context)!.currentWeight, "${user['peso'] ?? '--'}kg"),
                 ],
               ),
               const SizedBox(height: 20),
               Text(
-                "* Valores estimados via IA baseados na pose e altura.",
+                AppLocalizations.of(context)!.estimatedIAValues,
                 style: GoogleFonts.inter(color: Colors.white38, fontSize: 10, fontStyle: FontStyle.italic),
               ),
             ],

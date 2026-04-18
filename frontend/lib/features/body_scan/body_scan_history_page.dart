@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import 'dart:math' as math;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -101,7 +102,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A1A),
       appBar: AppBar(
-        title: Text("Minha Evolução", style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.myEvolution, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -110,17 +111,6 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
             onPressed: () => _showDisclaimerModal(context),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          debugPrint(">>> BOTÃO DE TESTE CLICADO OK!");
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Toque detectado no botão de teste!")),
-          );
-        },
-        label: const Text("TESTE DE TOQUE"),
-        icon: const Icon(Icons.touch_app),
-        backgroundColor: Colors.redAccent,
       ),
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator(color: Color(0xFF6C5CE7)))
@@ -136,7 +126,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 _buildCountdownHeader(),
                 const SizedBox(height: 30),
                 Text(
-                  "Histórico de Scans",
+                  AppLocalizations.of(context)!.scansHistory,
                   style: GoogleFonts.inter(
                     fontSize: 18, 
                     fontWeight: FontWeight.bold, 
@@ -204,7 +194,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     ),
                   ),
                   Text(
-                    "DIAS",
+                    AppLocalizations.of(context)!.days,
                     style: GoogleFonts.inter(
                       fontSize: 10, 
                       fontWeight: FontWeight.bold, 
@@ -222,8 +212,8 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               children: [
                 Text(
                   _daysRemaining == 0 
-                    ? "Hora de Atualizar!" 
-                    : "Próximo Check-in",
+                    ? AppLocalizations.of(context)!.timeToUpdate 
+                    : AppLocalizations.of(context)!.nextCheckin,
                   style: GoogleFonts.inter(
                     fontSize: 18, 
                     fontWeight: FontWeight.bold, 
@@ -233,8 +223,8 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 const SizedBox(height: 4),
                 Text(
                   _daysRemaining == 0
-                    ? "Faça um novo scanner agora para ver seus resultados!"
-                    : "Faltam $_daysRemaining dias para o seu próximo scanner corporal de comparação.",
+                    ? AppLocalizations.of(context)!.newScanNow
+                    : AppLocalizations.of(context)!.daysRemainingDesc(_daysRemaining),
                   style: GoogleFonts.inter(
                     fontSize: 13, 
                     color: Colors.white.withOpacity(0.8)
@@ -250,7 +240,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
 
   Widget _buildSessionCard(String dateKey, List<dynamic> scans) {
     DateTime date = DateTime.parse(dateKey);
-    String formattedDate = DateFormat('dd MMMM, yyyy', 'pt_BR').format(date);
+    String formattedDate = DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(date);
     
     // Tentamos pegar as métricas do primeiro scan que tiver (geralmente frente)
     Map<String, dynamic>? metrics;
@@ -291,7 +281,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                       ),
                     ),
                     Text(
-                      "${scans.length} fotos anexadas",
+                      AppLocalizations.of(context)!.photosAttached(scans.length),
                       style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
                     ),
                   ],
@@ -303,7 +293,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    "Sessão",
+                    AppLocalizations.of(context)!.session,
                     style: GoogleFonts.inter(
                       color: const Color(0xFF6C5CE7), 
                       fontWeight: FontWeight.bold,
@@ -357,7 +347,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                               alignment: Alignment.bottomCenter,
                               padding: const EdgeInsets.only(bottom: 8),
                               child: Text(
-                                _translateType(scan['type']),
+                                _translateType(context, scan['type']),
                                 style: GoogleFonts.inter(
                                   color: Colors.white, 
                                   fontSize: 10, 
@@ -399,7 +389,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                       const Icon(Icons.analytics, color: Color(0xFF6C5CE7), size: 16),
                       const SizedBox(width: 8),
                       Text(
-                        "Medidas via IA:",
+                        AppLocalizations.of(context)!.iaMeasures,
                         style: GoogleFonts.inter(color: const Color(0xFF6C5CE7), fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -418,11 +408,11 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildMetricItem("Pescoço", "${metrics['neck']?.toInt() ?? '--'}"),
+                            _buildMetricItem(AppLocalizations.of(context)!.neck, _formatMeasure(metrics['neck'])),
                             _buildMetricDivider(),
-                            _buildMetricItem("Ombros", "${metrics['shoulders']?.toInt() ?? '--'}"),
+                            _buildMetricItem(AppLocalizations.of(context)!.shoulders, _formatMeasure(metrics['shoulders'])),
                             _buildMetricDivider(),
-                            _buildMetricItem("Peito", "${metrics['chest']?.toInt() ?? '--'}"),
+                            _buildMetricItem(AppLocalizations.of(context)!.chest, _formatMeasure(metrics['chest'])),
                           ],
                         ),
                         const Padding(
@@ -432,9 +422,9 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildMetricItem("Cintura", "${metrics['waist']?.toInt() ?? '--'}"),
+                            _buildMetricItem(AppLocalizations.of(context)!.waist, _formatMeasure(metrics['waist'])),
                             _buildMetricDivider(),
-                            _buildMetricItem("Quadril", "${metrics['hips']?.toInt() ?? '--'}"),
+                            _buildMetricItem(AppLocalizations.of(context)!.hips, _formatMeasure(metrics['hips'])),
                           ],
                         ),
                         
@@ -447,9 +437,9 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildMetricItem("Braço E.", "${metrics['left_arm']?.toInt() ?? '--'}"),
+                              _buildMetricItem(AppLocalizations.of(context)!.leftArm, _formatMeasure(metrics['left_arm'])),
                               _buildMetricDivider(),
-                              _buildMetricItem("Braço D.", "${metrics['right_arm']?.toInt() ?? '--'}"),
+                              _buildMetricItem(AppLocalizations.of(context)!.rightArm, _formatMeasure(metrics['right_arm'])),
                             ],
                           ),
                           const Padding(
@@ -459,9 +449,9 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildMetricItem("Coxa E.", "${metrics['left_thigh']?.toInt() ?? '--'}"),
+                              _buildMetricItem(AppLocalizations.of(context)!.leftThigh, _formatMeasure(metrics['left_thigh'])),
                               _buildMetricDivider(),
-                              _buildMetricItem("Coxa D.", "${metrics['right_thigh']?.toInt() ?? '--'}"),
+                              _buildMetricItem(AppLocalizations.of(context)!.rightThigh, _formatMeasure(metrics['right_thigh'])),
                             ],
                           ),
                           const Padding(
@@ -471,9 +461,9 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildMetricItem("Pant. E.", "${metrics['left_calf']?.toInt() ?? '--'}"),
+                              _buildMetricItem(AppLocalizations.of(context)!.leftCalf, _formatMeasure(metrics['left_calf'])),
                               _buildMetricDivider(),
-                              _buildMetricItem("Pant. D.", "${metrics['right_calf']?.toInt() ?? '--'}"),
+                              _buildMetricItem(AppLocalizations.of(context)!.rightCalf, _formatMeasure(metrics['right_calf'])),
                             ],
                           ),
                         ],
@@ -488,11 +478,11 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               if (metrics['waist_hip_ratio'] != null)
-                                _buildMetricItem("C/Q", "${metrics['waist_hip_ratio']}"),
+                                _buildMetricItem("C/Q", "${metrics['waist_hip_ratio']}", unit: ""),
                               if (metrics['waist_hip_ratio'] != null && metrics['v_shape'] != null)
                                 _buildMetricDivider(),
                               if (metrics['v_shape'] != null)
-                                _buildMetricItem("V-Shape", "${metrics['v_shape']}"),
+                                _buildMetricItem("V-Shape", "${metrics['v_shape']}", unit: ""),
                             ],
                           ),
                         ],
@@ -506,9 +496,9 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildMiniInfo("Peso Atual", "${user['peso']} kg"),
-                        _buildMiniInfo("Altura", "${user['altura']} cm"),
-                        _buildMiniInfo("IMC", _calculateIMC(user['peso'], user['altura'])),
+                        _buildMiniInfo(AppLocalizations.of(context)!.currentWeight, _formatWeight(user['peso'])),
+                        _buildMiniInfo(AppLocalizations.of(context)!.height, _formatMeasure(user['altura'], isHeight: true)),
+                        _buildMiniInfo(AppLocalizations.of(context)!.bmi, _calculateIMC(user['peso'], user['altura'])),
                       ],
                     ),
                   ]
@@ -528,21 +518,22 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
+        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
           backgroundColor: const Color(0xFF16162A),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(
-            "Excluir Foto?", 
+            l10n.deletePhotoTitle, 
             style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)
           ),
           content: Text(
-            "Deseja remover esta foto do seu histórico? Esta ação não pode ser desfeita.",
+            l10n.deletePhotoDesc,
             style: GoogleFonts.inter(color: Colors.white70),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: Text("CANCELAR", style: GoogleFonts.inter(color: Colors.white54)),
+              child: Text(l10n.cancel.toUpperCase(), style: GoogleFonts.inter(color: Colors.white54)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -553,7 +544,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 Navigator.pop(dialogContext);
                 _deleteScan(scanId, imageUrl);
               },
-              child: Text("EXCLUIR", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: Text(l10n.delete.toUpperCase(), style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -580,8 +571,8 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
           await _loadLatestUserMetrics();
           
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Foto removida com sucesso!"),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.photoRemoved),
               backgroundColor: Colors.green,
             ),
           );
@@ -594,7 +585,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Erro ao excluir: $e"),
+            content: Text(AppLocalizations.of(context)!.errorDeleting(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -602,6 +593,35 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  String _formatWeight(dynamic valueInKg) {
+    if (valueInKg == null || valueInKg == '--' || valueInKg == '') return '--';
+    double kg = double.tryParse(valueInKg.toString()) ?? 0.0;
+    if (kg == 0) return '--';
+    if (Localizations.localeOf(context).languageCode == 'en') {
+      return "${(kg * 2.20462).toStringAsFixed(1)} lbs";
+    }
+    return "$valueInKg kg";
+  }
+
+  String _formatMeasure(dynamic valueInCm, {bool isHeight = false, bool isPercentage = false}) {
+    if (valueInCm == null || valueInCm == '--' || valueInCm == '') return '--';
+    if (isPercentage) return "$valueInCm %";
+    
+    double cm = double.tryParse(valueInCm.toString()) ?? 0.0;
+    if (cm == 0) return '--';
+    if (Localizations.localeOf(context).languageCode == 'en') {
+      double totalInches = cm / 2.54;
+      if (isHeight) {
+        int feet = totalInches ~/ 12;
+        int inches = (totalInches % 12).round();
+        return "$feet'$inches\"";
+      } else {
+        return "${totalInches.toStringAsFixed(1)}\"";
+      }
+    }
+    return "$valueInCm cm";
   }
 
   String _calculateIMC(dynamic peso, dynamic altura) {
@@ -652,7 +672,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               const Icon(Icons.person_pin, color: Color(0xFF6C5CE7), size: 24),
               const SizedBox(width: 12),
               Text(
-                "Perfil de Saúde ShapePro",
+                AppLocalizations.of(context)!.healthProfile,
                 style: GoogleFonts.inter(
                   color: Colors.white, 
                   fontWeight: FontWeight.bold, 
@@ -670,10 +690,10 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
             crossAxisSpacing: 16,
             childAspectRatio: 3,
             children: [
-              _buildDetailItem("Nome", user['nome'] ?? '--'),
-              _buildDetailItem("Peso", "${user['peso'] ?? '--'} kg"),
-              _buildDetailItem("Altura", "${user['altura'] ?? '--'} cm"),
-              _buildDetailItem("Objetivo", _translateObjective(user['objetivo'])),
+              _buildDetailItem(AppLocalizations.of(context)!.fullName, user['nome'] ?? '--'),
+              _buildDetailItem(AppLocalizations.of(context)!.currentWeight, _formatWeight(user['peso'])),
+              _buildDetailItem(AppLocalizations.of(context)!.height, _formatMeasure(user['altura'], isHeight: true)),
+              _buildDetailItem(AppLocalizations.of(context)!.yourObjective, _translateObjective(user['objetivo'])),
             ],
           ),
           
@@ -687,7 +707,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 const Icon(Icons.bolt, color: Colors.cyanAccent, size: 18),
                 const SizedBox(width: 8),
                 Text(
-                  "Medidas Corporais (IA)",
+                  AppLocalizations.of(context)!.bodyMeasurements,
                   style: GoogleFonts.inter(color: Colors.cyanAccent, fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -702,27 +722,27 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               childAspectRatio: 3.2,
               children: [
                 if (aiMetrics['neck'] != null)
-                  _buildDetailItem("Pescoço", "${aiMetrics['neck']} cm"),
-                _buildDetailItem("Ombros", "${aiMetrics['shoulders'] ?? '--'} cm"),
-                _buildDetailItem("Peito", "${aiMetrics['chest'] ?? '--'} cm"),
-                _buildDetailItem("Cintura", "${aiMetrics['waist'] ?? '--'} cm"),
-                _buildDetailItem("Quadril", "${aiMetrics['hips'] ?? '--'} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.neck, _formatMeasure(aiMetrics['neck'])),
+                _buildDetailItem(AppLocalizations.of(context)!.shoulders, _formatMeasure(aiMetrics['shoulders'])),
+                _buildDetailItem(AppLocalizations.of(context)!.chest, _formatMeasure(aiMetrics['chest'])),
+                _buildDetailItem(AppLocalizations.of(context)!.waist, _formatMeasure(aiMetrics['waist'])),
+                _buildDetailItem(AppLocalizations.of(context)!.hips, _formatMeasure(aiMetrics['hips'])),
                 if (aiMetrics['left_arm'] != null)
-                  _buildDetailItem("Braço Esq.", "${aiMetrics['left_arm']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.leftArm, _formatMeasure(aiMetrics['left_arm'])),
                 if (aiMetrics['right_arm'] != null)
-                  _buildDetailItem("Braço Dir.", "${aiMetrics['right_arm']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.rightArm, _formatMeasure(aiMetrics['right_arm'])),
                 if (aiMetrics['left_forearm'] != null)
-                  _buildDetailItem("Antebraço Esq.", "${aiMetrics['left_forearm']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.leftForearm, _formatMeasure(aiMetrics['left_forearm'])),
                 if (aiMetrics['right_forearm'] != null)
-                  _buildDetailItem("Antebraço Dir.", "${aiMetrics['right_forearm']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.rightForearm, _formatMeasure(aiMetrics['right_forearm'])),
                 if (aiMetrics['left_thigh'] != null)
-                  _buildDetailItem("Coxa Esq.", "${aiMetrics['left_thigh']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.leftThigh, _formatMeasure(aiMetrics['left_thigh'])),
                 if (aiMetrics['right_thigh'] != null)
-                  _buildDetailItem("Coxa Dir.", "${aiMetrics['right_thigh']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.rightThigh, _formatMeasure(aiMetrics['right_thigh'])),
                 if (aiMetrics['left_calf'] != null)
-                  _buildDetailItem("Panturrilha Esq.", "${aiMetrics['left_calf']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.leftCalf, _formatMeasure(aiMetrics['left_calf'])),
                 if (aiMetrics['right_calf'] != null)
-                  _buildDetailItem("Panturrilha Dir.", "${aiMetrics['right_calf']} cm"),
+                  _buildDetailItem(AppLocalizations.of(context)!.rightCalf, _formatMeasure(aiMetrics['right_calf'])),
               ],
             ),
 
@@ -737,7 +757,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                   const Icon(Icons.monitor_heart, color: Color(0xFF00E676), size: 18),
                   const SizedBox(width: 8),
                   Text(
-                    "Indicadores de Saúde",
+                    AppLocalizations.of(context)!.healthIndicators,
                     style: GoogleFonts.inter(color: const Color(0xFF00E676), fontSize: 13, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -752,11 +772,11 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 childAspectRatio: 3.2,
                 children: [
                   if (aiMetrics['waist_hip_ratio'] != null)
-                    _buildDetailItem("Cintura/Quadril", "${aiMetrics['waist_hip_ratio']}"),
+                    _buildDetailItem(AppLocalizations.of(context)!.waistHipRatio, "${aiMetrics['waist_hip_ratio']}"),
                   if (aiMetrics['waist_height_ratio'] != null)
-                    _buildDetailItem("Cintura/Altura", "${aiMetrics['waist_height_ratio']}"),
+                    _buildDetailItem(AppLocalizations.of(context)!.waistHeightRatio, "${aiMetrics['waist_height_ratio']}"),
                   if (aiMetrics['v_shape'] != null)
-                    _buildDetailItem("V-Shape", "${aiMetrics['v_shape']}"),
+                    _buildDetailItem(AppLocalizations.of(context)!.vShape, "${aiMetrics['v_shape']}"),
                 ],
               ),
             ],
@@ -768,7 +788,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               child: Divider(color: Colors.white10),
             ),
             Text(
-              "Medidas Manuais Recentes:",
+              AppLocalizations.of(context)!.recentManualMeasures,
               style: GoogleFonts.inter(color: const Color(0xFF6C5CE7), fontSize: 13, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -780,13 +800,13 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               crossAxisSpacing: 16,
               childAspectRatio: 3,
               children: [
-                _buildDetailItem("Cintura", "${_latestMetrics!['cintura'] ?? '--'} cm"),
-                _buildDetailItem("Peito", "${_latestMetrics!['peito'] ?? '--'} cm"),
-                _buildDetailItem("Braço Esq.", "${_latestMetrics!['braco_esq'] ?? '--'} cm"),
-                _buildDetailItem("Braço Dir.", "${_latestMetrics!['braco_dir'] ?? '--'} cm"),
-                _buildDetailItem("Coxa Esq.", "${_latestMetrics!['coxa_esq'] ?? '--'} cm"),
-                _buildDetailItem("Coxa Dir.", "${_latestMetrics!['coxa_dir'] ?? '--'} cm"),
-                _buildDetailItem("Gordura", "${_latestMetrics!['percentual_gordura'] ?? '--'} %"),
+                _buildDetailItem(AppLocalizations.of(context)!.waist, _formatMeasure(_latestMetrics!['cintura'])),
+                _buildDetailItem(AppLocalizations.of(context)!.chest, _formatMeasure(_latestMetrics!['peito'])),
+                _buildDetailItem(AppLocalizations.of(context)!.leftArm, _formatMeasure(_latestMetrics!['braco_esq'])),
+                _buildDetailItem(AppLocalizations.of(context)!.rightArm, _formatMeasure(_latestMetrics!['braco_dir'])),
+                _buildDetailItem(AppLocalizations.of(context)!.leftThigh, _formatMeasure(_latestMetrics!['coxa_esq'])),
+                _buildDetailItem(AppLocalizations.of(context)!.rightThigh, _formatMeasure(_latestMetrics!['coxa_dir'])),
+                _buildDetailItem(AppLocalizations.of(context)!.fatPercentage, _formatMeasure(_latestMetrics!['percentual_gordura'], isPercentage: true)),
               ],
             ),
           ],
@@ -814,21 +834,30 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
   }
 
   String _translateObjective(String? obj) {
-    switch (obj) {
-      case 'perder_peso': return 'Emagrecimento';
-      case 'ganhar_massa': return 'Hipertrofia';
-      case 'manter': return 'Manutenção';
-      default: return obj ?? 'Não definido';
+    if (obj == null) return '--';
+    final normalized = obj.toLowerCase();
+    
+    // Mapeia tanto os slugs quanto os valores brutos que podem vir do banco
+    if (normalized.contains('perder') || normalized.contains('emagrecer')) {
+      return AppLocalizations.of(context)!.loseWeight;
     }
+    if (normalized.contains('ganhar') || normalized.contains('hipertrofia') || normalized.contains('massa')) {
+      return AppLocalizations.of(context)!.gainMass;
+    }
+    if (normalized.contains('manter')) {
+      return AppLocalizations.of(context)!.maintainWeight;
+    }
+    
+    return obj;
   }
 
   String _translateActivity(String? level) {
     switch (level) {
-      case 'sedentario': return 'Sedentário';
-      case 'leve': return 'Leve';
-      case 'moderado': return 'Moderado';
-      case 'intenso': return 'Intenso';
-      default: return level ?? 'Não definido';
+      case 'sedentario': return AppLocalizations.of(context)!.sedentary;
+      case 'leve': return AppLocalizations.of(context)!.healthy;
+      case 'moderado': return AppLocalizations.of(context)!.standard;
+      case 'intenso': return AppLocalizations.of(context)!.extreme;
+      default: return level ?? '--';
     }
   }
 
@@ -863,7 +892,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 const Icon(Icons.gavel_rounded, color: Color(0xFF6C5CE7), size: 24),
                 const SizedBox(width: 12),
                 Text(
-                  "Aviso Legal ShapePro",
+                  AppLocalizations.of(context)!.legalDisclaimer,
                   style: GoogleFonts.inter(
                     color: Colors.white, 
                     fontWeight: FontWeight.bold, 
@@ -874,18 +903,18 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
             ),
             const SizedBox(height: 20),
             _buildModalSection(
-              "Finalidade Informativa",
-              "As medidas corporais exibidas são ESTIMATIVAS geradas por algoritmos de Inteligência Artificial e Visão Computacional. Estes valores não são exatos e devem ser usados apenas para monitoramento de tendências e motivação pessoal."
+              AppLocalizations.of(context)!.informativePurposeTitle,
+              AppLocalizations.of(context)!.informativePurposeDesc
             ),
             const SizedBox(height: 16),
             _buildModalSection(
-              "Não é um Dispositivo Médico",
-              "O ShapePro App não é um dispositivo médico e não fornece diagnósticos. Os resultados não substituem avaliações físicas profissionais, como bioimpedância ou dobras cutâneas realizadas por especialistas."
+              AppLocalizations.of(context)!.notAMedicalDeviceTitle,
+              AppLocalizations.of(context)!.notAMedicalDeviceDesc
             ),
             const SizedBox(height: 16),
             _buildModalSection(
-              "Consulte Profissionais",
-              "Sempre consulte seu médico ou nutricionista antes de iniciar novas dietas ou rotinas de exercícios intensos baseadas em dados automatizados."
+              AppLocalizations.of(context)!.consultProfessionalsTitle,
+              AppLocalizations.of(context)!.consultProfessionalsDesc
             ),
             const SizedBox(height: 32),
             ElevatedButton(
@@ -895,7 +924,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Text("Entendido", style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)!.understood, style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
           ],
@@ -921,16 +950,17 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
     );
   }
 
-  String _translateType(String type) {
+  String _translateType(BuildContext context, String type) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
-      case 'front': return 'FRENTE';
-      case 'side': return 'LADO';
-      case 'back': return 'COSTAS';
-      default: return type.toUpperCase();
+      case 'front': return l10n.frontType;
+      case 'side': return l10n.sideType;
+      case 'back': return l10n.backType;
+      default: return type;
     }
   }
 
-  Widget _buildMetricItem(String label, String value) {
+  Widget _buildMetricItem(String label, String value, {String unit = ""}) {
     return Column(
       children: [
         Text(
@@ -938,7 +968,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
           style: GoogleFonts.inter(color: Colors.white38, fontSize: 10),
         ),
         Text(
-          "$value cm",
+          "$value$unit",
           style: GoogleFonts.inter(
             color: Colors.white, 
             fontSize: 14, 
@@ -964,12 +994,12 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
         Icon(Icons.camera_enhance_outlined, size: 80, color: Colors.white.withOpacity(0.1)),
         const SizedBox(height: 20),
         Text(
-          "Nenhum scan realizado",
+          AppLocalizations.of(context)!.noScansPerformed,
           style: GoogleFonts.inter(color: Colors.white54, fontSize: 16),
         ),
         const SizedBox(height: 8),
         Text(
-          "Suas fotos e medidas aparecerão aqui.",
+          AppLocalizations.of(context)!.scansWillAppearHere,
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(color: Colors.white24, fontSize: 13),
         ),

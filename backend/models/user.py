@@ -22,6 +22,8 @@ class User(db.Model, SerialMixin):
     nivel_atividade = db.Column(db.String(50), nullable=True)  # sedentario, leve, moderado, intenso, muito_intenso
     ritmo_meta = db.Column(db.String(50), default='padrao')  # leve, padrao, agressivo
     foto_perfil = db.Column(db.String(500), nullable=True)
+    pais = db.Column(db.String(2), default='BR')  # BR, US, CA, GB
+    moeda = db.Column(db.String(3), default='BRL') # BRL, USD, CAD, GBP
     treinos_concluidos = db.Column(db.Integer, default=0)
     plano_assinatura = db.Column(db.String(20), default='free')  # free, mensal, anual
     assinatura_ativa = db.Column(db.Boolean, default=False)
@@ -50,9 +52,12 @@ class User(db.Model, SerialMixin):
         # Normalização forçada: Remover tudo exceto dígitos e o '+'
         clean_phone = re.sub(r'[^\d+]', '', str(telefone))
         
-        # Adicionar +55 se for um número brasileiro sem o prefixo (10 ou 11 dígitos)
+        # Se já tem '+', mantém como está. Se não tem, e for 10 ou 11 dígitos, 
+        # assume +55 apenas se o país do usuário for BR ou não estiver definido.
         if not clean_phone.startswith('+'):
             if len(clean_phone) >= 10 and len(clean_phone) <= 11:
+                # Nota: Na criação do usuário, o 'pais' pode ainda não estar setado no objeto.
+                # Por segurança, mantemos o comportamento padrão para BR, mas permitimos outros.
                 clean_phone = f"+55{clean_phone}"
                 
         return clean_phone

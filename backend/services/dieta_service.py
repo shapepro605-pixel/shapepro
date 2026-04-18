@@ -282,6 +282,92 @@ class DietaService:
             'total_calorias': total_cal,
         }
 
+    def translate_meals(self, meals_data, target_lang='pt'):
+        """
+        Translates a list of meals (or a weekly plan) on-the-fly.
+        Used for translating persisted data in the DB when the UI language changes.
+        """
+        if target_lang == self.lang:
+            return meals_data
+
+        try:
+            # Load the target language foods for mapping
+            target_service = DietaService(lang=target_lang)
+            target_foods = target_service.alimentos
+            
+            # Create a name-based mapping from source language to target language
+            # This works because PT and EN reference files are categorized identically
+            mapping = {}
+            for category, target_list in target_foods.items():
+                orig_list = self.alimentos.get(category, [])
+                for i in range(min(len(orig_list), len(target_list))):
+                    orig_name = orig_list[i]['nome']
+                    mapping[orig_name] = target_list[i]
+
+            def translate_refeicao(refeicao):
+                new_ref = refeicao.copy()
+                try:
+                    from services.i18n import t
+                except (ImportError, ModuleNotFoundError):
+                    t = lambda x: x # Fallback for standalone tests
+                
+                # Translate meal names (Breakfast, Lunch, etc.)
+                meal_key_map = {
+                    'Café da Manhã': 'meal_breakfast', 'Breakfast': 'meal_breakfast',
+                    'Lanche da Manhã': 'meal_morning_snack', 'Morning Snack': 'meal_morning_snack',
+                    'Almoço': 'meal_lunch', 'Lunch': 'meal_lunch',
+                    'Lanche da Tarde': 'meal_afternoon_snack', 'Afternoon Snack': 'meal_afternoon_snack',
+                    'Jantar': 'meal_dinner', 'Dinner': 'meal_dinner',
+                    'Ceia': 'meal_late_snack', 'Late Snack': 'meal_late_snack'
+                }
+                orig_meal_name = refeicao.get('nome')
+                if orig_meal_name in meal_key_map:
+                    # Note: We use t() but we need the context of target_lang
+                    # For simplicity, we hardcode the common ones if t() doesn't support forcing lang easily
+                    # but TreinoService/DietaService are initialized with the target lang usually.
+                    # Since this is a shim, we rely on the mapping or a simple dict.
+                    pass 
+
+                new_alimentos = []
+                for al in refeicao.get('alimentos', []):
+                    orig_food_name = al.get('nome')
+                    if orig_food_name in mapping:
+                        target_food = mapping[orig_food_name]
+                        new_al = al.copy()
+                        new_al['nome'] = target_food['nome']
+                        if 'unidade' in target_food: new_al['unidade'] = target_food['unidade']
+                        new_alimentos.append(new_al)
+            # Map by ID if available, otherwise by index
+            food_map = {}
+            for category in source_foods:
+                if category in target_foods:
+                    src_list = source_foods[category]
+                    tgt_list = target_foods[category]
+                    for i in range(min(len(src_list), len(tgt_list))):
+                        food_map[src_list[i]['nome']] = tgt_list[i]['nome']
+
+            translated_meals = []
+            for meal in meals:
+                new_meal = meal.copy()
+                # Meal names are translated via t() in the route, 
+                # but we can do a fallback here if needed.
+                
+                if 'alimentos' in new_meal:
+                    new_alimentos = []
+                    for item in new_meal['alimentos']:
+                        new_item = item.copy()
+                        curr_name = new_item.get('nome', '')
+                        if curr_name in food_map:
+                            new_item['nome'] = food_map[curr_name]
+                        new_alimentos.append(new_item)
+                    new_meal['alimentos'] = new_alimentos
+                
+                translated_meals.append(new_meal)
+            return translated_meals
+        except Exception as e:
+            print(f"[DietaService] Translation error: {e}")
+            return meals
+
     def gerar_plano(self, sexo, idade, altura, peso, nivel_atividade='moderado', objetivo='manter', ritmo_meta='padrao', dias=1, orcamento='padrao'):
         """
         Generate a complete diet plan (1 or 7 days).

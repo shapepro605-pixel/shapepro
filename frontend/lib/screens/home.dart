@@ -719,7 +719,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             children: [
               const Icon(Icons.show_chart, color: Colors.white24, size: 40),
               const SizedBox(height: 10),
-              Text('Registre seu peso para ver o gráfico', style: GoogleFonts.inter(
+              Text(AppLocalizations.of(context)!.registerWeightToSeeChart, style: GoogleFonts.inter(
                 color: Colors.white38, fontSize: 13,
               )),
             ],
@@ -976,21 +976,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 );
               },
             ),
-            _buildMenuItem(Icons.person_outline, 'Meu perfil', () {
+            _buildMenuItem(Icons.person_outline, AppLocalizations.of(context)!.myProfile, () {
               Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData());
             }),
-            _buildMenuItem(Icons.star_outline, 'Assinatura', () {}),
-            _buildMenuItem(Icons.settings_outlined, 'Configurações', () {}),
-            _buildMenuItem(Icons.delete_forever, 'Excluir Conta', () async {
+            _buildMenuItem(Icons.star_outline, AppLocalizations.of(context)!.subscription, () {}),
+            _buildMenuItem(Icons.settings_outlined, AppLocalizations.of(context)!.settings, () {}),
+            _buildMenuItem(Icons.delete_forever, AppLocalizations.of(context)!.deleteAccount, () async {
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
                   backgroundColor: const Color(0xFF16162A),
-                  title: Text('Excluir Conta?', style: GoogleFonts.inter(color: Colors.white)),
-                  content: Text('Isso apagará permanentemente todos os seus dados. Deseja continuar?', style: GoogleFonts.inter(color: Colors.white70)),
+                  title: Text(AppLocalizations.of(context)!.deleteAccountTitle, style: GoogleFonts.inter(color: Colors.white)),
+                  content: Text(AppLocalizations.of(context)!.deleteAccountDesc, style: GoogleFonts.inter(color: Colors.white70)),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar', style: TextStyle(color: Colors.white54))),
-                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Excluir', style: TextStyle(color: Color(0xFFFD4556)))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white54))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Color(0xFFFD4556)))),
                   ],
                 ),
               );
@@ -1008,8 +1008,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   }
                 }
               }, color: const Color(0xFFFD4556)),
-            _buildMenuItem(Icons.help_outline, 'Ajuda', () {}),
-            _buildMenuItem(Icons.info_outline, 'Sobre o App', () {
+            _buildMenuItem(Icons.help_outline, AppLocalizations.of(context)!.help, () {}),
+            _buildMenuItem(Icons.info_outline, AppLocalizations.of(context)!.aboutApp, () {
               showLicensePage(
                 context: context,
                 applicationName: 'ShapePro',
@@ -1020,11 +1020,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               );
             }),
-            _buildMenuItem(Icons.privacy_tip_outlined, 'Política de Privacidade', () {
+            _buildMenuItem(Icons.privacy_tip_outlined, AppLocalizations.of(context)!.privacyPolicy, () {
               Navigator.pushNamed(context, '/privacy');
             }),
             const SizedBox(height: 8),
-            _buildMenuItem(Icons.logout, 'Sair', () async {
+            _buildMenuItem(Icons.logout, AppLocalizations.of(context)!.logout, () async {
               if (!mounted) return;
               final api = Provider.of<ApiService>(context, listen: false);
               await api.logout();
@@ -1097,11 +1097,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             });
           }
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.fitness_center_rounded), label: 'Treino'),
-          BottomNavigationBarItem(icon: Icon(Icons.restaurant_menu), label: 'Dieta'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart_rounded), label: 'Resultado'),
+        items: [
+          BottomNavigationBarItem(icon: const Icon(Icons.home_rounded), label: AppLocalizations.of(context)!.home),
+          BottomNavigationBarItem(icon: const Icon(Icons.fitness_center_rounded), label: AppLocalizations.of(context)!.treino),
+          BottomNavigationBarItem(icon: const Icon(Icons.restaurant_menu), label: AppLocalizations.of(context)!.dieta),
+          BottomNavigationBarItem(icon: const Icon(Icons.bar_chart_rounded), label: AppLocalizations.of(context)!.resultado),
         ],
       ),
     );
@@ -1134,7 +1134,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           if (api.currentUser?['foto_perfil'] != null)
             ListTile(
               leading: const Icon(Icons.delete_outline, color: Color(0xFFFD4556)),
-              title: const Text('Remover foto atual', style: TextStyle(color: Color(0xFFFD4556))),
+              title: Text(l10n.remvovePhoto, style: const TextStyle(color: Color(0xFFFD4556))),
               onTap: () async {
                 Navigator.pop(ctx);
                 await api.updateProfile({'foto_perfil': null});
@@ -1165,12 +1165,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         
         if (url != null && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Foto de perfil atualizada!'), backgroundColor: Colors.green),
+            SnackBar(content: Text(l10n.photoUpdated), backgroundColor: Colors.green),
           );
           _loadData();
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Erro ao carregar foto.'), backgroundColor: Colors.red),
+            SnackBar(content: Text(l10n.errorPhoto), backgroundColor: Colors.red),
           );
         }
       }

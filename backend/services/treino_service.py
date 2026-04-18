@@ -143,8 +143,52 @@ class TreinoService:
             'exercicios': exercicios_treino,
         }
 
+    def translate_exercises(self, exercises_list, target_lang='pt'):
+        """
+        Translates a list of already generated exercise objects on-the-fly.
+        Used for translating persisted data in the DB when the UI language changes.
+        """
+        try:
+            # We always use the PT service as the "source" for mapping 
+            # because the database exercises are stored in Portuguese.
+            pt_service = TreinoService(lang='pt')
+            source_data = pt_service.exercises
+            
+            # Load the target language exercises for mapping
+            target_service = TreinoService(lang=target_lang)
+            target_data = target_service.exercises
+            
+            # Create a name-based mapping from PT to target language
+            mapping = {}
+            for group, target_exs in target_data.items():
+                orig_exs = source_data.get(group, [])
+                # Map by index since files have identical order
+                for i in range(min(len(orig_exs), len(target_exs))):
+                    orig_name = orig_exs[i]['nome']
+                    mapping[orig_name] = target_exs[i]
+
+            translated = []
+            for ex in exercises_list:
+                orig_name = ex.get('nome')
+                if orig_name in mapping:
+                    target_ex = mapping[orig_name]
+                    new_ex = ex.copy()
+                    new_ex['nome'] = target_ex['nome']
+                    # Translate descriptions/tips/equipment if they exist
+                    if 'descricao' in target_ex: new_ex['descricao'] = target_ex['descricao']
+                    if 'dicas' in target_ex: new_ex['dicas'] = target_ex['dicas']
+                    if 'equipamento' in target_ex: new_ex['equipamento'] = target_ex['equipamento']
+                    if 'musculos_trabalhados' in target_ex: new_ex['musculos_trabalhados'] = target_ex['musculos_trabalhados']
+                    translated.append(new_ex)
+                else:
+                    translated.append(ex)
+            return translated
+        except Exception as e:
+            print(f"[TreinoService] Translation error: {e}")
+            return exercises_list
+
     def get_grupos_musculares(self):
-        """Return list of available muscle groups."""
+        # Return list of available muscle groups.
         from services.i18n import t
         grupos = [
             {'id': 'peito', 'nome': t('muscle_peito'), 'icone': '💪'},

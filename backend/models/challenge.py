@@ -29,6 +29,17 @@ class Challenge(db.Model, SerialMixin):
     participantes = db.relationship('UserChallenge', backref='challenge', lazy=True, cascade='all, delete-orphan')
 
     # Uses default to_dict from SerialMixin
+    def to_dict(self):
+        d = super().to_dict()
+        try:
+            from services.i18n import t
+            if d.get('nome'):
+                d['nome'] = t(d['nome'])
+            if d.get('descricao'):
+                d['descricao'] = t(d['descricao'])
+        except ImportError:
+            pass # Ignore if i18n is not loaded
+        return d
 
 
 class UserChallenge(db.Model, SerialMixin):

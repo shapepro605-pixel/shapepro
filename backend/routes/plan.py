@@ -123,35 +123,30 @@ def get_dieta():
 
     # Translate meal names on the fly for the current language
     plan_dict = diet_plan.to_dict()
-    from services.i18n import get_locale, t
+    # NEW: Integrated dynamic translation shift
+    from services.i18n import get_locale
     lang = get_locale()
+    dieta_service = DietaService(lang=lang)
+    plan_dict['refeicoes'] = dieta_service.translate_meals(plan_dict['refeicoes'], target_lang=lang)
     
-    # Map of meal name translations to ensure consistency
+    # Map of meal name translations to ensure consistency (Fallback/Double Check)
     meal_map = {
-        'Café da manhã': t('meal_breakfast'),
-        'Breakfast': t('meal_breakfast'),
-        'Lanche da manhã': t('meal_morning_snack'),
-        'Morning Snack': t('meal_morning_snack'),
-        'Almoço': t('meal_lunch'),
-        'Lunch': t('meal_lunch'),
-        'Lanche da tarde': t('meal_afternoon_snack'),
-        'Afternoon Snack': t('meal_afternoon_snack'),
-        'Jantar': t('meal_dinner'),
-        'Dinner': t('meal_dinner'),
-        'Ceia': t('meal_late_snack'),
-        'Late Snack': t('meal_late_snack')
+        'Café da manhã': t('meal_breakfast'), 'Breakfast': t('meal_breakfast'),
+        'Lanche da manhã': t('meal_morning_snack'), 'Morning Snack': t('meal_morning_snack'),
+        'Almoço': t('meal_lunch'), 'Lunch': t('meal_lunch'),
+        'Lanche da tarde': t('meal_afternoon_snack'), 'Afternoon Snack': t('meal_afternoon_snack'),
+        'Jantar': t('meal_dinner'), 'Dinner': t('meal_dinner'),
+        'Ceia': t('meal_late_snack'), 'Late Snack': t('meal_late_snack')
     }
     
     for r in plan_dict['refeicoes']:
         if 'refeicoes' in r: # 7-day plan (list of days)
             for refeicao in r['refeicoes']:
                 curr_name = refeicao.get('nome')
-                if curr_name in meal_map:
-                    refeicao['nome'] = meal_map[curr_name]
+                if curr_name in meal_map: refeicao['nome'] = meal_map[curr_name]
         else: # 1-day plan (list of meals)
             curr_name = r.get('nome')
-            if curr_name in meal_map:
-                r['nome'] = meal_map[curr_name]
+            if curr_name in meal_map: r['nome'] = meal_map[curr_name]
 
     # FREE TRIAL LOGIC (PAYWALL)
     user = User.query.get(int(user_id))
@@ -219,6 +214,32 @@ def get_treinos():
         for p in db_plans:
             t_dict = p.to_dict()
             t_dict['tipo'] = p.tipo_treino
+            
+            # NEW: Translate exercises from DB on-the-fly
+            t_dict['exercicios'] = treino_service.translate_exercises(t_dict['exercicios'], target_lang=lang)
+            
+            # NEW: Translate training name (e.g. "Treino A - Peito")
+            nome = t_dict.get('nome', '')
+            if " - " in nome:
+                partes = nome.split(" - ")
+                # Simple mapping for muscles in names
+                muscle_map = {
+                    'Peito': t('muscle_peito'), 'Costas': t('muscle_costas'),
+                    'Ombros': t('muscle_ombros'), 'Bíceps': t('muscle_biceps'),
+                    'Tríceps': t('muscle_triceps'), 'Pernas': t('muscle_pernas'),
+                    'Abdômen': t('muscle_abdomen'), 'Glúteos': t('muscle_gluteos')
+                }
+                if partes[1] in muscle_map:
+                    # partes[0] might be "Treino A"
+                    prefix = partes[0].replace('Treino', t('training_title'))
+                    t_dict['nome'] = f"{prefix} - {muscle_map[partes[1]]}"
+                else:
+                    # Fallback for prefix even if muscle doesn't match
+                    t_dict['nome'] = nome.replace('Treino', t('training_title'))
+            else:
+                # Single part name like "Treino Inferiores"
+                t_dict['nome'] = nome.replace('Treino', t('training_title'))
+
             # Estimate time from exercicios count
             t_dict['tempo_estimado'] = f"{len(t_dict['exercicios']) * 6} min"
             treinos.append(t_dict)

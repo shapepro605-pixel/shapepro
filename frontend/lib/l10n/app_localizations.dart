@@ -332,11 +332,35 @@ abstract class AppLocalizations {
   /// **'Excluir Conta'**
   String get deleteAccount;
 
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir Conta?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Isso apagará permanentemente todos os seus dados. Deseja continuar?'**
+  String get deleteAccountDesc;
+
   /// No description provided for @help.
   ///
   /// In pt, this message translates to:
   /// **'Ajuda'**
   String get help;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sobre o App'**
+  String get aboutApp;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Política de Privacidade'**
+  String get privacyPolicy;
 
   /// No description provided for @logout.
   ///
@@ -467,7 +491,7 @@ abstract class AppLocalizations {
   /// No description provided for @currentWeight.
   ///
   /// In pt, this message translates to:
-  /// **'Peso atual'**
+  /// **'Peso'**
   String get currentWeight;
 
   /// No description provided for @yourObjective.
@@ -644,11 +668,197 @@ abstract class AppLocalizations {
   /// **'Criar minha conta'**
   String get createMyAccount;
 
-  /// No description provided for @myDiet.
+  /// No description provided for @myEvolution.
   ///
   /// In pt, this message translates to:
-  /// **'Minha Dieta'**
-  String get myDiet;
+  /// **'Minha Evolução'**
+  String get myEvolution;
+
+  /// No description provided for @nextCheckin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo Check-in'**
+  String get nextCheckin;
+
+  /// No description provided for @scansHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Histórico de Scans'**
+  String get scansHistory;
+
+  /// No description provided for @daysRemainingDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faltam {days} dias para o seu próximo scanner corporal de comparação.'**
+  String daysRemainingDesc(int days);
+
+  /// No description provided for @timeToUpdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hora de Atualizar!'**
+  String get timeToUpdate;
+
+  /// No description provided for @newScanNow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faça um novo scanner agora para ver seus resultados!'**
+  String get newScanNow;
+
+  /// No description provided for @neck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pescoço'**
+  String get neck;
+
+  /// No description provided for @shoulders.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ombros'**
+  String get shoulders;
+
+  /// No description provided for @chest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Peito'**
+  String get chest;
+
+  /// No description provided for @waist.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cintura'**
+  String get waist;
+
+  /// No description provided for @hips.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quadril'**
+  String get hips;
+
+  /// No description provided for @leftArm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Braço Esq.'**
+  String get leftArm;
+
+  /// No description provided for @rightArm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Braço Dir.'**
+  String get rightArm;
+
+  /// No description provided for @leftThigh.
+  ///
+  /// In pt, this message translates to:
+  /// **'Coxa Esq.'**
+  String get leftThigh;
+
+  /// No description provided for @rightThigh.
+  ///
+  /// In pt, this message translates to:
+  /// **'Coxa Dir.'**
+  String get rightThigh;
+
+  /// No description provided for @leftCalf.
+  ///
+  /// In pt, this message translates to:
+  /// **'Panturrilha Esq.'**
+  String get leftCalf;
+
+  /// No description provided for @rightCalf.
+  ///
+  /// In pt, this message translates to:
+  /// **'Panturrilha Dir.'**
+  String get rightCalf;
+
+  /// No description provided for @iaMeasures.
+  ///
+  /// In pt, this message translates to:
+  /// **'Medidas IA'**
+  String get iaMeasures;
+
+  /// No description provided for @days.
+  ///
+  /// In pt, this message translates to:
+  /// **'DIAS'**
+  String get days;
+
+  /// No description provided for @remvovePhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover foto atual'**
+  String get remvovePhoto;
+
+  /// No description provided for @photoUpdated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto de perfil atualizada!'**
+  String get photoUpdated;
+
+  /// No description provided for @errorPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar foto.'**
+  String get errorPhoto;
+
+  /// No description provided for @session.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sessão'**
+  String get session;
+
+  /// No description provided for @frontType.
+  ///
+  /// In pt, this message translates to:
+  /// **'FRENTE'**
+  String get frontType;
+
+  /// No description provided for @sideType.
+  ///
+  /// In pt, this message translates to:
+  /// **'PERFIL'**
+  String get sideType;
+
+  /// No description provided for @backType.
+  ///
+  /// In pt, this message translates to:
+  /// **'COSTAS'**
+  String get backType;
+
+  /// No description provided for @height.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altura'**
+  String get height;
+
+  /// No description provided for @bmi.
+  ///
+  /// In pt, this message translates to:
+  /// **'IMC'**
+  String get bmi;
+
+  /// No description provided for @deletePhotoTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir Foto?'**
+  String get deletePhotoTitle;
+
+  /// No description provided for @deletePhotoDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja remover esta foto do seu histórico? Esta ação não pode ser desfeita.'**
+  String get deletePhotoDesc;
+
+  /// No description provided for @photoRemoved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto removida com sucesso!'**
+  String get photoRemoved;
+
+  /// No description provided for @errorDeleting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao excluir: {error}'**
+  String errorDeleting(String error);
 
   /// No description provided for @generate.
   ///
@@ -656,10 +866,22 @@ abstract class AppLocalizations {
   /// **'Gerar'**
   String get generate;
 
+  /// No description provided for @myDiet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minha Dieta'**
+  String get myDiet;
+
+  /// No description provided for @delete.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir'**
+  String get delete;
+
   /// No description provided for @adjustRoute.
   ///
   /// In pt, this message translates to:
-  /// **'Ajuste de Rota'**
+  /// **'Ajustar Rota'**
   String get adjustRoute;
 
   /// No description provided for @changeBeforeGenerate.
@@ -1364,18 +1586,6 @@ abstract class AppLocalizations {
   /// **'Cidade'**
   String get city;
 
-  /// No description provided for @monthlyIncome.
-  ///
-  /// In pt, this message translates to:
-  /// **'Renda Mensal (R\$)'**
-  String get monthlyIncome;
-
-  /// No description provided for @dietBudget.
-  ///
-  /// In pt, this message translates to:
-  /// **'Orçamento para Dieta (R\$)'**
-  String get dietBudget;
-
   /// No description provided for @reportPrice.
   ///
   /// In pt, this message translates to:
@@ -1399,6 +1609,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'SALVAR PREÇO'**
   String get savePrice;
+
+  /// No description provided for @registerWeightToSeeChart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registre seu peso para ver o gráfico'**
+  String get registerWeightToSeeChart;
+
+  /// No description provided for @monthlyIncome.
+  ///
+  /// In pt, this message translates to:
+  /// **'Renda Mensal ({currency})'**
+  String monthlyIncome(Object currency);
+
+  /// No description provided for @dietBudget.
+  ///
+  /// In pt, this message translates to:
+  /// **'Orçamento para Dieta ({currency})'**
+  String dietBudget(Object currency);
 
   /// No description provided for @time.
   ///
@@ -1484,12 +1712,6 @@ abstract class AppLocalizations {
   /// **'Full Body / Funcional'**
   String get fullBodyFunctional;
 
-  /// No description provided for @logWeightToChart.
-  ///
-  /// In pt, this message translates to:
-  /// **'Registre seu peso para ver o gráfico'**
-  String get logWeightToChart;
-
   /// No description provided for @noChampionships.
   ///
   /// In pt, this message translates to:
@@ -1537,6 +1759,444 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Enviando...'**
   String get uploading;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In pt, this message translates to:
+  /// **'SALVAR ALTERAÇÕES'**
+  String get saveChanges;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informações Pessoais'**
+  String get personalInfo;
+
+  /// No description provided for @locationAndFinance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Localização e Finanças'**
+  String get locationAndFinance;
+
+  /// No description provided for @profileUpdateSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Perfil atualizado com sucesso!'**
+  String get profileUpdateSuccess;
+
+  /// No description provided for @profileUpdateError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao atualizar perfil'**
+  String get profileUpdateError;
+
+  /// No description provided for @country.
+  ///
+  /// In pt, this message translates to:
+  /// **'País'**
+  String get country;
+
+  /// No description provided for @selectCountry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione o país'**
+  String get selectCountry;
+
+  /// No description provided for @currency.
+  ///
+  /// In pt, this message translates to:
+  /// **'Moeda'**
+  String get currency;
+
+  /// No description provided for @incomeHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: 3500.00'**
+  String get incomeHint;
+
+  /// No description provided for @budgetHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto pode gastar com a dieta?'**
+  String get budgetHint;
+
+  /// No description provided for @stateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: SP ou New York'**
+  String get stateHint;
+
+  /// No description provided for @cityHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: São Paulo ou Miami'**
+  String get cityHint;
+
+  /// No description provided for @brazil.
+  ///
+  /// In pt, this message translates to:
+  /// **'Brasil'**
+  String get brazil;
+
+  /// No description provided for @usa.
+  ///
+  /// In pt, this message translates to:
+  /// **'EUA'**
+  String get usa;
+
+  /// No description provided for @canada.
+  ///
+  /// In pt, this message translates to:
+  /// **'Canadá'**
+  String get canada;
+
+  /// No description provided for @uk.
+  ///
+  /// In pt, this message translates to:
+  /// **'Reino Unido'**
+  String get uk;
+
+  /// No description provided for @privacyIntroTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Introdução'**
+  String get privacyIntroTitle;
+
+  /// No description provided for @privacyIntroDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'O ShapePro está comprometido em proteger sua privacidade. Esta política descreve como coletamos e usamos seus dados para fornecer planos de treino e dieta personalizados.'**
+  String get privacyIntroDesc;
+
+  /// No description provided for @privacyDataTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Coleta de Dados'**
+  String get privacyDataTitle;
+
+  /// No description provided for @privacyDataDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Coletamos informações como e-mail, telefone, peso, altura, idade e nível de atividade. Esses dados são usados exclusivamente para o cálculo do seu plano e monitoramento de progresso.'**
+  String get privacyDataDesc;
+
+  /// No description provided for @privacyPaymentTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinaturas e Pagamentos'**
+  String get privacyPaymentTitle;
+
+  /// No description provided for @privacyPaymentDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'As assinaturas são processadas através da Google Play Store. O cancelamento pode ser feito a qualquer momento nas configurações da sua conta Google.'**
+  String get privacyPaymentDesc;
+
+  /// No description provided for @privacyDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exclusão de Dados'**
+  String get privacyDeleteTitle;
+
+  /// No description provided for @privacyDeleteDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você pode solicitar a exclusão permanente de sua conta e todos os dados associados a qualquer momento através do menu Configurações no aplicativo.'**
+  String get privacyDeleteDesc;
+
+  /// No description provided for @privacyContactTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contato'**
+  String get privacyContactTitle;
+
+  /// No description provided for @privacyContactDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Para dúvidas sobre privacidade, entre em contato: suporte@shapepro.com.br'**
+  String get privacyContactDesc;
+
+  /// No description provided for @version.
+  ///
+  /// In pt, this message translates to:
+  /// **'Versão'**
+  String get version;
+
+  /// No description provided for @lastUpdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Última atualização'**
+  String get lastUpdate;
+
+  /// No description provided for @approximateValues.
+  ///
+  /// In pt, this message translates to:
+  /// **'* Valores aproximados de peso e medidas.'**
+  String get approximateValues;
+
+  /// No description provided for @locationAndFinanceSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esses dados ajudam a IA a sugerir alimentos com melhor custo-benefício na sua região.'**
+  String get locationAndFinanceSubtitle;
+
+  /// No description provided for @mandatory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Obrigatório'**
+  String get mandatory;
+
+  /// No description provided for @ageHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: 25'**
+  String get ageHint;
+
+  /// No description provided for @heightHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: 175'**
+  String get heightHint;
+
+  /// No description provided for @weightHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: 70.5'**
+  String get weightHint;
+
+  /// No description provided for @suggestedWorkouts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Treinos Sugeridos'**
+  String get suggestedWorkouts;
+
+  /// No description provided for @suggestedWorkoutsDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Planejados especialmente para seu objetivo (IA).'**
+  String get suggestedWorkoutsDesc;
+
+  /// No description provided for @workoutNum.
+  ///
+  /// In pt, this message translates to:
+  /// **'Treino {type}'**
+  String workoutNum(Object type);
+
+  /// No description provided for @healthProfile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Perfil de Saúde ShapePro'**
+  String get healthProfile;
+
+  /// No description provided for @bodyMeasurements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Medidas Corporais (IA)'**
+  String get bodyMeasurements;
+
+  /// No description provided for @rightForearm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Antebraço Dir.'**
+  String get rightForearm;
+
+  /// No description provided for @leftForearm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Antebraço Esq.'**
+  String get leftForearm;
+
+  /// No description provided for @healthIndicators.
+  ///
+  /// In pt, this message translates to:
+  /// **'Indicadores de Saúde'**
+  String get healthIndicators;
+
+  /// No description provided for @waistHipRatio.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cintura/Quadril'**
+  String get waistHipRatio;
+
+  /// No description provided for @waistHeightRatio.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cintura/Altura'**
+  String get waistHeightRatio;
+
+  /// No description provided for @vShape.
+  ///
+  /// In pt, this message translates to:
+  /// **'V-Shape'**
+  String get vShape;
+
+  /// No description provided for @recentManualMeasures.
+  ///
+  /// In pt, this message translates to:
+  /// **'Medidas Manuais Recentes'**
+  String get recentManualMeasures;
+
+  /// No description provided for @fatPercentage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gordura'**
+  String get fatPercentage;
+
+  /// No description provided for @photosAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} fotos anexadas'**
+  String photosAttached(Object count);
+
+  /// No description provided for @noScansPerformed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum scan realizado'**
+  String get noScansPerformed;
+
+  /// No description provided for @scansWillAppearHere.
+  ///
+  /// In pt, this message translates to:
+  /// **'Suas fotos e medidas aparecerão aqui.'**
+  String get scansWillAppearHere;
+
+  /// No description provided for @legalDisclaimer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aviso Legal ShapePro'**
+  String get legalDisclaimer;
+
+  /// No description provided for @informativePurposeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Finalidade Informativa'**
+  String get informativePurposeTitle;
+
+  /// No description provided for @informativePurposeDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'As medidas corporais exibidas são ESTIMATIVAS geradas por algoritmos de IA. Estes valores não são exatos e devem ser usados apenas para monitoramento de tendências.'**
+  String get informativePurposeDesc;
+
+  /// No description provided for @notAMedicalDeviceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não é um Dispositivo Médico'**
+  String get notAMedicalDeviceTitle;
+
+  /// No description provided for @notAMedicalDeviceDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'O ShapePro App não é um dispositivo médico e não fornece diagnósticos. Os resultados não substituem avaliações físicas profissionais.'**
+  String get notAMedicalDeviceDesc;
+
+  /// No description provided for @consultProfessionalsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consulte Profissionais'**
+  String get consultProfessionalsTitle;
+
+  /// No description provided for @consultProfessionalsDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consulte sempre seu médico ou nutricionista antes de iniciar novas dietas ou rotinas de exercícios intensos.'**
+  String get consultProfessionalsDesc;
+
+  /// No description provided for @understood.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entendido'**
+  String get understood;
+
+  /// No description provided for @bodyScannerTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Scanner Corporal'**
+  String get bodyScannerTitle;
+
+  /// No description provided for @howItWorks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como Funciona o Scanner?'**
+  String get howItWorks;
+
+  /// No description provided for @scannerTutorialSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Siga as posições abaixo para a IA extrair suas medidas baseadas na sua foto.'**
+  String get scannerTutorialSubtitle;
+
+  /// No description provided for @frontDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fique de frente, pés separados e braços abertos mostrando a cintura.'**
+  String get frontDesc;
+
+  /// No description provided for @sideDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fique de lado, coluna reta, braços ao lado do corpo.'**
+  String get sideDesc;
+
+  /// No description provided for @backDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fique de costas para a câmera, mesma postura da frente.'**
+  String get backDesc;
+
+  /// No description provided for @viewEvolutionHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver Meu Histórico de Evolução'**
+  String get viewEvolutionHistory;
+
+  /// No description provided for @camera.
+  ///
+  /// In pt, this message translates to:
+  /// **'Câmera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Galeria'**
+  String get gallery;
+
+  /// No description provided for @scannerReport.
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório do Scanner'**
+  String get scannerReport;
+
+  /// No description provided for @chestEstimated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Peito (Estimado)'**
+  String get chestEstimated;
+
+  /// No description provided for @waistEstimated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cintura (Estimada)'**
+  String get waistEstimated;
+
+  /// No description provided for @hipsEstimated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quadril (Estimado)'**
+  String get hipsEstimated;
+
+  /// No description provided for @estimatedIAValues.
+  ///
+  /// In pt, this message translates to:
+  /// **'* Valores estimados via IA baseados na pose e altura.'**
+  String get estimatedIAValues;
+
+  /// No description provided for @uploadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro no upload: {error}'**
+  String uploadError(Object error);
 }
 
 class _AppLocalizationsDelegate

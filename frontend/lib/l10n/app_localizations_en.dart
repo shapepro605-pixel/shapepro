@@ -126,7 +126,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
+  String get deleteAccountTitle => 'Delete Account?';
+
+  @override
+  String get deleteAccountDesc =>
+      'This will permanently delete all your data. Do you wish to continue?';
+
+  @override
   String get help => 'Help';
+
+  @override
+  String get aboutApp => 'About App';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
 
   @override
   String get logout => 'Logout';
@@ -196,7 +209,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This helps us calculate your nutritional needs';
 
   @override
-  String get currentWeight => 'Current weight';
+  String get currentWeight => 'Weight';
 
   @override
   String get yourObjective => 'Your objective';
@@ -288,10 +301,114 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createMyAccount => 'Create my account';
 
   @override
-  String get myDiet => 'My Diet';
+  String get myEvolution => 'My Evolution';
+
+  @override
+  String get nextCheckin => 'Next Check-in';
+
+  @override
+  String get scansHistory => 'Scans History';
+
+  @override
+  String daysRemainingDesc(int days) {
+    return '$days days remaining for your next comparison scan.';
+  }
+
+  @override
+  String get timeToUpdate => 'Time to Update!';
+
+  @override
+  String get newScanNow => 'Do a new scan now to see your results!';
+
+  @override
+  String get neck => 'Neck';
+
+  @override
+  String get shoulders => 'Shoulders';
+
+  @override
+  String get chest => 'Chest';
+
+  @override
+  String get waist => 'Waist';
+
+  @override
+  String get hips => 'Hips';
+
+  @override
+  String get leftArm => 'Left Arm';
+
+  @override
+  String get rightArm => 'Right Arm';
+
+  @override
+  String get leftThigh => 'Left Thigh';
+
+  @override
+  String get rightThigh => 'Right Thigh';
+
+  @override
+  String get leftCalf => 'Left Calf';
+
+  @override
+  String get rightCalf => 'Right Calf';
+
+  @override
+  String get iaMeasures => 'AI Measures';
+
+  @override
+  String get days => 'DAYS';
+
+  @override
+  String get remvovePhoto => 'Remove current photo';
+
+  @override
+  String get photoUpdated => 'Profile photo updated!';
+
+  @override
+  String get errorPhoto => 'Error uploading photo.';
+
+  @override
+  String get session => 'Session';
+
+  @override
+  String get frontType => 'FRONT';
+
+  @override
+  String get sideType => 'SIDE';
+
+  @override
+  String get backType => 'BACK';
+
+  @override
+  String get height => 'Height';
+
+  @override
+  String get bmi => 'BMI';
+
+  @override
+  String get deletePhotoTitle => 'Delete Photo?';
+
+  @override
+  String get deletePhotoDesc =>
+      'Do you want to remove this photo from your history? This action cannot be undone.';
+
+  @override
+  String get photoRemoved => 'Photo removed successfully!';
+
+  @override
+  String errorDeleting(String error) {
+    return 'Error deleting: $error';
+  }
 
   @override
   String get generate => 'Generate';
+
+  @override
+  String get myDiet => 'My Diet';
+
+  @override
+  String get delete => 'Delete';
 
   @override
   String get adjustRoute => 'Adjust Route';
@@ -669,12 +786,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get city => 'City';
 
   @override
-  String get monthlyIncome => 'Monthly Income (R\$)';
-
-  @override
-  String get dietBudget => 'Monthly Diet Budget (R\$)';
-
-  @override
   String get reportPrice => 'Report Price';
 
   @override
@@ -685,6 +796,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savePrice => 'SAVE PRICE';
+
+  @override
+  String get registerWeightToSeeChart => 'Log your weight to see the chart';
+
+  @override
+  String monthlyIncome(Object currency) {
+    return 'Monthly Income ($currency)';
+  }
+
+  @override
+  String dietBudget(Object currency) {
+    return 'Monthly Diet Budget ($currency)';
+  }
 
   @override
   String get time => 'Time';
@@ -731,9 +855,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullBodyFunctional => 'Full Body / Functional';
 
   @override
-  String get logWeightToChart => 'Log your weight to see the chart';
-
-  @override
   String get noChampionships => 'No championships available';
 
   @override
@@ -756,4 +877,245 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get uploading => 'Uploading...';
+
+  @override
+  String get saveChanges => 'SAVE CHANGES';
+
+  @override
+  String get personalInfo => 'Personal Information';
+
+  @override
+  String get locationAndFinance => 'Location & Finance';
+
+  @override
+  String get profileUpdateSuccess => 'Profile updated successfully!';
+
+  @override
+  String get profileUpdateError => 'Error updating profile';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get selectCountry => 'Select country';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get incomeHint => 'Ex: 3500.00';
+
+  @override
+  String get budgetHint => 'How much can you spend on diet?';
+
+  @override
+  String get stateHint => 'Ex: NY or Florida';
+
+  @override
+  String get cityHint => 'Ex: New York or Miami';
+
+  @override
+  String get brazil => 'Brazil';
+
+  @override
+  String get usa => 'USA';
+
+  @override
+  String get canada => 'Canada';
+
+  @override
+  String get uk => 'United Kingdom';
+
+  @override
+  String get privacyIntroTitle => 'Introduction';
+
+  @override
+  String get privacyIntroDesc =>
+      'ShapePro is committed to protecting your privacy. This policy describes how we collect and use your data to provide personalized workout and diet plans.';
+
+  @override
+  String get privacyDataTitle => 'Data Collection';
+
+  @override
+  String get privacyDataDesc =>
+      'We collect information such as email, phone, weight, height, age, and activity level. This data is used exclusively for calculating your plan and tracking progress.';
+
+  @override
+  String get privacyPaymentTitle => 'Subscriptions & Payments';
+
+  @override
+  String get privacyPaymentDesc =>
+      'Subscriptions are processed through the Google Play Store. Cancellation can be made at any time in your Google account settings.';
+
+  @override
+  String get privacyDeleteTitle => 'Data Deletion';
+
+  @override
+  String get privacyDeleteDesc =>
+      'You can request the permanent deletion of your account and all associated data at any time through the Settings menu in the application.';
+
+  @override
+  String get privacyContactTitle => 'Contact';
+
+  @override
+  String get privacyContactDesc =>
+      'For questions about privacy, contact: support@shapepro.app';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get lastUpdate => 'Last update';
+
+  @override
+  String get approximateValues =>
+      '* Approximate weight and measurement values.';
+
+  @override
+  String get locationAndFinanceSubtitle =>
+      'This data helps the AI suggest food with the best cost-benefit in your region.';
+
+  @override
+  String get mandatory => 'Required';
+
+  @override
+  String get ageHint => 'Ex: 25';
+
+  @override
+  String get heightHint => 'Ex: 175';
+
+  @override
+  String get weightHint => 'Ex: 70.5';
+
+  @override
+  String get suggestedWorkouts => 'Suggested Workouts';
+
+  @override
+  String get suggestedWorkoutsDesc =>
+      'Planned specifically for your goal (AI).';
+
+  @override
+  String workoutNum(Object type) {
+    return 'Workout $type';
+  }
+
+  @override
+  String get healthProfile => 'ShapePro Health Profile';
+
+  @override
+  String get bodyMeasurements => 'Body Measurements (AI)';
+
+  @override
+  String get rightForearm => 'Right Forearm';
+
+  @override
+  String get leftForearm => 'Left Forearm';
+
+  @override
+  String get healthIndicators => 'Health Indicators';
+
+  @override
+  String get waistHipRatio => 'Waist/Hip Ratio';
+
+  @override
+  String get waistHeightRatio => 'Waist/Height Ratio';
+
+  @override
+  String get vShape => 'V-Shape';
+
+  @override
+  String get recentManualMeasures => 'Recent Manual Measures';
+
+  @override
+  String get fatPercentage => 'Fat %';
+
+  @override
+  String photosAttached(Object count) {
+    return '$count photos attached';
+  }
+
+  @override
+  String get noScansPerformed => 'No scans performed';
+
+  @override
+  String get scansWillAppearHere =>
+      'Your photos and measurements will appear here.';
+
+  @override
+  String get legalDisclaimer => 'ShapePro Legal Disclaimer';
+
+  @override
+  String get informativePurposeTitle => 'Informative Purpose';
+
+  @override
+  String get informativePurposeDesc =>
+      'Body measurements shown are ESTIMATES generated by AI algorithms. These values are not exact and should only be used for monitoring trends and personal motivation.';
+
+  @override
+  String get notAMedicalDeviceTitle => 'Not a Medical Device';
+
+  @override
+  String get notAMedicalDeviceDesc =>
+      'ShapePro App is not a medical device and does not provide diagnoses. Results do not replace professional physical evaluations.';
+
+  @override
+  String get consultProfessionalsTitle => 'Consult Professionals';
+
+  @override
+  String get consultProfessionalsDesc =>
+      'Always consult your doctor or nutritionist before starting new diets or intense exercise routines.';
+
+  @override
+  String get understood => 'Understood';
+
+  @override
+  String get bodyScannerTitle => 'Body Scanner';
+
+  @override
+  String get howItWorks => 'How it works?';
+
+  @override
+  String get scannerTutorialSubtitle =>
+      'Follow the positions below for AI to extract your measurements based on your photo.';
+
+  @override
+  String get frontDesc =>
+      'Stand facing the camera, feet apart and arms open showing your waist.';
+
+  @override
+  String get sideDesc => 'Stand sideways, straight back, arms at your side.';
+
+  @override
+  String get backDesc =>
+      'Stand with your back to the camera, same posture as the front.';
+
+  @override
+  String get viewEvolutionHistory => 'View My Evolution History';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get scannerReport => 'Scanner Report';
+
+  @override
+  String get chestEstimated => 'Chest (Estimated)';
+
+  @override
+  String get waistEstimated => 'Waist (Estimated)';
+
+  @override
+  String get hipsEstimated => 'Hips (Estimated)';
+
+  @override
+  String get estimatedIAValues =>
+      '* AI estimated values based on pose and height.';
+
+  @override
+  String uploadError(Object error) {
+    return 'Upload error: $error';
+  }
 }

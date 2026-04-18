@@ -6,6 +6,7 @@ import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../services/notification_service.dart';
 import '../widgets/upgrade_sheet.dart';
+import '../utils/currency_helper.dart';
 import 'workout_details.dart';
 
 class DietaScreen extends StatefulWidget {
@@ -100,7 +101,7 @@ class _DietaScreenState extends State<DietaScreen> {
               children: [
                 const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
                 const SizedBox(width: 12),
-                Text("${l10n?.diet_generated ?? ''} & ${l10n?.trainingCoordination ?? 'Treinos atualizados!'}"),
+                Text("${l10n?.diet_generated ?? ''} & ${l10n?.trainingCoordination ?? ''}"),
               ],
             ),
             backgroundColor: const Color(0xFF2ED573),
@@ -139,7 +140,7 @@ class _DietaScreenState extends State<DietaScreen> {
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                prefixText: 'R\$ ',
+                prefixText: '${CurrencyHelper.getSymbol(api.currentUser?['moeda'])} ',
                 hintText: l10n.pricePlaceholder,
                 hintStyle: const TextStyle(color: Colors.white24),
               ),
@@ -482,7 +483,7 @@ class _DietaScreenState extends State<DietaScreen> {
                    const Icon(Icons.info_outline, color: Colors.white38, size: 14),
                    const SizedBox(width: 6),
                    Text(
-                     "* Valores aproximados de peso e medidas.",
+                     AppLocalizations.of(context)!.approximateValues,
                      style: GoogleFonts.inter(fontSize: 11, color: Colors.white38, fontStyle: FontStyle.italic),
                    ),
                 ],
@@ -508,11 +509,11 @@ class _DietaScreenState extends State<DietaScreen> {
 
           // ── Treinos Sincronizados ──────────────────────────────
           if (_treinosSincronizados.isNotEmpty) ...[
-            Text('Treinos Sugeridos', style: GoogleFonts.inter(
+            Text(AppLocalizations.of(context)!.suggestedWorkouts, style: GoogleFonts.inter(
               fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white,
             )),
             const SizedBox(height: 6),
-            Text('Planejados especialmente para seu objetivo (IA).', style: GoogleFonts.inter(
+            Text(AppLocalizations.of(context)!.suggestedWorkoutsDesc, style: GoogleFonts.inter(
               fontSize: 13, color: Colors.white54,
             )),
             const SizedBox(height: 14),
@@ -574,7 +575,7 @@ class _DietaScreenState extends State<DietaScreen> {
                       color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text('Treino $tipo', style: GoogleFonts.inter(
+                    child: Text(AppLocalizations.of(context)!.workoutNum(tipo), style: GoogleFonts.inter(
                       color: color, fontWeight: FontWeight.w800, fontSize: 13,
                     )),
                   ),
@@ -781,7 +782,7 @@ class _DietaScreenState extends State<DietaScreen> {
                           color: Colors.white.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: const Icon(Icons.add_circle_outline, color: Color(0xFF2ED573), size: 16),
+                        child: const Icon(Icons.edit_outlined, color: Color(0xFF2ED573), size: 16),
                       ),
                     ),
                   ],
@@ -804,6 +805,7 @@ class _DietaScreenState extends State<DietaScreen> {
     final estimatedDailyCost = (_dieta!['calorias_totais'] as num).toDouble() / 200 * 2.5; // Heurística
     final estimatedMonthlyCost = estimatedDailyCost * 30;
     final percent = (estimatedMonthlyCost / userBudget).clamp(0.0, 1.2);
+    final currency = api.currentUser?['moeda'] ?? 'BRL';
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -819,9 +821,12 @@ class _DietaScreenState extends State<DietaScreen> {
             children: [
               const Icon(Icons.account_balance_wallet, color: Color(0xFF2ED573), size: 20),
               const SizedBox(width: 10),
-              Text('Controle de Orçamento', style: GoogleFonts.inter(
-                fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white,
-              )),
+              Text(
+                'Controle de Orçamento', // TODO: Add to ARB if needed, or keep for now
+                style: GoogleFonts.inter(
+                  fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -836,12 +841,18 @@ class _DietaScreenState extends State<DietaScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Estimado: R\$ ${estimatedMonthlyCost.toStringAsFixed(2)}', style: GoogleFonts.inter(color: Colors.white70, fontSize: 13)),
-              Text('Meta: R\$ ${userBudget.toStringAsFixed(2)}', style: GoogleFonts.inter(
-                color: percent > 1.0 ? Colors.redAccent : Colors.white38, 
-                fontSize: 13,
-                fontWeight: percent > 1.0 ? FontWeight.bold : FontWeight.normal,
-              )),
+              Text(
+                'Estimado: ${CurrencyHelper.format(estimatedMonthlyCost, currency)}',
+                style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
+              ),
+              Text(
+                'Meta: ${CurrencyHelper.format(userBudget, currency)}',
+                style: GoogleFonts.inter(
+                  color: percent > 1.0 ? Colors.redAccent : Colors.white38, 
+                  fontSize: 13,
+                  fontWeight: percent > 1.0 ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
             ],
           ),
           if (percent > 1.0) ...[
