@@ -182,12 +182,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final api = Provider.of<ApiService>(context, listen: false);
     await api.init();
     
-    // Check if phone is verified
-    if (api.currentUser != null && api.currentUser!['telefone_verificado'] == false) {
-       if (mounted) {
-         Navigator.pushReplacementNamed(context, '/verify_sms'); 
-         return;
-       }
+    // Check if user is verified (either email or phone)
+    if (api.currentUser != null) {
+      final user = api.currentUser!;
+      final bool phoneVerified = user['telefone_verificado'] == true;
+      final bool emailVerified = user['email_verificado'] == true;
+      
+      if (!phoneVerified && !emailVerified) {
+         if (mounted) {
+           Navigator.pushReplacementNamed(context, '/verify_choice'); 
+           return;
+         }
+      }
     }
 
     final result = await api.getProgresso();

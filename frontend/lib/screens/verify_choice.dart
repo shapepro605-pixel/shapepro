@@ -11,9 +11,22 @@ class VerifyChoiceScreen extends StatefulWidget {
 }
 
 class _VerifyChoiceScreenState extends State<VerifyChoiceScreen> {
+  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
 
   Future<void> _sendEmailVerification() async {
     setState(() {
@@ -29,7 +42,7 @@ class _VerifyChoiceScreenState extends State<VerifyChoiceScreen> {
       setState(() {
         _isLoading = false;
         if (response['success'] == true) {
-          _successMessage = 'E-mail enviado! Clique no link lá na sua caixa de entrada e depois clique aqui em "Já verifiquei".';
+          _successMessage = 'Código enviado! Verifique seu e-mail e digite os 6 dígitos abaixo.';
         } else {
           _errorMessage = response['error'] ?? 'Erro ao enviar e-mail.';
         }
@@ -61,6 +74,78 @@ class _VerifyChoiceScreenState extends State<VerifyChoiceScreen> {
         _successMessage = null;
       });
     }
+  }
+
+  Future<void> _verifyOtpCode() async {
+    String code = _controllers.map((c) => c.text).join();
+    if (code.length < 6) {
+      setState(() => _errorMessage = 'Digite o código completo de 6 dígitos.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final api = Provider.of<ApiService>(context, listen: false);
+    final result = await api.verifyEmailCode(code);
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (result['success'] == true) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        setState(() {
+          _errorMessage = result['error'] ?? 'Código inválido.';
+        });
+      }
+    }
+  }
+
+  Widget _buildOtpBox(int index) {
+    return SizedBox(
+      width: 45,
+      height: 55,
+      child: TextFormField(
+        controller: _controllers[index],
+        focusNode: _focusNodes[index],
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+        style: GoogleFonts.inter(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+        decoration: InputDecoration(
+          counterText: "",
+          fillColor: const Color(0xFF1E1E38),
+          filled: true,
+          contentPadding: EdgeInsets.zero,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFF2A2A4A)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFF6C5CE7), width: 2),
+          ),
+        ),
+        onChanged: (value) {
+          if (value.isNotEmpty && index < 5) {
+            _focusNodes[index + 1].requestFocus();
+          } else if (value.isEmpty && index > 0) {
+            _focusNodes[index - 1].requestFocus();
+          }
+          if (index == 5 && value.isNotEmpty) {
+            _verifyOtpCode();
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -112,27 +197,48 @@ class _VerifyChoiceScreenState extends State<VerifyChoiceScreen> {
                   ),
 
                 if (_successMessage != null)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(14),
-                    margin: const EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF00B894).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF00B894).withValues(alpha: 0.3)),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(_successMessage!, style: GoogleFonts.inter(color: const Color(0xFF00B894), fontSize: 13), textAlign: TextAlign.center),
-                        const SizedBox(height: 15),
-                        ElevatedButton.icon(
-                          onPressed: _isLoading ? null : _checkIfEmailVerified,
-                          icon: const Icon(Icons.check_circle_outline),
-                          label: const Text('Já verifiquei! Entrar no App'),
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00B894)),
-                        )
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00B894).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFF00B894).withValues(alpha: 0.3)),
+                        ),
+                        child: Text(_successMessage!, style: GoogleFonts.inter(color: const Color(0xFF00B894), fontSize: 13), textAlign: TextAlign.center),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(6, (index) => _buildOtpBox(index)),
+                      ),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _verifyOtpCode,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6C5CE7),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                              : Text(
+                                  "Confirmar Código",
+                                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      TextButton(
+                        onPressed: _isLoading ? null : _checkIfEmailVerified,
+                        child: const Text('Já cliquei no link mágico em vez disso'),
+                      )
+                    ],
                   ),
 
                 if (_successMessage == null) ...[

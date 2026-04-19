@@ -112,8 +112,8 @@ def register():
         db.session.commit()
         
         # --- Trigger Verification Email ---
-        # Generate a unique token
-        token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+        # Generate a 6 digit code
+        token = ''.join(secrets.choice(string.digits) for _ in range(6))
         new_user.otp_code = token
         db.session.commit()
 
@@ -125,7 +125,7 @@ def register():
         msg = Message(
             subject="Bem-vindo ao ShapePro - Verifique sua conta",
             recipients=[email],
-            body=f"Olá {nome},\n\nSua conta foi criada com sucesso! Falta apenas um passo para você começar sua jornada fitness.\n\nClique no link abaixo para verificar seu e-mail e ativar todas as funcionalidades:\n\n{verify_link}\n\nSe você não solicitou este cadastro, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
+            body=f"Olá {nome},\n\nSua conta foi criada com sucesso! Falta apenas um passo para você começar sua jornada fitness.\n\nSeu código de verificação é:\n\n{token}\n\nVocê também pode clicar no link abaixo para verificar seu e-mail automaticamente:\n\n{verify_link}\n\nSe você não solicitou este cadastro, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
         )
         _send_async_email(current_app, msg, "REGISTRO")
         # ---------------------------------
@@ -529,8 +529,8 @@ def send_verification_email():
     if user.email_verificado:
         return jsonify({'success': True, 'message': 'E-mail já verificado.'}), 200
         
-    # Generate a unique token (max 10 chars for DB compatibility)
-    token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+    # Generate a 6 digit code
+    token = ''.join(secrets.choice(string.digits) for _ in range(6))
     user.otp_code = token
     db.session.commit()
     
@@ -542,7 +542,7 @@ def send_verification_email():
     msg = Message(
         subject="Verifique sua conta ShapePro",
         recipients=[user.email],
-        body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nClique no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
+        body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nSeu código de verificação é:\n\n{token}\n\nVocê também pode clicar no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
     )
 
     _send_async_email(current_app, msg, "VERIFY_EMAIL")
@@ -588,5 +588,29 @@ def verify_email_endpoint():
         </body>
     </html>
     '''
+
+@auth_bp.route('/verify_email_code', methods=['POST'])
+@jwt_required()
+def verify_email_code():
+    """Verify email via 6-digit OTP code directly in the app."""
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+    
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado.'}), 404
+        
+    data = request.get_json()
+    code = str(data.get('code', '')).strip()
+    
+    if not code:
+        return jsonify({'error': 'Código não fornecido.'}), 400
+        
+    if user.otp_code and user.otp_code == code:
+        user.email_verificado = True
+        user.otp_code = None
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'E-mail verificado com sucesso!', 'user': user.to_dict()}), 200
+        
+    return jsonify({'error': 'Código inválido ou expirado.'}), 400
 
 

@@ -27,6 +27,7 @@ class ApiService extends ChangeNotifier {
   static const String currentAppVersion = "1.0.1";
   
   String? _accessToken;
+  String? _refreshToken;
   Map<String, dynamic>? _currentUser;
   bool _isLoading = false;
   Locale _locale = const Locale('pt', 'BR');
@@ -58,6 +59,7 @@ class ApiService extends ChangeNotifier {
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _accessToken = prefs.getString('access_token');
+    _refreshToken = prefs.getString('refresh_token');
     final userJson = prefs.getString('current_user');
     if (userJson != null) {
       _currentUser = jsonDecode(userJson);
@@ -181,10 +183,40 @@ class ApiService extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> _saveTokens(String access) async {
+  Future<void> _saveTokens(String access, {String? refresh}) async {
     _accessToken = access;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('access_token', access);
+    if (refresh != null) {
+      _refreshToken = refresh;
+      await prefs.setString('refresh_token', refresh);
+    }
+  }
+
+  Future<bool> _refreshAccessToken() async {
+    if (_refreshToken == null) return false;
+    try {
+      final uri = Uri.parse('$baseUrl/auth/refresh');
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_refreshToken',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['access_token'] != null) {
+          await _saveTokens(data['access_token']);
+          Log.s('Token refreshed successfully');
+          return true;
+        }
+      }
+    } catch (e) {
+      Log.e('Token refresh failed: $e');
+    }
+    return false;
   }
 
   Future<void> _saveUser(Map<String, dynamic> user) async {
@@ -200,6 +232,7 @@ class ApiService extends ChangeNotifier {
     String method,
     String endpoint, {
     Map<String, dynamic>? body,
+    bool isRetry = false,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -250,6 +283,18 @@ class ApiService extends ChangeNotifier {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return {'success': true, ...data};
+      } else if (response.statusCode == 401 && !isRetry && _refreshToken != null) {
+        Log.i('Token expired, attempting auto-refresh...');
+        final refreshed = await _refreshAccessToken();
+        if (refreshed) {
+          return _request(method, endpoint, body: body, isRetry: true);
+        }
+        Log.e('Auto-refresh failed, session expired');
+        await logout();
+        return {
+          'success': false,
+          'error': data['error'] ?? 'Sessão expirada. Faça login novamente.',
+        };
       } else {
         Log.e('API ERROR RESPONSE: ${response.body}');
         return {
@@ -300,7 +345,7 @@ class ApiService extends ChangeNotifier {
     });
 
     if (result['success'] == true) {
-      await _saveTokens(result['access_token']);
+      await _saveTokens(result['access_token'], refresh: result['refresh_token']);
       await _saveUser(result['user']);
     }
     return result;
@@ -314,7 +359,7 @@ class ApiService extends ChangeNotifier {
     });
     if (result['success'] == true) {
       if (result['access_token'] != null) {
-        await _saveTokens(result['access_token']);
+        await _saveTokens(result['access_token'], refresh: result['refresh_token']);
       }
       if (result['user'] != null) {
         await _saveUser(result['user']);
@@ -357,7 +402,7 @@ class ApiService extends ChangeNotifier {
     });
     if (result['success'] == true) {
       if (result['access_token'] != null) {
-        await _saveTokens(result['access_token']);
+        await _saveTokens(result['access_token'], refresh: result['refresh_token']);
       }
       if (result['user'] != null) {
         await _saveUser(result['user']);
@@ -383,6 +428,14 @@ class ApiService extends ChangeNotifier {
     return await _request('POST', '/auth/send_verification_email');
   }
 
+  Future<Map<String, dynamic>> verifyEmailCode(String code) async {
+    final result = await _request('POST', '/auth/verify_email_code', body: {'code': code});
+    if (result['success'] == true && result['user'] != null) {
+      await _saveUser(result['user']);
+    }
+    return result;
+  }
+
   Future<Map<String, dynamic>> resetPassword(String email) async {
     return await _request('POST', '/auth/reset_password', body: {'email': email});
   }
@@ -397,7 +450,7 @@ class ApiService extends ChangeNotifier {
     });
 
     if (result['success'] == true) {
-      await _saveTokens(result['access_token']);
+      await _saveTokens(result['access_token'], refresh: result['refresh_token']);
       await _saveUser(result['user']);
     }
     return result;
@@ -405,9 +458,11 @@ class ApiService extends ChangeNotifier {
 
   Future<void> logout() async {
     _accessToken = null;
+    _refreshToken = null;
     _currentUser = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('access_token');
+    await prefs.remove('refresh_token');
     await prefs.remove('current_user');
     notifyListeners();
   }
@@ -619,6 +674,9 @@ class ApiService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('biometric_token', _accessToken!);
       await prefs.setString('biometric_user', jsonEncode(_currentUser));
+      if (_refreshToken != null) {
+        await prefs.setString('biometric_refresh_token', _refreshToken!);
+      }
     }
   }
 
@@ -637,11 +695,13 @@ class ApiService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final bToken = prefs.getString('biometric_token');
     final bUserJson = prefs.getString('biometric_user');
+    final bRefresh = prefs.getString('biometric_refresh_token');
     
     if (bToken != null && bUserJson != null) {
       _accessToken = bToken;
+      _refreshToken = bRefresh;
       _currentUser = jsonDecode(bUserJson);
-      await _saveTokens(bToken);
+      await _saveTokens(bToken, refresh: bRefresh);
       await _saveUser(_currentUser!);
       return true;
     }
