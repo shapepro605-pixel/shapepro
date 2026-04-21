@@ -560,7 +560,7 @@ def send_verification_email():
     )
 
     # --- ASYNC MODE: Backend thread sending ---
-    _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=False)
+    _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=True)
     
     return jsonify({
         'success': True,
