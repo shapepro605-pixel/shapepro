@@ -635,3 +635,84 @@ def verify_email_code():
     return jsonify({'error': 'Código inválido ou expirado.'}), 400
 
 
+@auth_bp.route('/diag_email', methods=['GET'])
+def diagnostic_email():
+    """Detailed diagnostic route to test SMTP connection on the server."""
+    import smtplib
+    import ssl
+    import socket
+    from flask import current_app, jsonify
+    
+    email_user = current_app.config.get('MAIL_USERNAME')
+    email_pass = current_app.config.get('MAIL_PASSWORD')
+    server = current_app.config.get('MAIL_SERVER')
+    port = current_app.config.get('MAIL_PORT')
+    use_tls = current_app.config.get('MAIL_USE_TLS')
+    use_ssl = current_app.config.get('MAIL_USE_SSL')
+    
+    results = {
+        'config': {
+            'server': server,
+            'port': port,
+            'use_tls': use_tls,
+            'use_ssl': use_ssl,
+            'user_set': email_user is not None,
+            'pass_set': email_pass is not None,
+        },
+        'steps': []
+    }
+    
+    def log_step(name, status, details=None):
+        results['steps'].append({'step': name, 'status': status, 'details': details})
+
+    # 1. DNS Check
+    try:
+        ip = socket.gethostbyname(server)
+        log_step('DNS Resolution', 'SUCCESS', f'IP: {ip}')
+    except Exception as e:
+        log_step('DNS Resolution', 'FAILED', str(e))
+        return jsonify(results), 200
+
+    # 2. Connection Check
+    try:
+        if use_ssl:
+            context = ssl.create_default_context()
+            s = smtplib.SMTP_SSL(server, port, context=context, timeout=10)
+        else:
+            s = smtplib.SMTP(server, port, timeout=10)
+            if use_tls:
+                s.starttls(context=ssl.create_default_context())
+        
+        log_step('SMTP Connection', 'SUCCESS')
+        
+        # 3. Login Check
+        try:
+            if not email_user or not email_pass:
+                log_step('SMTP Login', 'FAILED', 'MAIL_USERNAME or MAIL_PASSWORD not configured in environment')
+            else:
+                s.login(email_user, email_pass)
+                log_step('SMTP Login', 'SUCCESS')
+                
+                # 4. Test Send
+                try:
+                    from flask_mail import Message
+                    msg = Message(
+                        subject="Teste de Diagnostico ShapePro",
+                        recipients=[email_user],
+                        body="Teste de conexao do servidor Railway."
+                    )
+                    current_app.mail.send(msg)
+                    log_step('Send Email', 'SUCCESS')
+                except Exception as e:
+                    log_step('Send Email', 'FAILED', str(e))
+            s.quit()
+        except Exception as e:
+            log_step('SMTP Login', 'FAILED', str(e))
+            
+    except Exception as e:
+        log_step('SMTP Connection', 'FAILED', str(e))
+        
+    return jsonify(results), 200
+
+
+
