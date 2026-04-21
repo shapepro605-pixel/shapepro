@@ -560,8 +560,14 @@ def send_verification_email():
     )
 
     # --- ASYNC MODE: Backend thread sending ---
-    _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=True)
+    success, error_msg = _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=True)
     
+    if not success:
+        return jsonify({
+            'success': false,
+            'error': f'Falha no envio do e-mail: {error_msg}'
+        }), 500
+        
     return jsonify({
         'success': True,
         'message': 'Link de verificação enviado para seu e-mail!'
