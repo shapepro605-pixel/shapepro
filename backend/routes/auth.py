@@ -125,24 +125,26 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         
-        # --- Trigger Verification Email ---
-        # Generate a 6 digit code
-        token = ''.join(secrets.choice(string.digits) for _ in range(6))
-        new_user.otp_code = token
-        db.session.commit()
-
-        # Create verification link
-        base_url = "https://shapepro-production.up.railway.app"
-        verify_link = f"{base_url}/api/auth/verify_email?uid={new_user.id}&token={token}"
-        
-        from flask_mail import Message
-        msg = Message(
-            subject="Bem-vindo ao ShapePro - Verifique sua conta",
-            recipients=[email],
-            body=f"Olá {nome},\n\nSua conta foi criada com sucesso! Falta apenas um passo para você começar sua jornada fitness.\n\nSeu código de verificação é:\n\n{token}\n\nVocê também pode clicar no link abaixo para verificar seu e-mail automaticamente:\n\n{verify_link}\n\nSe você não solicitou este cadastro, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
-        )
-        _send_async_email(current_app, msg, "REGISTRO")
-        # ---------------------------------
+        # --- Firebase Auth Sync ---
+        if is_firebase_initialized():
+            try:
+                from firebase_admin import auth as firebase_auth
+                try:
+                    # Check if user already exists in Firebase
+                    firebase_auth.get_user_by_email(email)
+                    print(f"[FIREBASE] User {email} already exists in Firebase.")
+                except:
+                    # Create new user in Firebase Auth
+                    firebase_auth.create_user(
+                        email=email,
+                        password=password,
+                        display_name=nome,
+                        uid=str(new_user.id) # Keep UIDs in sync
+                    )
+                    print(f"[FIREBASE] User {email} created in Firebase Auth.")
+            except Exception as fe:
+                print(f"[FIREBASE] Sync error: {fe}")
+        # --------------------------
 
     except Exception as e:
         db.session.rollback()
