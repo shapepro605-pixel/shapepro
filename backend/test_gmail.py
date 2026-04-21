@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 465
 MAIL_USERNAME = 'shapepro605@gmail.com'
-MAIL_PASSWORD = 'tmvxvhxkgcnnlkhr'
+MAIL_PASSWORD = 'xhqncucedyvjpucu'
 
 def test_email():
     print(f"Tentando conectar ao Gmail SMTP {MAIL_SERVER}:{MAIL_PORT} (SSL)...")

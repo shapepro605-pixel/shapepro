@@ -60,3 +60,5 @@ firebase_single_line.txt
 frontend/flutter_live_debug_current.txt
 verify_email_fix.py
 test_gmail_local.py
+usb_logs*.txt
+latest_logs.txt

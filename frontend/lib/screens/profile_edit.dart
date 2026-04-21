@@ -247,7 +247,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               CustomLabel(label: l10n.country),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: _pais,
+                initialValue: _pais,
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
@@ -262,8 +262,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     setState(() {
                       _pais = val;
                       // Atualiza moeda automaticamente
-                      if (val == 'BR') _moeda = 'BRL';
-                      else if (val == 'US') _moeda = 'USD';
+                      if (val == 'BR') {
+                        _moeda = 'BRL';
+                      } else if (val == 'US') _moeda = 'USD';
                       else if (val == 'CA') _moeda = 'CAD';
                       else if (val == 'GB') _moeda = 'GBP';
                     });

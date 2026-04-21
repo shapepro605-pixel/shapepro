@@ -30,8 +30,22 @@ def _verify_firebase_token(id_token):
         return None
 
 
-def _send_async_email(app, message, diagnostic_prefix="EMAIL"):
-    """Internal helper to send email in a background thread with diagnostics."""
+def _send_async_email(app, message, diagnostic_prefix="EMAIL", sync=False):
+    """Internal helper to send email. If sync=True, sends blocking to catch errors."""
+    if sync:
+        try:
+            recipient = message.recipients[0] if message.recipients else "desconhecido"
+            print(f"\n[{diagnostic_prefix}] 📨 [SYNC] Enviando para {recipient}...")
+            # Use real app context for synchronous sending too
+            with app.app_context():
+                app.mail.send(message)
+            print(f"[{diagnostic_prefix}] ✅ [SYNC] ENVIADO COM SUCESSO!\n")
+            return True, "Enviado"
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[{diagnostic_prefix}] ❌ [SYNC] FALHA: {error_msg}\n")
+            return False, error_msg
+
     from threading import Thread
     
     def send_thread(app_ctx, msg):
@@ -545,8 +559,15 @@ def send_verification_email():
         body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nSeu código de verificação é:\n\n{token}\n\nVocê também pode clicar no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
     )
 
-    _send_async_email(current_app, msg, "VERIFY_EMAIL")
+    # --- DIAGNOSTIC MODE: Synchronous sending ---
+    success, result = _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=True)
     
+    if not success:
+        return jsonify({
+            'success': False,
+            'error': f'Falha no servidor de e-mail: {result}'
+        }), 500
+        
     return jsonify({
         'success': True,
         'message': 'Link de verificação enviado para seu e-mail!'
