@@ -245,24 +245,24 @@ class ApiService extends ChangeNotifier {
 
       switch (method.toUpperCase()) {
         case 'GET':
-          response = await http.get(uri, headers: _headers).timeout(const Duration(seconds: 15));
+          response = await http.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
           break;
         case 'POST':
           response = await http.post(
             uri,
             headers: _headers,
             body: body != null ? jsonEncode(body) : null,
-          ).timeout(const Duration(seconds: 15));
+          ).timeout(const Duration(seconds: 30));
           break;
         case 'PUT':
           response = await http.put(
             uri,
             headers: _headers,
             body: body != null ? jsonEncode(body) : null,
-          ).timeout(const Duration(seconds: 15));
+          ).timeout(const Duration(seconds: 30));
           break;
         case 'DELETE':
-          response = await http.delete(uri, headers: _headers).timeout(const Duration(seconds: 15));
+          response = await http.delete(uri, headers: _headers).timeout(const Duration(seconds: 30));
           break;
         default:
           throw Exception('Método HTTP não suportado: $method');

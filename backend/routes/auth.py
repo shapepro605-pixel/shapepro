@@ -559,15 +559,9 @@ def send_verification_email():
         body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nSeu código de verificação é:\n\n{token}\n\nVocê também pode clicar no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
     )
 
-    # --- DIAGNOSTIC MODE: Synchronous sending ---
-    success, result = _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=True)
+    # --- ASYNC MODE: Backend thread sending ---
+    _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=False)
     
-    if not success:
-        return jsonify({
-            'success': False,
-            'error': f'Falha no servidor de e-mail: {result}'
-        }), 500
-        
     return jsonify({
         'success': True,
         'message': 'Link de verificação enviado para seu e-mail!'
