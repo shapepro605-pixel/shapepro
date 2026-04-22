@@ -30,44 +30,37 @@ def _verify_firebase_token(id_token):
         return None
 
 
-def _send_async_email(app, message, diagnostic_prefix="EMAIL", sync=False):
-    """Internal helper to send email. If sync=True, sends blocking to catch errors."""
-    if sync:
-        try:
-            recipient = message.recipients[0] if message.recipients else "desconhecido"
-            print(f"\n[{diagnostic_prefix}] 📨 [SYNC] Enviando para {recipient}...")
-            # Use real app context for synchronous sending too
-            with app.app_context():
-                app.mail.send(message)
-            print(f"[{diagnostic_prefix}] ✅ [SYNC] ENVIADO COM SUCESSO!\n")
-            return True, "Enviado"
-        except Exception as e:
-            error_msg = str(e)
-            print(f"[{diagnostic_prefix}] ❌ [SYNC] FALHA: {error_msg}\n")
-            return False, error_msg
-
+def _send_async_email(app, email_data, diagnostic_prefix="EMAIL"):
+    """Internal helper to send email via Firebase Cloud Function (Professional Relay)."""
+    import requests
     from threading import Thread
     
-    def send_thread(app_ctx, msg):
-        with app_ctx.app_context():
-            try:
-                recipient = msg.recipients[0] if msg.recipients else "desconhecido"
-                print(f"\n[{diagnostic_prefix}] 📨 Iniciando envio para {recipient}...")
-                print(f"  - Servidor: {app_ctx.config.get('MAIL_SERVER')}:{app_ctx.config.get('MAIL_PORT')}")
-                print(f"  - SSL: {app_ctx.config.get('MAIL_USE_SSL')}, TLS: {app_ctx.config.get('MAIL_USE_TLS')}")
+    def send_thread(data):
+        try:
+            # URL oficial da sua Cloud Function (2nd Gen)
+            cloud_function_url = "https://sendverificationcode-mhxdwt3ztq-uc.a.run.app"
+            
+            print(f"[{diagnostic_prefix}] 🚀 Revezando e-mail via Firebase para {data['email']}...")
+            
+            response = requests.post(
+                cloud_function_url,
+                json={
+                    "email": data["email"],
+                    "nome": data.get("nome", "Atleta"),
+                    "code": data["code"]
+                },
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                print(f"[{diagnostic_prefix}] ✅ CLOUD FUNCTION: E-MAIL ENVIADO COM SUCESSO!")
+            else:
+                print(f"[{diagnostic_prefix}] ❌ CLOUD FUNCTION ERRO ({response.status_code}): {response.text}")
                 
-                app_ctx.mail.send(msg)
-                print(f"[{diagnostic_prefix}] ✅ E-MAIL ENVIADO COM SUCESSO!\n")
-            except Exception as e:
-                print(f"[{diagnostic_prefix}] ❌ FALHA CRÍTICA NO ENVIO: {str(e)}\n")
+        except Exception as e:
+            print(f"[{diagnostic_prefix}] ❌ FALHA CRÍTICA AO CHAMAR CLOUD FUNCTION: {str(e)}")
 
-    # Obter o objeto real do app (lidando com LocalProxy se necessário)
-    try:
-        app_instance = app._get_current_object()
-    except AttributeError:
-        app_instance = app
-        
-    Thread(target=send_thread, args=(app_instance, message)).start()
+    Thread(target=send_thread, args=(email_data,)).start()
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -132,19 +125,28 @@ def register():
                 try:
                     # Check if user already exists in Firebase
                     firebase_auth.get_user_by_email(email)
-                    print(f"[FIREBASE] User {email} already exists in Firebase.")
                 except:
                     # Create new user in Firebase Auth
                     firebase_auth.create_user(
                         email=email,
                         password=password,
                         display_name=nome,
-                        uid=str(new_user.id) # Keep UIDs in sync
+                        uid=str(new_user.id)
                     )
-                    print(f"[FIREBASE] User {email} created in Firebase Auth.")
             except Exception as fe:
                 print(f"[FIREBASE] Sync error: {fe}")
-        # --------------------------
+        
+        # --- Trigger Verification Email via Firebase Relay ---
+        token = ''.join(secrets.choice(string.digits) for _ in range(6))
+        new_user.otp_code = token
+        db.session.commit()
+
+        _send_async_email(current_app, {
+            'email': email,
+            'nome': nome,
+            'code': token
+        }, "REGISTRO")
+        # ----------------------------------------------------
 
     except Exception as e:
         db.session.rollback()
@@ -517,15 +519,12 @@ def reset_password():
     user.password_hash = bcrypt.generate_password_hash(temp_password).decode('utf-8')
     db.session.commit()
 
-    # In production, send via email service.
-    from flask_mail import Message
-    msg = Message(
-        subject="Recuperacao de Senha - ShapePro",
-        recipients=[email],
-        body=f"Ola,\n\nRecebemos uma solicitacao de redefinicao de senha para sua conta ShapePro.\n\nSua nova senha temporaria e: {temp_password}\n\nRecomendamos que voce altere esta senha imediatamente apos entrar no aplicativo.\n\nAtenciosamente,\nEquipe ShapePro"
-    )
-
-    _send_async_email(current_app, msg, "PASSWORD_RESET")
+    # Send via Firebase Relay
+    _send_async_email(current_app, {
+        'email': email,
+        'nome': user.nome,
+        'code': temp_password
+    }, "PASSWORD_RESET")
 
     return jsonify({
         'success': True,
@@ -554,21 +553,14 @@ def send_verification_email():
     base_url = "https://shapepro-production.up.railway.app"
     verify_link = f"{base_url}/api/auth/verify_email?uid={user.id}&token={token}"
     
-    from flask_mail import Message
-    msg = Message(
-        subject="Verifique sua conta ShapePro",
-        recipients=[user.email],
-        body=f"Olá {user.nome},\n\nFalta pouco para você começar sua transformação!\n\nSeu código de verificação é:\n\n{token}\n\nVocê também pode clicar no link abaixo para verificar seu e-mail e ativar sua conta:\n\n{verify_link}\n\nSe você não solicitou este e-mail, pode ignorar esta mensagem.\n\nAtenciosamente,\nEquipe ShapePro"
-    )
-
-    # --- ASYNC MODE: Backend thread sending ---
-    success, error_msg = _send_async_email(current_app, msg, "VERIFY_EMAIL", sync=True)
+    # --- ASYNC MODE: Firebase Relay ---
+    _send_async_email(current_app, {
+        'email': user.email,
+        'nome': user.nome,
+        'code': token
+    }, "VERIFY_EMAIL")
     
-    if not success:
-        return jsonify({
-            'success': false,
-            'error': f'Falha no envio do e-mail: {error_msg}'
-        }), 500
+    # We return success immediately as the thread handles the relay
         
     return jsonify({
         'success': True,
