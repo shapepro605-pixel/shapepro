@@ -97,6 +97,31 @@ def toggle_user_status(target_id):
         'is_active': target_user.is_active
     }), 200
 
+@admin_bp.route('/api/admin/users/<int:target_id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(target_id):
+    user_id = get_jwt_identity()
+    if not check_admin(user_id):
+        return jsonify({'error': t('unauthorized')}), 403
+
+    if int(user_id) == target_id:
+        return jsonify({'error': t('cannot_ban_self')}), 400
+
+    target_user = User.query.get(target_id)
+    if not target_user:
+        return jsonify({'error': t('user_not_found')}), 404
+
+    try:
+        db.session.delete(target_user)
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'message': 'Usuário removido com sucesso.'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Falha ao excluir usuário: {str(e)}'}), 500
+
 @admin_bp.route('/api/admin/users/create', methods=['POST'])
 @jwt_required()
 def admin_create_user():

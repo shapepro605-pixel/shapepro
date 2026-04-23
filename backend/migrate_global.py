@@ -25,6 +25,14 @@ def migrate():
             safe_execute("ALTER TABLE users ADD COLUMN renda_mensal FLOAT DEFAULT 0;")
             safe_execute("ALTER TABLE users ADD COLUMN estado VARCHAR(100);")
             safe_execute("ALTER TABLE users ADD COLUMN cidade VARCHAR(100);")
+            
+            # Missing columns identified during debugging
+            safe_execute("ALTER TABLE users ADD COLUMN telefone VARCHAR(30);")
+            safe_execute("ALTER TABLE users ADD COLUMN telefone_verificado BOOLEAN DEFAULT FALSE;")
+            safe_execute("ALTER TABLE users ADD COLUMN email_verificado BOOLEAN DEFAULT FALSE;")
+            safe_execute("ALTER TABLE users ADD COLUMN otp_code VARCHAR(10);")
+            safe_execute("ALTER TABLE users ADD COLUMN cartao_cadastrado BOOLEAN DEFAULT FALSE;")
+            safe_execute("ALTER TABLE users ADD COLUMN data_vencimento DATETIME;")
 
             print("Global migration finished successfully.")
         except Exception as e:

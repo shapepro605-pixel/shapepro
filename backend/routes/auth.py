@@ -405,8 +405,14 @@ def update_profile():
         'pais', 'moeda', 'estado', 'cidade', 'renda_mensal', 'orcamento_dieta'
     ]
     location_changed = False
-    if 'pais' in data and data['pais'] != user.pais: location_changed = True
-    if 'cidade' in data and data['cidade'] != user.cidade: location_changed = True
+    
+    current_pais = getattr(user, 'pais', None)
+    current_cidade = getattr(user, 'cidade', None)
+    
+    if 'pais' in data and data['pais'] != current_pais: 
+        location_changed = True
+    if 'cidade' in data and data['cidade'] != current_cidade: 
+        location_changed = True
 
     for field in updatable:
         if field in data:

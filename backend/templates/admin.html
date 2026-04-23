@@ -617,9 +617,13 @@
                 const planBadge = `<span class="${planColor}"><i class="fas ${planIcon}"></i> ${planText}</span>`;
 
                 // Action Btn
-                const actionBtn = user.is_active
-                    ? `<button onclick="toggleUser(${user.id})" class="text-danger hover:bg-danger/20 px-3 py-1 rounded border border-danger/50 transition" title="Banir este usuário (Soft-delete)"><i class="fas fa-trash-alt"></i> Banir/Ocultar</button>`
-                    : `<button onclick="toggleUser(${user.id})" class="text-success hover:bg-success/20 px-3 py-1 rounded border border-success/50 transition" title="Reativar usuário"><i class="fas fa-undo"></i> Restaurar</button>`;
+                const toggleBtn = user.is_active
+                    ? `<button onclick="toggleUser(${user.id})" class="text-orange-400 hover:bg-orange-400/20 px-2 py-1 rounded border border-orange-400/50 transition" title="Banir este usuário (Soft-delete)"><i class="fas fa-ban"></i> Banir</button>`
+                    : `<button onclick="toggleUser(${user.id})" class="text-success hover:bg-success/20 px-2 py-1 rounded border border-success/50 transition" title="Reativar usuário"><i class="fas fa-undo"></i> Restaurar</button>`;
+
+                const deleteBtn = `<button onclick="deleteUserDefinitive(${user.id})" class="text-danger hover:bg-danger/20 px-2 py-1 rounded border border-danger/50 transition ml-2" title="Excluir Definitivamente"><i class="fas fa-trash-alt"></i> Excluir</button>`;
+                
+                const actionBtns = toggleBtn + deleteBtn;
 
                 const adminIcon = user.is_admin ? '<i class="fas fa-user-shield text-primary ml-2" title="Administrador"></i>' : '';
 
@@ -652,7 +656,7 @@
                     </td>
                     <td class="py-4 px-6">${planBadge}</td>
                     <td class="py-4 px-6">${statusBadge}</td>
-                    <td class="py-4 px-6 text-right">${user.is_admin ? '<span class="text-gray-500 text-xs italic">Intocável (Admin)</span>' : actionBtn}</td>
+                    <td class="py-4 px-6 text-right">${user.is_admin ? '<span class="text-gray-500 text-xs italic">Intocável (Admin)</span>' : actionBtns}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -667,6 +671,23 @@
                     loadDashboard(); // reload table
                 } else {
                     alert(res.error || "Erro ao banir usuário");
+                }
+            } catch(e) {
+                alert("Erro de comunicação com servidor.");
+            }
+        }
+
+        async function deleteUserDefinitive(id) {
+            if(!confirm("AÇÃO IRREVERSÍVEL!\\n\\nVocê está prestes a EXCLUIR DEFINITIVAMENTE este usuário e TODOS os seus dados associados (treinos, dieta, histórico de peso e fotos).\\n\\nDeseja realmente continuar?")) return;
+            if(!confirm("Tem certeza absoluta? Esta ação NÃO pode ser desfeita e os dados serão perdidos para sempre.")) return;
+            
+            try {
+                const res = await fetchWithAuth(API_BASE + `/users/${id}`, { method: 'DELETE' });
+                if(res.success) {
+                    loadDashboard(); // reload table
+                    alert("Usuário excluído permanentemente com sucesso.");
+                } else {
+                    alert(res.error || "Erro ao excluir usuário");
                 }
             } catch(e) {
                 alert("Erro de comunicação com servidor.");

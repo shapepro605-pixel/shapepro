@@ -23,6 +23,10 @@ class User(db.Model, SerialMixin):
     ritmo_meta = db.Column(db.String(50), default='padrao')  # leve, padrao, agressivo
     foto_perfil = db.Column(db.String(500), nullable=True)
     pais = db.Column(db.String(2), default='BR')  # BR, US, CA, GB
+    estado = db.Column(db.String(50), nullable=True)
+    cidade = db.Column(db.String(100), nullable=True)
+    renda_mensal = db.Column(db.Float, nullable=True)
+    orcamento_dieta = db.Column(db.Float, nullable=True)
     moeda = db.Column(db.String(3), default='BRL') # BRL, USD, CAD, GBP
     treinos_concluidos = db.Column(db.Integer, default=0)
     plano_assinatura = db.Column(db.String(20), default='free')  # free, mensal, anual

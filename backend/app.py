@@ -26,9 +26,6 @@ def create_app(config_name=None):
     app.config.from_object(config_by_name[config_name])
 
     # ── Initialize extensions ─────────────────────────────────────────
-    from flask_mail import Mail
-    app.mail = Mail(app)
-    
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     JWTManager(app)

@@ -9,5 +9,4 @@ google-generativeai==0.8.6
 marshmallow==4.3.0
 Flask-Limiter==4.1.1
 firebase-admin==7.4.0
-Flask-Mail==0.10.0
 psycopg2-binary==2.9.11

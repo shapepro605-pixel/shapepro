@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:shapepro/l10n/app_localizations.dart';
 import '../services/api.dart';
 import '../widgets/form_fields.dart';
@@ -61,6 +63,40 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     super.dispose();
   }
 
+  Future<Iterable<Map<String, String>>> _fetchCities(String query) async {
+    if (query.trim().length < 3) return [];
+    
+    final countryCode = _pais?.toLowerCase() ?? 'br'; 
+    final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(query)}&countrycodes=$countryCode&format=json&addressdetails=1&limit=5');
+
+    try {
+      final response = await http.get(url, headers: {
+        'Accept-Language': 'pt-BR,en-US',
+        'User-Agent': 'ShapeProApp/1.0', 
+      });
+
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        return data.map((item) {
+          final address = item['address'] ?? {};
+          final city = address['city'] ?? address['town'] ?? address['village'] ?? item['name'] ?? '';
+          final state = address['state'] ?? '';
+          final display = '$city${state.isNotEmpty ? ', $state' : ''}';
+          
+          return {
+            'display': display,
+            'city': city.toString(),
+            'state': state.toString(),
+          };
+        }).where((e) => e['city']!.isNotEmpty).toList();
+      }
+    } catch (e) {
+      debugPrint("Erro Nominatim: $e");
+    }
+    return [];
+  }
+
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
@@ -82,8 +118,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       'orcamento_dieta': double.tryParse(_orcamentoDietaController.text.trim()),
       'pais': _pais,
       'moeda': _moeda,
-      'estado': _estadoController.text.trim(),
-      'cidade': _cidadeController.text.trim(),
     };
 
     final result = await api.updateProfile(data);
@@ -293,9 +327,64 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomLabel(label: l10n.city),
-                        TextFormField(
-                          controller: _cidadeController,
-                          decoration: InputDecoration(hintText: l10n.cityHint),
+                        Autocomplete<Map<String, String>>(
+                          initialValue: TextEditingValue(text: _cidadeController.text),
+                          optionsBuilder: (TextEditingValue textEditingValue) async {
+                            if (textEditingValue.text.length < 3) {
+                              return const Iterable<Map<String, String>>.empty();
+                            }
+                            return await _fetchCities(textEditingValue.text);
+                          },
+                          displayStringForOption: (Map<String, String> option) => option['city']!,
+                          onSelected: (Map<String, String> selection) {
+                            _cidadeController.text = selection['city']!;
+                            if (selection['state']!.isNotEmpty) {
+                              setState(() {
+                                _estadoController.text = selection['state']!;
+                              });
+                            }
+                          },
+                          fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                            controller.addListener(() {
+                              _cidadeController.text = controller.text;
+                            });
+                            return TextFormField(
+                              controller: controller,
+                              focusNode: focusNode,
+                              onEditingComplete: onEditingComplete,
+                              decoration: InputDecoration(
+                                hintText: l10n.cityHint,
+                                suffixIcon: const Icon(Icons.search, size: 18, color: Colors.white38),
+                              ),
+                            );
+                          },
+                          optionsViewBuilder: (context, onSelected, options) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                color: const Color(0xFF1E1E38),
+                                borderRadius: BorderRadius.circular(8),
+                                child: SizedBox(
+                                  height: 200.0,
+                                  width: MediaQuery.of(context).size.width * 0.4,
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.all(8.0),
+                                    itemCount: options.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final option = options.elementAt(index);
+                                      return ListTile(
+                                        title: Text(option['display']!, style: const TextStyle(color: Colors.white, fontSize: 13)),
+                                        onTap: () {
+                                          onSelected(option);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

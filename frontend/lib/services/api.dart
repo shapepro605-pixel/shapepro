@@ -9,6 +9,8 @@ import 'package:shapepro/utils/logger.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+
 
 class ApiService extends ChangeNotifier {
   // Base URL for the API.
@@ -347,6 +349,16 @@ class ApiService extends ChangeNotifier {
     if (result['success'] == true) {
       await _saveTokens(result['access_token'], refresh: result['refresh_token']);
       await _saveUser(result['user']);
+
+      // --- Firebase Sync ---
+      try {
+        await fb_auth.FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } catch (e) {
+        Log.e('Firebase sync error: $e');
+      }
     }
     return result;
   }
@@ -411,20 +423,14 @@ class ApiService extends ChangeNotifier {
     return result;
   }
 
-  /// Legacy verify SMS (fallback for dev/testing without Firebase)
-  Future<Map<String, dynamic>> verifySms(String code) async {
-    final result = await _request('POST', '/auth/verify_sms', body: {'code': code});
-    if (result['success'] == true && result['user'] != null) {
-      await _saveUser(result['user']);
-    }
-    return result;
-  }
 
   Future<Map<String, dynamic>> resendSms() async {
     return await _request('POST', '/auth/resend_sms');
   }
 
   Future<Map<String, dynamic>> sendVerificationEmail() async {
+    // Professional 6-Digit OTP Relay (via Firebase Cloud Function)
+    // The backend now handles this automatically through the relay we built.
     return await _request('POST', '/auth/send_verification_email');
   }
 
