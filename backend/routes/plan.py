@@ -32,7 +32,7 @@ def gerar_dieta():
     # Generate new diet
     from services.i18n import get_locale
     lang = get_locale()
-    dieta_service = DietaService(lang=lang)
+    dieta_service = DietaService(lang=lang, user=user)
     
     dias = request.json.get('dias', 1)
     if dias not in [1, 7]:
@@ -123,10 +123,15 @@ def get_dieta():
 
     # Translate meal names on the fly for the current language
     plan_dict = diet_plan.to_dict()
+    # FREE TRIAL LOGIC (PAYWALL) & USER CONTEXT
+    user = User.query.get(int(user_id))
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+
     # NEW: Integrated dynamic translation shift
     from services.i18n import get_locale
     lang = get_locale()
-    dieta_service = DietaService(lang=lang)
+    dieta_service = DietaService(lang=lang, user=user)
     plan_dict['refeicoes'] = dieta_service.translate_meals(plan_dict['refeicoes'], target_lang=lang)
     
     # Map of meal name translations to ensure consistency (Fallback/Double Check)
@@ -149,7 +154,6 @@ def get_dieta():
             if curr_name in meal_map: r['nome'] = meal_map[curr_name]
 
     # FREE TRIAL LOGIC (PAYWALL)
-    user = User.query.get(int(user_id))
     if not user:
         return jsonify({'error': t('user_not_found')}), 404
         

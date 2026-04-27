@@ -87,7 +87,7 @@ class _DietaScreenState extends State<DietaScreen> {
     }
 
     final result = await api.gerarDieta(orcamento: _selectedOrcamento);
-    if (result['success'] == true) {
+    if (mounted) {
       setState(() {
         _isGenerating = false;
         if (result['success'] == true) {

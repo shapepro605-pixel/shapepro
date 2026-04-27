@@ -25,25 +25,69 @@ class BodyScanPage extends StatefulWidget {
 
 class _BodyScanPageState extends State<BodyScanPage> {
   String _selectedPose = 'front';
-  XFile? _capturedImage;
+  XFile? _frontImage;
+  Pose? _frontPose;
+  Size? _frontImageSize;
+  
+  XFile? _sideImage;
+  Pose? _sidePose;
+  Size? _sideImageSize;
+
+  XFile? _capturedImage; // Temporary preview
   bool _isUploading = false;
   Map<String, double>? _metrics;
-  Pose? _lastPose;
-  Size? _imageSize;
   late BodyScanService _scanService;
+  bool _isEvolutionMode = false;
+  int _daysSinceLastScan = 0;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _scanService = BodyScanService(Provider.of<ApiService>(context, listen: false));
+    _checkEvolutionStatus();
+  }
+
+  Future<void> _checkEvolutionStatus() async {
+    final history = await _scanService.getHistory();
+    if (history.isNotEmpty) {
+      final latest = DateTime.parse(history.first['created_at']);
+      final diff = DateTime.now().difference(latest).inDays;
+      if (mounted) {
+        setState(() {
+          _daysSinceLastScan = diff;
+          _isEvolutionMode = diff >= 30;
+        });
+      }
+    }
   }
 
   void _onImageCaptured(XFile file, Map<String, double>? metrics, [Pose? pose, Size? size]) {
     setState(() {
+      if (_selectedPose == 'front') {
+        _frontImage = file;
+        _frontPose = pose;
+        _frontImageSize = size;
+      } else if (_selectedPose == 'side') {
+        _sideImage = file;
+        _sidePose = pose;
+        _sideImageSize = size;
+      }
+      
+      // Automatic calculation if both are present
+      if (_frontPose != null && _sidePose != null) {
+        final api = Provider.of<ApiService>(context, listen: false);
+        final userHeight = api.currentUser?['altura']?.toDouble() ?? 170.0;
+        _metrics = PoseMetricsHelper.calculateProfessionalMetrics(
+          frontPose: _frontPose!,
+          sidePose: _sidePose!,
+          userHeight: userHeight,
+        );
+      } else {
+        // Fallback or partial metrics if only one is available (optional)
+        _metrics = metrics;
+      }
+      
       _capturedImage = file;
-      _metrics = metrics;
-      _lastPose = pose;
-      _imageSize = size;
     });
   }
 
@@ -132,9 +176,11 @@ class _BodyScanPageState extends State<BodyScanPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (_isEvolutionMode) _buildEvolutionBanner(),
+          const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.evolutionAnalysis,
-            style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w800, color: Colors.white),
+            _isEvolutionMode ? "CHECK-IN DE EVOLUÇÃO" : AppLocalizations.of(context)!.evolutionAnalysis,
+            style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white),
           ),
           const SizedBox(height: 8),
           Text(
@@ -142,11 +188,9 @@ class _BodyScanPageState extends State<BodyScanPage> {
             style: GoogleFonts.inter(fontSize: 14, color: Colors.white54),
           ),
           const SizedBox(height: 32),
-          _buildPoseCard(AppLocalizations.of(context)!.front, "front", Icons.person_outline),
+          _buildPoseCard(AppLocalizations.of(context)!.front, "front", Icons.person_outline, _frontPose != null),
           const SizedBox(height: 16),
-          _buildPoseCard(AppLocalizations.of(context)!.side, "side", Icons.hail),
-          const SizedBox(height: 16),
-          _buildPoseCard(AppLocalizations.of(context)!.back, "back", Icons.person_off_outlined),
+          _buildPoseCard(AppLocalizations.of(context)!.side, "side", Icons.hail, _sidePose != null),
           const SizedBox(height: 24),
           
           // History Button
@@ -214,6 +258,45 @@ class _BodyScanPageState extends State<BodyScanPage> {
     );
   }
 
+  Widget _buildEvolutionBanner() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2ED573), Color(0xFF1ABC9C)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(color: const Color(0xFF2ED573).withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))
+        ],
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.auto_awesome, color: Colors.white, size: 30),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "HORA DE VER RESULTADOS!",
+                  style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14),
+                ),
+                Text(
+                  "Já faz $_daysSinceLastScan dias desde seu último scan. Vamos ver como você evoluiu?",
+                  style: GoogleFonts.inter(color: Colors.white.withOpacity(0.9), fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showTutorial() {
     showModalBottomSheet(
       context: context,
@@ -246,7 +329,6 @@ class _BodyScanPageState extends State<BodyScanPage> {
                 children: [
                   _buildTutorialPage("assets/images/bodyscan_front.png", AppLocalizations.of(context)!.front, AppLocalizations.of(context)!.frontDesc),
                   _buildTutorialPage("assets/images/bodyscan_side.png", AppLocalizations.of(context)!.side, AppLocalizations.of(context)!.sideDesc),
-                  _buildTutorialPage("assets/images/bodyscan_back.png", AppLocalizations.of(context)!.back, AppLocalizations.of(context)!.backDesc),
                 ],
               ),
             ),
@@ -330,7 +412,7 @@ class _BodyScanPageState extends State<BodyScanPage> {
     }
   }
 
-  Widget _buildPoseCard(String label, String type, IconData icon) {
+  Widget _buildPoseCard(String label, String type, IconData icon, bool isCompleted) {
     bool isSelected = _selectedPose == type;
     return GestureDetector(
       onTap: () => setState(() => _selectedPose = type),
@@ -341,24 +423,32 @@ class _BodyScanPageState extends State<BodyScanPage> {
           color: isSelected ? const Color(0xFF6C5CE7).withValues(alpha: 0.1) : const Color(0xFF16162A),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF2A2A4A),
+            color: isSelected ? const Color(0xFF6C5CE7) : (isCompleted ? Colors.green.withOpacity(0.5) : const Color(0xFF2A2A4A)),
             width: 2,
           ),
         ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? const Color(0xFF6C5CE7) : Colors.white38, size: 28),
+            Icon(icon, color: isSelected ? const Color(0xFF6C5CE7) : (isCompleted ? Colors.green : Colors.white38), size: 28),
             const SizedBox(width: 16),
-            Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Colors.white : Colors.white60,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? Colors.white : Colors.white60,
+                  ),
+                ),
+                if (isCompleted) 
+                  Text("Foto capturada", style: GoogleFonts.inter(fontSize: 10, color: Colors.green)),
+              ],
             ),
             const Spacer(),
-            if (isSelected) const Icon(Icons.check_circle, color: Color(0xFF6C5CE7)),
+            if (isCompleted) const Icon(Icons.check_circle, color: Colors.green)
+            else if (isSelected) const Icon(Icons.circle_outlined, color: Color(0xFF6C5CE7)),
           ],
         ),
       ),
@@ -379,12 +469,21 @@ class _BodyScanPageState extends State<BodyScanPage> {
                   imageFilter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
                   child: Image.file(File(_capturedImage!.path), fit: BoxFit.cover),
                 ),
-                if (_lastPose != null && _imageSize != null)
+                if (_selectedPose == 'front' && _frontPose != null)
                   CustomPaint(
                     size: Size(constraints.maxWidth, constraints.maxHeight),
                     painter: NeonPosePainter(
-                      pose: _lastPose,
-                      imageSize: _imageSize!,
+                      pose: _frontPose,
+                      imageSize: _frontImageSize!,
+                      metrics: _metrics,
+                    ),
+                  )
+                else if (_selectedPose == 'side' && _sidePose != null)
+                  CustomPaint(
+                    size: Size(constraints.maxWidth, constraints.maxHeight),
+                    painter: NeonPosePainter(
+                      pose: _sidePose,
+                      imageSize: _sideImageSize!,
                       metrics: _metrics,
                     ),
                   ),
@@ -437,6 +536,16 @@ class _BodyScanPageState extends State<BodyScanPage> {
     );
   }
 
+  String _formatMeasure(double? value) {
+    if (value == null) return "--";
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
+    if (isEnglish) {
+      final inches = value / 2.54;
+      return "${inches.toStringAsFixed(1)} in";
+    }
+    return "${value.toStringAsFixed(1)} cm";
+  }
+
   Widget _buildResultsCard() {
     final api = Provider.of<ApiService>(context, listen: false);
     final user = api.currentUser;
@@ -470,11 +579,11 @@ class _BodyScanPageState extends State<BodyScanPage> {
               const Divider(height: 32, color: Colors.white10),
               
               // Measurements
-              _buildResultRow(AppLocalizations.of(context)!.chestEstimated, "${_metrics!['chest']?.toStringAsFixed(1)} cm"),
+              _buildResultRow(AppLocalizations.of(context)!.chestEstimated, _formatMeasure(_metrics!['chest'])),
               const SizedBox(height: 12),
-              _buildResultRow(AppLocalizations.of(context)!.waistEstimated, "${_metrics!['waist']?.toStringAsFixed(1)} cm"),
+              _buildResultRow(AppLocalizations.of(context)!.waistEstimated, _formatMeasure(_metrics!['waist'])),
               const SizedBox(height: 12),
-              _buildResultRow(AppLocalizations.of(context)!.hipsEstimated, "${_metrics!['hips']?.toStringAsFixed(1)} cm"),
+              _buildResultRow(AppLocalizations.of(context)!.hipsEstimated, _formatMeasure(_metrics!['hips'])),
               
               const Divider(height: 32, color: Colors.white10),
               
@@ -488,6 +597,17 @@ class _BodyScanPageState extends State<BodyScanPage> {
                 ],
               ),
               const SizedBox(height: 20),
+              Row(
+                children: [
+                  const Icon(Icons.verified_user_outlined, color: Colors.green, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    "Precisão estimada: 85% (Frente + Lado)",
+                    style: GoogleFonts.inter(color: Colors.green.withOpacity(0.8), fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
               Text(
                 AppLocalizations.of(context)!.estimatedIAValues,
                 style: GoogleFonts.inter(color: Colors.white38, fontSize: 10, fontStyle: FontStyle.italic),

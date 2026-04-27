@@ -117,8 +117,6 @@ class SilhouettePainter extends CustomPainter {
     
     if (poseType == 'side') {
       _drawSideSilhouette(path, size);
-    } else if (poseType == 'back') {
-      _drawBackSilhouette(path, size);
     } else {
       _drawFrontSilhouette(path, size);
     }
@@ -168,13 +166,6 @@ class SilhouettePainter extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.6, size.height * 0.45, size.width * 0.5, size.height * 0.25);
   }
 
-  void _drawBackSilhouette(Path path, Size size) {
-    _drawFrontSilhouette(path, size);
-    path.moveTo(size.width * 0.4, size.height * 0.35);
-    path.lineTo(size.width * 0.45, size.height * 0.45);
-    path.moveTo(size.width * 0.6, size.height * 0.35);
-    path.lineTo(size.width * 0.55, size.height * 0.45);
-  }
 
   @override
   bool shouldRepaint(covariant SilhouettePainter oldDelegate) => true; 

@@ -7,6 +7,8 @@ import 'dart:math' as math;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../services/api.dart';
+import '../../utils/body_utils.dart';
+import 'body_comparison_page.dart';
 import 'body_scan_service.dart';
 
 class BodyScanHistoryPage extends StatefulWidget {
@@ -149,91 +151,138 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
 
   Widget _buildCountdownHeader() {
     double progress = (30 - _daysRemaining) / 30;
+    bool isExpired = _daysRemaining == 0;
     
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF6C5CE7), Color(0xFF8E78FF)],
+        gradient: LinearGradient(
+          colors: isExpired 
+            ? [const Color(0xFF2ED573), const Color(0xFF1ABC9C)]
+            : [const Color(0xFF6C5CE7), const Color(0xFF8E78FF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6C5CE7).withOpacity(0.3),
+            color: (isExpired ? const Color(0xFF2ED573) : const Color(0xFF6C5CE7)).withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
         ],
       ),
-      child: Row(
+      child: Column(
         children: [
-          Stack(
-            alignment: Alignment.center,
+          Row(
             children: [
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.white24,
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
+              Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(
-                    "$_daysRemaining",
-                    style: GoogleFonts.inter(
-                      fontSize: 24, 
-                      fontWeight: FontWeight.w900, 
-                      color: Colors.white
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      strokeWidth: 8,
+                      backgroundColor: Colors.white24,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
-                  Text(
-                    AppLocalizations.of(context)!.days,
-                    style: GoogleFonts.inter(
-                      fontSize: 10, 
-                      fontWeight: FontWeight.bold, 
-                      color: Colors.white70
-                    ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "$_daysRemaining",
+                        style: GoogleFonts.inter(
+                          fontSize: 24, 
+                          fontWeight: FontWeight.w900, 
+                          color: Colors.white
+                        ),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.days,
+                        style: GoogleFonts.inter(
+                          fontSize: 10, 
+                          fontWeight: FontWeight.bold, 
+                          color: Colors.white70
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isExpired 
+                        ? "HORA DA EVOLUÇÃO!" 
+                        : AppLocalizations.of(context)!.nextCheckin,
+                      style: GoogleFonts.inter(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold, 
+                        color: Colors.white
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isExpired
+                        ? "Seu ciclo de 30 dias terminou. Tire uma nova foto agora!"
+                        : AppLocalizations.of(context)!.daysRemainingDesc(_daysRemaining),
+                      style: GoogleFonts.inter(
+                        fontSize: 13, 
+                        color: Colors.white.withOpacity(0.8)
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _daysRemaining == 0 
-                    ? AppLocalizations.of(context)!.timeToUpdate 
-                    : AppLocalizations.of(context)!.nextCheckin,
-                  style: GoogleFonts.inter(
-                    fontSize: 18, 
-                    fontWeight: FontWeight.bold, 
-                    color: Colors.white
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _daysRemaining == 0
-                    ? AppLocalizations.of(context)!.newScanNow
-                    : AppLocalizations.of(context)!.daysRemainingDesc(_daysRemaining),
-                  style: GoogleFonts.inter(
-                    fontSize: 13, 
-                    color: Colors.white.withOpacity(0.8)
-                  ),
-                ),
-              ],
+          if (_groupedScans.length >= 2) ...[
+            const SizedBox(height: 20),
+            const Divider(color: Colors.white24),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: _navigateToComparison,
+              icon: const Icon(Icons.compare, size: 18),
+              label: const Text("VER COMPARAÇÃO DE ANTES E DEPOIS"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: isExpired ? const Color(0xFF2ED573) : const Color(0xFF6C5CE7),
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                elevation: 0,
+              ),
             ),
-          ),
+          ]
         ],
+      ),
+    );
+  }
+
+  void _navigateToComparison() {
+    if (_groupedScans.length < 2) return;
+    
+    // Pegamos a sessão mais recente (after) e a mais antiga (before)
+    // Cada grupo é Map<String, List<dynamic>>
+    final afterSession = _groupedScans.first.values.first;
+    final beforeSession = _groupedScans.last.values.first;
+    
+    // Pegamos os scans do tipo 'front' de cada sessão, se existirem
+    final afterFront = afterSession.firstWhere((s) => s['type'] == 'front', orElse: () => afterSession.first);
+    final beforeFront = beforeSession.firstWhere((s) => s['type'] == 'front', orElse: () => beforeSession.first);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BodyComparisonPage(
+          beforeScan: beforeFront,
+          afterScan: afterFront,
+        ),
       ),
     );
   }
@@ -596,42 +645,15 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
   }
 
   String _formatWeight(dynamic valueInKg) {
-    if (valueInKg == null || valueInKg == '--' || valueInKg == '') return '--';
-    double kg = double.tryParse(valueInKg.toString()) ?? 0.0;
-    if (kg == 0) return '--';
-    if (Localizations.localeOf(context).languageCode == 'en') {
-      return "${(kg * 2.20462).toStringAsFixed(1)} lbs";
-    }
-    return "$valueInKg kg";
+    return BodyUtils.formatWeight(context, valueInKg);
   }
 
   String _formatMeasure(dynamic valueInCm, {bool isHeight = false, bool isPercentage = false}) {
-    if (valueInCm == null || valueInCm == '--' || valueInCm == '') return '--';
-    if (isPercentage) return "$valueInCm %";
-    
-    double cm = double.tryParse(valueInCm.toString()) ?? 0.0;
-    if (cm == 0) return '--';
-    if (Localizations.localeOf(context).languageCode == 'en') {
-      double totalInches = cm / 2.54;
-      if (isHeight) {
-        int feet = totalInches ~/ 12;
-        int inches = (totalInches % 12).round();
-        return "$feet'$inches\"";
-      } else {
-        return "${totalInches.toStringAsFixed(1)}\"";
-      }
-    }
-    return "$valueInCm cm";
+    return BodyUtils.formatMeasure(context, valueInCm, isHeight: isHeight, isPercentage: isPercentage);
   }
 
   String _calculateIMC(dynamic peso, dynamic altura) {
-    try {
-      double w = double.parse(peso.toString());
-      double h = double.parse(altura.toString()) / 100;
-      return (w / (h * h)).toStringAsFixed(1);
-    } catch (e) {
-      return "--";
-    }
+    return BodyUtils.calculateIMC(peso, altura);
   }
 
   Widget _buildMiniInfo(String label, String value) {

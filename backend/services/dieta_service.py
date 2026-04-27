@@ -7,18 +7,29 @@ e gera planos de refeição completos.
 import json
 import os
 import random
+from database import db
+from models.food_price import FoodPrice
 
 
 class DietaService:
 
-    def __init__(self, lang='pt'):
+    def __init__(self, lang='pt', user=None):
         self.lang = lang if lang in ['pt', 'en'] else 'pt'
+        self.user = user
         suffix = '_en' if self.lang == 'en' else ''
         self.foods_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             'data', f'foods{suffix}.json'
         )
         self._alimentos = None
+        self._custo_diario_acumulado = 0
+        self._orcamento_diario_limite = 999999
+        
+        if self.user and self.user.orcamento_dieta:
+            self._orcamento_diario_limite = self.user.orcamento_dieta / 30
+        elif self.user and self.user.renda_mensal:
+            # Estimativa: 15% da renda para dieta se não definido
+            self._orcamento_diario_limite = (self.user.renda_mensal * 0.15) / 30
 
     @property
     def alimentos(self):
@@ -121,14 +132,20 @@ class DietaService:
         if usados:
             opcoes = [a for a in opcoes if a['nome'] not in usados]
 
-        if orcamento == 'economico':
+        # Lógica de Orçamento em Tempo Real:
+        # Se já gastamos mais de 80% do limite diário, força alimentos de baixo custo
+        orcamento_forcado = orcamento
+        if self._custo_diario_acumulado > (self._orcamento_diario_limite * 0.8):
+            orcamento_forcado = 'economico'
+
+        if orcamento_forcado == 'economico':
             # Prefer low cost, then medium. Avoid high cost.
             filtradas = [a for a in opcoes if a.get('custo') == 'baixo']
             if not filtradas:
                 filtradas = [a for a in opcoes if a.get('custo') == 'medio']
             if filtradas:
                 opcoes = filtradas
-        elif orcamento == 'premium':
+        elif orcamento_forcado == 'premium':
             # Prioritize high cost items for a premium experience
             alto = [a for a in opcoes if a.get('custo') == 'alto']
             medio = [a for a in opcoes if a.get('custo') == 'medio']
@@ -146,22 +163,101 @@ class DietaService:
 
         return random.choice(opcoes) if opcoes else None
 
+    def _get_food_price(self, alimento_nome):
+        """
+        Calcula o preço real ou estimado para o alimento.
+        Prioridade: 1. BD (Cidade/País), 2. BD (País), 3. Estimativa Base
+        """
+        cidade = self.user.cidade if self.user else None
+        pais = self.user.pais if self.user else 'BR'
+        moeda = self.user.moeda if self.user else 'BRL'
+
+        # Busca no banco de dados (com proteção contra tabela inexistente)
+        try:
+            # Tenta cidade específica
+            if cidade:
+                price_rec = FoodPrice.query.filter(
+                    FoodPrice.alimento.ilike(alimento_nome),
+                    FoodPrice.cidade == cidade,
+                    FoodPrice.pais == pais
+                ).first()
+                if price_rec:
+                    return price_rec.preco
+
+            # Tenta país
+            price_rec = FoodPrice.query.filter(
+                FoodPrice.alimento.ilike(alimento_nome),
+                FoodPrice.pais == pais
+            ).first()
+            if price_rec:
+                return price_rec.preco
+        except Exception as e:
+            print(f"[DietaService] DB price lookup failed (table may not exist): {e}")
+
+        # Fallback: Estimativa Baseada no Custo e Moeda
+        # Heurística de preços médios por categoria de custo
+        base_prices = {'baixo': 2.50, 'medio': 7.00, 'alto': 18.00}
+        
+        # Encontra o custo do alimento no json
+        custo_categoria = 'medio'
+        for cat, list_f in self.alimentos.items():
+            for f in list_f:
+                if f['nome'] == alimento_nome:
+                    custo_categoria = f.get('custo', 'medio')
+                    break
+        
+        price_val = base_prices.get(custo_categoria, 7.0)
+        
+        # Multiplicadores de câmbio aproximados se não for USD
+        multipliers = {'BRL': 5.2, 'EUR': 0.92, 'GBP': 0.79, 'CAD': 1.37, 'USD': 1.0}
+        final_price = price_val * multipliers.get(moeda, 1.0)
+        
+        return round(final_price, 2)
+
+    def _format_currency(self, value):
+        moeda = self.user.moeda if self.user else 'BRL'
+        symbols = {'BRL': 'R$', 'USD': '$', 'EUR': '€', 'GBP': '£', 'CAD': 'C$'}
+        symbol = symbols.get(moeda, '$')
+        
+        if moeda == 'BRL':
+            return f"{symbol} {value:.2f}".replace('.', ',')
+        return f"{symbol}{value:.2f}"
+
     def _calcular_macros_alimento(self, alimento):
-        """Calculate actual macros for the food portion."""
+        """Calculate actual macros and PRICE for the food portion."""
         fator = alimento['porcao'] / 100
+        
+        # Calcula preço
+        preco_base = self._get_food_price(alimento['nome'])
+        
+        # Se for unidade, o preço no fallback costuma ser por "unidade/pacote"
+        # Para unidades individuais (ovo, banana), o preço base deve ser menor
+        if 'unidade' in alimento:
+             # Heurística: se for unidade, o preço base do fallback (7.0, 18.0) é dividido 
+             # para representar o valor de uma única unidade.
+             preco_porcao = preco_base / 5.0 
+        else:
+             preco_porcao = preco_base * (alimento['porcao'] / 1000) # Preço por kg
+        
+        self._custo_diario_acumulado += preco_porcao
+        
+        price_str = self._format_currency(preco_porcao)
+        
         return {
             'nome': alimento['nome'],
-            'porcao': f"{alimento['porcao']}g" if 'unidade' not in alimento else alimento['unidade'],
+            'porcao': f"{alimento['porcao']}g • {price_str}" if 'unidade' not in alimento else f"{alimento['unidade']} • {price_str}",
             'calorias': round(alimento['calorias'] * fator),
             'proteina': round(alimento['proteina'] * fator, 1),
             'carboidrato': round(alimento['carbo'] * fator, 1),
             'gordura': round(alimento['gordura'] * fator, 1),
+            'preco_num': round(preco_porcao, 2)
         }
 
     def gerar_refeicoes(self, macros, orcamento='padrao'):
         """Generate 6 meals for the day."""
         from services.i18n import t
         usados = set()
+        self._custo_diario_acumulado = 0 # Reset para o dia
 
         refeicoes = [
             self._gerar_cafe_da_manha(macros, usados, orcamento),

@@ -94,6 +94,11 @@ dependencies {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        freeCompilerArgs.addAll("-nowarn", "-Xlint:-deprecation")
+        freeCompilerArgs.addAll("-Xlint:all", "-Xlint:deprecation")
     }
+}
+
+// Enable Xlint for Java compilation as well
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:deprecation"))
 }

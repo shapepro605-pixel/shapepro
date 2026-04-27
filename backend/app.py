@@ -76,6 +76,7 @@ def create_app(config_name=None):
             Challenge, UserChallenge, Achievement,
             UserAchievement, SleepLog, JournalEntry
         )
+        from models.food_price import FoodPrice
         db.create_all()
 
         # Seed default challenges and achievements

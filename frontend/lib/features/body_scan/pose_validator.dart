@@ -29,7 +29,6 @@ class PoseValidator {
     if (!isCorrectPose(pose, type)) {
       if (type == 'front') errors.add("poseFront");
       if (type == 'side') errors.add("poseSide");
-      if (type == 'back') errors.add("poseBack");
     }
 
     return errors;
@@ -104,9 +103,6 @@ class PoseValidator {
       final shoulderWidth = (leftShoulder.x - rightShoulder.x).abs();
       final hipWidth = (pose.landmarks[PoseLandmarkType.leftHip]!.x - pose.landmarks[PoseLandmarkType.rightHip]!.x).abs();
       return shoulderWidth < (hipWidth * 0.7); // Heuristic for profile
-    } else if (type == 'back') {
-      // Nose confidence should be low for back pose
-      return nose.likelihood < 0.45; // Increased threshold slightly
     }
     return false;
   }
