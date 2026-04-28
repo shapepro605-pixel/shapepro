@@ -166,14 +166,10 @@ class PoseMetricsHelper {
     final sShoulderD = (_getPX(sidePose.landmarks[PoseLandmarkType.leftShoulder]!, sideSize) - 
                         _getPX(sidePose.landmarks[PoseLandmarkType.rightShoulder]!, sideSize)).abs() * sideScale;
 
-    dev.log(">>> AI SCAN DEBUG: Chest Width: $fShoulderW, Depth: $sShoulderD");
-
     final fHipW = (_getPX(frontPose.landmarks[PoseLandmarkType.leftHip]!, frontSize) - 
                    _getPX(frontPose.landmarks[PoseLandmarkType.rightHip]!, frontSize)).abs() * frontScale;
     final sHipD = (_getPX(sidePose.landmarks[PoseLandmarkType.leftHip]!, sideSize) - 
                    _getPX(sidePose.landmarks[PoseLandmarkType.rightHip]!, sideSize)).abs() * sideScale;
-
-    dev.log(">>> AI SCAN DEBUG: Hip Width: $fHipW, Depth: $sHipD");
 
     // --- CALCULATION ---
     // Multipliers increased to account for tissue (skin/muscle) depth beyond the skeletal joints
@@ -183,8 +179,6 @@ class PoseMetricsHelper {
     final chest = _ellipseCircumference(fShoulderW * 1.15, chestDepth) * 1.08;
     final waist = _ellipseCircumference((fShoulderW + fHipW) / 2 * 0.9, (chestDepth + hipDepth) / 2 * 0.85) * 0.98;
     final hips = _ellipseCircumference(fHipW * 1.05, hipDepth) * 1.05;
-
-    dev.log(">>> AI SCAN DEBUG: Final - Chest: $chest, Waist: $waist, Hips: $hips");
 
     final Map<String, double> metrics = {
       'shoulders': (fShoulderW * 2.6).roundToDouble(),

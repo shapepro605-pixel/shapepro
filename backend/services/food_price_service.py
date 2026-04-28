@@ -10,7 +10,6 @@ class FoodPriceService:
         Simulates an AI researching prices for common foods in a specific region.
         In a real scenario, this would call a search API or scrape local supermarkets.
         """
-        print(f"[ShapePro AI] Researching food prices for {cidade}, {pais}...")
         
         # Base prices in USD (Retail/Supermarket average)
         base_prices = {
@@ -68,5 +67,4 @@ class FoodPriceService:
             db.session.add(price_entry)
         
         db.session.commit()
-        print(f"[ShapePro AI] Price research finished. {len(base_prices)} prices saved for {cidade}.")
         return True

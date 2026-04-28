@@ -199,8 +199,8 @@ class DietaService:
             ).first()
             if price_rec:
                 return price_rec.preco
-        except Exception as e:
-            print(f"[DietaService] DB price lookup failed (table may not exist): {e}")
+        except Exception:
+            pass
 
         # Fallback: Estimativa Baseada no Custo e Moeda
         # Preços realistas de VAREJO em USD por kg / por dúzia (ovos)

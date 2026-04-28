@@ -83,7 +83,6 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
   }
 
   void _onImageCaptured(XFile file, Map<String, double>? metrics, [Pose? pose, Size? size]) {
-    log(">>> AI SCAN UI: onImageCaptured called. Pose: $_selectedPose. Pose is null? ${pose == null}");
     setState(() {
       if (_selectedPose == 'front') {
         _frontImage = file;
@@ -120,10 +119,8 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
         );
       } else {
         // Fallback or partial metrics if only one is available (optional)
-        log(">>> AI SCAN UI: Missing one of the poses. Falling back to single-pose metrics.");
         _metrics = metrics;
       }
-      log(">>> AI SCAN UI: Assigned metrics: $_metrics");
       
       _capturedImage = file;
       if (_selectedPose == 'front' && _frontPose != null) {

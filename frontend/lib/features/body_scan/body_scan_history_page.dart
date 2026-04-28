@@ -368,7 +368,6 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        debugPrint(">>> FOTO CLICADA PARA EXCLUSÃO: ID $scanId");
                         _confirmDeletion(scanId, scan['image_url']);
                       },
                       borderRadius: BorderRadius.circular(14),
@@ -561,8 +560,6 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
   }
 
   void _confirmDeletion(int scanId, String imageUrl) {
-    debugPrint(">>> SOLICITANDO DIÁLOGO DE EXCLUSÃO PARA ID: $scanId");
-    
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -602,7 +599,6 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
   }
 
   Future<void> _deleteScan(int scanId, String imageUrl) async {
-    debugPrint(">>> EXECUTANDO EXCLUSÃO NO SERVIDOR PARA ID: $scanId");
     final api = Provider.of<ApiService>(context, listen: false);
     final bodyScanService = BodyScanService(api);
     
@@ -611,7 +607,6 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
     try {
       final result = await bodyScanService.deleteScan(scanId, imageUrl);
       final bool success = result['success'] ?? false;
-      debugPrint(">>> SUCESSO DO SERVIDOR: $success");
       
       if (success) {
         if (mounted) {

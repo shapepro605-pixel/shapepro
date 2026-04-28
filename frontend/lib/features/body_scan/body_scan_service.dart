@@ -112,7 +112,6 @@ class BodyScanService {
     // 1. Try to delete from Backend
     try {
       final deleteUrl = '$baseUrl/body-scan/$scanId';
-      debugPrint(">>> CHAMANDO URL DE EXCLUSÃO: $deleteUrl");
       
       final response = await http.delete(
         Uri.parse(deleteUrl),
@@ -123,9 +122,7 @@ class BodyScanService {
 
       if (response.statusCode == 200) {
         backendDeleted = true;
-        debugPrint(">>> BACKEND: Registro $scanId excluído com sucesso");
       } else {
-        debugPrint(">>> BACKEND: Falha HTTP ${response.statusCode} - ${response.body}");
         // If 404, the DELETE route may not be deployed yet - continue to Firebase
       }
     } catch (e) {
@@ -137,7 +134,6 @@ class BodyScanService {
       if (imageUrl.isNotEmpty) {
         final ref = _storage.refFromURL(imageUrl);
         await ref.delete();
-        debugPrint(">>> FIREBASE: Imagem excluída do Storage com sucesso");
       }
       // If Firebase deletion worked, consider it a success even if backend failed
       return {'success': true};
