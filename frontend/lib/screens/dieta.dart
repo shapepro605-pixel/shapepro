@@ -691,9 +691,53 @@ class _DietaScreenState extends State<DietaScreen> {
               const SizedBox(height: 24),
 
               // ── Meals ───────────────────────────────────
-          Text(AppLocalizations.of(context)!.meals, style: GoogleFonts.inter(
-            fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white,
-          )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(AppLocalizations.of(context)!.meals, style: GoogleFonts.inter(
+                fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white,
+              )),
+              Builder(
+                builder: (context) {
+                  String displayTotal = '';
+                  if (_dieta?['preco_total_diario_str'] != null) {
+                    displayTotal = _dieta!['preco_total_diario_str'];
+                  } else {
+                    // Fallback calculate
+                    final cur = Provider.of<ApiService>(context, listen: false).currentUser?['moeda'] ?? 'BRL';
+                    double total = 0;
+                    final refs = _dieta?['refeicoes'] as List? ?? [];
+                    for (var r in refs) {
+                      final alim = r['alimentos'] as List? ?? [];
+                      for (var a in alim) {
+                        total += (a['preco_num'] as num?)?.toDouble() ?? 0;
+                      }
+                    }
+                    if (total > 0) displayTotal = CurrencyHelper.format(total, cur);
+                  }
+                  if (displayTotal.isEmpty) return const SizedBox.shrink();
+                  
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2ED573).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFF2ED573).withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.savings_outlined, color: Color(0xFF2ED573), size: 14),
+                        const SizedBox(width: 6),
+                        Text("Valor de hoje: $displayTotal", style: GoogleFonts.inter(
+                          color: const Color(0xFF2ED573), fontSize: 12, fontWeight: FontWeight.w700,
+                        )),
+                      ],
+                    ),
+                  );
+                }
+              ),
+            ],
+          ),
           const SizedBox(height: 14),
 
           ...refeicoes.asMap().entries.map((entry) {
@@ -920,6 +964,37 @@ class _DietaScreenState extends State<DietaScreen> {
                 Text('$totalCal kcal', style: GoogleFonts.inter(
                   color: accentColor, fontSize: 12, fontWeight: FontWeight.w600,
                 )),
+                const SizedBox(width: 12),
+                Builder(
+                  builder: (context) {
+                    String mealTotal = '';
+                    if (refeicao['total_preco_str'] != null) {
+                      mealTotal = refeicao['total_preco_str'];
+                    } else {
+                      final cur = Provider.of<ApiService>(context, listen: false).currentUser?['moeda'] ?? 'BRL';
+                      double t = 0;
+                      for (var a in alimentos) t += (a['preco_num'] as num?)?.toDouble() ?? 0;
+                      if (t > 0) mealTotal = CurrencyHelper.format(t, cur);
+                    }
+                    if (mealTotal.isEmpty) return const SizedBox.shrink();
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.monetization_on_outlined, color: Colors.white54, size: 12),
+                          const SizedBox(width: 4),
+                          Text(mealTotal, style: GoogleFonts.inter(
+                            color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w600,
+                          )),
+                        ],
+                      ),
+                    );
+                  }
+                ),
               ],
             ),
             trailing: isLocked 

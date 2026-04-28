@@ -236,22 +236,26 @@ class DietaService:
             is_imperial = self.user.pais == 'US' or self.user.moeda == 'USD'
             
         # Se for unidade, o preço no fallback costuma ser por "unidade/pacote"
-        # Para unidades individuais (ovo, banana), o preço base deve ser menor
-        if 'unidade' in alimento:
-             # Heurística: se for unidade, o preço base do fallback (7.0, 18.0) é dividido 
-             # para representar o valor de uma única unidade.
-             preco_porcao = preco_base / 5.0 
+        # Para ovos, assumimos o preço de uma cartela de 12. Para outros, calculamos pelo peso em gramas.
+        if 'ovo' in alimento['nome'].lower():
+             preco_porcao = preco_base / 12.0
              porcao_str = f"{alimento['unidade']}"
         else:
              if is_imperial:
                  # Preço base nos EUA é por Libra (lb) = 453.59g
                  preco_porcao = preco_base * (alimento['porcao'] / 453.592)
-                 # 1 oz = 28.3495g
-                 oz_val = round(alimento['porcao'] / 28.3495, 1)
-                 porcao_str = f"{oz_val} oz"
+                 if 'unidade' in alimento:
+                     porcao_str = f"{alimento['unidade']}"
+                 else:
+                     # 1 oz = 28.3495g
+                     oz_val = round(alimento['porcao'] / 28.3495, 1)
+                     porcao_str = f"{oz_val} oz"
              else:
                  preco_porcao = preco_base * (alimento['porcao'] / 1000) # Preço por kg
-                 porcao_str = f"{alimento['porcao']}g"
+                 if 'unidade' in alimento:
+                     porcao_str = f"{alimento['unidade']}"
+                 else:
+                     porcao_str = f"{alimento['porcao']}g"
         
         self._custo_diario_acumulado += preco_porcao
         
@@ -298,11 +302,14 @@ class DietaService:
                 alimentos.append(self._calcular_macros_alimento(a))
 
         total_cal = sum(a['calorias'] for a in alimentos)
+        total_preco = sum(a['preco_num'] for a in alimentos)
         return {
             'nome': t('meal_breakfast'),
             'horario': '07:00',
             'alimentos': alimentos,
             'total_calorias': total_cal,
+            'total_preco': total_preco,
+            'total_preco_str': self._format_currency(total_preco),
         }
 
     def _gerar_lanche(self, macros, usados, nome, orcamento='padrao'):
@@ -324,11 +331,14 @@ class DietaService:
             horario = '15:30'
 
         total_cal = sum(a['calorias'] for a in alimentos)
+        total_preco = sum(a['preco_num'] for a in alimentos)
         return {
             'nome': nome,
             'horario': horario,
             'alimentos': alimentos,
             'total_calorias': total_cal,
+            'total_preco': total_preco,
+            'total_preco_str': self._format_currency(total_preco),
         }
 
     def _gerar_almoco(self, macros, usados, orcamento='padrao'):
@@ -346,11 +356,14 @@ class DietaService:
                 alimentos.append(self._calcular_macros_alimento(a))
 
         total_cal = sum(a['calorias'] for a in alimentos)
+        total_preco = sum(a['preco_num'] for a in alimentos)
         return {
             'nome': t('meal_lunch'),
             'horario': '12:30',
             'alimentos': alimentos,
             'total_calorias': total_cal,
+            'total_preco': total_preco,
+            'total_preco_str': self._format_currency(total_preco),
         }
 
     def _gerar_jantar(self, macros, usados, orcamento='padrao'):
@@ -367,11 +380,14 @@ class DietaService:
                 alimentos.append(self._calcular_macros_alimento(a))
 
         total_cal = sum(a['calorias'] for a in alimentos)
+        total_preco = sum(a['preco_num'] for a in alimentos)
         return {
             'nome': t('meal_dinner'),
             'horario': '19:00',
             'alimentos': alimentos,
             'total_calorias': total_cal,
+            'total_preco': total_preco,
+            'total_preco_str': self._format_currency(total_preco),
         }
 
     def _gerar_ceia(self, macros, usados, orcamento='padrao'):
@@ -385,11 +401,14 @@ class DietaService:
             alimentos.append(self._calcular_macros_alimento(proteina))
 
         total_cal = sum(a['calorias'] for a in alimentos)
+        total_preco = sum(a['preco_num'] for a in alimentos)
         return {
             'nome': t('meal_late_snack'),
             'horario': '21:30',
             'alimentos': alimentos,
             'total_calorias': total_cal,
+            'total_preco': total_preco,
+            'total_preco_str': self._format_currency(total_preco),
         }
 
     def translate_meals(self, meals_data, target_lang='pt'):
@@ -449,6 +468,13 @@ class DietaService:
                             new_al['unidade'] = target_food['unidade']
                     new_alimentos.append(new_al)
                 new_ref['alimentos'] = new_alimentos
+                
+                # Update total_preco sum from new_alimentos to ensure consistency, 
+                # though it should be the same numerically
+                total_preco = sum(a.get('preco_num', 0) for a in new_alimentos)
+                new_ref['total_preco'] = total_preco
+                new_ref['total_preco_str'] = self._format_currency(total_preco)
+                
                 return new_ref
 
             translated_meals = []
@@ -478,15 +504,23 @@ class DietaService:
         if dias == 7:
             # Generate 7 different daily plans
             plano_semanal = []
+            preco_total_diario_soma = 0
             for i in range(7):
+                refeicoes_do_dia = self.gerar_refeicoes(macros, orcamento)
+                preco_dia = sum(r.get('total_preco', 0) for r in refeicoes_do_dia)
+                preco_total_diario_soma += preco_dia
                 plano_semanal.append({
                     'dia': i + 1,
-                    'refeicoes': self.gerar_refeicoes(macros, orcamento)
+                    'refeicoes': refeicoes_do_dia,
+                    'preco_total_diario': preco_dia,
+                    'preco_total_diario_str': self._format_currency(preco_dia)
                 })
             refeicoes_data = plano_semanal
+            preco_total_diario = preco_total_diario_soma / 7
         else:
             # Standard 1 day plan
             refeicoes_data = self.gerar_refeicoes(macros, orcamento)
+            preco_total_diario = sum(r.get('total_preco', 0) for r in refeicoes_data)
 
         return {
             'tmb': tmb,
@@ -495,6 +529,8 @@ class DietaService:
             'proteinas_g': macros['proteinas_g'],
             'carboidratos_g': macros['carboidratos_g'],
             'gorduras_g': macros['gorduras_g'],
+            'preco_total_diario': preco_total_diario,
+            'preco_total_diario_str': self._format_currency(preco_total_diario),
             'refeicoes': refeicoes_data,
             'objetivo': objetivo,
             'duracao': dias
@@ -551,7 +587,13 @@ class DietaService:
                 calorias_reais = porcao * calorias_por_100g
                 # Calcula o preço
                 preco_base = self._get_food_price(op['nome'])
-                preco_calculado = (preco_base / 5.0) * porcao
+                if 'ovo' in op['nome'].lower():
+                    preco_calculado = (preco_base / 12.0) * porcao
+                else:
+                    if is_imperial:
+                        preco_calculado = preco_base * ((op['porcao'] * porcao) / 453.592)
+                    else:
+                        preco_calculado = preco_base * ((op['porcao'] * porcao) / 1000)
             else:
                 # Peso em gramas
                 porcao = round(fator_necessario * 100)
