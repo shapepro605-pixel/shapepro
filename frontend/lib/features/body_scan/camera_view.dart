@@ -36,6 +36,7 @@ class _CameraViewState extends State<CameraView> {
   int _cameraIndex = 0;
   FlashMode _flashMode = FlashMode.off;
   bool _isCapturing = false;
+  int _alignmentPercentage = 0;
   
   @override
   void didChangeDependencies() {
@@ -96,18 +97,27 @@ class _CameraViewState extends State<CameraView> {
           image.height.toDouble()
         );
         
+        final alignmentScore = PoseValidator.calculateAlignmentScore(
+          poses.first, 
+          widget.poseType, 
+          image.width.toDouble(), 
+          image.height.toDouble()
+        );
+        
         setState(() {
           _validationErrors = errors;
           _isValid = errors.isEmpty;
           _lastPose = poses.first;
+          _alignmentPercentage = alignmentScore.toInt();
           _lastImageWidth = image.width.toDouble();
           _lastImageHeight = image.height.toDouble();
         });
       } else if (mounted) {
         setState(() {
-          _validationErrors = ["noBodyDetected"];
+          _validationErrors = ["instructions"]; // Use instruction key
           _lastPose = null;
           _isValid = false;
+          _alignmentPercentage = 0;
         });
       }
     } catch (e) {
@@ -191,12 +201,15 @@ class _CameraViewState extends State<CameraView> {
       }
       
       final file = await _controller!.takePicture();
-      widget.onImageCaptured(
-        file, 
-        metrics, 
-        _lastPose, 
-        Size(_lastImageWidth, _lastImageHeight)
-      );
+      if (mounted) {
+        Navigator.pop(context); // Close camera view and return to preview
+        widget.onImageCaptured(
+          file, 
+          metrics, 
+          _lastPose, 
+          Size(_lastImageWidth, _lastImageHeight)
+        );
+      }
     } catch (e) {
       debugPrint("Capture Error: $e");
       if (mounted) {
@@ -253,6 +266,7 @@ class _CameraViewState extends State<CameraView> {
           poseType: widget.poseType,
           currentPose: _lastPose,
           realtimeMetrics: _lastEstimatedMetrics,
+          alignmentPercentage: _alignmentPercentage,
           isFrontCamera: _cameras.isNotEmpty && _cameras[_cameraIndex].lensDirection == CameraLensDirection.front,
           imageSize: Size(_lastImageWidth, _lastImageHeight),
           statusMessage: _isValid 
@@ -374,6 +388,7 @@ class _CameraViewState extends State<CameraView> {
       case "poseSide": return l10n.poseSide;
       case "poseBack": return l10n.poseBack;
       case "noBodyDetected": return l10n.noBodyDetected;
+      case "instructions": return "Fique reto, corpo inteiro visível, boa iluminação";
       case "startingCamera": return l10n.startingCamera;
       default: return key;
     }

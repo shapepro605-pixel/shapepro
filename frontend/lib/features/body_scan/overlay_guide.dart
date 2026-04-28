@@ -11,6 +11,7 @@ class OverlayGuide extends StatelessWidget {
   final Map<String, double>? realtimeMetrics;
   final bool isFrontCamera;
   final Size imageSize;
+  final int alignmentPercentage;
 
   const OverlayGuide({
     super.key,
@@ -21,6 +22,7 @@ class OverlayGuide extends StatelessWidget {
     this.realtimeMetrics,
     this.isFrontCamera = false,
     required this.imageSize,
+    this.alignmentPercentage = 0,
   });
 
   @override
@@ -33,12 +35,13 @@ class OverlayGuide extends StatelessWidget {
             painter: SilhouettePainter(
               isValid: isValid,
               poseType: poseType,
+              hasBody: currentPose != null,
+              alignmentPercentage: alignmentPercentage,
             ),
           ),
         ),
         
         // Exibir métricas e marcações neon maravilhosas ao vivo
-        if (currentPose != null && realtimeMetrics != null)
           Positioned.fill(
             child: CustomPaint(
               painter: NeonPosePainter(
@@ -46,6 +49,31 @@ class OverlayGuide extends StatelessWidget {
                 imageSize: imageSize,
                 metrics: realtimeMetrics,
                 isFrontCamera: isFrontCamera,
+              ),
+            ),
+          ),
+        
+        // Alignment Percentage Badge
+        if (currentPose != null)
+          Positioned(
+            top: 150,
+            left: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: _getOverlayColor().withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.align_horizontal_center, color: Colors.white, size: 16),
+                  const SizedBox(width: 6),
+                  Text(
+                    "Alinhamento: $alignmentPercentage%",
+                    style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                ],
               ),
             ),
           ),
@@ -62,17 +90,14 @@ class OverlayGuide extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
               decoration: BoxDecoration(
-                color: isValid 
-                    ? const Color(0xFF2ED573).withValues(alpha: 0.9) 
-                    : const Color(0xFF16162A).withValues(alpha: 0.8),
+                color: _getOverlayColor().withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
-                  if (isValid)
-                    BoxShadow(
-                      color: const Color(0xFF2ED573).withValues(alpha: 0.4),
-                      blurRadius: 20,
-                      spreadRadius: 2,
-                    ),
+                  BoxShadow(
+                    color: _getOverlayColor().withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
                 ],
               ),
               child: Text(
@@ -91,25 +116,45 @@ class OverlayGuide extends StatelessWidget {
       ],
     );
   }
+
+  Color _getOverlayColor() {
+    if (isValid) return const Color(0xFF2ED573); // Green
+    if (currentPose != null) {
+      if (alignmentPercentage < 50) return Colors.redAccent;
+      return Colors.amber; // Yellow
+    }
+    return const Color(0xFF16162A); // Dark
+  }
 }
 
 class SilhouettePainter extends CustomPainter {
   final bool isValid;
   final String poseType;
+  final bool hasBody;
+  final int alignmentPercentage;
 
   SilhouettePainter({
     required this.isValid,
     required this.poseType,
+    this.hasBody = false,
+    this.alignmentPercentage = 0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawBrackets(canvas, size);
     
+    Color silhouetteColor = Colors.white.withValues(alpha: 0.4);
+    if (isValid) {
+      silhouetteColor = const Color(0xFF2ED573).withValues(alpha: 0.6);
+    } else if (hasBody) {
+      silhouetteColor = (alignmentPercentage < 50) 
+          ? Colors.redAccent.withValues(alpha: 0.6) 
+          : Colors.amber.withValues(alpha: 0.6);
+    }
+
     final paint = Paint()
-      ..color = isValid 
-        ? const Color(0xFF2ED573).withValues(alpha: 0.6) 
-        : Colors.white.withValues(alpha: 0.4)
+      ..color = silhouetteColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
 
@@ -125,8 +170,15 @@ class SilhouettePainter extends CustomPainter {
   }
 
   void _drawBrackets(Canvas canvas, Size size) {
+    Color bracketColor = Colors.white30;
+    if (isValid) {
+      bracketColor = const Color(0xFF2ED573);
+    } else if (hasBody) {
+      bracketColor = (alignmentPercentage < 50) ? Colors.redAccent : Colors.amber;
+    }
+
     final bracketPaint = Paint()
-      ..color = isValid ? const Color(0xFF2ED573) : Colors.white30
+      ..color = bracketColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0;
 

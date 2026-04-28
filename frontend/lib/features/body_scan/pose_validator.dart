@@ -34,6 +34,53 @@ class PoseValidator {
     return errors;
   }
 
+  /// Calculates an alignment score from 0 to 100 based on body visibility and position.
+  static double calculateAlignmentScore(Pose pose, String type, double frameWidth, double frameHeight) {
+    if (!isFullBodyDetected(pose)) {
+      // Base score on how many landmarks are visible
+      final landmarks = [
+        PoseLandmarkType.nose, PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder,
+        PoseLandmarkType.leftHip, PoseLandmarkType.rightHip, PoseLandmarkType.leftAnkle, PoseLandmarkType.rightAnkle
+      ];
+      int visible = 0;
+      for (var type in landmarks) {
+        if (pose.landmarks[type] != null && pose.landmarks[type]!.likelihood > 0.5) visible++;
+      }
+      return (visible / landmarks.length) * 40; // Max 40% if body is incomplete
+    }
+
+    double score = 40.0; // Base score for full body detection
+
+    // Centering (Max 20%)
+    final leftShoulder = pose.landmarks[PoseLandmarkType.leftShoulder]!;
+    final rightShoulder = pose.landmarks[PoseLandmarkType.rightShoulder]!;
+    final centerX = (leftShoulder.x + rightShoulder.x) / 2;
+    final screenCenter = frameWidth / 2;
+    final centerOffset = (centerX - screenCenter).abs() / frameWidth;
+    score += math.max(0, 20 * (1 - (centerOffset / 0.3))); // Max 20% if offset < 30%
+
+    // Straightness (Max 20%)
+    final diffY = (leftShoulder.y - rightShoulder.y).abs();
+    final width = (leftShoulder.x - rightShoulder.x).abs();
+    final tilt = diffY / (width + 1);
+    score += math.max(0, 20 * (1 - (tilt / 0.15))); // Max 20% if tilt < 15%
+
+    // Distance (Max 20%)
+    final nose = pose.landmarks[PoseLandmarkType.nose]!;
+    final leftAnkle = pose.landmarks[PoseLandmarkType.leftAnkle]!;
+    final rightAnkle = pose.landmarks[PoseLandmarkType.rightAnkle]!;
+    final bodyHeight = (leftAnkle.y - nose.y).abs();
+    final heightRatio = bodyHeight / frameHeight;
+    // Ideal ratio is between 0.4 and 0.7
+    double distanceFactor = 0;
+    if (heightRatio >= 0.4 && heightRatio <= 0.7) distanceFactor = 1.0;
+    else if (heightRatio < 0.4) distanceFactor = heightRatio / 0.4;
+    else distanceFactor = 1.0 - ((heightRatio - 0.7) / 0.3);
+    score += math.max(0, 20 * distanceFactor);
+
+    return math.min(100, score);
+  }
+
   static bool isFullBodyDetected(Pose pose) {
     final landmarks = [
       PoseLandmarkType.nose,
