@@ -485,3 +485,87 @@ class DietaService:
             'objetivo': objetivo,
             'duracao': dias
         }
+
+    def sugerir_substituicoes(self, alimento_atual, calorias_atual, preco_atual):
+        """
+        Gera uma lista de substituições inteligentes para um dado alimento.
+        Filtra pela mesma categoria, calcula a porção para bater as calorias e 
+        retorna apenas os alimentos que são mais baratos.
+        """
+        categoria_atual = None
+        alimento_info_atual = None
+        
+        # Encontra a categoria do alimento atual
+        for cat, lista in self.alimentos.items():
+            for alimento in lista:
+                if alimento['nome'].lower() == alimento_atual.lower():
+                    categoria_atual = cat
+                    alimento_info_atual = alimento
+                    break
+            if categoria_atual:
+                break
+                
+        if not categoria_atual:
+            return [] # Alimento não encontrado na base
+            
+        opcoes = self.alimentos.get(categoria_atual, [])
+        sugestoes = []
+        
+        for op in opcoes:
+            if op['nome'].lower() == alimento_atual.lower():
+                continue # Pula o próprio alimento
+                
+            # Calcula a porção necessária para ter a mesma caloria
+            # op['calorias'] é a caloria por 100g ou unidade
+            calorias_por_100g = op['calorias']
+            if calorias_por_100g <= 0:
+                continue
+                
+            fator_necessario = calorias_atual / calorias_por_100g
+            
+            # Ajusta porção
+            if 'unidade' in op:
+                # Arredonda para a unidade mais próxima (ex: 2 ovos)
+                # O fator aqui é a quantidade de unidades
+                porcao = round(fator_necessario)
+                if porcao <= 0: porcao = 1
+                porcao_str = f"{porcao} uni"
+                # Recalcula a caloria baseada na unidade inteira para manter precisão
+                calorias_reais = porcao * calorias_por_100g
+                # Calcula o preço
+                preco_base = self._get_food_price(op['nome'])
+                preco_calculado = (preco_base / 5.0) * porcao
+            else:
+                # Peso em gramas
+                porcao = round(fator_necessario * 100)
+                if porcao <= 0: porcao = 10
+                porcao_str = f"{porcao}g"
+                calorias_reais = (porcao / 100) * calorias_por_100g
+                # Calcula o preço
+                preco_base = self._get_food_price(op['nome'])
+                preco_calculado = preco_base * (porcao / 1000)
+                
+            # Filtra por preço (só opções mais baratas) e calorias muito discrepantes
+            # Margem de +- 10% nas calorias reais (relevante para unidades)
+            if preco_calculado < preco_atual and (0.9 * calorias_atual <= calorias_reais <= 1.1 * calorias_atual):
+                economia = preco_atual - preco_calculado
+                price_str = self._format_currency(preco_calculado)
+                economia_str = self._format_currency(economia)
+                
+                sugestoes.append({
+                    'nome': op['nome'],
+                    'porcao_str': porcao_str,
+                    'calorias': round(calorias_reais),
+                    'preco_num': round(preco_calculado, 2),
+                    'preco_str': price_str,
+                    'economia_num': round(economia, 2),
+                    'economia_str': economia_str,
+                    # Adiciona os novos valores para a interface usar
+                    'proteina': round(op['proteina'] * (porcao/100 if 'unidade' not in op else porcao), 1),
+                    'carboidrato': round(op['carbo'] * (porcao/100 if 'unidade' not in op else porcao), 1),
+                    'gordura': round(op['gordura'] * (porcao/100 if 'unidade' not in op else porcao), 1)
+                })
+                
+        # Ordena por maior economia
+        sugestoes.sort(key=lambda x: x['economia_num'], reverse=True)
+        return sugestoes[:5] # Retorna as 5 melhores opções

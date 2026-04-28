@@ -1,44 +1,49 @@
 import 'dart:math';
+import 'dart:developer' as dev;
+import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
 class PoseMetricsHelper {
-  static Map<String, double>? calculateEstimatedMetrics(Pose? lastPose, double userHeight) {
+  static Map<String, double>? calculateEstimatedMetrics(
+      Pose? lastPose, double userHeight) {
     if (lastPose == null) return null;
-    
+
     final nose = lastPose.landmarks[PoseLandmarkType.nose];
     final leftAnkle = lastPose.landmarks[PoseLandmarkType.leftAnkle];
     final rightAnkle = lastPose.landmarks[PoseLandmarkType.rightAnkle];
-    
+
     if (nose == null || leftAnkle == null || rightAnkle == null) return null;
-    
+
     // Altura em pixels
     final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
     final bodyHeightPixels = (avgAnkleY - nose.y).abs();
     if (bodyHeightPixels <= 0) return null; // Prevenir divisão por zero
-    
+
     // Proporção pixel para cm
     final pixelToCm = userHeight / bodyHeightPixels;
-    
+
     final shoulderL = lastPose.landmarks[PoseLandmarkType.leftShoulder];
     final shoulderR = lastPose.landmarks[PoseLandmarkType.rightShoulder];
     final hipL = lastPose.landmarks[PoseLandmarkType.leftHip];
     final hipR = lastPose.landmarks[PoseLandmarkType.rightHip];
-    
-    if (shoulderL == null || shoulderR == null || hipL == null || hipR == null) return null;
-    
+
+    if (shoulderL == null || shoulderR == null || hipL == null || hipR == null)
+      return null;
+
     // Cálculo de larguras em pixels
     final shoulderWidthPixels = (shoulderL.x - shoulderR.x).abs();
     final hipWidthPixels = (hipL.x - hipR.x).abs();
-    
+
     // Heurística de conversão de largura frontal para circunferência
     double widthToCircumference(double widthPixels, double factor) {
-      return (widthPixels * pixelToCm * factor).roundToDouble(); 
+      return (widthPixels * pixelToCm * factor).roundToDouble();
     }
 
     // === Métricas Existentes ===
     final shoulders = widthToCircumference(shoulderWidthPixels, 2.5);
     final chest = widthToCircumference(shoulderWidthPixels, 2.7);
-    final waist = widthToCircumference((shoulderWidthPixels + hipWidthPixels) / 2 * 0.85, 2.6);
+    final waist = widthToCircumference(
+        (shoulderWidthPixels + hipWidthPixels) / 2 * 0.85, 2.6);
     final hips = widthToCircumference(hipWidthPixels, 2.8);
 
     // === Novas Métricas Profissionais ===
@@ -114,12 +119,14 @@ class PoseMetricsHelper {
     // === Indicadores Derivados ===
     // Relação Cintura-Quadril (Risco Cardiovascular)
     if (hips > 0) {
-      metrics['waist_hip_ratio'] = double.parse((waist / hips).toStringAsFixed(2));
+      metrics['waist_hip_ratio'] =
+          double.parse((waist / hips).toStringAsFixed(2));
     }
 
     // Relação Cintura-Altura (Gordura Abdominal)
     if (userHeight > 0) {
-      metrics['waist_height_ratio'] = double.parse((waist / userHeight).toStringAsFixed(2));
+      metrics['waist_height_ratio'] =
+          double.parse((waist / userHeight).toStringAsFixed(2));
     }
 
     // Proporção V-Shape (Ombros / Cintura)
@@ -133,64 +140,80 @@ class PoseMetricsHelper {
   /// Calculates circumferences using a dual-angle elliptical model (Front + Side)
   static Map<String, double>? calculateProfessionalMetrics({
     required Pose frontPose,
+    required Size frontSize,
     required Pose sidePose,
+    required Size sideSize,
     required double userHeight,
   }) {
-    // 1. Get Scales
-    final frontScale = _getPixelToCmScale(frontPose, userHeight);
-    final sideScale = _getPixelToCmScale(sidePose, userHeight);
-    
+    // 1. Get Scales (using pixel-based height)
+    final frontScale = _getPixelToCmScale(frontPose, frontSize, userHeight);
+    final sideScale = _getPixelToCmScale(sidePose, sideSize, userHeight);
+
     if (frontScale == null || sideScale == null) return null;
+
+    dev.log(">>> AI SCAN DEBUG: Front Scale: $frontScale, Side Scale: $sideScale");
 
     // 2. Get Widths (Front) and Depths (Side)
     final fLandmarks = frontPose.landmarks;
     final sLandmarks = sidePose.landmarks;
 
     // --- CHEST ---
-    final fShoulderW = (fLandmarks[PoseLandmarkType.leftShoulder]!.x - fLandmarks[PoseLandmarkType.rightShoulder]!.x).abs() * frontScale;
-    final sShoulderD = (sLandmarks[PoseLandmarkType.leftShoulder]!.x - sLandmarks[PoseLandmarkType.rightShoulder]!.x).abs() * sideScale;
-    // Note: In side view, "width" between shoulders is actually depth. If they overlap, we might need a better landmark or a multiplier.
-    // For Side view depth, we often use the distance between a "front" landmark and "back" landmark.
-    // However, ML Kit landmarks are mainly on the joints. 
-    // A better way for Side Depth: use the distance between the Shoulder and the Chest (if we had one) 
-    // or just the width between the visible torso boundaries.
+    // Extracting pixel-based width and depth
+    final fShoulderW = (_getPX(frontPose.landmarks[PoseLandmarkType.leftShoulder]!, frontSize) - 
+                        _getPX(frontPose.landmarks[PoseLandmarkType.rightShoulder]!, frontSize)).abs() * frontScale;
     
-    // Actually, if the user is perfectly sideways, the distance between left and right hip landmarks 
-    // in the side photo will represent the depth.
-    
-    final fHipW = (fLandmarks[PoseLandmarkType.leftHip]!.x - fLandmarks[PoseLandmarkType.rightHip]!.x).abs() * frontScale;
-    final sHipD = (sLandmarks[PoseLandmarkType.leftHip]!.x - sLandmarks[PoseLandmarkType.rightHip]!.x).abs() * sideScale;
+    final sShoulderD = (_getPX(sidePose.landmarks[PoseLandmarkType.leftShoulder]!, sideSize) - 
+                        _getPX(sidePose.landmarks[PoseLandmarkType.rightShoulder]!, sideSize)).abs() * sideScale;
+
+    dev.log(">>> AI SCAN DEBUG: Chest Width: $fShoulderW, Depth: $sShoulderD");
+
+    final fHipW = (_getPX(frontPose.landmarks[PoseLandmarkType.leftHip]!, frontSize) - 
+                   _getPX(frontPose.landmarks[PoseLandmarkType.rightHip]!, frontSize)).abs() * frontScale;
+    final sHipD = (_getPX(sidePose.landmarks[PoseLandmarkType.leftHip]!, sideSize) - 
+                   _getPX(sidePose.landmarks[PoseLandmarkType.rightHip]!, sideSize)).abs() * sideScale;
+
+    dev.log(">>> AI SCAN DEBUG: Hip Width: $fHipW, Depth: $sHipD");
 
     // --- CALCULATION ---
-    final chest = _ellipseCircumference(fShoulderW * 1.1, sShoulderD * 1.2) * 1.05; // 5% correction
-    final waist = _ellipseCircumference((fShoulderW + fHipW) / 2 * 0.85, (sShoulderD + sHipD) / 2 * 0.9) * 0.97;
-    final hips = _ellipseCircumference(fHipW, sHipD) * 1.03;
+    // Multipliers increased to account for tissue (skin/muscle) depth beyond the skeletal joints
+    final chestDepth = max(sShoulderD * 1.85, fShoulderW * 0.72); // Fallback to 72% of width if depth is too small
+    final hipDepth = max(sHipD * 1.95, fHipW * 0.82);   // Fallback to 82% of width (common for hips)
+    
+    final chest = _ellipseCircumference(fShoulderW * 1.15, chestDepth) * 1.08;
+    final waist = _ellipseCircumference((fShoulderW + fHipW) / 2 * 0.9, (chestDepth + hipDepth) / 2 * 0.85) * 0.98;
+    final hips = _ellipseCircumference(fHipW * 1.05, hipDepth) * 1.05;
+
+    dev.log(">>> AI SCAN DEBUG: Final - Chest: $chest, Waist: $waist, Hips: $hips");
 
     final Map<String, double> metrics = {
+      'shoulders': (fShoulderW * 2.6).roundToDouble(),
       'chest': chest.roundToDouble(),
       'waist': waist.roundToDouble(),
       'hips': hips.roundToDouble(),
-      'v_shape': double.parse(((fShoulderW * 2.5) / waist).toStringAsFixed(2)),
+      'v_shape': double.parse(((fShoulderW * 2.6) / waist).toStringAsFixed(2)),
     };
 
     // Add individual limb measurements using average of both poses where possible
     // (Limbs are mostly cylindrical, so we can average the estimated diameters)
     // For brevity, we'll use the existing cylindrical logic but with improved scaling.
-    
+
     return metrics;
   }
 
-  static double? _getPixelToCmScale(Pose pose, double userHeight) {
+  static double? _getPixelToCmScale(Pose pose, Size imageSize, double userHeight) {
     final nose = pose.landmarks[PoseLandmarkType.nose];
     final leftAnkle = pose.landmarks[PoseLandmarkType.leftAnkle];
     final rightAnkle = pose.landmarks[PoseLandmarkType.rightAnkle];
-    
+
     if (nose == null || leftAnkle == null || rightAnkle == null) return null;
-    
-    final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
-    final bodyHeightPixels = (avgAnkleY - nose.y).abs();
-    if (bodyHeightPixels <= 0) return null;
-    
+
+    // Detect if coordinates are normalized (0..1)
+    double noseY = _getPY(nose, imageSize);
+    double ankleY = (_getPY(leftAnkle, imageSize) + _getPY(rightAnkle, imageSize)) / 2;
+
+    final bodyHeightPixels = (ankleY - noseY).abs();
+    if (bodyHeightPixels <= 10) return null;
+
     return userHeight / bodyHeightPixels;
   }
 
@@ -203,6 +226,9 @@ class PoseMetricsHelper {
     // Ramanujan formula: PI * [ 3(a+b) - sqrt((3a+b)*(a+3b)) ]
     return pi * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
   }
+
+  static double _getPX(PoseLandmark lm, Size size) => lm.x <= 1.0 ? lm.x * size.width : lm.x;
+  static double _getPY(PoseLandmark lm, Size size) => lm.y <= 1.0 ? lm.y * size.height : lm.y;
 
   /// Calcula a distância euclidiana entre dois landmarks em pixels
   static double _distance(PoseLandmark a, PoseLandmark b) {

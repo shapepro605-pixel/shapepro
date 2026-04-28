@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NeonPosePainter extends CustomPainter {
   final Pose? pose;
   final Size imageSize;
   final Map<String, double>? metrics;
   final bool isFrontCamera;
+  final double animationProgress;
 
   NeonPosePainter({
     required this.pose, 
     required this.imageSize, 
     this.metrics, 
     this.isFrontCamera = false,
+    this.animationProgress = 1.0,
   });
 
   @override
@@ -86,8 +89,11 @@ class NeonPosePainter extends CustomPainter {
     // === DESENHAR PONTOS NOS LANDMARKS ===
     void drawDot(PoseLandmark? point) {
       if (point == null) return;
-      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 6, dotGlowPaint);
-      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 3, dotPaint);
+      if (animationProgress < 0.2) return; // Delay dots slightly
+      final scale = Curves.easeOutBack.transform(((animationProgress - 0.2) / 0.8).clamp(0.0, 1.0));
+      
+      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 6 * scale, dotGlowPaint);
+      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 3 * scale, dotPaint);
     }
 
     // Todos os pontos de referência
@@ -102,9 +108,11 @@ class NeonPosePainter extends CustomPainter {
       final start = Offset(tx(a.x), ty(a.y));
       final end = Offset(tx(b.x), ty(b.y));
       
-      canvas.drawLine(start, end, outerGlowPaint);
-      canvas.drawLine(start, end, innerGlowPaint);
-      canvas.drawLine(start, end, linePaint);
+      final currentEnd = Offset.lerp(start, end, Curves.easeInOut.transform(animationProgress))!;
+      
+      canvas.drawLine(start, currentEnd, outerGlowPaint);
+      canvas.drawLine(start, currentEnd, innerGlowPaint);
+      canvas.drawLine(start, currentEnd, linePaint);
     }
 
     // Esqueleto corporal
@@ -129,7 +137,9 @@ class NeonPosePainter extends CustomPainter {
     }
 
     // === LABELS DE MÉTRICAS AO LADO DO CORPO ===
-    if (metrics == null) return;
+    if (metrics == null || animationProgress < 0.7) return; // Only show metrics at the end of animation
+
+    final double textOpacity = Curves.easeIn.transform(((animationProgress - 0.7) / 0.3).clamp(0.0, 1.0));
 
     void drawMetricLabel(double x, double y, String label, String value, {bool leftSide = true}) {
       const double labelWidth = 100.0;
@@ -157,7 +167,7 @@ class NeonPosePainter extends CustomPainter {
 
       // Linha conectora elegante
       final connectorPaint = Paint()
-        ..color = neonGreen.withValues(alpha: 0.6)
+        ..color = neonGreen.withValues(alpha: 0.6 * textOpacity)
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
 
@@ -177,11 +187,11 @@ class NeonPosePainter extends CustomPainter {
       );
 
       final bgPaint = Paint()
-        ..color = const Color(0xFF0A0A1A).withValues(alpha: 0.85)
+        ..color = const Color(0xFF0A0A1A).withValues(alpha: 0.85 * textOpacity)
         ..style = PaintingStyle.fill;
 
       final borderPaint = Paint()
-        ..color = neonGreen.withValues(alpha: 0.4)
+        ..color = neonGreen.withValues(alpha: 0.4 * textOpacity)
         ..strokeWidth = 1.2
         ..style = PaintingStyle.stroke;
 
@@ -194,21 +204,22 @@ class NeonPosePainter extends CustomPainter {
           children: [
             TextSpan(
               text: "$label\n",
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 8,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.0,
+              style: GoogleFonts.inter(
+                color: Colors.white.withValues(alpha: 0.9 * textOpacity),
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.5,
               ),
             ),
             TextSpan(
               text: "$value cm",
-              style: TextStyle(
-                color: neonGreen,
-                fontSize: 13,
+              style: GoogleFonts.inter(
+                color: neonGreen.withValues(alpha: textOpacity),
+                fontSize: 14,
                 fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
                 shadows: [
-                  Shadow(color: neonGreen.withValues(alpha: 0.5), blurRadius: 4),
+                  Shadow(color: neonGreen.withValues(alpha: 0.6 * textOpacity), blurRadius: 6),
                 ],
               ),
             ),

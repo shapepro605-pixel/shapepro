@@ -609,6 +609,18 @@ class ApiService extends ChangeNotifier {
     return await _request('GET', '/plan/dieta/historico');
   }
 
+  Future<Map<String, dynamic>> sugerirSubstituicao({
+    required String alimentoAtual,
+    required double caloriasAtual,
+    required double precoAtual,
+  }) async {
+    return await _request('POST', '/plan/dieta/substituir', body: {
+      'alimento_atual': alimentoAtual,
+      'calorias_atual': caloriasAtual,
+      'preco_atual': precoAtual,
+    });
+  }
+
   // ── TRAINING ─────────────────────────────────────────────────────────
 
   Future<Map<String, dynamic>> getTreinos() async {

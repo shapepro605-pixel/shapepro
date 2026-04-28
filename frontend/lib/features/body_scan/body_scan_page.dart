@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,9 @@ class BodyScanPage extends StatefulWidget {
   State<BodyScanPage> createState() => _BodyScanPageState();
 }
 
-class _BodyScanPageState extends State<BodyScanPage> {
+class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderStateMixin {
+  late AnimationController _neonAnimController;
+
   String _selectedPose = 'front';
   XFile? _frontImage;
   Pose? _frontPose;
@@ -32,6 +35,12 @@ class _BodyScanPageState extends State<BodyScanPage> {
   XFile? _sideImage;
   Pose? _sidePose;
   Size? _sideImageSize;
+  
+  // Static holders to survive Activity recreations during ImagePicker/Camera
+  static Pose? _staticFrontPose;
+  static Size? _staticFrontSize;
+  static Pose? _staticSidePose;
+  static Size? _staticSideSize;
 
   XFile? _capturedImage; // Temporary preview
   bool _isUploading = false;
@@ -39,6 +48,18 @@ class _BodyScanPageState extends State<BodyScanPage> {
   late BodyScanService _scanService;
   bool _isEvolutionMode = false;
   int _daysSinceLastScan = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _neonAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+  }
+
+  @override
+  void dispose() {
+    _neonAnimController.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -62,32 +83,52 @@ class _BodyScanPageState extends State<BodyScanPage> {
   }
 
   void _onImageCaptured(XFile file, Map<String, double>? metrics, [Pose? pose, Size? size]) {
+    log(">>> AI SCAN UI: onImageCaptured called. Pose: ${_selectedPose}. Pose is null? ${pose == null}");
     setState(() {
       if (_selectedPose == 'front') {
         _frontImage = file;
         _frontPose = pose;
         _frontImageSize = size;
+        _staticFrontPose = pose;
+        _staticFrontSize = size;
       } else if (_selectedPose == 'side') {
         _sideImage = file;
         _sidePose = pose;
         _sideImageSize = size;
+        _staticSidePose = pose;
+        _staticSideSize = size;
       }
       
+      // Restore from static if local state was lost
+      _frontPose ??= _staticFrontPose;
+      _frontImageSize ??= _staticFrontSize;
+      _sidePose ??= _staticSidePose;
+      _sideImageSize ??= _staticSideSize;
+
       // Automatic calculation if both are present
+      log(">>> AI SCAN UI: frontPose exists? ${_frontPose != null}, sidePose exists? ${_sidePose != null}");
       if (_frontPose != null && _sidePose != null) {
+        log(">>> AI SCAN UI: Calculating professional metrics");
         final api = Provider.of<ApiService>(context, listen: false);
         final userHeight = api.currentUser?['altura']?.toDouble() ?? 170.0;
         _metrics = PoseMetricsHelper.calculateProfessionalMetrics(
           frontPose: _frontPose!,
+          frontSize: _frontImageSize!,
           sidePose: _sidePose!,
+          sideSize: _sideImageSize!,
           userHeight: userHeight,
         );
       } else {
         // Fallback or partial metrics if only one is available (optional)
+        log(">>> AI SCAN UI: Missing one of the poses. Falling back to single-pose metrics.");
         _metrics = metrics;
       }
+      log(">>> AI SCAN UI: Assigned metrics: $_metrics");
       
       _capturedImage = file;
+      if (_selectedPose == 'front' && _frontPose != null) {
+        _neonAnimController.forward(from: 0.0);
+      }
     });
   }
 
@@ -470,13 +511,19 @@ class _BodyScanPageState extends State<BodyScanPage> {
                   child: Image.file(File(_capturedImage!.path), fit: BoxFit.cover),
                 ),
                 if (_selectedPose == 'front' && _frontPose != null)
-                  CustomPaint(
-                    size: Size(constraints.maxWidth, constraints.maxHeight),
-                    painter: NeonPosePainter(
-                      pose: _frontPose,
-                      imageSize: _frontImageSize!,
-                      metrics: _metrics,
-                    ),
+                  AnimatedBuilder(
+                    animation: _neonAnimController,
+                    builder: (context, child) {
+                      return CustomPaint(
+                        size: Size(constraints.maxWidth, constraints.maxHeight),
+                        painter: NeonPosePainter(
+                          pose: _frontPose,
+                          imageSize: _frontImageSize!,
+                          metrics: _metrics,
+                          animationProgress: _neonAnimController.value,
+                        ),
+                      );
+                    },
                   )
                 else if (_selectedPose == 'side' && _sidePose != null)
                   CustomPaint(
@@ -581,6 +628,10 @@ class _BodyScanPageState extends State<BodyScanPage> {
               // Measurements
               _buildResultRow(AppLocalizations.of(context)!.chestEstimated, _formatMeasure(_metrics!['chest'])),
               const SizedBox(height: 12),
+              if (_metrics!.containsKey('shoulders')) ...[
+                _buildResultRow("Ombro", _formatMeasure(_metrics!['shoulders'])),
+                const SizedBox(height: 12),
+              ],
               _buildResultRow(AppLocalizations.of(context)!.waistEstimated, _formatMeasure(_metrics!['waist'])),
               const SizedBox(height: 12),
               _buildResultRow(AppLocalizations.of(context)!.hipsEstimated, _formatMeasure(_metrics!['hips'])),

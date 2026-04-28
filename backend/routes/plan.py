@@ -178,6 +178,37 @@ def get_dieta():
     return jsonify({'dieta': plan_dict}), 200
 
 
+@plan_bp.route('/dieta/substituir', methods=['POST'])
+@jwt_required()
+def sugerir_substituicao():
+    """Get smart food substitution suggestions."""
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+    
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+        
+    data = request.get_json()
+    alimento_atual = data.get('alimento_atual')
+    calorias_atual = data.get('calorias_atual')
+    preco_atual = data.get('preco_atual')
+    
+    if not all([alimento_atual, calorias_atual, preco_atual]):
+        return jsonify({'error': 'Parâmetros incompletos.'}), 400
+        
+    from services.i18n import get_locale
+    lang = get_locale()
+    dieta_service = DietaService(lang=lang, user=user)
+    
+    sugestoes = dieta_service.sugerir_substituicoes(
+        alimento_atual=alimento_atual,
+        calorias_atual=float(calorias_atual),
+        preco_atual=float(preco_atual)
+    )
+    
+    return jsonify({'sugestoes': sugestoes}), 200
+
+
 @plan_bp.route('/dieta/historico', methods=['GET'])
 @jwt_required()
 def get_dieta_historico():

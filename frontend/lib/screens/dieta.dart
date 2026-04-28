@@ -174,6 +174,204 @@ class _DietaScreenState extends State<DietaScreen> {
     );
   }
 
+  void _showSubstitutionModal(Map<String, dynamic> alimentoAtual, int mealIndex, int foodIndex) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return FutureBuilder<Map<String, dynamic>>(
+              future: Provider.of<ApiService>(context, listen: false).sugerirSubstituicao(
+                alimentoAtual: alimentoAtual['nome'] ?? '',
+                caloriasAtual: (alimentoAtual['calorias'] as num).toDouble(),
+                precoAtual: (alimentoAtual['preco_num'] as num?)?.toDouble() ?? 0.0,
+              ),
+              builder: (context, snapshot) {
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF16162A),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 12),
+                        width: 40, height: 4,
+                        decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(22),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.lightbulb_outline, color: Color(0xFFFFD700), size: 28),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Substituição Inteligente", style: GoogleFonts.inter(
+                                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700,
+                                  )),
+                                  const SizedBox(height: 4),
+                                  Text("Economize mantendo suas calorias", style: GoogleFonts.inter(
+                                    color: Colors.white54, fontSize: 13,
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        const Expanded(child: Center(child: CircularProgressIndicator(color: Color(0xFF2ED573))))
+                      else if (snapshot.hasError || snapshot.data?['success'] == false || snapshot.data?['sugestoes'] == null || (snapshot.data?['sugestoes'] as List).isEmpty)
+                        Expanded(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(32),
+                              child: Text(
+                                "Nenhuma alternativa mais barata encontrada na base para este alimento no momento.",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(color: Colors.white54, fontSize: 15),
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                            itemCount: (snapshot.data!['sugestoes'] as List).length,
+                            itemBuilder: (context, idx) {
+                              final sug = snapshot.data!['sugestoes'][idx];
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1E1E38),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: const Color(0xFF2A2A4A)),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${sug['nome']} (${sug['porcao_str']})", style: GoogleFonts.inter(
+                                            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15,
+                                          )),
+                                          const SizedBox(height: 6),
+                                          Row(
+                                            children: [
+                                              Text("${sug['calorias']} kcal", style: GoogleFonts.inter(
+                                                color: const Color(0xFF2ED573), fontSize: 13, fontWeight: FontWeight.w600,
+                                              )),
+                                              const SizedBox(width: 8),
+                                              Text("•  💰 ${sug['preco_str']}", style: GoogleFonts.inter(
+                                                color: Colors.white70, fontSize: 13,
+                                              )),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF2ED573).withValues(alpha: 0.15),
+                                              borderRadius: BorderRadius.circular(6),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(Icons.savings, color: Color(0xFF2ED573), size: 12),
+                                                const SizedBox(width: 6),
+                                                Text("Você economiza ${sug['economia_str']}", style: GoogleFonts.inter(
+                                                  color: const Color(0xFF2ED573), fontSize: 11, fontWeight: FontWeight.w600,
+                                                )),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFF6C5CE7),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                      ),
+                                      onPressed: () {
+                                        _aplicarSubstituicao(mealIndex, foodIndex, sug);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Substituir", style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _aplicarSubstituicao(int mealIndex, int foodIndex, Map<String, dynamic> novaOpcao) {
+    if (_dieta == null) return;
+    setState(() {
+      final refeicoes = _dieta!['refeicoes'] as List;
+      final meal = refeicoes[mealIndex];
+      final alimentos = meal['alimentos'] as List;
+      
+      final oldFood = alimentos[foodIndex];
+      final oldCal = (oldFood['calorias'] as num).toDouble();
+      
+      final novoAlimento = {
+        'nome': novaOpcao['nome'],
+        'porcao': novaOpcao['porcao_str'],
+        'calorias': novaOpcao['calorias'],
+        'preco_num': novaOpcao['preco_num'],
+        'proteina': novaOpcao['proteina'],
+        'carboidrato': novaOpcao['carboidrato'],
+        'gordura': novaOpcao['gordura'],
+      };
+      
+      // Update the food in the list
+      alimentos[foodIndex] = novoAlimento;
+      
+      // Update meal calories
+      final diffCal = novaOpcao['calorias'] - oldCal;
+      meal['total_calorias'] = ((meal['total_calorias'] as num) + diffCal).round();
+      
+      // Update diet total macros/calories (optional, but good for UX)
+      _dieta!['calorias_totais'] = ((_dieta!['calorias_totais'] as num) + diffCal).round();
+      
+      if (novaOpcao['proteina'] != null && oldFood['proteina'] != null) {
+        _dieta!['proteinas_g'] = ((_dieta!['proteinas_g'] as num) + (novaOpcao['proteina'] - oldFood['proteina'])).round();
+      }
+      if (novaOpcao['carboidrato'] != null && oldFood['carboidrato'] != null) {
+        _dieta!['carboidratos_g'] = ((_dieta!['carboidratos_g'] as num) + (novaOpcao['carboidrato'] - oldFood['carboidrato'])).round();
+      }
+      if (novaOpcao['gordura'] != null && oldFood['gordura'] != null) {
+        _dieta!['gorduras_g'] = ((_dieta!['gorduras_g'] as num) + (novaOpcao['gordura'] - oldFood['gordura'])).round();
+      }
+      
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Substituído com sucesso! Economia aplicada."),
+        backgroundColor: const Color(0xFF2ED573),
+      ));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -747,8 +945,9 @@ class _DietaScreenState extends State<DietaScreen> {
             },
             iconColor: Colors.white38,
             collapsedIconColor: Colors.white38,
-            children: isLocked ? [] : alimentos.map((alimento) {
-              final a = alimento as Map<String, dynamic>;
+            children: isLocked ? [] : alimentos.asMap().entries.map((foodEntry) {
+              final foodIndex = foodEntry.key;
+              final a = foodEntry.value as Map<String, dynamic>;
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
@@ -775,14 +974,14 @@ class _DietaScreenState extends State<DietaScreen> {
                     )),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _showPriceDialog(a['nome'] ?? ''),
+                      onTap: () => _showSubstitutionModal(a, index, foodIndex),
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: const Icon(Icons.edit_outlined, color: Color(0xFF2ED573), size: 16),
+                        child: const Icon(Icons.sync_alt, color: Color(0xFF2ED573), size: 16),
                       ),
                     ),
                   ],
