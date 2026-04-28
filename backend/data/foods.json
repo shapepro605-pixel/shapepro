@@ -9,7 +9,9 @@
         {"nome": "Queijo cottage", "calorias": 98, "proteina": 11, "carbo": 3.4, "gordura": 4.3, "porcao": 100, "custo": "medio"},
         {"nome": "Whey protein", "calorias": 120, "proteina": 24, "carbo": 3, "gordura": 1.5, "porcao": 30, "unidade": "1 scoop", "custo": "alto"},
         {"nome": "Salmão grelhado", "calorias": 208, "proteina": 20, "carbo": 0, "gordura": 13, "porcao": 150, "custo": "alto"},
-        {"nome": "Iogurte grego natural", "calorias": 59, "proteina": 10, "carbo": 3.6, "gordura": 0.7, "porcao": 170, "custo": "medio"}
+        {"nome": "Iogurte grego natural", "calorias": 59, "proteina": 10, "carbo": 3.6, "gordura": 0.7, "porcao": 170, "custo": "medio"},
+        {"nome": "Carne de peru moída", "calorias": 149, "proteina": 27, "carbo": 0, "gordura": 4.5, "porcao": 100, "custo": "medio"},
+        {"nome": "Tofu firme", "calorias": 83, "proteina": 10, "carbo": 1.2, "gordura": 5, "porcao": 100, "custo": "baixo"}
     ],
     "carboidratos": [
         {"nome": "Arroz integral", "calorias": 111, "proteina": 2.6, "carbo": 23, "gordura": 0.9, "porcao": 150, "custo": "baixo"},
@@ -21,7 +23,8 @@
         {"nome": "Granola sem açúcar", "calorias": 421, "proteina": 10, "carbo": 64, "gordura": 15, "porcao": 30, "custo": "medio"},
         {"nome": "Banana", "calorias": 89, "proteina": 1.1, "carbo": 23, "gordura": 0.3, "porcao": 100, "unidade": "1 unidade", "custo": "baixo"},
         {"nome": "Cuscuz", "calorias": 112, "proteina": 3.8, "carbo": 23, "gordura": 0.2, "porcao": 135, "custo": "baixo"},
-        {"nome": "Tapioca", "calorias": 330, "proteina": 0.5, "carbo": 80, "gordura": 0.1, "porcao": 40, "unidade": "2 colheres", "custo": "baixo"}
+        {"nome": "Tapioca", "calorias": 330, "proteina": 0.5, "carbo": 80, "gordura": 0.1, "porcao": 40, "unidade": "2 colheres", "custo": "baixo"},
+        {"nome": "Quinoa cozida", "calorias": 120, "proteina": 4.4, "carbo": 21, "gordura": 1.9, "porcao": 150, "custo": "medio"}
     ],
     "gorduras": [
         {"nome": "Azeite de oliva", "calorias": 884, "proteina": 0, "carbo": 0, "gordura": 100, "porcao": 10, "unidade": "1 colher sopa", "custo": "medio"},
@@ -48,6 +51,7 @@
         {"nome": "Laranja", "calorias": 47, "proteina": 0.9, "carbo": 12, "gordura": 0.1, "porcao": 150, "unidade": "1 unidade", "custo": "baixo"},
         {"nome": "Melão", "calorias": 34, "proteina": 0.8, "carbo": 8.2, "gordura": 0.2, "porcao": 150, "unidade": "1 fatia", "custo": "medio"},
         {"nome": "Mamão", "calorias": 43, "proteina": 0.5, "carbo": 11, "gordura": 0.3, "porcao": 150, "unidade": "1 fatia", "custo": "baixo"},
-        {"nome": "Manga", "calorias": 60, "proteina": 0.8, "carbo": 15, "gordura": 0.4, "porcao": 120, "unidade": "½ unidade", "custo": "medio"}
+        {"nome": "Manga", "calorias": 60, "proteina": 0.8, "carbo": 15, "gordura": 0.4, "porcao": 120, "unidade": "½ unidade", "custo": "medio"},
+        {"nome": "Mirtilos (Blueberries)", "calorias": 57, "proteina": 0.7, "carbo": 14, "gordura": 0.3, "porcao": 100, "custo": "alto"}
     ]
 }
