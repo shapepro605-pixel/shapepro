@@ -129,6 +129,14 @@ class DietaService:
     def _selecionar_alimento(self, categoria, usados=None, orcamento='padrao'):
         """Select a random food item from category, avoiding repeats and respecting budget."""
         opcoes = self.alimentos.get(categoria, [])
+        
+        # Filtro de país (Exclusividade)
+        user_pais = self.user.pais if self.user else 'BR'
+        opcoes = [
+            a for a in opcoes 
+            if 'exclusive' not in a or user_pais in a['exclusive']
+        ]
+
         if usados:
             opcoes = [a for a in opcoes if a['nome'] not in usados]
 
