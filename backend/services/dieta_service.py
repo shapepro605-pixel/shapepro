@@ -195,8 +195,9 @@ class DietaService:
             print(f"[DietaService] DB price lookup failed (table may not exist): {e}")
 
         # Fallback: Estimativa Baseada no Custo e Moeda
-        # Heurística de preços médios por categoria de custo
-        base_prices = {'baixo': 2.50, 'medio': 7.00, 'alto': 18.00}
+        # Preços realistas em USD por kg / por dúzia (ovos)
+        # baixo ~R$4/kg, medio ~R$18/kg, alto ~R$50/kg dividido pelo câmbio
+        base_prices = {'baixo': 0.77, 'medio': 3.46, 'alto': 9.62}
         
         # Encontra o custo do alimento no json
         custo_categoria = 'medio'
@@ -206,9 +207,10 @@ class DietaService:
                     custo_categoria = f.get('custo', 'medio')
                     break
         
-        price_val = base_prices.get(custo_categoria, 7.0)
+        price_val = base_prices.get(custo_categoria, 3.46)
         
-        # Multiplicadores de câmbio aproximados se não for USD
+        # Multiplicadores de câmbio realistas
+        # Os preços base estão em USD/kg, conversão para moeda local
         multipliers = {'BRL': 5.2, 'EUR': 0.92, 'GBP': 0.79, 'CAD': 1.37, 'USD': 1.0}
         final_price = price_val * multipliers.get(moeda, 1.0)
         
@@ -223,39 +225,83 @@ class DietaService:
             return f"{symbol} {value:.2f}".replace('.', ',')
         return f"{symbol}{value:.2f}"
 
+    # Peso médio em gramas por unidade de cada alimento vendido a granel/peça.
+    # Usado para calcular preço por unidade a partir do preço/kg.
+    # Ovos são calculados separadamente (por dúzia).
+    _GRAMAS_POR_UNIDADE = {
+        # PT
+        'banana': 120, 'laranja': 180, 'maçã': 160, 'pera': 170, 'kiwi': 80,
+        'manga': 300, 'mamão': 500, 'goiaba': 150, 'abacate': 200,
+        'limão': 80, 'tangerina': 130, 'uva': 5, # por grão
+        # EN
+        'apple': 160, 'orange': 180, 'pear': 170, 'kiwi': 80,
+        'mango': 300, 'papaya': 500, 'avocado': 200,
+        'lemon': 80, 'grape': 5, 'banana (unit)': 120,
+    }
+
+    # Número de unidades por embalagem (para itens vendidos em pacotes)
+    _UNIDADES_POR_EMBALAGEM = {
+        'ovo': 12, 'egg': 12, 'eggs': 12,
+    }
+
     def _calcular_macros_alimento(self, alimento):
         """Calculate actual macros and PRICE for the food portion."""
         fator = alimento['porcao'] / 100
         
-        # Calcula preço
+        # Calcula preço base por kg (ou por embalagem para ovos)
         preco_base = self._get_food_price(alimento['nome'])
         
         # Identifica se usa sistema imperial (EUA)
         is_imperial = False
         if self.user:
             is_imperial = self.user.pais == 'US' or self.user.moeda == 'USD'
+
+        nome_lower = alimento['nome'].lower()
+
+        # --- Lógica por embalagem (Ovos e similares) ---
+        embalagem_qtd = None
+        for key, qty in self._UNIDADES_POR_EMBALAGEM.items():
+            if key in nome_lower:
+                embalagem_qtd = qty
+                break
+        
+        if embalagem_qtd:
+            # Preço por unidade = preço da embalagem / qtd de unidades
+            preco_porcao = preco_base / embalagem_qtd
+            porcao_str = alimento.get('unidade', '1 un')
+
+        elif 'unidade' in alimento:
+            # --- Lógica de frutas/itens vendidos por peça ---
+            # Procura o peso em gramas desta unidade
+            gramas = None
+            for key, g in self._GRAMAS_POR_UNIDADE.items():
+                if key in nome_lower:
+                    gramas = g
+                    break
             
-        # Se for unidade, o preço no fallback costuma ser por "unidade/pacote"
-        # Para ovos, assumimos o preço de uma cartela de 12. Para outros, calculamos pelo peso em gramas.
-        if 'ovo' in alimento['nome'].lower():
-             preco_porcao = preco_base / 12.0
-             porcao_str = f"{alimento['unidade']}"
+            if gramas is None:
+                # Fallback: usa o campo 'porcao' do JSON como peso da unidade
+                gramas = alimento.get('porcao', 150)
+
+            if is_imperial:
+                # Libras: preço base é por lb (453.59g)
+                preco_porcao = preco_base * (gramas / 453.592)
+            else:
+                # Kg: preço base é por kg (1000g)
+                preco_porcao = preco_base * (gramas / 1000)
+
+            porcao_str = alimento.get('unidade', f'{gramas}g')
+
         else:
-             if is_imperial:
-                 # Preço base nos EUA é por Libra (lb) = 453.59g
-                 preco_porcao = preco_base * (alimento['porcao'] / 453.592)
-                 if 'unidade' in alimento:
-                     porcao_str = f"{alimento['unidade']}"
-                 else:
-                     # 1 oz = 28.3495g
-                     oz_val = round(alimento['porcao'] / 28.3495, 1)
-                     porcao_str = f"{oz_val} oz"
-             else:
-                 preco_porcao = preco_base * (alimento['porcao'] / 1000) # Preço por kg
-                 if 'unidade' in alimento:
-                     porcao_str = f"{alimento['unidade']}"
-                 else:
-                     porcao_str = f"{alimento['porcao']}g"
+            # --- Lógica padrão: por peso (gramas ou oz) ---
+            if is_imperial:
+                # Preço base nos EUA é por Libra (lb) = 453.59g
+                preco_porcao = preco_base * (alimento['porcao'] / 453.592)
+                oz_val = round(alimento['porcao'] / 28.3495, 1)
+                porcao_str = f"{oz_val} oz"
+            else:
+                preco_porcao = preco_base * (alimento['porcao'] / 1000)  # Preço por kg
+                porcao_str = f"{alimento['porcao']}g"
         
         self._custo_diario_acumulado += preco_porcao
         
