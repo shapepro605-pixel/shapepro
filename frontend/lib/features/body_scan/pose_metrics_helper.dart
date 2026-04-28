@@ -27,8 +27,9 @@ class PoseMetricsHelper {
     final hipL = lastPose.landmarks[PoseLandmarkType.leftHip];
     final hipR = lastPose.landmarks[PoseLandmarkType.rightHip];
 
-    if (shoulderL == null || shoulderR == null || hipL == null || hipR == null)
+    if (shoulderL == null || shoulderR == null || hipL == null || hipR == null) {
       return null;
+    }
 
     // Cálculo de larguras em pixels
     final shoulderWidthPixels = (shoulderL.x - shoulderR.x).abs();

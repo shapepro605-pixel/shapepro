@@ -83,7 +83,7 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
   }
 
   void _onImageCaptured(XFile file, Map<String, double>? metrics, [Pose? pose, Size? size]) {
-    log(">>> AI SCAN UI: onImageCaptured called. Pose: ${_selectedPose}. Pose is null? ${pose == null}");
+    log(">>> AI SCAN UI: onImageCaptured called. Pose: $_selectedPose. Pose is null? ${pose == null}");
     setState(() {
       if (_selectedPose == 'front') {
         _frontImage = file;

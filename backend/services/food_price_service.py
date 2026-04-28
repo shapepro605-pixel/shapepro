@@ -12,24 +12,23 @@ class FoodPriceService:
         """
         print(f"[ShapePro AI] Researching food prices for {cidade}, {pais}...")
         
-        # Base prices in USD (will be converted or used as base)
+        # Base prices in USD (Retail/Supermarket average)
         base_prices = {
-            "Peito de Frango": 5.50,
-            "Chicken Breast": 5.50,
-            "Arroz Integral": 2.00,
-            "Brown Rice": 2.00,
-            "Ovos (12 un)": 3.00,
-            "Eggs (12 units)": 3.00,
-            "Batata Doce": 1.50,
-            "Sweet Potato": 1.50,
-            "Banana": 0.80,
-            "Banana (unit)": 0.30,
-            "Brócolis": 2.50,
-            "Broccoli": 2.50,
-            "Pasta de Amendoim": 4.00,
-            "Peanut Butter": 4.00,
-            "Aveia": 2.20,
-            "Oats": 2.20,
+            "Peito de Frango": 4.50, # ~R$ 23/kg
+            "Chicken Breast": 4.50,
+            "Arroz Integral": 2.20, # ~R$ 11/kg
+            "Brown Rice": 2.20,
+            "Ovos (12 un)": 2.80, # ~R$ 14.50/doz
+            "Eggs (12 units)": 2.80,
+            "Batata Doce": 1.80, # ~R$ 9.30/kg
+            "Sweet Potato": 1.80,
+            "Patinho Bovino": 9.50, # ~R$ 49/kg
+            "Top Side Beef": 9.50,
+            "Banana": 1.20, # ~R$ 6.20/kg
+            "Maçã": 2.50, # ~R$ 13/kg
+            "Apple": 2.50,
+            "Brócolis": 3.00,
+            "Broccoli": 3.00,
         }
 
         # Multipliers based on country/economy

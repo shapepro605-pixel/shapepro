@@ -1,9 +1,9 @@
 {
     "proteinas": [
-        {"nome": "Grilled chicken breast", "calorias": 165, "proteina": 31, "carbo": 0, "gordura": 3.6, "porcao": 150, "custo": "baixo"},
+        {"nome": "Grilled chicken breast", "calorias": 165, "proteina": 31, "carbo": 0, "gordura": 3.6, "porcao": 150, "custo": "medio"},
         {"nome": "Boiled egg", "calorias": 155, "proteina": 13, "carbo": 1.1, "gordura": 11, "porcao": 50, "unidade": "1 unit", "custo": "baixo"},
-        {"nome": "Grilled beef (top side)", "calorias": 219, "proteina": 35, "carbo": 0, "gordura": 7.3, "porcao": 120, "custo": "medio"},
-        {"nome": "Grilled tilapia", "calorias": 128, "proteina": 26, "carbo": 0, "gordura": 2.7, "porcao": 150, "custo": "medio"},
+        {"nome": "Grilled beef (top side)", "calorias": 219, "proteina": 35, "carbo": 0, "gordura": 7.3, "porcao": 120, "custo": "alto"},
+        {"nome": "Grilled tilapia", "calorias": 128, "proteina": 26, "carbo": 0, "gordura": 2.7, "porcao": 150, "custo": "alto"},
         {"nome": "Turkey breast", "calorias": 104, "proteina": 17, "carbo": 4.2, "gordura": 1.7, "porcao": 100, "custo": "medio"},
         {"nome": "Canned tuna (water)", "calorias": 116, "proteina": 26, "carbo": 0, "gordura": 0.8, "porcao": 100, "custo": "medio"},
         {"nome": "Cottage cheese", "calorias": 98, "proteina": 11, "carbo": 3.4, "gordura": 4.3, "porcao": 100, "custo": "medio"},

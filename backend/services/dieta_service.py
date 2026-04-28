@@ -195,9 +195,9 @@ class DietaService:
             print(f"[DietaService] DB price lookup failed (table may not exist): {e}")
 
         # Fallback: Estimativa Baseada no Custo e Moeda
-        # Preços realistas em USD por kg / por dúzia (ovos)
-        # baixo ~R$4/kg, medio ~R$18/kg, alto ~R$50/kg dividido pelo câmbio
-        base_prices = {'baixo': 0.77, 'medio': 3.46, 'alto': 9.62}
+        # Preços realistas de VAREJO em USD por kg / por dúzia (ovos)
+        # baixo ~R$10/kg, medio ~R$25/kg, alto ~R$60/kg
+        base_prices = {'baixo': 1.92, 'medio': 4.81, 'alto': 11.54}
         
         # Encontra o custo do alimento no json
         custo_categoria = 'medio'
