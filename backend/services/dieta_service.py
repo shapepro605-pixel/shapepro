@@ -230,14 +230,28 @@ class DietaService:
         # Calcula preço
         preco_base = self._get_food_price(alimento['nome'])
         
+        # Identifica se usa sistema imperial (EUA)
+        is_imperial = False
+        if self.user:
+            is_imperial = self.user.pais == 'US' or self.user.moeda == 'USD'
+            
         # Se for unidade, o preço no fallback costuma ser por "unidade/pacote"
         # Para unidades individuais (ovo, banana), o preço base deve ser menor
         if 'unidade' in alimento:
              # Heurística: se for unidade, o preço base do fallback (7.0, 18.0) é dividido 
              # para representar o valor de uma única unidade.
              preco_porcao = preco_base / 5.0 
+             porcao_str = f"{alimento['unidade']}"
         else:
-             preco_porcao = preco_base * (alimento['porcao'] / 1000) # Preço por kg
+             if is_imperial:
+                 # Preço base nos EUA é por Libra (lb) = 453.59g
+                 preco_porcao = preco_base * (alimento['porcao'] / 453.592)
+                 # 1 oz = 28.3495g
+                 oz_val = round(alimento['porcao'] / 28.3495, 1)
+                 porcao_str = f"{oz_val} oz"
+             else:
+                 preco_porcao = preco_base * (alimento['porcao'] / 1000) # Preço por kg
+                 porcao_str = f"{alimento['porcao']}g"
         
         self._custo_diario_acumulado += preco_porcao
         
@@ -245,7 +259,7 @@ class DietaService:
         
         return {
             'nome': alimento['nome'],
-            'porcao': f"{alimento['porcao']}g • {price_str}" if 'unidade' not in alimento else f"{alimento['unidade']} • {price_str}",
+            'porcao': f"{porcao_str} • {price_str}",
             'calorias': round(alimento['calorias'] * fator),
             'proteina': round(alimento['proteina'] * fator, 1),
             'carboidrato': round(alimento['carbo'] * fator, 1),
@@ -510,7 +524,10 @@ class DietaService:
             
         opcoes = self.alimentos.get(categoria_atual, [])
         sugestoes = []
-        
+        is_imperial = False
+        if self.user:
+            is_imperial = self.user.pais == 'US' or self.user.moeda == 'USD'
+
         for op in opcoes:
             if op['nome'].lower() == alimento_atual.lower():
                 continue # Pula o próprio alimento
@@ -539,11 +556,16 @@ class DietaService:
                 # Peso em gramas
                 porcao = round(fator_necessario * 100)
                 if porcao <= 0: porcao = 10
-                porcao_str = f"{porcao}g"
                 calorias_reais = (porcao / 100) * calorias_por_100g
-                # Calcula o preço
                 preco_base = self._get_food_price(op['nome'])
-                preco_calculado = preco_base * (porcao / 1000)
+                
+                if is_imperial:
+                    preco_calculado = preco_base * (porcao / 453.592)
+                    oz_val = round(porcao / 28.3495, 1)
+                    porcao_str = f"{oz_val} oz"
+                else:
+                    preco_calculado = preco_base * (porcao / 1000)
+                    porcao_str = f"{porcao}g"
                 
             # Filtra por preço (só opções mais baratas) e calorias muito discrepantes
             # Margem de +- 10% nas calorias reais (relevante para unidades)

@@ -255,58 +255,60 @@ class _DietaScreenState extends State<DietaScreen> {
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(color: const Color(0xFF2A2A4A)),
                                 ),
-                                child: Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${sug['nome']} (${sug['porcao_str']})", style: GoogleFonts.inter(
-                                            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15,
-                                          )),
-                                          const SizedBox(height: 6),
-                                          Row(
+                                    Text("${sug['nome']} (${sug['porcao_str']})", style: GoogleFonts.inter(
+                                      color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16,
+                                    )),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Text("${sug['calorias']} kcal", style: GoogleFonts.inter(
+                                          color: const Color(0xFF2ED573), fontSize: 14, fontWeight: FontWeight.w600,
+                                        )),
+                                        const SizedBox(width: 8),
+                                        Text("•  💰 ${sug['preco_str']}", style: GoogleFonts.inter(
+                                          color: Colors.white70, fontSize: 14,
+                                        )),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF2ED573).withValues(alpha: 0.15),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Text("${sug['calorias']} kcal", style: GoogleFonts.inter(
-                                                color: const Color(0xFF2ED573), fontSize: 13, fontWeight: FontWeight.w600,
-                                              )),
-                                              const SizedBox(width: 8),
-                                              Text("•  💰 ${sug['preco_str']}", style: GoogleFonts.inter(
-                                                color: Colors.white70, fontSize: 13,
+                                              const Icon(Icons.savings, color: Color(0xFF2ED573), size: 14),
+                                              const SizedBox(width: 6),
+                                              Text("Economia: ${sug['economia_str']}", style: GoogleFonts.inter(
+                                                color: const Color(0xFF2ED573), fontSize: 12, fontWeight: FontWeight.w600,
                                               )),
                                             ],
                                           ),
-                                          const SizedBox(height: 8),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF2ED573).withValues(alpha: 0.15),
-                                              borderRadius: BorderRadius.circular(6),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Icon(Icons.savings, color: Color(0xFF2ED573), size: 12),
-                                                const SizedBox(width: 6),
-                                                Text("Você economiza ${sug['economia_str']}", style: GoogleFonts.inter(
-                                                  color: const Color(0xFF2ED573), fontSize: 11, fontWeight: FontWeight.w600,
-                                                )),
-                                              ],
-                                            ),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(0xFF6C5CE7),
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                            minimumSize: Size.zero,
+                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF6C5CE7),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                      ),
-                                      onPressed: () {
-                                        _aplicarSubstituicao(mealIndex, foodIndex, sug);
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("Substituir", style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+                                          onPressed: () {
+                                            _aplicarSubstituicao(mealIndex, foodIndex, sug);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Trocar", style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13)),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
