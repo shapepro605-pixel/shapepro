@@ -402,5 +402,23 @@
   "bpm": "Average BPM",
   "distancia": "Distance",
   "metaDiaria": "Daily Goal",
-  "atividade": "Activity"
+  "atividade": "Activity",
+  "fastingTitle": "Intermittent Fasting",
+  "fastingDesc": "Track your windows",
+  "wearablesBannerTitle": "Wearables & Health",
+  "wearablesBannerDesc": "Sync your watch",
+  "premiumFastingTitle": "Premium Timer",
+  "premiumFastingDesc": "Your trial period has ended. Unlock Intermittent Fasting and all diet meals with ShapePro Premium.",
+  "fastingStateFasting": "FASTING",
+  "fastingStateEating": "EATING WINDOW",
+  "fastingStateReady": "READY",
+  "remaining": "Remaining: {time}",
+  "@remaining": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "startFasting": "START FASTING",
+  "breakFasting": "BREAK FAST",
+  "finishWindow": "FINISH WINDOW"
 }

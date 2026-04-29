@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../../services/api.dart';
 import 'fasting_service.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class FastingTimerPage extends StatefulWidget {
@@ -92,7 +93,7 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Jejum Intermitente', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(AppLocalizations.of(context)!.fastingTitle, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -129,12 +130,12 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
              .scaleXY(begin: 1.0, end: 1.1, duration: 1.seconds, curve: Curves.easeInOut),
             const SizedBox(height: 40),
             Text(
-              "Cronômetro Premium",
+              AppLocalizations.of(context)!.premiumFastingTitle,
               style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 16),
             Text(
-              "Seu período de teste acabou. Desbloqueie o Jejum Intermitente e todas as refeições da dieta com o ShapePro Premium.",
+              AppLocalizations.of(context)!.premiumFastingDesc,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(fontSize: 16, color: Colors.white70),
             ),
@@ -147,7 +148,7 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Text("DESBLOQUEAR PREMIUM", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16)),
+              child: Text(AppLocalizations.of(context)!.unlockPremium, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16)),
             )
           ],
         ),
@@ -195,15 +196,17 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        isFasting ? "JEJUM" : (isEating ? "ALIMENTAÇÃO" : "PRONTO"),
-                        style: GoogleFonts.inter(
-                          fontSize: 14, 
-                          fontWeight: FontWeight.bold, 
-                          color: primaryColor,
-                          letterSpacing: 2
+                        Text(
+                          isFasting 
+                              ? AppLocalizations.of(context)!.fastingStateFasting 
+                              : (isEating ? AppLocalizations.of(context)!.fastingStateEating : AppLocalizations.of(context)!.fastingStateReady),
+                          style: GoogleFonts.inter(
+                            fontSize: 14, 
+                            fontWeight: FontWeight.bold, 
+                            color: primaryColor,
+                            letterSpacing: 2
+                          ),
                         ),
-                      ),
                       const SizedBox(height: 8),
                       Text(
                         isFasting || isEating 
@@ -219,7 +222,7 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
                       if (isFasting) ...[
                         const SizedBox(height: 8),
                         Text(
-                          "Restante: ${_formatDuration(_fastingService.remainingTime)}",
+                          AppLocalizations.of(context)!.remaining(_formatDuration(_fastingService.remainingTime)),
                           style: GoogleFonts.inter(fontSize: 14, color: Colors.white54),
                         ),
                       ]
@@ -267,7 +270,7 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
                     minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: Text("INICIAR JEJUM", style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(AppLocalizations.of(context)!.startFasting, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                 )
               else if (isFasting)
                 ElevatedButton(
@@ -280,7 +283,7 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
                     minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: Text("QUEBRAR JEJUM", style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(AppLocalizations.of(context)!.breakFasting, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                 )
               else if (isEating)
                 ElevatedButton(
@@ -293,7 +296,7 @@ class _FastingTimerPageState extends State<FastingTimerPage> with SingleTickerPr
                     minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: Text("FINALIZAR JANELA", style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(AppLocalizations.of(context)!.finishWindow, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
             ],
           ),

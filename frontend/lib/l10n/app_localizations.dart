@@ -2359,6 +2359,84 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Atividade'**
   String get atividade;
+
+  /// No description provided for @fastingTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Jejum Intermitente'**
+  String get fastingTitle;
+
+  /// No description provided for @fastingDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acompanhe suas janelas'**
+  String get fastingDesc;
+
+  /// No description provided for @wearablesBannerTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Wearables & Saúde'**
+  String get wearablesBannerTitle;
+
+  /// No description provided for @wearablesBannerDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sincronize seu relógio'**
+  String get wearablesBannerDesc;
+
+  /// No description provided for @premiumFastingTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cronômetro Premium'**
+  String get premiumFastingTitle;
+
+  /// No description provided for @premiumFastingDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu período de teste acabou. Desbloqueie o Jejum Intermitente e todas as refeições da dieta com o ShapePro Premium.'**
+  String get premiumFastingDesc;
+
+  /// No description provided for @fastingStateFasting.
+  ///
+  /// In pt, this message translates to:
+  /// **'JEJUM'**
+  String get fastingStateFasting;
+
+  /// No description provided for @fastingStateEating.
+  ///
+  /// In pt, this message translates to:
+  /// **'ALIMENTAÇÃO'**
+  String get fastingStateEating;
+
+  /// No description provided for @fastingStateReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'PRONTO'**
+  String get fastingStateReady;
+
+  /// No description provided for @remaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restante: {time}'**
+  String remaining(String time);
+
+  /// No description provided for @startFasting.
+  ///
+  /// In pt, this message translates to:
+  /// **'INICIAR JEJUM'**
+  String get startFasting;
+
+  /// No description provided for @breakFasting.
+  ///
+  /// In pt, this message translates to:
+  /// **'QUEBRAR JEJUM'**
+  String get breakFasting;
+
+  /// No description provided for @finishWindow.
+  ///
+  /// In pt, this message translates to:
+  /// **'FINALIZAR JANELA'**
+  String get finishWindow;
 }
 
 class _AppLocalizationsDelegate

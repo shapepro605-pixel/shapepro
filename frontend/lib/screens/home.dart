@@ -753,7 +753,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Jejum Intermitente",
+                  AppLocalizations.of(context)!.fastingTitle,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -761,7 +761,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 Text(
-                  "Acompanhe suas janelas",
+                  AppLocalizations.of(context)!.fastingDesc,
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: Colors.white54,
@@ -779,9 +779,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: const Color(0xFF00D2FF), width: 1),
               ),
-              child: const Text(
-                "ABRIR", 
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF00D2FF))
+              child: Text(
+                AppLocalizations.of(context)!.open, 
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF00D2FF))
               ),
             ),
           ),
@@ -822,7 +822,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Wearables & Saúde",
+                  AppLocalizations.of(context)!.wearablesBannerTitle,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -830,7 +830,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 Text(
-                  "Sincronize seu relógio",
+                  AppLocalizations.of(context)!.wearablesBannerDesc,
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: Colors.white54,
@@ -848,9 +848,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: const Color(0xFF2ED573), width: 1),
               ),
-              child: const Text(
-                "ABRIR", 
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF2ED573))
+              child: Text(
+                AppLocalizations.of(context)!.open, 
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF2ED573))
               ),
             ),
           ),

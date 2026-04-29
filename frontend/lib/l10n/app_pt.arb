@@ -402,5 +402,23 @@
   "bpm": "BPM Médio",
   "distancia": "Distância",
   "metaDiaria": "Meta Diária",
-  "atividade": "Atividade"
+  "atividade": "Atividade",
+  "fastingTitle": "Jejum Intermitente",
+  "fastingDesc": "Acompanhe suas janelas",
+  "wearablesBannerTitle": "Wearables & Saúde",
+  "wearablesBannerDesc": "Sincronize seu relógio",
+  "premiumFastingTitle": "Cronômetro Premium",
+  "premiumFastingDesc": "Seu período de teste acabou. Desbloqueie o Jejum Intermitente e todas as refeições da dieta com o ShapePro Premium.",
+  "fastingStateFasting": "JEJUM",
+  "fastingStateEating": "ALIMENTAÇÃO",
+  "fastingStateReady": "PRONTO",
+  "remaining": "Restante: {time}",
+  "@remaining": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "startFasting": "INICIAR JEJUM",
+  "breakFasting": "QUEBRAR JEJUM",
+  "finishWindow": "FINALIZAR JANELA"
 }

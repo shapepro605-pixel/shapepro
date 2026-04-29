@@ -1203,4 +1203,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get atividade => 'Activity';
+
+  @override
+  String get fastingTitle => 'Intermittent Fasting';
+
+  @override
+  String get fastingDesc => 'Track your windows';
+
+  @override
+  String get wearablesBannerTitle => 'Wearables & Health';
+
+  @override
+  String get wearablesBannerDesc => 'Sync your watch';
+
+  @override
+  String get premiumFastingTitle => 'Premium Timer';
+
+  @override
+  String get premiumFastingDesc =>
+      'Your trial period has ended. Unlock Intermittent Fasting and all diet meals with ShapePro Premium.';
+
+  @override
+  String get fastingStateFasting => 'FASTING';
+
+  @override
+  String get fastingStateEating => 'EATING WINDOW';
+
+  @override
+  String get fastingStateReady => 'READY';
+
+  @override
+  String remaining(String time) {
+    return 'Remaining: $time';
+  }
+
+  @override
+  String get startFasting => 'START FASTING';
+
+  @override
+  String get breakFasting => 'BREAK FAST';
+
+  @override
+  String get finishWindow => 'FINISH WINDOW';
 }

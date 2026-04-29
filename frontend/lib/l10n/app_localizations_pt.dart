@@ -1205,4 +1205,46 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get atividade => 'Atividade';
+
+  @override
+  String get fastingTitle => 'Jejum Intermitente';
+
+  @override
+  String get fastingDesc => 'Acompanhe suas janelas';
+
+  @override
+  String get wearablesBannerTitle => 'Wearables & Saúde';
+
+  @override
+  String get wearablesBannerDesc => 'Sincronize seu relógio';
+
+  @override
+  String get premiumFastingTitle => 'Cronômetro Premium';
+
+  @override
+  String get premiumFastingDesc =>
+      'Seu período de teste acabou. Desbloqueie o Jejum Intermitente e todas as refeições da dieta com o ShapePro Premium.';
+
+  @override
+  String get fastingStateFasting => 'JEJUM';
+
+  @override
+  String get fastingStateEating => 'ALIMENTAÇÃO';
+
+  @override
+  String get fastingStateReady => 'PRONTO';
+
+  @override
+  String remaining(String time) {
+    return 'Restante: $time';
+  }
+
+  @override
+  String get startFasting => 'INICIAR JEJUM';
+
+  @override
+  String get breakFasting => 'QUEBRAR JEJUM';
+
+  @override
+  String get finishWindow => 'FINALIZAR JANELA';
 }
