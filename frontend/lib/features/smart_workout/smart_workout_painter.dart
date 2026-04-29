@@ -9,19 +9,21 @@ class SmartWorkoutPainter extends CustomPainter {
   final Size imageSize;
   final InputImageRotation rotation;
   final CameraLensDirection cameraLensDirection;
+  final bool isFormCorrect;
 
   SmartWorkoutPainter(
     this.pose,
     this.imageSize,
     this.rotation,
     this.cameraLensDirection,
+    this.isFormCorrect,
   );
 
   @override
   void paint(Canvas canvas, Size size) {
     // Neon style paint
     final paintLine = Paint()
-      ..color = const Color(0xFF00D2FF)
+      ..color = isFormCorrect ? const Color(0xFF00D2FF) : const Color(0xFFFF4757)
       ..strokeWidth = 4.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -100,7 +102,8 @@ class SmartWorkoutPainter extends CustomPainter {
     return oldDelegate.pose != pose ||
            oldDelegate.imageSize != imageSize ||
            oldDelegate.rotation != rotation ||
-           oldDelegate.cameraLensDirection != cameraLensDirection;
+           oldDelegate.cameraLensDirection != cameraLensDirection ||
+           oldDelegate.isFormCorrect != isFormCorrect;
   }
 }
 

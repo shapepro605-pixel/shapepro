@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 
 import '../../services/api.dart';
-import 'rep_counter_helper.dart';
+import 'workout_ai_engine.dart';
 import 'smart_workout_painter.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 
@@ -28,7 +28,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
   double _lastImageWidth = 1.0;
   double _lastImageHeight = 1.0;
   
-  final RepCounterHelper _repCounter = RepCounterHelper();
+  final WorkoutAIEngine _aiEngine = WorkoutAIEngine();
   bool _isPremiumLocked = false;
   bool _isLoading = true;
 
@@ -119,8 +119,8 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
       if (poses.isNotEmpty && mounted) {
         final pose = poses.first;
         
-        // Count reps
-        _repCounter.processSquat(pose);
+        // Process AI Logic
+        _aiEngine.processPose(pose);
         
         setState(() {
           _lastPose = pose;
@@ -214,6 +214,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                 Size(_lastImageWidth, _lastImageHeight),
                 InputImageRotationValue.fromRawValue(_controller!.description.sensorOrientation) ?? InputImageRotation.rotation0deg,
                 _controller!.description.lensDirection,
+                _aiEngine.isFormCorrect,
               ),
             ),
             
@@ -222,26 +223,57 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Top Bar
+                // Top Bar with Carousel
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.only(top: 20.0, left: 10, right: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white, size: 30),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00D2FF).withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFF00D2FF)),
-                        ),
-                        child: Text(
-                          "AGACHAMENTO",
-                          style: GoogleFonts.inter(color: const Color(0xFF00D2FF), fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: AIExerciseType.values.map((type) {
+                              bool isSelected = _aiEngine.currentExercise == type;
+                              String name = "";
+                              switch(type) {
+                                case AIExerciseType.squat: name = "AGACHAMENTO"; break;
+                                case AIExerciseType.pushup: name = "FLEXÃO"; break;
+                                case AIExerciseType.crunch: name = "ABDOMINAL"; break;
+                                case AIExerciseType.plank: name = "PRANCHA"; break;
+                              }
+                              
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _aiEngine.setExercise(type);
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? const Color(0xFF00D2FF).withValues(alpha: 0.2) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: isSelected ? const Color(0xFF00D2FF) : Colors.white30),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      name,
+                                      style: GoogleFonts.inter(
+                                        color: isSelected ? const Color(0xFF00D2FF) : Colors.white70, 
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                       IconButton(
@@ -258,10 +290,10 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.black.withValues(alpha: 0.5),
-                    border: Border.all(color: _repCounter.currentState == WorkoutState.down ? const Color(0xFF2ED573) : const Color(0xFF00D2FF), width: 4),
+                    border: Border.all(color: !_aiEngine.isFormCorrect ? const Color(0xFFFF4757) : (_aiEngine.currentState == WorkoutState.down ? const Color(0xFF2ED573) : const Color(0xFF00D2FF)), width: 4),
                     boxShadow: [
                       BoxShadow(
-                        color: (_repCounter.currentState == WorkoutState.down ? const Color(0xFF2ED573) : const Color(0xFF00D2FF)).withValues(alpha: 0.3),
+                        color: (!_aiEngine.isFormCorrect ? const Color(0xFFFF4757) : (_aiEngine.currentState == WorkoutState.down ? const Color(0xFF2ED573) : const Color(0xFF00D2FF))).withValues(alpha: 0.3),
                         blurRadius: 30,
                         spreadRadius: 10,
                       )
@@ -271,16 +303,18 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _repCounter.repCount.toString(),
+                        _aiEngine.currentExercise == AIExerciseType.plank 
+                            ? "${_aiEngine.plankSeconds}s" 
+                            : _aiEngine.repCount.toString(),
                         style: GoogleFonts.inter(
-                          fontSize: 80,
+                          fontSize: 60, // slightly smaller to fit "s"
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
                           height: 1.0,
                         ),
                       ),
                       Text(
-                        "REPS",
+                        _aiEngine.currentExercise == AIExerciseType.plank ? "TEMPO" : "REPS",
                         style: GoogleFonts.inter(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -298,17 +332,17 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.black54,
+                      color: !_aiEngine.isFormCorrect ? const Color(0xFFFF4757).withValues(alpha: 0.8) : Colors.black54,
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Text(
                       _lastPose == null 
                         ? "Posicione o celular no chão" 
-                        : (_repCounter.currentState == WorkoutState.down ? "SUBA!" : "DESÇA"),
+                        : _aiEngine.feedbackMessage,
                       style: GoogleFonts.inter(
                         fontSize: 18, 
                         fontWeight: FontWeight.bold, 
-                        color: _lastPose == null ? Colors.white70 : Colors.white
+                        color: Colors.white
                       ),
                     ),
                   ),
