@@ -21,6 +21,7 @@ import 'screens/verify_choice.dart';
 import 'screens/privacy_policy.dart';
 import 'features/body_scan/body_scan_page.dart';
 import 'features/fasting/fasting_timer_page.dart';
+import 'features/smart_workout/smart_workout_view.dart';
 
 
 import 'package:shapepro/l10n/app_localizations.dart';
@@ -117,6 +118,7 @@ class ShapeProApp extends StatelessWidget {
               '/privacy': (context) => const PrivacyPolicyScreen(),
               '/body_scan': (context) => const BodyScanPage(),
               '/fasting': (context) => const FastingTimerPage(),
+              '/smart_workout': (context) => const SmartWorkoutView(),
 
 
             },

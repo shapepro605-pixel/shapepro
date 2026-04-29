@@ -252,6 +252,10 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
 
           // COMEÇAR TREINO BUTTON
           _buildStartWorkoutButton(index, tipo, isTrial),
+          const SizedBox(height: 12),
+          
+          // TREINAR COM IA BUTTON
+          _buildAIWorkoutButton(tipo, isTrial),
           const SizedBox(height: 24),
 
           // Exercises list
@@ -349,6 +353,40 @@ class _TreinoScreenState extends State<TreinoScreen> with SingleTickerProviderSt
               AppLocalizations.of(context)!.startWorkout,
               style: GoogleFonts.inter(
                 color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAIWorkoutButton(String tipo, bool isTrial) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/smart_workout');
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          side: BorderSide(color: const Color(0xFF00D2FF), width: 2),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.auto_awesome, color: Color(0xFF00D2FF), size: 24),
+            const SizedBox(width: 8),
+            Text(
+              "TREINAR COM IA",
+              style: GoogleFonts.inter(
+                color: const Color(0xFF00D2FF),
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1,
