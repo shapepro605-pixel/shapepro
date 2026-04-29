@@ -476,6 +476,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 _buildBodyScanBanner(),
                 const SizedBox(height: 22),
 
+                // ── Fasting Timer Banner ───────────────────────
+                _buildFastingBanner(),
+                const SizedBox(height: 22),
+
                 // ── Quick Actions ───────────────────────────────
                 Row(
                   children: [
@@ -705,6 +709,75 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
       ),
     ).animate().fadeIn(delay: 100.ms, duration: 600.ms).moveY(begin: 20, end: 0, curve: Curves.easeOutQuad);
+  }
+
+  Widget _buildFastingBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF16162A),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFF00D2FF).withValues(alpha: 0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00D2FF).withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF00D2FF).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Icon(Icons.timer_outlined, color: Color(0xFF00D2FF), size: 28),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Jejum Intermitente",
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  "Acompanhe suas janelas",
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: Colors.white54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ScaleButton(
+            onTap: () => Navigator.pushNamed(context, '/fasting'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF00D2FF).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFF00D2FF), width: 1),
+              ),
+              child: const Text(
+                "ABRIR", 
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF00D2FF))
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 150.ms, duration: 600.ms).moveY(begin: 20, end: 0, curve: Curves.easeOutQuad);
   }
 
   Widget _buildWeightChart() {
