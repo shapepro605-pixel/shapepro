@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'dart:io';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+import 'package:camera/camera.dart';
 
 class SmartWorkoutPainter extends CustomPainter {
   final Pose pose;
@@ -37,10 +40,8 @@ class SmartWorkoutPainter extends CustomPainter {
         // Only draw if confidence is high enough
         if (landmark1.likelihood > 0.5 && landmark2.likelihood > 0.5) {
           canvas.drawLine(
-              _translateX(landmark1.x, size, imageSize, rotation, cameraLensDirection),
-              _translateY(landmark1.y, size, imageSize, rotation, cameraLensDirection),
-              _translateX(landmark2.x, size, imageSize, rotation, cameraLensDirection),
-              _translateY(landmark2.y, size, imageSize, rotation, cameraLensDirection),
+              Offset(_translateX(landmark1.x, size, imageSize, rotation, cameraLensDirection), _translateY(landmark1.y, size, imageSize, rotation, cameraLensDirection)),
+              Offset(_translateX(landmark2.x, size, imageSize, rotation, cameraLensDirection), _translateY(landmark2.y, size, imageSize, rotation, cameraLensDirection)),
               paintLine);
         }
       }
@@ -124,4 +125,3 @@ double _translateY(double y, Size canvasSize, Size imageSize, InputImageRotation
       return y * canvasSize.height / imageSize.height;
   }
 }
-import 'dart:io';
