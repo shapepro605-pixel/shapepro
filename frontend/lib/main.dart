@@ -23,6 +23,7 @@ import 'features/body_scan/body_scan_page.dart';
 import 'features/fasting/fasting_timer_page.dart';
 import 'features/smart_workout/smart_workout_view.dart';
 import 'features/wearables/wearables_dashboard.dart';
+import 'services/wearable_service.dart';
 
 
 import 'package:shapepro/l10n/app_localizations.dart';
@@ -70,14 +71,21 @@ class ShapeProApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        final api = ApiService();
-        api.init().catchError((e) {
-          Log.e('Error initializing ApiService: $e');
-        });
-        return api;
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            final api = ApiService();
+            api.init().catchError((e) {
+              Log.e('Error initializing ApiService: $e');
+            });
+            return api;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) => WearableService()..init(),
+        ),
+      ],
       child: Consumer<ApiService>(
         builder: (context, api, child) {
           // Update System UI according to theme

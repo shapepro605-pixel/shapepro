@@ -27,6 +27,8 @@ allprojects {
     tasks.withType<JavaCompile>().configureEach {
         options.isWarnings = false
         options.isDeprecation = false
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
         // Using -nowarn and -Xlint:none to completely suppress compiler notes
         options.compilerArgs.addAll(listOf("-nowarn", "-Xlint:none", "-Xlint:-deprecation", "-Xlint:-unchecked"))
     }

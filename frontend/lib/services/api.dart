@@ -581,6 +581,16 @@ class ApiService extends ChangeNotifier {
     return await _request('GET', '/tracking/sleep/stats');
   }
 
+  // ── WEARABLES ────────────────────────────────────────────────────────
+
+  Future<Map<String, dynamic>> syncWearableData(Map<String, dynamic> data) async {
+    return await _request('POST', '/tracking/wearable/sync', body: data);
+  }
+
+  Future<Map<String, dynamic>> getWearableHistory() async {
+    return await _request('GET', '/tracking/wearable/history');
+  }
+
   // ── JOURNAL ──────────────────────────────────────────────────────────
 
   Future<Map<String, dynamic>> createJournalEntry(Map<String, dynamic> data) async {

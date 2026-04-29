@@ -72,6 +72,7 @@ def create_app(config_name=None):
         from models.user import (
             User, BodyScan
         )
+        from models.wearable import WearableData
         from models.challenge import (
             Challenge, UserChallenge, Achievement,
             UserAchievement, SleepLog, JournalEntry

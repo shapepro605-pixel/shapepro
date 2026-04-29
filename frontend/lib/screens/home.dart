@@ -12,6 +12,8 @@ import '../widgets/scale_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:shapepro/utils/logger.dart';
+import '../services/wearable_service.dart';
+import '../widgets/fitness_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -482,6 +484,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                 // ── Wearables Banner ───────────────────────────
                 _buildWearablesBanner(),
+                const SizedBox(height: 22),
+
+                // ── Fitness Section ──────────────────────────────
+                _buildFitnessSection(),
                 const SizedBox(height: 22),
 
                 // ── Quick Actions ───────────────────────────────
@@ -1201,6 +1207,150 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onTap();
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  Widget _buildFitnessSection() {
+    final wearableService = context.watch<WearableService>();
+    final data = wearableService.currentData;
+    final score = wearableService.fitnessScore;
+    
+    if (wearableService.isSyncing && data.isEmpty) {
+      return const FitnessSkeleton();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Minha Atividade",
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(context, '/wearables'),
+              child: Text(
+                "Ver detalhes",
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: const Color(0xFF6C5CE7),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: const Color(0xFF16162A),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: const Color(0xFF2A2A4A)),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Fitness Score",
+                          style: GoogleFonts.inter(color: Colors.white54, fontSize: 13),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              score.round().toString(),
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.greenAccent.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "BOM",
+                                style: GoogleFonts.inter(
+                                  color: Colors.greenAccent,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  DailyProgressRing(
+                    size: 80,
+                    percentage: score / 100,
+                    color: const Color(0xFF6C5CE7),
+                    centerWidget: const Icon(Icons.bolt, color: Colors.white, size: 20),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildMiniStat(Icons.directions_walk, "${data['steps'] ?? 0}", "passos"),
+                  _buildMiniStat(Icons.local_fire_department, "${data['calories'] ?? 0}", "kcal"),
+                  _buildMiniStat(Icons.nightlight_round, "${(data['sleep'] ?? 0) ~/ 60}h", "sono"),
+                ],
+              ),
+              const Divider(color: Color(0xFF2A2A4A), height: 32),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Progresso Semanal",
+                    style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
+                  ),
+                  const SizedBox(height: 12),
+                  const WeeklyActivityChart(
+                    data: [4500, 6200, 8100, 5400, 9200, 7100, 8500], // Mock data for now
+                    color: Color(0xFF00D2FF),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMiniStat(IconData icon, String value, String label) {
+    return Column(
+      children: [
+        Icon(icon, color: Colors.white38, size: 18),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        Text(
+          label,
+          style: GoogleFonts.inter(color: Colors.white38, fontSize: 10),
+        ),
+      ],
     );
   }
 

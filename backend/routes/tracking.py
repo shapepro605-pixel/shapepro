@@ -194,5 +194,64 @@ def get_sleep_stats():
     }), 200
 
 
+# ── WEARABLE DATA ──────────────────────────────────────────────────────
+
+@tracking_bp.route('/wearable/sync', methods=['POST'])
+@jwt_required()
+def sync_wearable_data():
+    """Sync daily data from wearable/smartwatch."""
+    from models.wearable import WearableData
+    
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': 'Dados não fornecidos'}), 400
+    
+    today = datetime.utcnow().date()
+    
+    # Try to find existing record for today
+    log = WearableData.query.filter_by(user_id=user_id, data=today).first()
+    
+    if not log:
+        log = WearableData(user_id=user_id, data=today)
+        db.session.add(log)
+    
+    # Update fields
+    log.steps = data.get('steps', log.steps)
+    log.calories = data.get('calories', log.calories)
+    log.distance = data.get('distance', log.distance)
+    log.heart_rate = data.get('heartRate', log.heart_rate)
+    log.sleep_minutes = data.get('sleep', log.sleep_minutes)
+    log.fitness_score = data.get('fitnessScore', log.fitness_score)
+    log.source = data.get('source', log.source)
+    log.last_sync = datetime.utcnow()
+    
+    db.session.commit()
+    
+    # Auto-update challenges
+    if 'steps' in data:
+        StreakService.update_challenge_progress(user_id, 'passos', data['steps'])
+    if 'sleep' in data:
+        # Convert minutes to hours for challenge
+        StreakService.update_challenge_progress(user_id, 'sono', round(data['sleep'] / 60, 1))
+    
+    return jsonify({'message': 'Sincronização concluída!', 'data': log.to_dict()}), 200
+
+
+@tracking_bp.route('/wearable/history', methods=['GET'])
+@jwt_required()
+def get_wearable_history():
+    """Get wearable data history."""
+    from models.wearable import WearableData
+    
+    user_id = get_jwt_identity()
+    logs = WearableData.query.filter_by(
+        user_id=user_id
+    ).order_by(WearableData.data.desc()).limit(30).all()
+    
+    return jsonify({'history': [log.to_dict() for log in logs]}), 200
+
+
 # ── Helper ─────────────────────────────────────────────────────────────
 
