@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../services/api.dart';
 import '../../services/wearable_service.dart';
 import '../../widgets/fitness_widgets.dart';
+import 'package:shapepro/l10n/app_localizations.dart';
 import 'health_service.dart';
 
 class WearablesDashboard extends StatefulWidget {
@@ -82,7 +83,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Wearables",
+          AppLocalizations.of(context)!.wearablesTitle,
           style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         actions: [
@@ -148,12 +149,14 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
           ),
           const SizedBox(width: 12),
           Text(
-            service.isSyncing ? "Sincronizando..." : "Conectado",
+            service.isSyncing 
+                ? AppLocalizations.of(context)!.syncing 
+                : AppLocalizations.of(context)!.connected,
             style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
           ),
           const Spacer(),
           Text(
-            "Última sync: $timeStr",
+            AppLocalizations.of(context)!.lastSync(timeStr),
             style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
           ),
         ],
@@ -183,7 +186,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
                   ),
                 ),
                 Text(
-                  "Fitness Score",
+                  AppLocalizations.of(context)!.fitnessScore,
                   style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
                 ),
               ],
@@ -201,42 +204,42 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
           children: [
             FitnessDataCard(
               icon: Icons.directions_walk,
-              title: "Passos",
+              title: AppLocalizations.of(context)!.steps,
               value: "${data['steps'] ?? 0}",
               unit: "/ ${service.stepGoal}",
               color: const Color(0xFF00D2FF),
             ),
             FitnessDataCard(
               icon: Icons.local_fire_department,
-              title: "Calorias",
+              title: AppLocalizations.of(context)!.calories,
               value: "${data['calories'] ?? 0}",
               unit: "kcal",
               color: const Color(0xFFFF2A5F),
             ),
             FitnessDataCard(
               icon: Icons.favorite,
-              title: "BPM Médio",
+              title: AppLocalizations.of(context)!.bpm,
               value: "${data['heartRate'] ?? 0}",
               unit: "bpm",
               color: const Color(0xFFFF6B6B),
             ),
             FitnessDataCard(
               icon: Icons.nightlight_round,
-              title: "Sono",
+              title: AppLocalizations.of(context)!.sono,
               value: "${(data['sleep'] ?? 0) ~/ 60}h ${(data['sleep'] ?? 0) % 60}m",
               unit: "",
               color: const Color(0xFF6C5CE7),
             ),
             FitnessDataCard(
               icon: Icons.straighten,
-              title: "Distância",
+              title: AppLocalizations.of(context)!.distancia,
               value: (data['distance'] ?? 0.0).toStringAsFixed(1),
               unit: "km",
               color: const Color(0xFF2ED573),
             ),
             FitnessDataCard(
               icon: Icons.bolt,
-              title: "Meta Diária",
+              title: AppLocalizations.of(context)!.metaDiaria,
               value: "${((data['steps'] ?? 0) / service.stepGoal * 100).round()}%",
               unit: "",
               color: Colors.orangeAccent,
@@ -254,7 +257,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Treinos Detectados",
+          AppLocalizations.of(context)!.detectedWorkouts,
           style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         const SizedBox(height: 16),
@@ -288,7 +291,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  workout['type'] ?? "Atividade",
+                  workout['type'] ?? AppLocalizations.of(context)!.atividade,
                   style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -318,12 +321,12 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
           const Icon(Icons.edit_note, color: Colors.white38, size: 32),
           const SizedBox(height: 12),
           Text(
-            "Não tem um Smartwatch?",
+            AppLocalizations.of(context)!.noSmartwatchTitle,
             style: GoogleFonts.inter(color: Colors.white70, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
           Text(
-            "Adicione seus passos e atividades manualmente.",
+            AppLocalizations.of(context)!.noSmartwatchDesc,
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
           ),
@@ -331,7 +334,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
           TextButton(
             onPressed: _showManualEntryDialog,
             child: Text(
-              "ADICIONAR MANUALMENTE",
+              AppLocalizations.of(context)!.addManually,
               style: GoogleFonts.inter(color: const Color(0xFF6C5CE7), fontWeight: FontWeight.bold),
             ),
           ),
@@ -349,7 +352,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF16162A),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text("Entrada Manual", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.manualEntry, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -357,21 +360,21 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
               controller: stepsController,
               keyboardType: TextInputType.number,
               style: const TextStyle(color: Colors.white),
-              decoration: _inputDecoration("Passos"),
+              decoration: _inputDecoration(AppLocalizations.of(context)!.steps),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: calsController,
               keyboardType: TextInputType.number,
               style: const TextStyle(color: Colors.white),
-              decoration: _inputDecoration("Calorias (kcal)"),
+              decoration: _inputDecoration("${AppLocalizations.of(context)!.calories} (kcal)"),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("CANCELAR", style: TextStyle(color: Colors.white54)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white54)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -382,7 +385,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6C5CE7)),
-            child: const Text("SALVAR"),
+            child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -417,12 +420,12 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
           const Icon(Icons.error_outline, color: Color(0xFFFD4556), size: 48),
           const SizedBox(height: 16),
           Text(
-            "Sincronização Falhou",
+            AppLocalizations.of(context)!.syncFailed,
             style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
-            "Certifique-se de que o Health Connect está instalado e autorizado.",
+            AppLocalizations.of(context)!.healthConnectDesc,
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(color: Colors.white70, fontSize: 14),
           ),
@@ -436,7 +439,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
                     side: const BorderSide(color: Color(0xFF6C5CE7)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text("INSTALAR", style: TextStyle(color: Color(0xFF6C5CE7))),
+                  child: Text(AppLocalizations.of(context)!.install, style: const TextStyle(color: Color(0xFF6C5CE7))),
                 ),
               ),
               const SizedBox(width: 12),
@@ -447,7 +450,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
                     backgroundColor: const Color(0xFF6C5CE7),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text("RETRY"),
+                  child: Text(AppLocalizations.of(context)!.retry, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -481,7 +484,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
             ),
             const SizedBox(height: 16),
             Text(
-              "Conecte seus dispositivos e acompanhe seu progresso real-time. Disponível para usuários Premium.",
+              AppLocalizations.of(context)!.premiumWearablesDesc,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(fontSize: 16, color: Colors.white70),
             ),
@@ -493,7 +496,7 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text("DESBLOQUEAR PREMIUM", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)!.unlockPremium, style: const TextStyle(fontWeight: FontWeight.bold)),
             )
           ],
         ),

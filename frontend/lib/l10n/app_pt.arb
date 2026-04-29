@@ -370,5 +370,37 @@
   "waistEstimated": "Cintura (Estimada)",
   "hipsEstimated": "Quadril (Estimado)",
   "estimatedIAValues": "* Valores estimados via IA baseados na pose e altura.",
-  "uploadError": "Erro no upload: {error}"
+  "uploadError": "Erro no upload: {error}",
+  "fitnessActivity": "Minha Atividade",
+  "viewDetails": "Ver detalhes",
+  "fitnessScore": "Fitness Score",
+  "fitnessScoreGood": "BOM",
+  "steps": "Passos",
+  "kcal": "kcal",
+  "sono": "Sono",
+  "weeklyProgress": "Progresso Semanal",
+  "wearablesTitle": "Wearables",
+  "syncing": "Sincronizando...",
+  "connected": "Conectado",
+  "lastSync": "Última sync: {time}",
+  "@lastSync": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "detectedWorkouts": "Treinos Detectados",
+  "noSmartwatchTitle": "Não tem um Smartwatch?",
+  "noSmartwatchDesc": "Adicione seus passos e atividades manualmente.",
+  "addManually": "ADICIONAR MANUALMENTE",
+  "manualEntry": "Entrada Manual",
+  "syncFailed": "Sincronização Falhou",
+  "healthConnectDesc": "Certifique-se de que o Health Connect está instalado e autorizado.",
+  "install": "INSTALAR",
+  "retry": "RETRY",
+  "premiumWearablesDesc": "Conecte seus dispositivos e acompanhe seu progresso real-time. Disponível para usuários Premium.",
+  "unlockPremium": "DESBLOQUEAR PREMIUM",
+  "bpm": "BPM Médio",
+  "distancia": "Distância",
+  "metaDiaria": "Meta Diária",
+  "atividade": "Atividade"
 }

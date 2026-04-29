@@ -1226,7 +1226,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Minha Atividade",
+              AppLocalizations.of(context)!.fitnessActivity,
               style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -1236,7 +1236,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/wearables'),
               child: Text(
-                "Ver detalhes",
+                AppLocalizations.of(context)!.viewDetails,
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   color: const Color(0xFF6C5CE7),
@@ -1263,7 +1263,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Fitness Score",
+                          AppLocalizations.of(context)!.fitnessScore,
                           style: GoogleFonts.inter(color: Colors.white54, fontSize: 13),
                         ),
                         const SizedBox(height: 4),
@@ -1310,9 +1310,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildMiniStat(Icons.directions_walk, "${data['steps'] ?? 0}", "passos"),
-                  _buildMiniStat(Icons.local_fire_department, "${data['calories'] ?? 0}", "kcal"),
-                  _buildMiniStat(Icons.nightlight_round, "${(data['sleep'] ?? 0) ~/ 60}h", "sono"),
+                  _buildMiniStat(Icons.directions_walk, "${data['steps'] ?? 0}", AppLocalizations.of(context)!.steps),
+                  _buildMiniStat(Icons.local_fire_department, "${data['calories'] ?? 0}", AppLocalizations.of(context)!.kcal),
+                  _buildMiniStat(Icons.nightlight_round, "${(data['sleep'] ?? 0) ~/ 60}h", AppLocalizations.of(context)!.sono),
                 ],
               ),
               const Divider(color: Color(0xFF2A2A4A), height: 32),
@@ -1320,7 +1320,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Progresso Semanal",
+                    AppLocalizations.of(context)!.weeklyProgress,
                     style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
                   ),
                   const SizedBox(height: 12),

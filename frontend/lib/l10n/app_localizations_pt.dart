@@ -1119,4 +1119,90 @@ class AppLocalizationsPt extends AppLocalizations {
   String uploadError(Object error) {
     return 'Erro no upload: $error';
   }
+
+  @override
+  String get fitnessActivity => 'Minha Atividade';
+
+  @override
+  String get viewDetails => 'Ver detalhes';
+
+  @override
+  String get fitnessScore => 'Fitness Score';
+
+  @override
+  String get fitnessScoreGood => 'BOM';
+
+  @override
+  String get steps => 'Passos';
+
+  @override
+  String get kcal => 'kcal';
+
+  @override
+  String get sono => 'Sono';
+
+  @override
+  String get weeklyProgress => 'Progresso Semanal';
+
+  @override
+  String get wearablesTitle => 'Wearables';
+
+  @override
+  String get syncing => 'Sincronizando...';
+
+  @override
+  String get connected => 'Conectado';
+
+  @override
+  String lastSync(String time) {
+    return 'Última sync: $time';
+  }
+
+  @override
+  String get detectedWorkouts => 'Treinos Detectados';
+
+  @override
+  String get noSmartwatchTitle => 'Não tem um Smartwatch?';
+
+  @override
+  String get noSmartwatchDesc =>
+      'Adicione seus passos e atividades manualmente.';
+
+  @override
+  String get addManually => 'ADICIONAR MANUALMENTE';
+
+  @override
+  String get manualEntry => 'Entrada Manual';
+
+  @override
+  String get syncFailed => 'Sincronização Falhou';
+
+  @override
+  String get healthConnectDesc =>
+      'Certifique-se de que o Health Connect está instalado e autorizado.';
+
+  @override
+  String get install => 'INSTALAR';
+
+  @override
+  String get retry => 'RETRY';
+
+  @override
+  String get premiumWearablesDesc =>
+      'Conecte seus dispositivos e acompanhe seu progresso real-time. Disponível para usuários Premium.';
+
+  @override
+  String get unlockPremium => 'DESBLOQUEAR PREMIUM';
+
+  @override
+  String get bpm => 'BPM Médio';
+
+  @override
+  String get distancia => 'Distância';
+
+  @override
+  String get metaDiaria => 'Meta Diária';
+
+  @override
+  String get atividade => 'Atividade';
 }

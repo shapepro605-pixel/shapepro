@@ -2197,6 +2197,168 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro no upload: {error}'**
   String uploadError(Object error);
+
+  /// No description provided for @fitnessActivity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minha Atividade'**
+  String get fitnessActivity;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver detalhes'**
+  String get viewDetails;
+
+  /// No description provided for @fitnessScore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fitness Score'**
+  String get fitnessScore;
+
+  /// No description provided for @fitnessScoreGood.
+  ///
+  /// In pt, this message translates to:
+  /// **'BOM'**
+  String get fitnessScoreGood;
+
+  /// No description provided for @steps.
+  ///
+  /// In pt, this message translates to:
+  /// **'Passos'**
+  String get steps;
+
+  /// No description provided for @kcal.
+  ///
+  /// In pt, this message translates to:
+  /// **'kcal'**
+  String get kcal;
+
+  /// No description provided for @sono.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sono'**
+  String get sono;
+
+  /// No description provided for @weeklyProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso Semanal'**
+  String get weeklyProgress;
+
+  /// No description provided for @wearablesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Wearables'**
+  String get wearablesTitle;
+
+  /// No description provided for @syncing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sincronizando...'**
+  String get syncing;
+
+  /// No description provided for @connected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conectado'**
+  String get connected;
+
+  /// No description provided for @lastSync.
+  ///
+  /// In pt, this message translates to:
+  /// **'Última sync: {time}'**
+  String lastSync(String time);
+
+  /// No description provided for @detectedWorkouts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Treinos Detectados'**
+  String get detectedWorkouts;
+
+  /// No description provided for @noSmartwatchTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não tem um Smartwatch?'**
+  String get noSmartwatchTitle;
+
+  /// No description provided for @noSmartwatchDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicione seus passos e atividades manualmente.'**
+  String get noSmartwatchDesc;
+
+  /// No description provided for @addManually.
+  ///
+  /// In pt, this message translates to:
+  /// **'ADICIONAR MANUALMENTE'**
+  String get addManually;
+
+  /// No description provided for @manualEntry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrada Manual'**
+  String get manualEntry;
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sincronização Falhou'**
+  String get syncFailed;
+
+  /// No description provided for @healthConnectDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Certifique-se de que o Health Connect está instalado e autorizado.'**
+  String get healthConnectDesc;
+
+  /// No description provided for @install.
+  ///
+  /// In pt, this message translates to:
+  /// **'INSTALAR'**
+  String get install;
+
+  /// No description provided for @retry.
+  ///
+  /// In pt, this message translates to:
+  /// **'RETRY'**
+  String get retry;
+
+  /// No description provided for @premiumWearablesDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conecte seus dispositivos e acompanhe seu progresso real-time. Disponível para usuários Premium.'**
+  String get premiumWearablesDesc;
+
+  /// No description provided for @unlockPremium.
+  ///
+  /// In pt, this message translates to:
+  /// **'DESBLOQUEAR PREMIUM'**
+  String get unlockPremium;
+
+  /// No description provided for @bpm.
+  ///
+  /// In pt, this message translates to:
+  /// **'BPM Médio'**
+  String get bpm;
+
+  /// No description provided for @distancia.
+  ///
+  /// In pt, this message translates to:
+  /// **'Distância'**
+  String get distancia;
+
+  /// No description provided for @metaDiaria.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meta Diária'**
+  String get metaDiaria;
+
+  /// No description provided for @atividade.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atividade'**
+  String get atividade;
 }
 
 class _AppLocalizationsDelegate

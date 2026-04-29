@@ -370,5 +370,37 @@
   "waistEstimated": "Waist (Estimated)",
   "hipsEstimated": "Hips (Estimated)",
   "estimatedIAValues": "* AI estimated values based on pose and height.",
-  "uploadError": "Upload error: {error}"
+  "uploadError": "Upload error: {error}",
+  "fitnessActivity": "My Activity",
+  "viewDetails": "View details",
+  "fitnessScore": "Fitness Score",
+  "fitnessScoreGood": "GOOD",
+  "steps": "Steps",
+  "kcal": "kcal",
+  "sono": "Sleep",
+  "weeklyProgress": "Weekly Progress",
+  "wearablesTitle": "Wearables",
+  "syncing": "Syncing...",
+  "connected": "Connected",
+  "lastSync": "Last sync: {time}",
+  "@lastSync": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "detectedWorkouts": "Detected Workouts",
+  "noSmartwatchTitle": "Don't have a Smartwatch?",
+  "noSmartwatchDesc": "Add your steps and activities manually.",
+  "addManually": "ADD MANUALLY",
+  "manualEntry": "Manual Entry",
+  "syncFailed": "Sync Failed",
+  "healthConnectDesc": "Ensure Health Connect is installed and authorized.",
+  "install": "INSTALL",
+  "retry": "RETRY",
+  "premiumWearablesDesc": "Connect your devices and track your progress in real-time. Available for Premium users.",
+  "unlockPremium": "UNLOCK PREMIUM",
+  "bpm": "Average BPM",
+  "distancia": "Distance",
+  "metaDiaria": "Daily Goal",
+  "atividade": "Activity"
 }
