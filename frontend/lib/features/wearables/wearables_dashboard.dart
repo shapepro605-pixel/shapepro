@@ -159,6 +159,14 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
             AppLocalizations.of(context)!.lastSync(timeStr),
             style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
           ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.settings_applications_outlined, color: Colors.white24, size: 20),
+            onPressed: () => HealthService().openHealthConnectSettings(),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            splashRadius: 20,
+          ),
         ],
       ),
     );
@@ -193,6 +201,34 @@ class _WearablesDashboardState extends State<WearablesDashboard> with SingleTick
             ),
           ),
         ),
+        if ((data['steps'] ?? 0) == 0 && (data['calories'] ?? 0) == 0 && (data['heartRate'] ?? 0) == 0)
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF6C5CE7).withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.lightbulb_outline, color: Color(0xFF6C5CE7), size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "Dados zerados? Verifique se as permissões de LEITURA estão ativas no Health Connect.",
+                      style: GoogleFonts.inter(color: Colors.white70, fontSize: 12),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => HealthService().openHealthConnectSettings(),
+                    child: const Text("AJUSTAR", style: TextStyle(color: Color(0xFF6C5CE7), fontWeight: FontWeight.bold, fontSize: 12)),
+                  ),
+                ],
+              ),
+            ),
+          ),
         const SizedBox(height: 40),
         GridView.count(
           shrinkWrap: true,

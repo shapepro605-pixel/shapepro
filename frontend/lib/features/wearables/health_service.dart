@@ -38,6 +38,16 @@ class HealthService {
     }
   }
 
+  Future<void> openHealthConnectSettings() async {
+    if (Platform.isAndroid) {
+      try {
+        await _health.openHealthConnectSettings();
+      } catch (e) {
+        print("Error opening Health Connect settings: $e");
+      }
+    }
+  }
+
   Future<bool> requestPermissions() async {
     // Request permissions for ACTIVITY_RECOGNITION and BODY_SENSORS on Android
     if (Platform.isAndroid) {

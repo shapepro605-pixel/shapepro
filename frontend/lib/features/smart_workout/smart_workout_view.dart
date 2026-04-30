@@ -8,7 +8,6 @@ import 'dart:io';
 import '../../services/api.dart';
 import 'workout_ai_engine.dart';
 import 'smart_workout_painter.dart';
-import 'package:shapepro/l10n/app_localizations.dart';
 
 class SmartWorkoutView extends StatefulWidget {
   const SmartWorkoutView({super.key});

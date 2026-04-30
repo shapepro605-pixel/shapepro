@@ -73,8 +73,9 @@ class PoseValidator {
     final heightRatio = bodyHeight / frameHeight;
     // Ideal ratio is between 0.4 and 0.7
     double distanceFactor = 0;
-    if (heightRatio >= 0.4 && heightRatio <= 0.7) distanceFactor = 1.0;
-    else if (heightRatio < 0.4) distanceFactor = heightRatio / 0.4;
+    if (heightRatio >= 0.4 && heightRatio <= 0.7) {
+      distanceFactor = 1.0;
+    } else if (heightRatio < 0.4) distanceFactor = heightRatio / 0.4;
     else distanceFactor = 1.0 - ((heightRatio - 0.7) / 0.3);
     score += math.max(0, 20 * distanceFactor);
 

@@ -973,7 +973,9 @@ class _DietaScreenState extends State<DietaScreen> {
                     } else {
                       final cur = Provider.of<ApiService>(context, listen: false).currentUser?['moeda'] ?? 'BRL';
                       double t = 0;
-                      for (var a in alimentos) t += (a['preco_num'] as num?)?.toDouble() ?? 0;
+                      for (var a in alimentos) {
+                        t += (a['preco_num'] as num?)?.toDouble() ?? 0;
+                      }
                       if (t > 0) mealTotal = CurrencyHelper.format(t, cur);
                     }
                     if (mealTotal.isEmpty) return const SizedBox.shrink();
