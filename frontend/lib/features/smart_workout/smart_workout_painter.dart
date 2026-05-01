@@ -10,6 +10,8 @@ class SmartWorkoutPainter extends CustomPainter {
   final InputImageRotation rotation;
   final CameraLensDirection cameraLensDirection;
   final bool isFormCorrect;
+  final AIExerciseType exerciseType;
+  final int repCount; // To trigger particle effects on change
 
   SmartWorkoutPainter(
     this.pose,
@@ -17,17 +19,27 @@ class SmartWorkoutPainter extends CustomPainter {
     this.rotation,
     this.cameraLensDirection,
     this.isFormCorrect,
+    this.exerciseType,
+    this.repCount,
   );
 
   @override
   void paint(Canvas canvas, Size size) {
+    _drawGhostForm(canvas, size);
+    
+    // Pulse animation factor (0.0 to 1.0)
+    final double pulse = (DateTime.now().millisecondsSinceEpoch % 1500) / 1500.0;
+    final double glowIntensity = 2.0 + (pulse * 3.0);
+    
     // Neon style paint
     final paintLine = Paint()
-      ..color = isFormCorrect ? const Color(0xFF00D2FF) : const Color(0xFFFF4757)
+      ..color = isFormCorrect 
+          ? const Color(0xFF00D2FF).withValues(alpha: 0.8 + (pulse * 0.2)) 
+          : const Color(0xFFFF4757)
       ..strokeWidth = 4.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
-      ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 3); // Neon glow effect
+      ..maskFilter = MaskFilter.blur(BlurStyle.solid, glowIntensity); // Dynamic neon glow
       
     final paintPoint = Paint()
       ..color = const Color(0xFF6C5CE7)
@@ -95,6 +107,43 @@ class SmartWorkoutPainter extends CustomPainter {
     drawPoint(PoseLandmarkType.rightKnee);
     drawPoint(PoseLandmarkType.leftAnkle);
     drawPoint(PoseLandmarkType.rightAnkle);
+  }
+
+  void _drawGhostForm(Canvas canvas, Size size) {
+    // Draw a subtle "ghost" silhouette of the perfect form
+    final paintGhost = Paint()
+      ..color = Colors.white.withValues(alpha: 0.1)
+      ..strokeWidth = 3.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    // Define standard "guide" points for a generic human shape or per-exercise
+    // For now, let's draw a subtle box or a generic "T-Pose" as a alignment guide
+    // Or better: draw the ideal skeleton for the current exercise
+    
+    // Example: Squat Ghost
+    if (exerciseType == AIExerciseType.squat) {
+       // Just a simple visual guide for the user to center themselves
+       final RRect guideBox = RRect.fromLTRBR(
+         size.width * 0.2, 
+         size.height * 0.2, 
+         size.width * 0.8, 
+         size.height * 0.9, 
+         const Radius.circular(20)
+       );
+       canvas.drawRRect(guideBox, paintGhost);
+       
+       // "AI ALIGNMENT" Text style
+       final textPainter = TextPainter(
+         text: TextSpan(
+           text: "ALINHAMENTO IA",
+           style: TextStyle(color: Colors.white.withValues(alpha: 0.2), fontSize: 12, fontWeight: FontWeight.bold),
+         ),
+         textDirection: TextDirection.ltr,
+       );
+       textPainter.layout();
+       textPainter.paint(canvas, Offset(size.width * 0.5 - textPainter.width / 2, size.height * 0.15));
+    }
   }
 
   @override

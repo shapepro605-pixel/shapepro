@@ -20,6 +20,8 @@ class WorkoutAIEngine {
   // Form Validation
   bool isFormCorrect = true;
   String feedbackMessage = "Posicione-se para começar";
+  double accuracyScore = 100.0; // 0-100 score
+  List<double> historyAccuracy = [];
 
   // Plank specifics
   int plankSeconds = 0;
@@ -38,6 +40,8 @@ class WorkoutAIEngine {
     currentState = WorkoutState.up;
     isFormCorrect = true;
     feedbackMessage = "Pronto para começar";
+    accuracyScore = 100.0;
+    historyAccuracy.clear();
     lastPlankTick = null;
   }
 
@@ -99,10 +103,13 @@ class WorkoutAIEngine {
     if (backAngle < 60) {
       isFormCorrect = false;
       feedbackMessage = "Mantenha as costas retas!";
+      accuracyScore = math.max(0, accuracyScore - 2);
     } else {
       isFormCorrect = true;
       feedbackMessage = currentState == WorkoutState.down ? "Suba!" : "Desça!";
+      accuracyScore = math.min(100, accuracyScore + 0.5);
     }
+    historyAccuracy.add(accuracyScore);
 
     // Rep Counting Logic
     if (kneeAngle > 160) {
@@ -136,10 +143,13 @@ class WorkoutAIEngine {
     if (bodyAngle < 150) {
       isFormCorrect = false;
       feedbackMessage = "Não deixe o quadril cair!";
+      accuracyScore = math.max(0, accuracyScore - 2);
     } else {
       isFormCorrect = true;
       feedbackMessage = currentState == WorkoutState.down ? "Empurre!" : "Desça!";
+      accuracyScore = math.min(100, accuracyScore + 0.5);
     }
+    historyAccuracy.add(accuracyScore);
 
     if (elbowAngle > 160) {
       if (currentState == WorkoutState.down) {
@@ -167,6 +177,8 @@ class WorkoutAIEngine {
 
     isFormCorrect = true;
     feedbackMessage = currentState == WorkoutState.down ? "Contraia!" : "Desça controlando";
+    accuracyScore = math.min(100, accuracyScore + 0.2);
+    historyAccuracy.add(accuracyScore);
 
     // When lying down, angle is around 120-140 (because knees are bent)
     // When crunching up, angle decreases below 90
@@ -197,10 +209,12 @@ class WorkoutAIEngine {
     if (bodyAngle < 160) {
       isFormCorrect = false;
       feedbackMessage = "Alinhe o quadril!";
+      accuracyScore = math.max(0, accuracyScore - 1);
       lastPlankTick = null; // Pause timer
     } else {
       isFormCorrect = true;
       feedbackMessage = "Segure firme!";
+      accuracyScore = math.min(100, accuracyScore + 0.3);
       
       final now = DateTime.now();
       if (lastPlankTick == null) {
@@ -212,5 +226,6 @@ class WorkoutAIEngine {
         }
       }
     }
+    historyAccuracy.add(accuracyScore);
   }
 }

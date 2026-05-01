@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 
 import '../../services/api.dart';
+import '../../services/tts_service.dart';
 import 'workout_ai_engine.dart';
 import 'smart_workout_painter.dart';
 
@@ -28,8 +29,13 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
   double _lastImageHeight = 1.0;
   
   final WorkoutAIEngine _aiEngine = WorkoutAIEngine();
+  final TtsService _tts = TtsService();
   bool _isPremiumLocked = false;
   bool _isLoading = true;
+  
+  String _lastFeedback = "";
+  int _lastRepCount = 0;
+  int _lastPlankSeconds = 0;
 
   @override
   void initState() {
@@ -95,6 +101,9 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
 
     try {
       await _controller!.initialize();
+      await _tts.init();
+      _tts.speak("Câmera pronta. Posicione-se para começar.");
+      
       _controller!.startImageStream(_processImage);
       if (mounted) setState(() {});
     } catch (e) {
@@ -120,6 +129,9 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
         
         // Process AI Logic
         _aiEngine.processPose(pose);
+        
+        // Voice Feedback Logic
+        _handleVoiceFeedback();
         
         setState(() {
           _lastPose = pose;
@@ -156,11 +168,117 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
     );
   }
 
+  void _showSessionSummary() {
+    _tts.speak("Treino finalizado. Excelente trabalho!");
+    
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF0A0A1A),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const Border.all(color: Color(0xFF00D2FF), width: 1),
+        ),
+        title: Center(
+          child: Text(
+            "RESUMO DO TREINO",
+            style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildSummaryRow("REPETIÇÕES", _aiEngine.repCount.toString()),
+            if (_aiEngine.currentExercise == AIExerciseType.plank)
+              _buildSummaryRow("TEMPO", "${_aiEngine.plankSeconds}s"),
+            _buildSummaryRow("PRECISÃO MÉDIA", "${_aiEngine.accuracyScore.toInt()}%"),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF00D2FF).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.star, color: Color(0xFFFFD12F)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      _aiEngine.accuracyScore > 90 
+                          ? "Performance de Atleta! Postura impecável."
+                          : "Bom trabalho! Continue focando na postura para melhores resultados.",
+                      style: GoogleFonts.inter(color: Colors.white70, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Close workout view
+            },
+            child: Text(
+              "CONCLUIR",
+              style: GoogleFonts.inter(color: const Color(0xFF00D2FF), fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: GoogleFonts.inter(color: Colors.white60, fontSize: 14)),
+          Text(value, style: GoogleFonts.inter(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  void _handleVoiceFeedback() {
+    // 1. Feedback de Correção (Apenas se mudar e for um erro ou instrução importante)
+    if (_aiEngine.feedbackMessage != _lastFeedback) {
+      // Evitar falar "Desça" ou "Suba" toda hora se o usuário já estiver fazendo
+      // Focamos em erros de postura (isFormCorrect == false)
+      if (!_aiEngine.isFormCorrect || 
+          (_aiEngine.feedbackMessage.contains("Pronto") || _aiEngine.feedbackMessage.contains("Segure"))) {
+        _tts.speak(_aiEngine.feedbackMessage);
+      }
+      _lastFeedback = _aiEngine.feedbackMessage;
+    }
+
+    // 2. Contagem de Repetições
+    if (_aiEngine.repCount != _lastRepCount) {
+      _tts.speak(_aiEngine.repCount.toString());
+      _lastRepCount = _aiEngine.repCount;
+    }
+
+    // 3. Contagem de segundos da Prancha (a cada 5 ou 10 segundos para não ser irritante)
+    if (_aiEngine.currentExercise == AIExerciseType.plank) {
+      if (_aiEngine.plankSeconds != _lastPlankSeconds && _aiEngine.plankSeconds % 5 == 0 && _aiEngine.plankSeconds > 0) {
+        _tts.speak("${_aiEngine.plankSeconds} segundos");
+      }
+      _lastPlankSeconds = _aiEngine.plankSeconds;
+    }
+  }
+
   @override
   void dispose() {
     _controller?.stopImageStream();
     _controller?.dispose();
     _poseDetector?.close();
+    _tts.stop();
     super.dispose();
   }
 
@@ -214,6 +332,8 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                 InputImageRotationValue.fromRawValue(_controller!.description.sensorOrientation) ?? InputImageRotation.rotation0deg,
                 _controller!.description.lensDirection,
                 _aiEngine.isFormCorrect,
+                _aiEngine.currentExercise,
+                _aiEngine.repCount,
               ),
             ),
             
@@ -229,7 +349,13 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          if (_aiEngine.repCount > 0 || _aiEngine.plankSeconds > 0) {
+                            _showSessionSummary();
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
                       ),
                       Expanded(
                         child: SizedBox(
@@ -319,6 +445,24 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white70,
                           letterSpacing: 2,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: (_aiEngine.accuracyScore > 80 ? const Color(0xFF2ED573) : const Color(0xFFFFD12F)).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: (_aiEngine.accuracyScore > 80 ? const Color(0xFF2ED573) : const Color(0xFFFFD12F)).withValues(alpha: 0.5), width: 1),
+                        ),
+                        child: Text(
+                          "${_aiEngine.accuracyScore.toInt()}% PRECISÃO",
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: _aiEngine.accuracyScore > 80 ? const Color(0xFF2ED573) : const Color(0xFFFFD12F),
+                            letterSpacing: 1,
+                          ),
                         ),
                       ),
                     ],
