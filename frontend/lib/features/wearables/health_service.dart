@@ -1,7 +1,9 @@
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
+import 'package:shapepro/utils/logger.dart';
 
 class HealthService {
   static final HealthService _instance = HealthService._internal();
@@ -38,12 +40,15 @@ class HealthService {
     }
   }
 
+  static const _customChannel = MethodChannel('com.shapepro.fitness/health');
+
   Future<void> openHealthConnectSettings() async {
     if (Platform.isAndroid) {
       try {
-        await _health.openHealthConnectSettings();
+        await _customChannel.invokeMethod('openHealthConnectSettings');
       } catch (e) {
-        print("Error opening Health Connect settings: $e");
+        Log.e("Error opening Health Connect settings", e);
+        await openHealthConnectInPlayStore();
       }
     }
   }
@@ -69,7 +74,7 @@ class HealthService {
       _isAuthorized = authorized;
       return authorized;
     } catch (error) {
-      print("Error requesting health permissions: $error");
+      Log.e("Error requesting health permissions", error);
       return false;
     }
   }
@@ -165,7 +170,7 @@ class HealthService {
         'workouts': workouts,
       };
     } catch (e) {
-      print("Error fetching health data: $e");
+      Log.e("Error fetching health data", e);
       return {
         'steps': 0,
         'calories': 0,

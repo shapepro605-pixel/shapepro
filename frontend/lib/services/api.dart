@@ -26,7 +26,7 @@ class ApiService extends ChangeNotifier {
   }
   
   // Current version must match configuration
-  static const String currentAppVersion = "1.0.1";
+  static const String currentAppVersion = "1.0.4";
   
   String? _accessToken;
   String? _refreshToken;
@@ -34,6 +34,7 @@ class ApiService extends ChangeNotifier {
   bool _isLoading = false;
   Locale _locale = const Locale('pt', 'BR');
   bool _isDarkMode = true; // Default to dark
+  bool _isInitialized = false;
 
   String? get accessToken => _accessToken;
   Map<String, dynamic>? get currentUser => _currentUser;
@@ -59,6 +60,8 @@ class ApiService extends ChangeNotifier {
   // ── Init: Load saved token ───────────────────────────────────────────
 
   Future<void> init() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
     final prefs = await SharedPreferences.getInstance();
     _accessToken = prefs.getString('access_token');
     _refreshToken = prefs.getString('refresh_token');
@@ -763,7 +766,7 @@ class ApiService extends ChangeNotifier {
           'version': data['version'],
           'min_version': data['min_version'],
           'update_url': data['update_url'],
-          'is_outdated': currentAppVersion != data['version'],
+          'is_outdated': _compareVersions(currentAppVersion, data['version']) < 0,
           'is_mandatory': _compareVersions(currentAppVersion, data['min_version']) < 0,
         };
       }

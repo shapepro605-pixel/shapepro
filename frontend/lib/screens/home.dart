@@ -34,7 +34,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _loadNotificationPreference();
     _loadData();
     _checkUpdate();
+    _checkTutorial();
     _showMedicalDisclaimer();
+  }
+
+  Future<void> _checkTutorial() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeen = prefs.getBool('has_seen_tutorial') ?? false;
+    
+    if (!hasSeen) {
+      if (mounted) {
+        Navigator.pushNamed(context, '/tutorial');
+      }
+    }
   }
 
   Future<void> _showMedicalDisclaimer() async {
@@ -182,7 +194,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Future<void> _loadData() async {
     final api = Provider.of<ApiService>(context, listen: false);
-    await api.init();
     
     // Check if user is verified (either email or phone)
     if (api.currentUser != null) {
