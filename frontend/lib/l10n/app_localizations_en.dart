@@ -965,7 +965,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get version => 'Version';
 
   @override
-  String get lastUpdate => 'Last update';
+  String get lastUpdate => 'Last Update';
+
+  @override
+  String get tutorialTitle => 'ShapePro Masterclass';
+
+  @override
+  String get tutorialSubtitle => 'Learn to master all premium features';
+
+  @override
+  String get tutorialHomeTitle => 'Control Panel';
+
+  @override
+  String get tutorialHomeDesc =>
+      'Track your macros, water intake, and daily progress in real-time.';
+
+  @override
+  String get tutorialWorkoutTitle => 'Your Elite Workout';
+
+  @override
+  String get tutorialWorkoutDesc =>
+      'Access your training plans (A, B, C...) and see detailed exercises, sets, and reps.';
+
+  @override
+  String get tutorialAICoachTitle => 'AI Smart Coach';
+
+  @override
+  String get tutorialAICoachDesc =>
+      'While training, use your camera for real-time form correction via voice and computer vision.';
+
+  @override
+  String get tutorialDietTitle => 'Smart Nutrition';
+
+  @override
+  String get tutorialDietDesc =>
+      'Tap any food to find cheaper or equivalent substitutions that fit your budget.';
+
+  @override
+  String get tutorialScannerTitle => '3D Body Scanner';
+
+  @override
+  String get tutorialScannerDesc =>
+      'Use our AI to measure body fat percentage and circumferences with just front and side photos.';
+
+  @override
+  String get tutorialGamificationTitle => 'Challenges & Achievements';
+
+  @override
+  String get tutorialGamificationDesc =>
+      'Earn trophies, rank up, and maintain consistency to unlock rewards.';
+
+  @override
+  String get tutorialWearablesTitle => 'Full Sync';
+
+  @override
+  String get tutorialWearablesDesc =>
+      'Connect your smartwatch to track steps, calories, and heart rate automatically.';
+
+  @override
+  String get tutorialGetStarted => 'GET STARTED';
+
+  @override
+  String get tutorialNext => 'NEXT';
+
+  @override
+  String get tutorialBack => 'BACK';
 
   @override
   String get approximateValues =>

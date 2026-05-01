@@ -971,6 +971,70 @@ class AppLocalizationsPt extends AppLocalizations {
   String get lastUpdate => 'Última atualização';
 
   @override
+  String get tutorialTitle => 'Mestre no ShapePro';
+
+  @override
+  String get tutorialSubtitle => 'Aprenda a dominar todas as funções premium';
+
+  @override
+  String get tutorialHomeTitle => 'Painel de Controle';
+
+  @override
+  String get tutorialHomeDesc =>
+      'Aqui você acompanha seus macros, ingestão de água e progresso diário em tempo real.';
+
+  @override
+  String get tutorialWorkoutTitle => 'Seu Treino de Elite';
+
+  @override
+  String get tutorialWorkoutDesc =>
+      'Acesse seus treinos (A, B, C...) e veja a lista detalhada de exercícios, séries e repetições.';
+
+  @override
+  String get tutorialAICoachTitle => 'Coach com IA';
+
+  @override
+  String get tutorialAICoachDesc =>
+      'Ao treinar, use a câmera para receber correções de postura em tempo real por voz e visão computacional.';
+
+  @override
+  String get tutorialDietTitle => 'Dieta Inteligente';
+
+  @override
+  String get tutorialDietDesc =>
+      'Toque em qualquer alimento para encontrar substituições mais baratas ou equivalentes que cabem no seu bolso.';
+
+  @override
+  String get tutorialScannerTitle => 'Scanner Corporal 3D';
+
+  @override
+  String get tutorialScannerDesc =>
+      'Use nossa IA para medir seu percentual de gordura e circunferências apenas com fotos de frente e lado.';
+
+  @override
+  String get tutorialGamificationTitle => 'Desafios & Conquistas';
+
+  @override
+  String get tutorialGamificationDesc =>
+      'Ganhe troféus, suba no ranking e mantenha sua constância para desbloquear recompensas.';
+
+  @override
+  String get tutorialWearablesTitle => 'Sincronização Total';
+
+  @override
+  String get tutorialWearablesDesc =>
+      'Conecte seu smartwatch para monitorar passos, calorias e batimentos cardíacos automaticamente.';
+
+  @override
+  String get tutorialGetStarted => 'COMEÇAR AGORA';
+
+  @override
+  String get tutorialNext => 'PRÓXIMO';
+
+  @override
+  String get tutorialBack => 'VOLTAR';
+
+  @override
   String get approximateValues => '* Valores aproximados de peso e medidas.';
 
   @override

@@ -1928,6 +1928,120 @@ abstract class AppLocalizations {
   /// **'Última atualização'**
   String get lastUpdate;
 
+  /// No description provided for @tutorialTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mestre no ShapePro'**
+  String get tutorialTitle;
+
+  /// No description provided for @tutorialSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprenda a dominar todas as funções premium'**
+  String get tutorialSubtitle;
+
+  /// No description provided for @tutorialHomeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Painel de Controle'**
+  String get tutorialHomeTitle;
+
+  /// No description provided for @tutorialHomeDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aqui você acompanha seus macros, ingestão de água e progresso diário em tempo real.'**
+  String get tutorialHomeDesc;
+
+  /// No description provided for @tutorialWorkoutTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu Treino de Elite'**
+  String get tutorialWorkoutTitle;
+
+  /// No description provided for @tutorialWorkoutDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesse seus treinos (A, B, C...) e veja a lista detalhada de exercícios, séries e repetições.'**
+  String get tutorialWorkoutDesc;
+
+  /// No description provided for @tutorialAICoachTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Coach com IA'**
+  String get tutorialAICoachTitle;
+
+  /// No description provided for @tutorialAICoachDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ao treinar, use a câmera para receber correções de postura em tempo real por voz e visão computacional.'**
+  String get tutorialAICoachDesc;
+
+  /// No description provided for @tutorialDietTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dieta Inteligente'**
+  String get tutorialDietTitle;
+
+  /// No description provided for @tutorialDietDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque em qualquer alimento para encontrar substituições mais baratas ou equivalentes que cabem no seu bolso.'**
+  String get tutorialDietDesc;
+
+  /// No description provided for @tutorialScannerTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Scanner Corporal 3D'**
+  String get tutorialScannerTitle;
+
+  /// No description provided for @tutorialScannerDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use nossa IA para medir seu percentual de gordura e circunferências apenas com fotos de frente e lado.'**
+  String get tutorialScannerDesc;
+
+  /// No description provided for @tutorialGamificationTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desafios & Conquistas'**
+  String get tutorialGamificationTitle;
+
+  /// No description provided for @tutorialGamificationDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ganhe troféus, suba no ranking e mantenha sua constância para desbloquear recompensas.'**
+  String get tutorialGamificationDesc;
+
+  /// No description provided for @tutorialWearablesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sincronização Total'**
+  String get tutorialWearablesTitle;
+
+  /// No description provided for @tutorialWearablesDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conecte seu smartwatch para monitorar passos, calorias e batimentos cardíacos automaticamente.'**
+  String get tutorialWearablesDesc;
+
+  /// No description provided for @tutorialGetStarted.
+  ///
+  /// In pt, this message translates to:
+  /// **'COMEÇAR AGORA'**
+  String get tutorialGetStarted;
+
+  /// No description provided for @tutorialNext.
+  ///
+  /// In pt, this message translates to:
+  /// **'PRÓXIMO'**
+  String get tutorialNext;
+
+  /// No description provided for @tutorialBack.
+  ///
+  /// In pt, this message translates to:
+  /// **'VOLTAR'**
+  String get tutorialBack;
+
   /// No description provided for @approximateValues.
   ///
   /// In pt, this message translates to:

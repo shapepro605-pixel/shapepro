@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 class TutorialScreen extends StatefulWidget {
   const TutorialScreen({super.key});
@@ -15,47 +16,58 @@ class _TutorialScreenState extends State<TutorialScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  // Caminhos das imagens geradas (simulando assets de produção)
+  final List<String> _imagePaths = [
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_scanner_1777599080404.png',
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_workout_1777599096034.png',
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_workout_1777599096034.png', // Reutilizando para exemplo
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_nutrition_1777599109154.png',
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_scanner_1777599080404.png', // Reutilizando scanner
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_trophy_1777599126166.png',
+    'C:/Users/mae12/.gemini/antigravity/brain/44b1f9e6-1720-486d-b153-bcd2b45f4041/premium_3d_heart_1777599140761.png',
+  ];
+
   List<TutorialStep> get _steps => [
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialHomeTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialHomeDesc,
-      icon: Icons.dashboard_customize_rounded,
+      imagePath: _imagePaths[0],
       color: const Color(0xFF6C5CE7),
     ),
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialWorkoutTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialWorkoutDesc,
-      icon: Icons.fitness_center_rounded,
+      imagePath: _imagePaths[1],
       color: const Color(0xFF00D2FF),
     ),
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialAICoachTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialAICoachDesc,
-      icon: Icons.psychology_rounded,
+      imagePath: _imagePaths[2],
       color: const Color(0xFF2ED573),
     ),
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialDietTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialDietDesc,
-      icon: Icons.restaurant_menu_rounded,
+      imagePath: _imagePaths[3],
       color: const Color(0xFFFFA502),
     ),
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialScannerTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialScannerDesc,
-      icon: Icons.accessibility_new_rounded,
+      imagePath: _imagePaths[4],
       color: const Color(0xFFFF4757),
     ),
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialGamificationTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialGamificationDesc,
-      icon: Icons.emoji_events_rounded,
+      imagePath: _imagePaths[5],
       color: const Color(0xFFFFD32A),
     ),
     TutorialStep(
       title: (context) => AppLocalizations.of(context)!.tutorialWearablesTitle,
       description: (context) => AppLocalizations.of(context)!.tutorialWearablesDesc,
-      icon: Icons.watch_rounded,
+      imagePath: _imagePaths[6],
       color: const Color(0xFF1E90FF),
     ),
   ];
@@ -76,51 +88,53 @@ class _TutorialScreenState extends State<TutorialScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFF0A0A1A),
+          color: Color(0xFF020205), // Fundo ainda mais profundo
         ),
         child: Stack(
           children: [
-            // Background Glow
-            Positioned(
-              top: -100,
-              right: -100,
-              child: Container(
-                width: 300,
-                height: 300,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: steps[_currentPage].color.withOpacity(0.15),
+            // Background Glow Animado
+            AnimatedContainer(
+              duration: const Duration(seconds: 1),
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: const Alignment(0.7, -0.6),
+                  radius: 1.2,
+                  colors: [
+                    steps[_currentPage].color.withOpacity(0.08),
+                    Colors.transparent,
+                  ],
                 ),
-              ).animate(target: _currentPage.toDouble()).blur(begin: 100, end: 100),
+              ),
             ),
 
             SafeArea(
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
-                  // Header
+                  const SizedBox(height: 10),
+                  // Header Minimalista
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          l10n.tutorialTitle,
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white54,
-                            letterSpacing: 1.5,
+                          l10n.tutorialTitle.toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white24,
+                            letterSpacing: 3,
                           ),
                         ),
                         TextButton(
                           onPressed: _finishTutorial,
                           child: Text(
-                            l10n.later.toUpperCase(),
-                            style: GoogleFonts.inter(
-                              color: Colors.white38,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
+                            l10n.later,
+                            style: GoogleFonts.outfit(
+                              color: Colors.white30,
+                              fontSize: 13,
                             ),
                           ),
                         ),
@@ -136,59 +150,64 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       itemBuilder: (context, index) {
                         final step = steps[index];
                         return Padding(
-                          padding: const EdgeInsets.all(40),
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // Animated Icon Container
+                              // Ilustração 3D Premium
                               Container(
-                                width: 180,
-                                height: 180,
+                                height: 280,
                                 decoration: BoxDecoration(
-                                  color: step.color.withOpacity(0.1),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: step.color.withOpacity(0.3),
-                                    width: 2,
+                                  borderRadius: BorderRadius.circular(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: step.color.withOpacity(0.1),
+                                      blurRadius: 50,
+                                      spreadRadius: -10,
+                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Image.file(
+                                    File(step.imagePath),
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                                child: Icon(
-                                  step.icon,
-                                  size: 80,
-                                  color: step.color,
-                                ),
-                              ).animate(key: ValueKey(index))
-                                .scale(duration: 600.ms, curve: Curves.backOut)
-                                .shimmer(delay: 800.ms, duration: 1500.ms),
+                              ).animate(key: ValueKey('img$index'))
+                                .fadeIn(duration: 800.ms)
+                                .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1), curve: Curves.easeOutCubic),
                               
-                              const SizedBox(height: 50),
+                              const SizedBox(height: 60),
                               
                               Text(
                                 step.title(context),
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w800,
                                   color: Colors.white,
-                                  letterSpacing: -0.5,
+                                  letterSpacing: -1,
+                                  height: 1.1,
                                 ),
                               ).animate(key: ValueKey('t$index'))
                                 .fadeIn(delay: 200.ms)
-                                .moveY(begin: 20, end: 0),
+                                .moveY(begin: 30, end: 0, curve: Curves.easeOutCubic),
                               
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 18),
                               
                               Text(
                                 step.description(context),
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  color: Colors.white70,
-                                  height: 1.5,
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 15,
+                                  color: Colors.white54,
+                                  height: 1.6,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ).animate(key: ValueKey('d$index'))
                                 .fadeIn(delay: 400.ms)
-                                .moveY(begin: 20, end: 0),
+                                .moveY(begin: 30, end: 0, curve: Curves.easeOutCubic),
                             ],
                           ),
                         );
@@ -196,37 +215,37 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     ),
                   ),
 
-                  // Footer
+                  // Navegação e Progresso
                   Padding(
-                    padding: const EdgeInsets.all(32),
+                    padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Page Indicators
+                        // Indicadores Ultra-Thin
                         Row(
                           children: List.generate(steps.length, (index) {
                             return AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              margin: const EdgeInsets.only(right: 8),
-                              height: 8,
-                              width: _currentPage == index ? 24 : 8,
+                              duration: const Duration(milliseconds: 400),
+                              margin: const EdgeInsets.only(right: 6),
+                              height: 4,
+                              width: _currentPage == index ? 28 : 12,
                               decoration: BoxDecoration(
                                 color: _currentPage == index 
                                   ? steps[index].color 
-                                  : Colors.white10,
-                                borderRadius: BorderRadius.circular(4),
+                                  : Colors.white.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(2),
                               ),
                             );
                           }),
                         ),
 
-                        // Action Button
+                        // Botão de Ação Moderno
                         GestureDetector(
                           onTap: () {
                             if (_currentPage < steps.length - 1) {
                               _pageController.nextPage(
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut,
+                                duration: const Duration(milliseconds: 600),
+                                curve: Curves.easeInOutQuart,
                               );
                             } else {
                               _finishTutorial();
@@ -234,40 +253,38 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           },
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                            height: 60,
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  steps[_currentPage].color,
-                                  steps[_currentPage].color.withOpacity(0.7),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: steps[_currentPage].color.withOpacity(0.3),
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 5),
+                                  color: Colors.white.withOpacity(0.2),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
                                 ),
                               ],
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  _currentPage == steps.length - 1 
-                                    ? l10n.tutorialGetStarted
-                                    : l10n.tutorialNext,
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    letterSpacing: 0.5,
+                            child: Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    _currentPage == steps.length - 1 
+                                      ? l10n.tutorialGetStarted
+                                      : l10n.tutorialNext,
+                                    style: GoogleFonts.outfit(
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      letterSpacing: 1,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-                                const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.white),
-                              ],
+                                  const SizedBox(width: 10),
+                                  const Icon(Icons.arrow_forward_rounded, size: 20, color: Colors.black),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -287,13 +304,13 @@ class _TutorialScreenState extends State<TutorialScreen> {
 class TutorialStep {
   final String Function(BuildContext) title;
   final String Function(BuildContext) description;
-  final IconData icon;
+  final String imagePath;
   final Color color;
 
   TutorialStep({
     required this.title,
     required this.description,
-    required this.icon,
+    required this.imagePath,
     required this.color,
   });
 }
