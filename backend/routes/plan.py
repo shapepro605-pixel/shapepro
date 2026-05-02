@@ -26,8 +26,10 @@ def gerar_dieta():
             'error': t('complete_profile_diet')
         }), 400
 
-    # Deactivate previous diet plans
-    DietPlan.query.filter_by(user_id=int(user_id), ativa=True).update({'ativa': False})
+    # Clean up old diet and training plans for this user (Keep only current)
+    DietPlan.query.filter_by(user_id=int(user_id)).delete()
+    TrainingPlan.query.filter_by(user_id=int(user_id)).delete()
+    db.session.commit()
 
     # Generate new diet
     from services.i18n import get_locale
@@ -81,8 +83,8 @@ def gerar_dieta():
         elif user.nivel_atividade in ['intenso', 'muito_intenso']:
             nivel = 'avancado'
             
-        # Deactivate old plans
-        TrainingPlan.query.filter_by(user_id=int(user_id), ativo=True).update({'ativo': False})
+        # Training plans are already cleaned up at the beginning of the function
+        # TrainingPlan.query.filter_by(user_id=int(user_id), ativo=True).update({'ativo': False})
         
         # Access TreinoService
         treino_service = TreinoService(lang=lang)

@@ -29,6 +29,9 @@ def migrate():
                 safe_execute("ALTER TABLE diet_plans ADD COLUMN perda_estimada_kg FLOAT;")
                 safe_execute("ALTER TABLE diet_plans ADD COLUMN fibra_total_g FLOAT;")
                 safe_execute("ALTER TABLE diet_plans ADD COLUMN agua_recomendada_ml INTEGER;")
+                
+                # Sincronização Firebase
+                safe_execute("ALTER TABLE users ADD COLUMN firebase_uid VARCHAR(128);")
             else:
                 safe_execute("ALTER TABLE users ADD COLUMN foto_perfil TEXT;")
                 safe_execute("ALTER TABLE body_scans ADD COLUMN metrics JSON;")
@@ -38,6 +41,9 @@ def migrate():
                 safe_execute("ALTER TABLE diet_plans ADD COLUMN perda_estimada_kg REAL;")
                 safe_execute("ALTER TABLE diet_plans ADD COLUMN fibra_total_g REAL;")
                 safe_execute("ALTER TABLE diet_plans ADD COLUMN agua_recomendada_ml INTEGER;")
+
+                # Sincronização Firebase (SQLite)
+                safe_execute("ALTER TABLE users ADD COLUMN firebase_uid TEXT;")
                 
             # Run the other migrations securely
             from migrate_global import migrate as migrate_global

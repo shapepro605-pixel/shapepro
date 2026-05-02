@@ -124,15 +124,17 @@ def register():
                 from firebase_admin import auth as firebase_auth
                 try:
                     # Check if user already exists in Firebase
-                    firebase_auth.get_user_by_email(email)
+                    fb_user = firebase_auth.get_user_by_email(email)
+                    new_user.firebase_uid = fb_user.uid
                 except:
                     # Create new user in Firebase Auth
-                    firebase_auth.create_user(
+                    fb_user = firebase_auth.create_user(
                         email=email,
                         password=password,
                         display_name=nome,
                         uid=str(new_user.id)
                     )
+                    new_user.firebase_uid = fb_user.uid
             except Exception as fe:
                 print(f"[FIREBASE] Sync error: {fe}")
         
@@ -207,6 +209,7 @@ def verify_sms():
             
             if user:
                 user.telefone_verificado = True
+                user.firebase_uid = decoded.get('uid')
                 db.session.commit()
                 
                 # Generate Tokens for Login
@@ -288,6 +291,7 @@ def google_login():
             nome=name,
             telefone=decoded.get('phone_number', ''),
             password_hash=password_hash,
+            firebase_uid=decoded.get('uid'),
             telefone_verificado=True  # Google accounts are pre-verified
         )
         db.session.add(user)
@@ -414,8 +418,32 @@ def update_profile():
     if 'cidade' in data and data['cidade'] != current_cidade: 
         location_changed = True
 
+    # Handle Profile Photo cleanup if it's being updated
+    if 'foto_perfil' in data:
+        new_photo_url = data['foto_perfil']
+        old_photo_url = user.foto_perfil
+        
+        # Only cleanup if the photo actually changed and it's a firebase URL
+        if old_photo_url and old_photo_url != new_photo_url and is_firebase_initialized():
+            try:
+                from firebase_admin import storage
+                import urllib.parse
+                parsed_url = urllib.parse.urlparse(old_photo_url)
+                if 'firebasestorage.googleapis.com' in parsed_url.netloc:
+                    path = parsed_url.path.split('/o/')[-1]
+                    path = urllib.parse.unquote(path)
+                    bucket = storage.bucket()
+                    blob = bucket.blob(path)
+                    if blob.exists():
+                        blob.delete()
+                        print(f"[FIREBASE] Deleted OLD storage file: {path}")
+            except Exception as e:
+                print(f"[FIREBASE] OLD photo cleanup error: {e}")
+        
+        user.foto_perfil = new_photo_url
+
     for field in updatable:
-        if field in data:
+        if field in data and field != 'foto_perfil': # handled above
             setattr(user, field, data[field])
 
     db.session.commit()
@@ -438,23 +466,53 @@ def update_profile():
 @auth_bp.route('/profile', methods=['DELETE'])
 @jwt_required()
 def delete_profile():
-    """Hard delete user account and all personal data."""
+    """Hard delete user account and all personal data (SQL + Firebase)."""
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
 
     if not user:
         return jsonify({'error': t('user_not_found')}), 404
 
+    firebase_uid = getattr(user, 'firebase_uid', None)
+    profile_photo_url = getattr(user, 'foto_perfil', None)
+
     try:
-        # User deletion will cascade via db.relationship definitions 
-        # for dietas, treinos, weight_logs, water_logs, desafios, conquistas, etc.
+        # 1. Clean up Firebase Storage (Profile Photo)
+        if profile_photo_url and is_firebase_initialized():
+            try:
+                from firebase_admin import storage
+                import urllib.parse
+                parsed_url = urllib.parse.urlparse(profile_photo_url)
+                if 'firebasestorage.googleapis.com' in parsed_url.netloc:
+                    path = parsed_url.path.split('/o/')[-1]
+                    path = urllib.parse.unquote(path)
+                    bucket = storage.bucket()
+                    blob = bucket.blob(path)
+                    if blob.exists():
+                        blob.delete()
+                        print(f"[FIREBASE] Deleted storage file: {path}")
+            except Exception as e:
+                print(f"[FIREBASE] Storage cleanup error: {e}")
+
+        # 2. Clean up Firebase Authentication
+        if firebase_uid and is_firebase_initialized():
+            try:
+                from firebase_admin import auth as firebase_auth
+                firebase_auth.delete_user(firebase_uid)
+                print(f"[FIREBASE] Deleted Auth user: {firebase_uid}")
+            except Exception as e:
+                print(f"[FIREBASE] Auth deletion error: {e}")
+
+        # 3. Clean up SQL Database (Cascades will handle related tables)
         db.session.delete(user)
         db.session.commit()
+
+        return jsonify({'success': True, 'message': t('account_deleted')}), 200
+
     except Exception as e:
         db.session.rollback()
+        print(f"[DELETE ACCOUNT] Critical error: {e}")
         return jsonify({'error': 'Failed to delete account data: ' + str(e)}), 500
-
-    return jsonify({'success': True, 'message': t('account_deleted')}), 200
 
 
 @auth_bp.route('/refresh', methods=['POST'])
@@ -713,6 +771,10 @@ def diagnostic_email():
         log_step('SMTP Connection', 'FAILED', str(e))
         
     return jsonify(results), 200
+
+
+
+
 
 
 

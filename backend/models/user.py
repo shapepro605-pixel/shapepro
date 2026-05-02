@@ -46,6 +46,7 @@ class User(db.Model, SerialMixin):
     ultimo_treino_data = db.Column(db.DateTime, nullable=True)
     pontos_xp = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Boolean, default=True)
+    firebase_uid = db.Column(db.String(128), nullable=True, unique=True, index=True)
     data_atualizacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     @validates('telefone')
