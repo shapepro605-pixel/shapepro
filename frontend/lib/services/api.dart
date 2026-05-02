@@ -26,7 +26,7 @@ class ApiService extends ChangeNotifier {
   }
   
   // Current version must match configuration
-  static const String currentAppVersion = "1.0.6";
+  static const String currentAppVersion = "1.0.10";
   
   String? _accessToken;
   String? _refreshToken;
@@ -180,6 +180,12 @@ class ApiService extends ChangeNotifier {
     final cityParam = cidade != null ? '&cidade=$cidade' : '';
     final countryParam = pais != null ? '&pais=$pais' : '';
     return await _request('GET', '/food-prices/search?$query$cityParam$countryParam');
+  }
+
+  Future<Map<String, dynamic>> reportDietResult(double weightLost) async {
+    return await _request('POST', '/plan/dieta/resultado-mensal', body: {
+      'peso_perdido': weightLost,
+    });
   }
 
   @override

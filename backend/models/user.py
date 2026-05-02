@@ -162,6 +162,11 @@ class DietPlan(db.Model, SerialMixin):
     duracao = db.Column(db.Integer, default=1)  # Duration in days
     ativa = db.Column(db.Boolean, default=True)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    # Nutritionist-grade fields
+    peso_inicial = db.Column(db.Float, nullable=True)  # User weight when diet was created
+    perda_estimada_kg = db.Column(db.Float, nullable=True)  # AI-projected weight loss in 30 days
+    fibra_total_g = db.Column(db.Float, nullable=True)  # Daily fiber total
+    agua_recomendada_ml = db.Column(db.Integer, nullable=True)  # Daily water recommendation
 
     def to_dict(self):
         import json

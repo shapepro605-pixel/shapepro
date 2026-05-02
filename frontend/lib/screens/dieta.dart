@@ -690,6 +690,11 @@ class _DietaScreenState extends State<DietaScreen> {
               ),
               const SizedBox(height: 24),
 
+              if (_dieta?['projecao_30d'] != null) ...[
+                _buildProjectionCard(),
+                const SizedBox(height: 24),
+              ],
+
               // ── Meals ───────────────────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -764,10 +769,175 @@ class _DietaScreenState extends State<DietaScreen> {
             _buildTreinosSincronizadosList(),
             const SizedBox(height: 30),
           ],
+          
+          if (_dieta?['projecao_30d'] != null) ...[
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton.icon(
+                onPressed: () => _showMonthResultModal(context),
+                icon: const Icon(Icons.emoji_events, color: Colors.white),
+                label: Text(
+                  'Registrar Resultado de 30 Dias',
+                  style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6C5CE7),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+          ],
         ],
       ),
     );
   }
+
+  Widget _buildProjectionCard() {
+    final proj = _dieta?['projecao_30d'];
+    if (proj == null) return const SizedBox.shrink();
+
+    final perdaKg = (proj['perda_estimada_kg'] as num?)?.toDouble() ?? 0.0;
+    final aguaMl = _dieta?['agua_recomendada_ml']?.toString() ?? '2500';
+    final fibraG = _dieta?['fibra_meta_g']?.toString() ?? '25';
+    
+    // Only show projection if there is actual weight loss expected
+    if (perdaKg <= 0.1) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF6C5CE7), Color(0xFF4834D4)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(color: const Color(0xFF6C5CE7).withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text('Projeção ShapePro IA', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildProjectionItem(Icons.monitor_weight_outlined, '-${perdaKg}kg', 'em 30 dias'),
+              _buildProjectionItem(Icons.water_drop_outlined, '${aguaMl}ml', 'água/dia'),
+              _buildProjectionItem(Icons.grass_outlined, '${fibraG}g', 'fibras/dia'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProjectionItem(IconData icon, String value, String label) {
+    return Column(
+      children: [
+        Icon(icon, color: Colors.white70, size: 22),
+        const SizedBox(height: 6),
+        Text(value, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+        const SizedBox(height: 2),
+        Text(label, style: GoogleFonts.inter(color: Colors.white70, fontSize: 10)),
+      ],
+    );
+  }
+
+  void _showMonthResultModal(BuildContext context) {
+    final TextEditingController weightController = TextEditingController();
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: const BoxDecoration(
+              color: Color(0xFF1E1E38),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10))),
+                const SizedBox(height: 24),
+                const Icon(Icons.celebration, color: Color(0xFF2ED573), size: 48),
+                const SizedBox(height: 16),
+                Text('Resultado de 30 Dias', style: GoogleFonts.inter(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Text('Parabéns por seguir a dieta! Quantos quilos você perdeu neste mês?', 
+                  style: GoogleFonts.inter(color: Colors.white70, fontSize: 14), textAlign: TextAlign.center),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: weightController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  style: GoogleFonts.inter(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    hintText: 'Ex: 4.5',
+                    hintStyle: GoogleFonts.inter(color: Colors.white24),
+                    suffixText: 'kg',
+                    suffixStyle: GoogleFonts.inter(color: Colors.white54, fontSize: 18),
+                    filled: true,
+                    fillColor: const Color(0xFF16162A),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (weightController.text.isEmpty) return;
+                      final val = double.tryParse(weightController.text.replaceAll(',', '.'));
+                      if (val != null) {
+                        Navigator.pop(ctx);
+                        final api = Provider.of<ApiService>(context, listen: false);
+                        final res = await api.reportDietResult(val);
+                        if (res['success'] == true) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Row(
+                              children: [
+                                const Icon(Icons.check_circle, color: Colors.white),
+                                const SizedBox(width: 8),
+                                Expanded(child: Text(res['message'] ?? 'Sucesso! Peso atualizado no perfil.')),
+                              ],
+                            ),
+                            backgroundColor: const Color(0xFF2ED573),
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2ED573), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                    child: Text('Confirmar & Atualizar Perfil', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   Widget _buildTreinosSincronizadosList() {
     final treinoColors = {

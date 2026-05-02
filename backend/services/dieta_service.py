@@ -48,17 +48,32 @@ class DietaService:
 
     def calcular_tmb(self, sexo, idade, altura, peso):
         """
-        Calcula a Taxa Metabólica Basal usando a fórmula de Harris-Benedict revisada.
-        sexo: 'M' ou 'F'
-        idade: em anos
-        altura: em cm
-        peso: em kg
+        Calcula a Taxa Metabólica Basal usando Mifflin-St Jeor (1990).
+        Recomendada pela Academy of Nutrition and Dietetics como a mais precisa.
         """
         if sexo.upper() == 'M':
-            tmb = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * idade)
+            tmb = (10 * peso) + (6.25 * altura) - (5 * idade) + 5
         else:
-            tmb = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * idade)
+            tmb = (10 * peso) + (6.25 * altura) - (5 * idade) - 161
         return round(tmb, 0)
+
+    def calcular_agua(self, peso):
+        """Calcula recomendação de água diária (ml). Fórmula: 35ml × peso."""
+        return round(peso * 35)
+
+    def calcular_projecao_30d(self, tdee, calorias_dieta, peso_atual):
+        """Projeta perda de peso em 30 dias baseado no déficit calórico.
+        1 kg de gordura ≈ 7700 kcal."""
+        deficit_diario = tdee - calorias_dieta
+        if deficit_diario <= 0:
+            return {'perda_estimada_kg': 0, 'peso_projetado': peso_atual, 'deficit_diario': 0}
+        perda_kg = round((deficit_diario * 30) / 7700, 1)
+        perda_kg = min(perda_kg, 5.0)  # Trava: máximo 5 kg/mês (seguro)
+        return {
+            'perda_estimada_kg': perda_kg,
+            'peso_projetado': round(peso_atual - perda_kg, 1),
+            'deficit_diario': round(deficit_diario)
+        }
 
     def calcular_tdee(self, tmb, nivel_atividade):
         """Calcula o TDEE (Total Daily Energy Expenditure)."""
@@ -72,59 +87,69 @@ class DietaService:
         fator = fatores.get(nivel_atividade, 1.55)
         return round(tmb * fator, 0)
 
-    def calcular_macros(self, calorias, objetivo, ritmo_meta='padrao'):
+    def calcular_macros(self, calorias, objetivo, ritmo_meta='padrao', peso=70, sexo='M', nivel_atividade='moderado'):
         """
-        Distribui macronutrientes baseado no objetivo e ritmo (agressividade).
-        Retorna proteinas, carboidratos e gorduras em gramas.
+        Distribui macronutrientes usando método de nutricionista clínica:
+        - Proteína: calculada por g/kg de peso corporal (ISSN Position Stand)
+        - Gordura: 25-35% das calorias (saúde hormonal)
+        - Carboidrato: o restante das calorias
         """
         ajustes_ritmo = {
-            'perder_peso': {
-                'leve': -300,
-                'padrao': -500,
-                'agressivo': -1000
-            },
-            'ganhar_massa': {
-                'leve': 300,
-                'padrao': 500,
-                'agressivo': 1000
-            },
-            'manter': {
-                'leve': 0, 'padrao': 0, 'agressivo': 0
-            }
+            'perder_peso': {'leve': -300, 'padrao': -500, 'agressivo': -750},
+            'ganhar_massa': {'leve': 300, 'padrao': 500, 'agressivo': 800},
+            'manter': {'leve': 0, 'padrao': 0, 'agressivo': 0}
         }
-
-        if objetivo == 'perder_peso':
-            if ritmo_meta == 'agressivo':
-                macros = {'proteina_pct': 0.45, 'carbo_pct': 0.20, 'gordura_pct': 0.35} # Low carb extremo
-            elif ritmo_meta == 'leve':
-                macros = {'proteina_pct': 0.30, 'carbo_pct': 0.45, 'gordura_pct': 0.25}
-            else:
-                macros = {'proteina_pct': 0.35, 'carbo_pct': 0.35, 'gordura_pct': 0.30}
-        elif objetivo == 'ganhar_massa':
-            if ritmo_meta == 'agressivo':
-                macros = {'proteina_pct': 0.25, 'carbo_pct': 0.55, 'gordura_pct': 0.20} # High carb e calorias absurdas
-            else:
-                macros = {'proteina_pct': 0.30, 'carbo_pct': 0.50, 'gordura_pct': 0.20}
-        else:
-            macros = {'proteina_pct': 0.30, 'carbo_pct': 0.45, 'gordura_pct': 0.25}
 
         ajuste = ajustes_ritmo.get(objetivo, ajustes_ritmo['manter']).get(ritmo_meta, 0)
         calorias_finais = calorias + ajuste
 
-        # Trava de segurança
-        if calorias_finais < 1200:
-            calorias_finais = 1200
+        # Trava de segurança por sexo (OMS)
+        minimo = 1500 if sexo.upper() == 'M' else 1200
+        if calorias_finais < minimo:
+            calorias_finais = minimo
 
-        proteinas_g = round((calorias_finais * macros['proteina_pct']) / 4, 0)  # 4 cal/g
-        carboidratos_g = round((calorias_finais * macros['carbo_pct']) / 4, 0)  # 4 cal/g
-        gorduras_g = round((calorias_finais * macros['gordura_pct']) / 9, 0)    # 9 cal/g
+        # ── Proteína por g/kg (ISSN) ──
+        if objetivo == 'perder_peso':
+            if nivel_atividade in ['sedentario', 'leve']:
+                prot_por_kg = 1.4  # Sedentário em déficit
+            elif ritmo_meta == 'agressivo':
+                prot_por_kg = 2.2  # Déficit agressivo ativo
+            else:
+                prot_por_kg = 1.8  # Ativo em déficit padrão
+        elif objetivo == 'ganhar_massa':
+            prot_por_kg = 1.8 if nivel_atividade in ['sedentario', 'leve'] else 2.0
+        else:
+            prot_por_kg = 1.2 if nivel_atividade in ['sedentario', 'leve'] else 1.4
+
+        proteinas_g = round(peso * prot_por_kg)
+        cal_proteina = proteinas_g * 4
+
+        # Limita proteína para não ultrapassar 40% das calorias
+        if cal_proteina > calorias_finais * 0.40:
+            proteinas_g = round((calorias_finais * 0.40) / 4)
+            cal_proteina = proteinas_g * 4
+
+        # ── Gordura: 25-30% ──
+        gordura_pct = 0.30 if objetivo == 'perder_peso' else 0.25
+        gorduras_g = round((calorias_finais * gordura_pct) / 9)
+        cal_gordura = gorduras_g * 9
+
+        # ── Carboidrato: o restante ──
+        cal_restante = calorias_finais - cal_proteina - cal_gordura
+        carboidratos_g = round(max(cal_restante, 200) / 4)  # Mínimo 50g (saúde cerebral)
+
+        # Fibra recomendada (OMS)
+        fibra_meta_g = 38 if sexo.upper() == 'M' else 25
 
         return {
-            'calorias_totais': calorias_finais,
+            'calorias_totais': round(calorias_finais),
             'proteinas_g': proteinas_g,
             'carboidratos_g': carboidratos_g,
             'gorduras_g': gorduras_g,
+            'fibra_meta_g': fibra_meta_g,
+            'prot_por_kg': prot_por_kg,
         }
+
 
     def _selecionar_alimento(self, categoria, usados=None, orcamento='padrao'):
         """Select a random food item from category, avoiding repeats and respecting budget."""
@@ -322,6 +347,7 @@ class DietaService:
             'proteina': round(alimento['proteina'] * fator, 1),
             'carboidrato': round(alimento['carbo'] * fator, 1),
             'gordura': round(alimento['gordura'] * fator, 1),
+            'fibra': round(alimento.get('fibra', 0) * fator, 1),
             'preco_num': round(preco_porcao, 2)
         }
 
@@ -549,11 +575,15 @@ class DietaService:
     def gerar_plano(self, sexo, idade, altura, peso, nivel_atividade='moderado', objetivo='manter', ritmo_meta='padrao', dias=1, orcamento='padrao'):
         """
         Generate a complete diet plan (1 or 7 days).
-        Returns dict with calories, macros, and meals.
+        Returns dict with calories, macros, meals, water, fiber, and weight projection.
         """
         tmb = self.calcular_tmb(sexo, idade, altura, peso)
         tdee = self.calcular_tdee(tmb, nivel_atividade)
-        macros = self.calcular_macros(tdee, objetivo, ritmo_meta)
+        macros = self.calcular_macros(tdee, objetivo, ritmo_meta, peso=peso, sexo=sexo, nivel_atividade=nivel_atividade)
+
+        # Projeção de perda/ganho de peso (30 dias)
+        projecao = self.calcular_projecao_30d(tdee, macros['calorias_totais'], peso)
+        agua_ml = self.calcular_agua(peso)
 
         if dias == 7:
             # Generate 7 different daily plans
@@ -583,6 +613,10 @@ class DietaService:
             'proteinas_g': macros['proteinas_g'],
             'carboidratos_g': macros['carboidratos_g'],
             'gorduras_g': macros['gorduras_g'],
+            'fibra_meta_g': macros.get('fibra_meta_g', 25),
+            'prot_por_kg': macros.get('prot_por_kg', 1.4),
+            'agua_recomendada_ml': agua_ml,
+            'projecao_30d': projecao,
             'preco_total_diario': preco_total_diario,
             'preco_total_diario_str': self._format_currency(preco_total_diario),
             'refeicoes': refeicoes_data,

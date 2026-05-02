@@ -64,6 +64,10 @@ def gerar_dieta():
         objetivo=plano['objetivo'],
         duracao=dias,
         ativa=True,
+        peso_inicial=user.peso,
+        perda_estimada_kg=plano.get('projecao_30d', {}).get('perda_estimada_kg'),
+        fibra_total_g=plano.get('fibra_meta_g'),
+        agua_recomendada_ml=plano.get('agua_recomendada_ml'),
     )
 
     db.session.add(diet_plan)
@@ -105,7 +109,11 @@ def gerar_dieta():
         'message': t('diet_generated') + " & Treinos coordenados!",
         'dieta': diet_plan.to_dict(),
         'treino_sincronizado': True,
-        'objetivo': diet_plan.objetivo
+        'objetivo': diet_plan.objetivo,
+        'projecao_30d': plano.get('projecao_30d'),
+        'agua_recomendada_ml': plano.get('agua_recomendada_ml'),
+        'fibra_meta_g': plano.get('fibra_meta_g'),
+        'prot_por_kg': plano.get('prot_por_kg'),
     }), 201
 
 
@@ -489,4 +497,41 @@ def update_assinatura():
     return jsonify({
         'message': t('subscription_updated', plano=plano),
         'user': user.to_dict(),
+    }), 200
+
+
+@plan_bp.route('/dieta/resultado-mensal', methods=['POST'])
+@jwt_required()
+def relatar_resultado_dieta():
+    """Report weight loss after 30 days of diet."""
+    user_id = get_jwt_identity()
+    user = User.query.get(int(user_id))
+
+    if not user:
+        return jsonify({'error': t('user_not_found')}), 404
+
+    data = request.get_json()
+    if not data or 'peso_perdido' not in data:
+        return jsonify({'error': 'Peso perdido não informado.'}), 400
+
+    try:
+        peso_perdido = float(data['peso_perdido'])
+    except ValueError:
+        return jsonify({'error': 'Valor de peso inválido.'}), 400
+
+    # Atualiza o peso atual do usuário
+    novo_peso = user.peso - peso_perdido
+    user.peso = novo_peso
+
+    # Adiciona registro no histórico de peso
+    from models.user import WeightLog
+    log = WeightLog(user_id=user.id, peso=novo_peso)
+    db.session.add(log)
+
+    db.session.commit()
+
+    return jsonify({
+        'message': f'Parabéns! Você perdeu {peso_perdido}kg! Seu peso foi atualizado para {novo_peso}kg.',
+        'user': user.to_dict(),
+        'novo_peso': novo_peso
     }), 200
