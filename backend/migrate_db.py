@@ -23,9 +23,21 @@ def migrate():
             if engine.name == 'postgresql':
                 safe_execute("ALTER TABLE users ADD COLUMN foto_perfil VARCHAR(500);")
                 safe_execute("ALTER TABLE body_scans ADD COLUMN metrics JSON;")
+                
+                # Novas colunas da refatoração nutricional
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN peso_inicial FLOAT;")
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN perda_estimada_kg FLOAT;")
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN fibra_total_g FLOAT;")
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN agua_recomendada_ml INTEGER;")
             else:
                 safe_execute("ALTER TABLE users ADD COLUMN foto_perfil TEXT;")
                 safe_execute("ALTER TABLE body_scans ADD COLUMN metrics JSON;")
+                
+                # Novas colunas da refatoração nutricional (SQLite)
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN peso_inicial REAL;")
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN perda_estimada_kg REAL;")
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN fibra_total_g REAL;")
+                safe_execute("ALTER TABLE diet_plans ADD COLUMN agua_recomendada_ml INTEGER;")
                 
             # Run the other migrations securely
             from migrate_global import migrate as migrate_global
