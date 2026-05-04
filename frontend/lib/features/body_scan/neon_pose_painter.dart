@@ -119,26 +119,26 @@ class NeonPosePainter extends CustomPainter {
       canvas.drawLine(start, currentEnd, linePaint);
     }
 
-    // Esqueleto corporal
-    drawLine(shoulderL, shoulderR);
-    drawLine(shoulderL, elbowL);
-    drawLine(elbowL, wristL);
-    drawLine(shoulderR, elbowR);
-    drawLine(elbowR, wristR);
-    drawLine(shoulderL, hipL);
-    drawLine(shoulderR, hipR);
-    drawLine(hipL, hipR);
-    drawLine(hipL, kneeL);
-    drawLine(hipR, kneeR);
-    drawLine(kneeL, ankleL);
-    drawLine(kneeR, ankleR);
+    // Ocultar linhas de esqueleto para remover visual de "exercício"
+    // drawLine(shoulderL, shoulderR);
+    // drawLine(shoulderL, elbowL);
+    // drawLine(elbowL, wristL);
+    // drawLine(shoulderR, elbowR);
+    // drawLine(elbowR, wristR);
+    // drawLine(shoulderL, hipL);
+    // drawLine(shoulderR, hipR);
+    // drawLine(hipL, hipR);
+    // drawLine(hipL, kneeL);
+    // drawLine(hipR, kneeR);
+    // drawLine(kneeL, ankleL);
+    // drawLine(kneeR, ankleR);
 
-    // Linha central (pescoço)
-    if (nose != null) {
-      final neckX = (shoulderL.x + shoulderR.x) / 2;
-      final neckY = (shoulderL.y + shoulderR.y) / 2;
-      drawLine(nose, PoseLandmark(type: PoseLandmarkType.nose, x: neckX, y: neckY, z: 0, likelihood: 1));
-    }
+    // Linha central (pescoço) - manter apenas se necessário para anatomia sutil
+    // if (nose != null) {
+    //   final neckX = (shoulderL.x + shoulderR.x) / 2;
+    //   final neckY = (shoulderL.y + shoulderR.y) / 2;
+    //   drawLine(nose, PoseLandmark(type: PoseLandmarkType.nose, x: neckX, y: neckY, z: 0, likelihood: 1));
+    // }
 
     // === LABELS DE MÉTRICAS AO LADO DO CORPO ===
     if (metrics == null || animationProgress < 0.7) return; // Only show metrics at the end of animation

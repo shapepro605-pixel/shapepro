@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../services/api.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
@@ -42,6 +43,9 @@ class _CameraViewState extends State<CameraView> {
   String _userName = "";
   String _lastSpokenError = "";
   bool _isSpeakingCapture = false;
+  bool _showContrastFlash = false;
+  double _stabilityProgress = 0.0;
+  DateTime? _stableStartTime;
   DateTime _lastVoiceTime = DateTime.now().subtract(const Duration(seconds: 5));
   
   @override
@@ -215,7 +219,14 @@ class _CameraViewState extends State<CameraView> {
         debugPrint("Error stopping stream: $e");
       }
       
+      // Trigger Contrast Flash
+      setState(() => _showContrastFlash = true);
+      await Future.delayed(const Duration(milliseconds: 100));
+
       final file = await _controller!.takePicture();
+      
+      // Hide Flash
+      setState(() => _showContrastFlash = false);
       
       // Final Thank You Voice
       final thankYou = _userName.isNotEmpty 
@@ -248,10 +259,28 @@ class _CameraViewState extends State<CameraView> {
   void _handleVoiceGuidance() {
     if (_isSpeakingCapture) return;
 
-    // 1. Auto-Capture Trigger (>85% alignment)
-    if (_alignmentPercentage >= 85 && _isValid && !_isCapturing) {
-      _startAutoCapture();
+    // 1. Auto-Capture Trigger (>70% alignment + Stability)
+    if (_alignmentPercentage >= 70 && _isValid && !_isCapturing) {
+      if (_stableStartTime == null) {
+        _stableStartTime = DateTime.now();
+      }
+      
+      final elapsedStable = DateTime.now().difference(_stableStartTime!).inMilliseconds;
+      setState(() {
+        _stabilityProgress = (elapsedStable / 1500).clamp(0.0, 1.0);
+      });
+
+      if (elapsedStable >= 1500) {
+        _startAutoCapture();
+      }
       return;
+    } else {
+      if (_stableStartTime != null) {
+        setState(() {
+          _stableStartTime = null;
+          _stabilityProgress = 0.0;
+        });
+      }
     }
 
     // 2. Error Guidance (Don't spam, every 3 seconds)
@@ -270,15 +299,24 @@ class _CameraViewState extends State<CameraView> {
 
   String _getVoiceMessage(String errorKey) {
     String prefix = _userName.isNotEmpty ? "$_userName, " : "";
+    
+    // Adicionar um toque de encorajamento se o alinhamento estiver subindo
+    String suffix = "";
+    if (_alignmentPercentage > 50) {
+      suffix = " Você está quase lá, continue se ajustando.";
+    }
+
     switch (errorKey) {
-      case "moveRight": return "${prefix}mova um pouco para a direita.";
-      case "moveLeft": return "${prefix}mova um pouco para a esquerda.";
-      case "moveForward": return "${prefix}mova para frente.";
-      case "moveBack": return "${prefix}mova para trás.";
-      case "stayStraight": return "${prefix}mantenha o corpo reto.";
-      case "fullBodyNotDetected": return "${prefix}preciso ver seu corpo inteiro.";
-      case "poseFront": return "${prefix}fique de frente para a câmera.";
-      case "poseSide": return "${prefix}fique de lado para o perfil.";
+      case "moveRight": return "${prefix}mova só mais um pouco para a sua direita.$suffix";
+      case "moveLeft": return "${prefix}mova só mais um pouco para a sua esquerda.$suffix";
+      case "moveForward": return "${prefix}chegue um pouco mais para frente.$suffix";
+      case "moveBack": return "${prefix}afaste-se só mais um pouco para trás.$suffix";
+      case "stayStraight": return "${prefix}alinhe seu corpo, você está inclinado para os lados.";
+      case "alignShoulders": return "${prefix}tente deixar seus ombros bem retos e nivelados.";
+      case "rotateToCenter": return "${prefix}vire seu corpo um milímetro para o centro, você está um pouco de lado.";
+      case "fullBodyNotDetected": return "${prefix}ainda não consigo ver seus pés ou cabeça. Afaste-se um pouco.";
+      case "poseFront": return "${prefix}gire seu corpo para ficar totalmente de frente para mim.";
+      case "poseSide": return "${prefix}fique de perfil, olhando para o lado.";
       default: return "";
     }
   }
@@ -296,7 +334,7 @@ class _CameraViewState extends State<CameraView> {
     // Wait for the voice to finish or at least a short buffer
     await Future.delayed(const Duration(milliseconds: 2800));
     
-    if (mounted && _isValid && _alignmentPercentage >= 80) {
+    if (mounted && _isValid && _alignmentPercentage >= 65) {
        await _captureImage(isAuto: true);
     } else {
       _isSpeakingCapture = false;
@@ -356,6 +394,24 @@ class _CameraViewState extends State<CameraView> {
             : (_validationErrors.isNotEmpty ? _getLocalizedError(_validationErrors.first) : ""),
         ),
 
+        // Central Spirit Level (Professional Aesthetic)
+        if (_alignmentPercentage > 50)
+          Center(
+            child: Container(
+              width: 250,
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    _isValid ? const Color(0xFF00FF88).withValues(alpha: 0.6) : Colors.redAccent.withValues(alpha: 0.4),
+                    Colors.transparent
+                  ],
+                ),
+              ),
+            ),
+          ),
+
         // Distance Instruction Tip
         Positioned(
           top: 100,
@@ -375,7 +431,7 @@ class _CameraViewState extends State<CameraView> {
                   Icon(Icons.straighten, color: Colors.cyanAccent, size: 16),
                   SizedBox(width: 8),
                   Text(
-                    "Afaste-se ~2.5m para mais precisão",
+                    "Afaste-se ~1.5m para mais precisão",
                     style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -454,6 +510,40 @@ class _CameraViewState extends State<CameraView> {
             child: IconButton(
               icon: const Icon(Icons.flip_camera_android, color: Colors.white, size: 28),
               onPressed: _toggleCamera,
+            ),
+          ),
+        
+        // Stability Progress Bar (Professional AI look)
+        if (_stabilityProgress > 0 && _stabilityProgress < 1.0)
+          Positioned(
+            bottom: 130,
+            left: 60,
+            right: 60,
+            child: Column(
+              children: [
+                Text(
+                  "ESTABILIZANDO...",
+                  style: GoogleFonts.inter(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2),
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: _stabilityProgress,
+                    backgroundColor: Colors.white10,
+                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF00FF88)),
+                    minHeight: 4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        // Contrast Flash Overlay
+        if (_showContrastFlash)
+          Positioned.fill(
+            child: Container(
+              color: Colors.white,
             ),
           ),
       ],

@@ -55,16 +55,28 @@ class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderSt
       final lm = widget.currentPose!.landmarks;
       final leftShoulder = lm[PoseLandmarkType.leftShoulder];
       final rightShoulder = lm[PoseLandmarkType.rightShoulder];
+      final leftHip = lm[PoseLandmarkType.leftHip];
+      final rightHip = lm[PoseLandmarkType.rightHip];
       
+      // Usar a média entre ombros e quadris para um centro mais estável
+      double? bodyCenterX;
       if (leftShoulder != null && rightShoulder != null) {
-        final bodyCenterX = (leftShoulder.x + rightShoulder.x) / 2;
+        bodyCenterX = (leftShoulder.x + rightShoulder.x) / 2;
+      } else if (leftHip != null && rightHip != null) {
+        bodyCenterX = (leftHip.x + rightHip.x) / 2;
+      }
+      
+      if (bodyCenterX != null) {
         final imageCenterX = widget.imageSize.width / 2;
         
         // Normalizar o deslocamento (-1 a 1)
         horizontalOffset = (bodyCenterX - imageCenterX) / (widget.imageSize.width / 2);
         
-        // Inverter se for câmera frontal (espelhado)
-        if (widget.isFrontCamera) horizontalOffset = -horizontalOffset;
+        // Ajustar sensibilidade e direção
+        // Se for câmera frontal, o movimento horizontal costuma ser invertido no preview
+        if (widget.isFrontCamera) {
+          horizontalOffset = -horizontalOffset;
+        }
       }
     }
 
@@ -196,8 +208,8 @@ class SilhouettePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     _drawBrackets(canvas, size);
     
-    // Calcular deslocamento em pixels
-    final double pixelOffset = horizontalOffset * (size.width * 0.15); // Limite de 15% da largura
+    // Calcular deslocamento em pixels - Aumentado para 40% da tela para ser bem evidente
+    final double pixelOffset = horizontalOffset * (size.width * 0.4); 
     
     Color silhouetteColor = Colors.white.withValues(alpha: 0.3);
     if (isValid) {
@@ -291,26 +303,56 @@ class SilhouettePainter extends CustomPainter {
   }
 
   void _drawFrontSilhouette(Path path, Size size) {
-    path.addOval(Rect.fromLTWH(size.width * 0.4, size.height * 0.1, size.width * 0.2, size.width * 0.25));
-    path.moveTo(size.width * 0.25, size.height * 0.3);
-    path.lineTo(size.width * 0.75, size.height * 0.3);
-    path.lineTo(size.width * 0.65, size.height * 0.6);
-    path.lineTo(size.width * 0.35, size.height * 0.6);
+    final w = size.width;
+    final h = size.height;
+    
+    // Cabeça
+    path.addOval(Rect.fromLTWH(w * 0.42, h * 0.08, w * 0.16, h * 0.1));
+    
+    // Tronco Superior (Ombros e Peito)
+    path.moveTo(w * 0.3, h * 0.22);
+    path.quadraticBezierTo(w * 0.5, h * 0.18, w * 0.7, h * 0.22);
+    
+    // Braços (Sugeridos)
+    path.lineTo(w * 0.75, h * 0.45);
+    path.lineTo(w * 0.68, h * 0.45);
+    path.lineTo(w * 0.65, h * 0.28);
+    
+    // Tronco e Quadril
+    path.quadraticBezierTo(w * 0.6, h * 0.4, w * 0.62, h * 0.55);
+    path.quadraticBezierTo(w * 0.5, h * 0.58, w * 0.38, h * 0.55);
+    path.quadraticBezierTo(w * 0.4, h * 0.4, w * 0.35, h * 0.28);
+    
+    // Braço Esquerdo
+    path.lineTo(w * 0.32, h * 0.45);
+    path.lineTo(w * 0.25, h * 0.45);
     path.close();
-    path.moveTo(size.width * 0.35, size.height * 0.6);
-    path.lineTo(size.width * 0.35, size.height * 0.9);
-    path.moveTo(size.width * 0.65, size.height * 0.6);
-    path.lineTo(size.width * 0.65, size.height * 0.9);
+    
+    // Pernas
+    path.moveTo(w * 0.4, h * 0.55);
+    path.lineTo(w * 0.38, h * 0.9);
+    path.lineTo(w * 0.48, h * 0.9);
+    path.lineTo(w * 0.5, h * 0.6);
+    path.lineTo(w * 0.52, h * 0.9);
+    path.lineTo(w * 0.62, h * 0.9);
+    path.lineTo(w * 0.6, h * 0.55);
   }
 
   void _drawSideSilhouette(Path path, Size size) {
-    path.addOval(Rect.fromLTWH(size.width * 0.42, size.height * 0.1, size.width * 0.16, size.width * 0.25));
-    path.moveTo(size.width * 0.5, size.height * 0.25);
-    path.quadraticBezierTo(size.width * 0.4, size.height * 0.45, size.width * 0.5, size.height * 0.6);
-    path.lineTo(size.width * 0.45, size.height * 0.9);
-    path.lineTo(size.width * 0.55, size.height * 0.9);
-    path.lineTo(size.width * 0.55, size.height * 0.6);
-    path.quadraticBezierTo(size.width * 0.6, size.height * 0.45, size.width * 0.5, size.height * 0.25);
+    final w = size.width;
+    final h = size.height;
+    
+    // Cabeça de perfil
+    path.addOval(Rect.fromLTWH(w * 0.44, h * 0.08, w * 0.12, h * 0.1));
+    
+    // Tronco de perfil (Curvatura das costas e peito)
+    path.moveTo(w * 0.5, h * 0.18);
+    path.quadraticBezierTo(w * 0.62, h * 0.3, w * 0.58, h * 0.45); // Peito e barriga
+    path.quadraticBezierTo(w * 0.55, h * 0.55, w * 0.55, h * 0.6); // Quadril
+    path.lineTo(w * 0.52, h * 0.9); // Perna frente
+    path.lineTo(w * 0.45, h * 0.9); // Perna trás
+    path.lineTo(w * 0.45, h * 0.6); // Glúteo
+    path.quadraticBezierTo(w * 0.4, h * 0.35, w * 0.5, h * 0.18); // Costas
   }
 
 

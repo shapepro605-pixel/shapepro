@@ -37,15 +37,35 @@ class PoseValidator {
     final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
     final bodyHeight = (avgAnkleY - nose.y).abs();
 
-    if (bodyHeight < (frameHeight * 0.40)) {
-      errors.add("moveForward");
-    } else if (bodyHeight > (frameHeight * 0.85)) {
-      errors.add("moveBack");
+    // 3. Verificar distância (Aproximadamente 1.5m)
+    // A 1.5m, o corpo deve ocupar entre 70% e 90% da altura da imagem
+    final double bodyHeightRatio = bodyHeight / frameHeight;
+    if (bodyHeightRatio < 0.65) {
+      errors.add("moveForward"); // Muito longe
+    } else if (bodyHeightRatio > 0.95) {
+      errors.add("moveBack"); // Muito perto
     }
 
     if (!isCorrectPose(pose, type)) {
       if (type == 'front') errors.add("poseFront");
       if (type == 'side') errors.add("poseSide");
+    }
+
+    // 4. Verificar Inclinação (Ombros Nivelados)
+    final double shoulderDiffY = (leftShoulder.y - rightShoulder.y).abs();
+    final double shoulderDist = (leftShoulder.x - rightShoulder.x).abs();
+    if (shoulderDiffY > (shoulderDist * 0.1)) {
+      errors.add("alignShoulders"); // Ombros desalinhados
+    }
+
+    // 5. Verificar Rotação (Apenas para pose frontal)
+    if (type == 'front') {
+      final noseX = pose.landmarks[PoseLandmarkType.nose]!.x;
+      final distL = (noseX - leftShoulder.x).abs();
+      final distR = (noseX - rightShoulder.x).abs();
+      if (distL < distR * 0.6 || distR < distL * 0.6) {
+        errors.add("rotateToCenter");
+      }
     }
 
     return errors;
@@ -82,18 +102,22 @@ class PoseValidator {
     final tilt = diffY / (width + 1);
     score += math.max(0, 20 * (1 - (tilt / 0.15))); // Max 20% if tilt < 15%
 
-    // Distance (Max 20%)
+    // Distance (Max 20%) - Updated for 1.5m (Ratio 0.65 - 0.95)
     final nose = pose.landmarks[PoseLandmarkType.nose]!;
     final leftAnkle = pose.landmarks[PoseLandmarkType.leftAnkle]!;
     final rightAnkle = pose.landmarks[PoseLandmarkType.rightAnkle]!;
-    final bodyHeight = (leftAnkle.y - nose.y).abs();
+    final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
+    final bodyHeight = (avgAnkleY - nose.y).abs();
     final heightRatio = bodyHeight / frameHeight;
-    // Ideal ratio is between 0.4 and 0.7
+    
     double distanceFactor = 0;
-    if (heightRatio >= 0.4 && heightRatio <= 0.7) {
+    if (heightRatio >= 0.65 && heightRatio <= 0.95) {
       distanceFactor = 1.0;
-    } else if (heightRatio < 0.4) distanceFactor = heightRatio / 0.4;
-    else distanceFactor = 1.0 - ((heightRatio - 0.7) / 0.3);
+    } else if (heightRatio < 0.65) {
+      distanceFactor = (heightRatio - 0.3) / (0.65 - 0.3); // Scale from 30% to 65%
+    } else {
+      distanceFactor = 1.0 - ((heightRatio - 0.95) / 0.05); // Rapid drop off if too close
+    }
     score += math.max(0, 20 * distanceFactor);
 
     return math.min(100, score);
