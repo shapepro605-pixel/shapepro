@@ -690,7 +690,7 @@ class _DietaScreenState extends State<DietaScreen> {
               ),
               const SizedBox(height: 24),
 
-              if (_dieta?['projecao_30d'] != null) ...[
+              if (_dieta?['perda_estimada_kg'] != null && (_dieta!['perda_estimada_kg'] as num).toDouble() > 0) ...[
                 _buildProjectionCard(),
                 const SizedBox(height: 24),
               ],
@@ -770,7 +770,7 @@ class _DietaScreenState extends State<DietaScreen> {
             const SizedBox(height: 30),
           ],
           
-          if (_dieta?['projecao_30d'] != null) ...[
+          if (_dieta?['perda_estimada_kg'] != null && (_dieta!['perda_estimada_kg'] as num).toDouble() > 0) ...[
             SizedBox(
               width: double.infinity,
               height: 54,
@@ -795,12 +795,9 @@ class _DietaScreenState extends State<DietaScreen> {
   }
 
   Widget _buildProjectionCard() {
-    final proj = _dieta?['projecao_30d'];
-    if (proj == null) return const SizedBox.shrink();
-
-    final perdaKg = (proj['perda_estimada_kg'] as num?)?.toDouble() ?? 0.0;
+    final perdaKg = (_dieta?['perda_estimada_kg'] as num?)?.toDouble() ?? 0.0;
     final aguaMl = _dieta?['agua_recomendada_ml']?.toString() ?? '2500';
-    final fibraG = _dieta?['fibra_meta_g']?.toString() ?? '25';
+    final fibraG = _dieta?['fibra_total_g']?.toString() ?? '25';
     
     // Only show projection if there is actual weight loss expected
     if (perdaKg <= 0.1) return const SizedBox.shrink();

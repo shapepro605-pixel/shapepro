@@ -11,19 +11,36 @@ class PoseValidator {
 
     if (!isFullBodyDetected(pose)) {
       errors.add("fullBodyNotDetected");
-      return errors; // Early return as other checks depend on these landmarks
+      return errors;
     }
 
-    if (!isCentered(pose, frameWidth, frameHeight)) {
-      errors.add("centerYourBody");
+    // Centering checks
+    final leftShoulder = pose.landmarks[PoseLandmarkType.leftShoulder]!;
+    final rightShoulder = pose.landmarks[PoseLandmarkType.rightShoulder]!;
+    final centerX = (leftShoulder.x + rightShoulder.x) / 2;
+    final screenCenter = frameWidth / 2;
+    
+    if (centerX < screenCenter - (frameWidth * 0.15)) {
+      errors.add("moveRight");
+    } else if (centerX > screenCenter + (frameWidth * 0.15)) {
+      errors.add("moveLeft");
     }
 
     if (!isStraight(pose)) {
       errors.add("stayStraight");
     }
 
-    if (!isValidDistance(pose, frameHeight)) {
-      errors.add("invalidDistance");
+    // Distance checks
+    final nose = pose.landmarks[PoseLandmarkType.nose]!;
+    final leftAnkle = pose.landmarks[PoseLandmarkType.leftAnkle]!;
+    final rightAnkle = pose.landmarks[PoseLandmarkType.rightAnkle]!;
+    final avgAnkleY = (leftAnkle.y + rightAnkle.y) / 2;
+    final bodyHeight = (avgAnkleY - nose.y).abs();
+
+    if (bodyHeight < (frameHeight * 0.40)) {
+      errors.add("moveForward");
+    } else if (bodyHeight > (frameHeight * 0.85)) {
+      errors.add("moveBack");
     }
 
     if (!isCorrectPose(pose, type)) {

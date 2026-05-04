@@ -6,6 +6,7 @@ import '../../services/api.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import 'pose_validator.dart';
 import 'overlay_guide.dart';
+import '../../services/tts_service.dart';
 import 'pose_metrics_helper.dart';
 
 class CameraView extends StatefulWidget {
@@ -37,6 +38,11 @@ class _CameraViewState extends State<CameraView> {
   FlashMode _flashMode = FlashMode.off;
   bool _isCapturing = false;
   int _alignmentPercentage = 0;
+  final TtsService _tts = TtsService();
+  String _userName = "";
+  String _lastSpokenError = "";
+  bool _isSpeakingCapture = false;
+  DateTime _lastVoiceTime = DateTime.now().subtract(const Duration(seconds: 5));
   
   @override
   void didChangeDependencies() {
@@ -50,6 +56,13 @@ class _CameraViewState extends State<CameraView> {
     super.initState();
     _initializeCamera();
     _initializePoseDetector();
+    _initializeVoice();
+  }
+
+  Future<void> _initializeVoice() async {
+    await _tts.init();
+    final api = Provider.of<ApiService>(context, listen: false);
+    _userName = api.currentUser?['nome']?.split(' ').first ?? "";
   }
 
   void _initializePoseDetector() {
@@ -112,6 +125,8 @@ class _CameraViewState extends State<CameraView> {
           _lastImageWidth = image.width.toDouble();
           _lastImageHeight = image.height.toDouble();
         });
+
+        _handleVoiceGuidance();
       } else if (mounted) {
         setState(() {
           _validationErrors = ["instructions"]; // Use instruction key
@@ -156,11 +171,11 @@ class _CameraViewState extends State<CameraView> {
     }
   }
 
-  Future<void> _captureImage() async {
-    if (_controller == null || _isCapturing) return;
+  Future<void> _captureImage({bool isAuto = false}) async {
+    if (_controller == null || (_isCapturing && !isAuto)) return;
 
-    if (!_isValid) {
-      if (_validationErrors.isEmpty) return; // Prevent crash if errors are not yet populated
+    if (!_isValid && !isAuto) {
+      if (_validationErrors.isEmpty) return; 
       
       // Provide helpful feedback why capture is blocked
       final errorMessage = _getLocalizedError(_validationErrors.first);
@@ -201,6 +216,13 @@ class _CameraViewState extends State<CameraView> {
       }
       
       final file = await _controller!.takePicture();
+      
+      // Final Thank You Voice
+      final thankYou = _userName.isNotEmpty 
+          ? "Já finalizamos sua foto, muito obrigado $_userName."
+          : "Já finalizamos sua foto, muito obrigado.";
+      await _tts.speak(thankYou);
+
       if (mounted) {
         Navigator.pop(context); // Close camera view and return to preview
         widget.onImageCaptured(
@@ -220,6 +242,65 @@ class _CameraViewState extends State<CameraView> {
       }
     } finally {
       if (mounted) setState(() => _isCapturing = false);
+    }
+  }
+
+  void _handleVoiceGuidance() {
+    if (_isSpeakingCapture) return;
+
+    // 1. Auto-Capture Trigger (>85% alignment)
+    if (_alignmentPercentage >= 85 && _isValid && !_isCapturing) {
+      _startAutoCapture();
+      return;
+    }
+
+    // 2. Error Guidance (Don't spam, every 3 seconds)
+    if (DateTime.now().difference(_lastVoiceTime).inSeconds > 3) {
+      if (_validationErrors.isNotEmpty) {
+        final error = _validationErrors.first;
+        if (error != _lastSpokenError) {
+          final message = _getVoiceMessage(error);
+          _tts.speak(message);
+          _lastSpokenError = error;
+          _lastVoiceTime = DateTime.now();
+        }
+      }
+    }
+  }
+
+  String _getVoiceMessage(String errorKey) {
+    String prefix = _userName.isNotEmpty ? "$_userName, " : "";
+    switch (errorKey) {
+      case "moveRight": return "${prefix}mova um pouco para a direita.";
+      case "moveLeft": return "${prefix}mova um pouco para a esquerda.";
+      case "moveForward": return "${prefix}mova para frente.";
+      case "moveBack": return "${prefix}mova para trás.";
+      case "stayStraight": return "${prefix}mantenha o corpo reto.";
+      case "fullBodyNotDetected": return "${prefix}preciso ver seu corpo inteiro.";
+      case "poseFront": return "${prefix}fique de frente para a câmera.";
+      case "poseSide": return "${prefix}fique de lado para o perfil.";
+      default: return "";
+    }
+  }
+
+  Future<void> _startAutoCapture() async {
+    _isSpeakingCapture = true;
+    _isCapturing = true; // Block manual clicks
+    
+    final message = _userName.isNotEmpty 
+        ? "$_userName, mantenha-se parado, não se mova, vou tirar a foto agora."
+        : "Mantenha-se parado, não se mova, vou tirar a foto agora.";
+    
+    await _tts.speak(message);
+    
+    // Wait for the voice to finish or at least a short buffer
+    await Future.delayed(const Duration(milliseconds: 2800));
+    
+    if (mounted && _isValid && _alignmentPercentage >= 80) {
+       await _captureImage(isAuto: true);
+    } else {
+      _isSpeakingCapture = false;
+      _isCapturing = false;
     }
   }
 
@@ -245,6 +326,7 @@ class _CameraViewState extends State<CameraView> {
   void dispose() {
     _controller?.dispose();
     _poseDetector?.close();
+    _tts.stop();
     super.dispose();
   }
 

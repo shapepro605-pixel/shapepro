@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -90,10 +91,13 @@ class NeonPosePainter extends CustomPainter {
     void drawDot(PoseLandmark? point) {
       if (point == null) return;
       if (animationProgress < 0.2) return; // Delay dots slightly
-      final scale = Curves.easeOutBack.transform(((animationProgress - 0.2) / 0.8).clamp(0.0, 1.0));
       
-      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 6 * scale, dotGlowPaint);
-      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 3 * scale, dotPaint);
+      final entryScale = Curves.easeOutBack.transform(((animationProgress - 0.2) / 0.8).clamp(0.0, 1.0));
+      // Efeito de pulso sutil baseado no tempo/progresso
+      final pulse = (1.0 + 0.2 * math.sin(animationProgress * math.pi * 4)); 
+      
+      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 8 * entryScale * pulse, dotGlowPaint);
+      canvas.drawCircle(Offset(tx(point.x), ty(point.y)), 3 * entryScale, dotPaint);
     }
 
     // Todos os pontos de referência

@@ -36,6 +36,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
   String _lastFeedback = "";
   int _lastRepCount = 0;
   int _lastPlankSeconds = 0;
+  DateTime _lastRepTime = DateTime.fromMillisecondsSinceEpoch(0);
 
   @override
   void initState() {
@@ -178,7 +179,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
         backgroundColor: const Color(0xFF0A0A1A),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const Border.all(color: Color(0xFF00D2FF), width: 1),
+          side: const BorderSide(color: Color(0xFF00D2FF), width: 1),
         ),
         title: Center(
           child: Text(
@@ -262,6 +263,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
     if (_aiEngine.repCount != _lastRepCount) {
       _tts.speak(_aiEngine.repCount.toString());
       _lastRepCount = _aiEngine.repCount;
+      _lastRepTime = DateTime.now();
     }
 
     // 3. Contagem de segundos da Prancha (a cada 5 ou 10 segundos para não ser irritante)
@@ -305,6 +307,10 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
     final size = MediaQuery.of(context).size;
     final scale = size.aspectRatio * _controller!.value.aspectRatio;
 
+    // Calculate Flash Intensity (VFX)
+    final msSinceRep = DateTime.now().difference(_lastRepTime).inMilliseconds;
+    final flashIntensity = msSinceRep < 500 ? (1.0 - (msSinceRep / 500.0)) : 0.0;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -320,7 +326,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
           
           // Dark overlay for better neon visibility
           Container(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: Colors.black.withValues(alpha: 0.3 + (flashIntensity * 0.2)),
           ),
 
           // ML Pose Painter (Neon Lines)
@@ -334,6 +340,7 @@ class _SmartWorkoutViewState extends State<SmartWorkoutView> {
                 _aiEngine.isFormCorrect,
                 _aiEngine.currentExercise,
                 _aiEngine.repCount,
+                flashIntensity: flashIntensity,
               ),
             ),
             

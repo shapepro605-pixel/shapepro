@@ -3,7 +3,7 @@ import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'neon_pose_painter.dart';
 
-class OverlayGuide extends StatelessWidget {
+class OverlayGuide extends StatefulWidget {
   final bool isValid;
   final String statusMessage;
   final String poseType;
@@ -26,35 +26,83 @@ class OverlayGuide extends StatelessWidget {
   });
 
   @override
+  State<OverlayGuide> createState() => _OverlayGuideState();
+}
+
+class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderStateMixin {
+  late AnimationController _scanController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scanController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _scanController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Calcular deslocamento horizontal da silhueta para seguir o usuário
+    double horizontalOffset = 0;
+    if (widget.currentPose != null && widget.imageSize.width > 0) {
+      final lm = widget.currentPose!.landmarks;
+      final leftShoulder = lm[PoseLandmarkType.leftShoulder];
+      final rightShoulder = lm[PoseLandmarkType.rightShoulder];
+      
+      if (leftShoulder != null && rightShoulder != null) {
+        final bodyCenterX = (leftShoulder.x + rightShoulder.x) / 2;
+        final imageCenterX = widget.imageSize.width / 2;
+        
+        // Normalizar o deslocamento (-1 a 1)
+        horizontalOffset = (bodyCenterX - imageCenterX) / (widget.imageSize.width / 2);
+        
+        // Inverter se for câmera frontal (espelhado)
+        if (widget.isFrontCamera) horizontalOffset = -horizontalOffset;
+      }
+    }
+
     return Stack(
       children: [
         // Silhouette & Trace Painter
         Positioned.fill(
-          child: CustomPaint(
-            painter: SilhouettePainter(
-              isValid: isValid,
-              poseType: poseType,
-              hasBody: currentPose != null,
-              alignmentPercentage: alignmentPercentage,
-            ),
+          child: AnimatedBuilder(
+            animation: _scanController,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: SilhouettePainter(
+                  isValid: widget.isValid,
+                  poseType: widget.poseType,
+                  hasBody: widget.currentPose != null,
+                  alignmentPercentage: widget.alignmentPercentage,
+                  horizontalOffset: horizontalOffset,
+                  scanProgress: _scanController.value,
+                ),
+              );
+            }
           ),
         ),
         
         // Exibir métricas e marcações neon maravilhosas ao vivo
-          Positioned.fill(
-            child: CustomPaint(
-              painter: NeonPosePainter(
-                pose: currentPose,
-                imageSize: imageSize,
-                metrics: realtimeMetrics,
-                isFrontCamera: isFrontCamera,
-              ),
+        Positioned.fill(
+          child: CustomPaint(
+            painter: NeonPosePainter(
+              pose: widget.currentPose,
+              imageSize: widget.imageSize,
+              metrics: widget.realtimeMetrics,
+              isFrontCamera: widget.isFrontCamera,
             ),
           ),
+        ),
         
         // Alignment Percentage Badge
-        if (currentPose != null)
+        if (widget.currentPose != null)
           Positioned(
             top: 150,
             left: 20,
@@ -70,7 +118,7 @@ class OverlayGuide extends StatelessWidget {
                   const Icon(Icons.align_horizontal_center, color: Colors.white, size: 16),
                   const SizedBox(width: 6),
                   Text(
-                    "Alinhamento: $alignmentPercentage%",
+                    "Alinhamento: ${widget.alignmentPercentage}%",
                     style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                   ),
                 ],
@@ -101,7 +149,7 @@ class OverlayGuide extends StatelessWidget {
                 ],
               ),
               child: Text(
-                statusMessage,
+                widget.statusMessage,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   color: Colors.white,
@@ -118,9 +166,9 @@ class OverlayGuide extends StatelessWidget {
   }
 
   Color _getOverlayColor() {
-    if (isValid) return const Color(0xFF2ED573); // Green
-    if (currentPose != null) {
-      if (alignmentPercentage < 50) return Colors.redAccent;
+    if (widget.isValid) return const Color(0xFF2ED573); // Green
+    if (widget.currentPose != null) {
+      if (widget.alignmentPercentage < 50) return Colors.redAccent;
       return Colors.amber; // Yellow
     }
     return const Color(0xFF16162A); // Dark
@@ -132,47 +180,82 @@ class SilhouettePainter extends CustomPainter {
   final String poseType;
   final bool hasBody;
   final int alignmentPercentage;
+  final double horizontalOffset;
+  final double scanProgress;
 
   SilhouettePainter({
     required this.isValid,
     required this.poseType,
     this.hasBody = false,
     this.alignmentPercentage = 0,
+    this.horizontalOffset = 0,
+    this.scanProgress = 0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawBrackets(canvas, size);
     
-    Color silhouetteColor = Colors.white.withValues(alpha: 0.4);
+    // Calcular deslocamento em pixels
+    final double pixelOffset = horizontalOffset * (size.width * 0.15); // Limite de 15% da largura
+    
+    Color silhouetteColor = Colors.white.withValues(alpha: 0.3);
     if (isValid) {
-      silhouetteColor = const Color(0xFF2ED573).withValues(alpha: 0.6);
+      silhouetteColor = const Color(0xFF00FF88).withValues(alpha: 0.6);
     } else if (hasBody) {
       silhouetteColor = (alignmentPercentage < 50) 
-          ? Colors.redAccent.withValues(alpha: 0.6) 
-          : Colors.amber.withValues(alpha: 0.6);
+          ? Colors.redAccent.withValues(alpha: 0.5) 
+          : Colors.amber.withValues(alpha: 0.5);
     }
 
     final paint = Paint()
       ..color = silhouetteColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5;
+      ..strokeWidth = 2.0;
+
+    canvas.save();
+    canvas.translate(pixelOffset, 0);
 
     final path = Path();
-    
     if (poseType == 'side') {
       _drawSideSilhouette(path, size);
     } else {
       _drawFrontSilhouette(path, size);
     }
 
-    canvas.drawPath(path, paint);
+    // Desenhar sombra neon
+    canvas.drawPath(path, paint..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+    canvas.drawPath(path, paint..maskFilter = null..strokeWidth = 1.5);
+
+    // Efeito de Scanline Neon
+    if (hasBody) {
+      final scanLineY = size.height * 0.1 + (size.height * 0.8 * scanProgress);
+      final scanPaint = Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            silhouetteColor.withValues(alpha: 0),
+            silhouetteColor.withValues(alpha: 0.8),
+            silhouetteColor.withValues(alpha: 0),
+          ],
+        ).createShader(Rect.fromLTWH(0, scanLineY - 20, size.width, 40))
+        ..strokeWidth = 2.0;
+
+      canvas.drawLine(
+        Offset(size.width * 0.2, scanLineY),
+        Offset(size.width * 0.8, scanLineY),
+        scanPaint,
+      );
+    }
+
+    canvas.restore();
   }
 
   void _drawBrackets(Canvas canvas, Size size) {
     Color bracketColor = Colors.white30;
     if (isValid) {
-      bracketColor = const Color(0xFF2ED573);
+      bracketColor = const Color(0xFF00FF88);
     } else if (hasBody) {
       bracketColor = (alignmentPercentage < 50) ? Colors.redAccent : Colors.amber;
     }
@@ -185,14 +268,26 @@ class SilhouettePainter extends CustomPainter {
     const double bLen = 30.0;
     const double margin = 40.0;
 
+    // Cantos com brilho
+    final glowPaint = Paint()
+      ..color = bracketColor.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6.0
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+
+    void drawCorner(Path path) {
+      canvas.drawPath(path, glowPaint);
+      canvas.drawPath(path, bracketPaint);
+    }
+
     // Top Left
-    canvas.drawPath(Path()..moveTo(margin, margin + bLen)..lineTo(margin, margin)..lineTo(margin + bLen, margin), bracketPaint);
+    drawCorner(Path()..moveTo(margin, margin + bLen)..lineTo(margin, margin)..lineTo(margin + bLen, margin));
     // Top Right
-    canvas.drawPath(Path()..moveTo(size.width - margin - bLen, margin)..lineTo(size.width - margin, margin)..lineTo(size.width - margin, margin + bLen), bracketPaint);
+    drawCorner(Path()..moveTo(size.width - margin - bLen, margin)..lineTo(size.width - margin, margin)..lineTo(size.width - margin, margin + bLen));
     // Bottom Left
-    canvas.drawPath(Path()..moveTo(margin, size.height - margin - bLen)..lineTo(margin, size.height - margin)..lineTo(margin + bLen, size.height - margin), bracketPaint);
+    drawCorner(Path()..moveTo(margin, size.height - margin - bLen)..lineTo(margin, size.height - margin)..lineTo(margin + bLen, size.height - margin));
     // Bottom Right
-    canvas.drawPath(Path()..moveTo(size.width - margin - bLen, size.height - margin)..lineTo(size.width - margin, size.height - margin)..lineTo(size.width - margin, size.height - margin - bLen), bracketPaint);
+    drawCorner(Path()..moveTo(size.width - margin - bLen, size.height - margin)..lineTo(size.width - margin, size.height - margin)..lineTo(size.width - margin, size.height - margin - bLen));
   }
 
   void _drawFrontSilhouette(Path path, Size size) {

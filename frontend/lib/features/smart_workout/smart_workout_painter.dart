@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'dart:io';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:camera/camera.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'workout_ai_engine.dart';
 
 class SmartWorkoutPainter extends CustomPainter {
   final Pose pose;
@@ -12,6 +14,7 @@ class SmartWorkoutPainter extends CustomPainter {
   final bool isFormCorrect;
   final AIExerciseType exerciseType;
   final int repCount; // To trigger particle effects on change
+  final double flashIntensity;
 
   SmartWorkoutPainter(
     this.pose,
@@ -20,8 +23,9 @@ class SmartWorkoutPainter extends CustomPainter {
     this.cameraLensDirection,
     this.isFormCorrect,
     this.exerciseType,
-    this.repCount,
-  );
+    this.repCount, {
+    this.flashIntensity = 0.0,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -29,12 +33,12 @@ class SmartWorkoutPainter extends CustomPainter {
     
     // Pulse animation factor (0.0 to 1.0)
     final double pulse = (DateTime.now().millisecondsSinceEpoch % 1500) / 1500.0;
-    final double glowIntensity = 2.0 + (pulse * 3.0);
+    final double glowIntensity = (2.0 + (pulse * 3.0)) + (flashIntensity * 15.0);
     
     // Neon style paint
     final paintLine = Paint()
       ..color = isFormCorrect 
-          ? const Color(0xFF00D2FF).withValues(alpha: 0.8 + (pulse * 0.2)) 
+          ? Color.lerp(const Color(0xFF00D2FF), Colors.white, flashIntensity)!.withValues(alpha: 0.8 + (pulse * 0.2)) 
           : const Color(0xFFFF4757)
       ..strokeWidth = 4.0
       ..style = PaintingStyle.stroke
@@ -110,49 +114,98 @@ class SmartWorkoutPainter extends CustomPainter {
   }
 
   void _drawGhostForm(Canvas canvas, Size size) {
-    // Draw a subtle "ghost" silhouette of the perfect form
     final paintGhost = Paint()
-      ..color = Colors.white.withValues(alpha: 0.1)
-      ..strokeWidth = 3.0
+      ..color = Colors.white.withValues(alpha: 0.05)
+      ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    // Define standard "guide" points for a generic human shape or per-exercise
-    // For now, let's draw a subtle box or a generic "T-Pose" as a alignment guide
-    // Or better: draw the ideal skeleton for the current exercise
-    
-    // Example: Squat Ghost
-    if (exerciseType == AIExerciseType.squat) {
-       // Just a simple visual guide for the user to center themselves
-       final RRect guideBox = RRect.fromLTRBR(
-         size.width * 0.2, 
-         size.height * 0.2, 
-         size.width * 0.8, 
-         size.height * 0.9, 
-         const Radius.circular(20)
-       );
-       canvas.drawRRect(guideBox, paintGhost);
-       
-       // "AI ALIGNMENT" Text style
-       final textPainter = TextPainter(
-         text: TextSpan(
-           text: "ALINHAMENTO IA",
-           style: TextStyle(color: Colors.white.withValues(alpha: 0.2), fontSize: 12, fontWeight: FontWeight.bold),
-         ),
-         textDirection: TextDirection.ltr,
-       );
-       textPainter.layout();
-       textPainter.paint(canvas, Offset(size.width * 0.5 - textPainter.width / 2, size.height * 0.15));
+    final paintGhostFill = Paint()
+      ..color = const Color(0xFF00D2FF).withValues(alpha: 0.02)
+      ..style = PaintingStyle.fill;
+
+    // Alignment Label
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: "IA ALIGNMENT GUIDE",
+        style: GoogleFonts.inter(
+          color: Colors.white.withValues(alpha: 0.2), 
+          fontSize: 10, 
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(size.width * 0.5 - textPainter.width / 2, size.height * 0.12));
+
+    switch (exerciseType) {
+      case AIExerciseType.squat:
+        _drawSquatGhost(canvas, size, paintGhost, paintGhostFill);
+        break;
+      case AIExerciseType.pushup:
+      case AIExerciseType.plank:
+        _drawHorizontalGhost(canvas, size, paintGhost, paintGhostFill);
+        break;
+      case AIExerciseType.crunch:
+        _drawCrunchGhost(canvas, size, paintGhost, paintGhostFill);
+        break;
     }
+  }
+
+  void _drawSquatGhost(Canvas canvas, Size size, Paint paint, Paint fill) {
+    // Vertical human silhouette guide
+    final path = Path();
+    path.moveTo(size.width * 0.4, size.height * 0.2); // Head top
+    path.quadraticBezierTo(size.width * 0.5, size.height * 0.15, size.width * 0.6, size.height * 0.2);
+    path.lineTo(size.width * 0.7, size.height * 0.4); // Shoulders
+    path.lineTo(size.width * 0.65, size.height * 0.7); // Hips
+    path.lineTo(size.width * 0.75, size.height * 0.95); // Right Leg
+    path.lineTo(size.width * 0.25, size.height * 0.95); // Left Leg
+    path.lineTo(size.width * 0.35, size.height * 0.7); // Hips
+    path.lineTo(size.width * 0.3, size.height * 0.4); // Shoulders
+    path.close();
+    
+    canvas.drawPath(path, fill);
+    canvas.drawPath(path, paint);
+  }
+
+  void _drawHorizontalGhost(Canvas canvas, Size size, Paint paint, Paint fill) {
+    // Horizontal alignment guide for floor exercises
+    final rect = Rect.fromLTWH(
+      size.width * 0.1, 
+      size.height * 0.65, 
+      size.width * 0.8, 
+      size.height * 0.15
+    );
+    final rRect = RRect.fromRectAndRadius(rect, const Radius.circular(30));
+    canvas.drawRRect(rRect, fill);
+    canvas.drawRRect(rRect, paint);
+    
+    // Floor indicator
+    canvas.drawLine(
+      Offset(size.width * 0.05, size.height * 0.82), 
+      Offset(size.width * 0.95, size.height * 0.82), 
+      paint..color = Colors.white10
+    );
+  }
+
+  void _drawCrunchGhost(Canvas canvas, Size size, Paint paint, Paint fill) {
+    // Seated/Lying guide
+    final rect = Rect.fromLTWH(
+      size.width * 0.15, 
+      size.height * 0.5, 
+      size.width * 0.7, 
+      size.height * 0.4
+    );
+    canvas.drawOval(rect, fill);
+    canvas.drawOval(rect, paint);
   }
 
   @override
   bool shouldRepaint(covariant SmartWorkoutPainter oldDelegate) {
-    return oldDelegate.pose != pose ||
-           oldDelegate.imageSize != imageSize ||
-           oldDelegate.rotation != rotation ||
-           oldDelegate.cameraLensDirection != cameraLensDirection ||
-           oldDelegate.isFormCorrect != isFormCorrect;
+    return true; // Always repaint for animations
   }
 }
 
