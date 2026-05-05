@@ -1,17 +1,19 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'neon_pose_painter.dart';
 
 class OverlayGuide extends StatefulWidget {
   final bool isValid;
   final String statusMessage;
+  final bool isStabilizing;
+  final double stabilityProgress;
   final String poseType;
   final Pose? currentPose;
   final Map<String, double>? realtimeMetrics;
+  final int alignmentPercentage;
   final bool isFrontCamera;
   final Size imageSize;
-  final int alignmentPercentage;
 
   const OverlayGuide({
     super.key,
@@ -23,6 +25,8 @@ class OverlayGuide extends StatefulWidget {
     this.isFrontCamera = false,
     required this.imageSize,
     this.alignmentPercentage = 0,
+    this.isStabilizing = false,
+    this.stabilityProgress = 0,
   });
 
   @override
@@ -44,7 +48,7 @@ class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderSt
   @override
   void dispose() {
     _scanController.dispose();
-    super.dispose();
+    super.initState();
   }
 
   @override
@@ -58,7 +62,6 @@ class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderSt
       final leftHip = lm[PoseLandmarkType.leftHip];
       final rightHip = lm[PoseLandmarkType.rightHip];
       
-      // Usar a média entre ombros e quadris para um centro mais estável
       double? bodyCenterX;
       if (leftShoulder != null && rightShoulder != null) {
         bodyCenterX = (leftShoulder.x + rightShoulder.x) / 2;
@@ -68,12 +71,7 @@ class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderSt
       
       if (bodyCenterX != null) {
         final imageCenterX = widget.imageSize.width / 2;
-        
-        // Normalizar o deslocamento (-1 a 1)
         horizontalOffset = (bodyCenterX - imageCenterX) / (widget.imageSize.width / 2);
-        
-        // Ajustar sensibilidade e direção
-        // Se for câmera frontal, o movimento horizontal costuma ser invertido no preview
         if (widget.isFrontCamera) {
           horizontalOffset = -horizontalOffset;
         }
@@ -82,7 +80,6 @@ class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderSt
 
     return Stack(
       children: [
-        // Silhouette & Trace Painter
         Positioned.fill(
           child: AnimatedBuilder(
             animation: _scanController,
@@ -95,95 +92,52 @@ class _OverlayGuideState extends State<OverlayGuide> with SingleTickerProviderSt
                   alignmentPercentage: widget.alignmentPercentage,
                   horizontalOffset: horizontalOffset,
                   scanProgress: _scanController.value,
+                  isStabilizing: widget.isStabilizing,
+                  stabilityProgress: widget.stabilityProgress,
                 ),
               );
             }
           ),
         ),
-        
-        // Exibir métricas e marcações neon maravilhosas ao vivo
-        Positioned.fill(
-          child: CustomPaint(
-            painter: NeonPosePainter(
-              pose: widget.currentPose,
-              imageSize: widget.imageSize,
-              metrics: widget.realtimeMetrics,
-              isFrontCamera: widget.isFrontCamera,
-            ),
-          ),
-        ),
-        
-        // Alignment Percentage Badge
-        if (widget.currentPose != null)
+
+        if (widget.statusMessage.isNotEmpty)
           Positioned(
             top: 150,
-            left: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: _getOverlayColor().withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white24),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.align_horizontal_center, color: Colors.white, size: 16),
-                  const SizedBox(width: 6),
-                  Text(
-                    "Alinhamento: ${widget.alignmentPercentage}%",
-                    style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: _getStatusColor(widget.isValid).withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getStatusColor(widget.isValid).withValues(alpha: 0.3),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    )
+                  ],
+                ),
+                child: Text(
+                  widget.statusMessage,
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                ],
-              ),
-            ),
-          ),
-
-        
-        // Status Text
-        Positioned(
-          bottom: 125,
-          left: 40,
-          right: 40,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 300),
-            opacity: 0.9,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-              decoration: BoxDecoration(
-                color: _getOverlayColor().withValues(alpha: 0.9),
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: _getOverlayColor().withValues(alpha: 0.4),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: Text(
-                widget.statusMessage,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
 
-  Color _getOverlayColor() {
-    if (widget.isValid) return const Color(0xFF2ED573); // Green
-    if (widget.currentPose != null) {
-      if (widget.alignmentPercentage < 50) return Colors.redAccent;
-      return Colors.amber; // Yellow
-    }
-    return const Color(0xFF16162A); // Dark
+  Color _getStatusColor(bool isValid) {
+    if (isValid) return const Color(0xFF00FF88);
+    return Colors.redAccent;
   }
 }
 
@@ -194,21 +148,24 @@ class SilhouettePainter extends CustomPainter {
   final int alignmentPercentage;
   final double horizontalOffset;
   final double scanProgress;
+  final bool isStabilizing;
+  final double stabilityProgress;
 
   SilhouettePainter({
     required this.isValid,
     required this.poseType,
-    this.hasBody = false,
-    this.alignmentPercentage = 0,
-    this.horizontalOffset = 0,
-    this.scanProgress = 0,
+    required this.hasBody,
+    required this.alignmentPercentage,
+    required this.horizontalOffset,
+    required this.scanProgress,
+    this.isStabilizing = false,
+    this.stabilityProgress = 0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawBrackets(canvas, size);
     
-    // Calcular deslocamento em pixels - Aumentado para 40% da tela para ser bem evidente
     final double pixelOffset = horizontalOffset * (size.width * 0.4); 
     
     Color silhouetteColor = Colors.white.withValues(alpha: 0.3);
@@ -235,33 +192,36 @@ class SilhouettePainter extends CustomPainter {
       _drawFrontSilhouette(path, size);
     }
 
-    // Desenhar sombra neon
     canvas.drawPath(path, paint..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
     canvas.drawPath(path, paint..maskFilter = null..strokeWidth = 1.5);
-
-    // Efeito de Scanline Neon
-    if (hasBody) {
-      final scanLineY = size.height * 0.1 + (size.height * 0.8 * scanProgress);
-      final scanPaint = Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            silhouetteColor.withValues(alpha: 0),
-            silhouetteColor.withValues(alpha: 0.8),
-            silhouetteColor.withValues(alpha: 0),
-          ],
-        ).createShader(Rect.fromLTWH(0, scanLineY - 20, size.width, 40))
-        ..strokeWidth = 2.0;
-
-      canvas.drawLine(
-        Offset(size.width * 0.2, scanLineY),
-        Offset(size.width * 0.8, scanLineY),
-        scanPaint,
-      );
-    }
-
     canvas.restore();
+
+    // Laser Scan VFX
+    if (isStabilizing || (isValid && alignmentPercentage > 95)) {
+      _drawLaserScan(canvas, size, pixelOffset);
+    }
+  }
+
+  void _drawLaserScan(Canvas canvas, Size size, double pixelOffset) {
+    final double yPos = size.height * (0.1 + (isStabilizing ? stabilityProgress : scanProgress) * 0.8);
+    
+    final Paint laserPaint = Paint()
+      ..color = const Color(0xFF00FF88)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+
+    final Paint linePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    final double laserWidth = size.width * 0.4;
+    final double startX = (size.width - laserWidth) / 2 + pixelOffset;
+    final double endX = (size.width + laserWidth) / 2 + pixelOffset;
+
+    canvas.drawLine(Offset(startX - 20, yPos), Offset(endX + 20, yPos), laserPaint);
+    canvas.drawLine(Offset(startX, yPos), Offset(endX, yPos), linePaint);
   }
 
   void _drawBrackets(Canvas canvas, Size size) {
@@ -280,7 +240,6 @@ class SilhouettePainter extends CustomPainter {
     const double bLen = 30.0;
     const double margin = 40.0;
 
-    // Cantos com brilho
     final glowPaint = Paint()
       ..color = bracketColor.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
@@ -292,43 +251,27 @@ class SilhouettePainter extends CustomPainter {
       canvas.drawPath(path, bracketPaint);
     }
 
-    // Top Left
     drawCorner(Path()..moveTo(margin, margin + bLen)..lineTo(margin, margin)..lineTo(margin + bLen, margin));
-    // Top Right
     drawCorner(Path()..moveTo(size.width - margin - bLen, margin)..lineTo(size.width - margin, margin)..lineTo(size.width - margin, margin + bLen));
-    // Bottom Left
     drawCorner(Path()..moveTo(margin, size.height - margin - bLen)..lineTo(margin, size.height - margin)..lineTo(margin + bLen, size.height - margin));
-    // Bottom Right
     drawCorner(Path()..moveTo(size.width - margin - bLen, size.height - margin)..lineTo(size.width - margin, size.height - margin)..lineTo(size.width - margin, size.height - margin - bLen));
   }
 
   void _drawFrontSilhouette(Path path, Size size) {
     final w = size.width;
     final h = size.height;
-    
-    // Cabeça
     path.addOval(Rect.fromLTWH(w * 0.42, h * 0.08, w * 0.16, h * 0.1));
-    
-    // Tronco Superior (Ombros e Peito)
     path.moveTo(w * 0.3, h * 0.22);
     path.quadraticBezierTo(w * 0.5, h * 0.18, w * 0.7, h * 0.22);
-    
-    // Braços (Sugeridos)
     path.lineTo(w * 0.75, h * 0.45);
     path.lineTo(w * 0.68, h * 0.45);
     path.lineTo(w * 0.65, h * 0.28);
-    
-    // Tronco e Quadril
     path.quadraticBezierTo(w * 0.6, h * 0.4, w * 0.62, h * 0.55);
     path.quadraticBezierTo(w * 0.5, h * 0.58, w * 0.38, h * 0.55);
     path.quadraticBezierTo(w * 0.4, h * 0.4, w * 0.35, h * 0.28);
-    
-    // Braço Esquerdo
     path.lineTo(w * 0.32, h * 0.45);
     path.lineTo(w * 0.25, h * 0.45);
     path.close();
-    
-    // Pernas
     path.moveTo(w * 0.4, h * 0.55);
     path.lineTo(w * 0.38, h * 0.9);
     path.lineTo(w * 0.48, h * 0.9);
@@ -341,21 +284,16 @@ class SilhouettePainter extends CustomPainter {
   void _drawSideSilhouette(Path path, Size size) {
     final w = size.width;
     final h = size.height;
-    
-    // Cabeça de perfil
     path.addOval(Rect.fromLTWH(w * 0.44, h * 0.08, w * 0.12, h * 0.1));
-    
-    // Tronco de perfil (Curvatura das costas e peito)
     path.moveTo(w * 0.5, h * 0.18);
-    path.quadraticBezierTo(w * 0.62, h * 0.3, w * 0.58, h * 0.45); // Peito e barriga
-    path.quadraticBezierTo(w * 0.55, h * 0.55, w * 0.55, h * 0.6); // Quadril
-    path.lineTo(w * 0.52, h * 0.9); // Perna frente
-    path.lineTo(w * 0.45, h * 0.9); // Perna trás
-    path.lineTo(w * 0.45, h * 0.6); // Glúteo
-    path.quadraticBezierTo(w * 0.4, h * 0.35, w * 0.5, h * 0.18); // Costas
+    path.quadraticBezierTo(w * 0.62, h * 0.3, w * 0.58, h * 0.45);
+    path.quadraticBezierTo(w * 0.55, h * 0.55, w * 0.55, h * 0.6);
+    path.lineTo(w * 0.52, h * 0.9);
+    path.lineTo(w * 0.45, h * 0.9);
+    path.lineTo(w * 0.45, h * 0.6);
+    path.quadraticBezierTo(w * 0.4, h * 0.35, w * 0.5, h * 0.18);
   }
 
-
   @override
-  bool shouldRepaint(covariant SilhouettePainter oldDelegate) => true; 
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

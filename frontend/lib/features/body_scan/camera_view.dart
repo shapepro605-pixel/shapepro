@@ -389,6 +389,8 @@ class _CameraViewState extends State<CameraView> {
           alignmentPercentage: _alignmentPercentage,
           isFrontCamera: _cameras.isNotEmpty && _cameras[_cameraIndex].lensDirection == CameraLensDirection.front,
           imageSize: Size(_lastImageWidth, _lastImageHeight),
+          isStabilizing: _stableStartTime != null,
+          stabilityProgress: _stabilityProgress,
           statusMessage: _isValid 
             ? AppLocalizations.of(context)!.perfectCapture 
             : (_validationErrors.isNotEmpty ? _getLocalizedError(_validationErrors.first) : ""),
