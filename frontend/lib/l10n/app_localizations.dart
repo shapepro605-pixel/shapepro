@@ -326,18 +326,6 @@ abstract class AppLocalizations {
   /// **'Configurações'**
   String get settings;
 
-  /// No description provided for @settingsComingSoon.
-  ///
-  /// In pt, this message translates to:
-  /// **'Configurações estarão disponíveis em breve!'**
-  String get settingsComingSoon;
-
-  /// No description provided for @helpComingSoon.
-  ///
-  /// In pt, this message translates to:
-  /// **'Central de ajuda em desenvolvimento!'**
-  String get helpComingSoon;
-
   /// No description provided for @deleteAccount.
   ///
   /// In pt, this message translates to:
@@ -1580,57 +1568,6 @@ abstract class AppLocalizations {
   /// **'Nenhum corpo detectado'**
   String get noBodyDetected;
 
-  /// No description provided for @distanceTip.
-  String get distanceTip;
-
-  /// No description provided for @stabilizing.
-  String get stabilizing;
-
-  /// No description provided for @capturing.
-  String get capturing;
-
-  /// No description provided for @captureSuccess.
-  String captureSuccess(Object name);
-
-  /// No description provided for @adjustPosition.
-  String adjustPosition(Object error);
-
-  /// No description provided for @autoCaptureMessage.
-  String autoCaptureMessage(Object name);
-
-  /// No description provided for @encouragement.
-  String get encouragement;
-
-  /// No description provided for @moveRightVoice.
-  String get moveRightVoice;
-
-  /// No description provided for @moveLeftVoice.
-  String get moveLeftVoice;
-
-  /// No description provided for @moveForwardVoice.
-  String get moveForwardVoice;
-
-  /// No description provided for @moveBackVoice.
-  String get moveBackVoice;
-
-  /// No description provided for @stayStraightVoice.
-  String get stayStraightVoice;
-
-  /// No description provided for @alignShouldersVoice.
-  String get alignShouldersVoice;
-
-  /// No description provided for @rotateToCenterVoice.
-  String get rotateToCenterVoice;
-
-  /// No description provided for @fullBodyNotDetectedVoice.
-  String get fullBodyNotDetectedVoice;
-
-  /// No description provided for @poseFrontVoice.
-  String get poseFrontVoice;
-
-  /// No description provided for @poseSideVoice.
-  String get poseSideVoice;
-
   /// No description provided for @perfectCapture.
   ///
   /// In pt, this message translates to:
@@ -2614,6 +2551,120 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'FINALIZAR JANELA'**
   String get finishWindow;
+
+  /// No description provided for @settingsComingSoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações estarão disponíveis em breve!'**
+  String get settingsComingSoon;
+
+  /// No description provided for @helpComingSoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Central de ajuda em desenvolvimento!'**
+  String get helpComingSoon;
+
+  /// No description provided for @distanceTip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Afaste-se ~1.5m para mais precisão'**
+  String get distanceTip;
+
+  /// No description provided for @stabilizing.
+  ///
+  /// In pt, this message translates to:
+  /// **'ESTABILIZANDO...'**
+  String get stabilizing;
+
+  /// No description provided for @capturing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Capturando... Mantenha a posição'**
+  String get capturing;
+
+  /// No description provided for @captureSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já finalizamos sua foto, muito obrigado {name}.'**
+  String captureSuccess(Object name);
+
+  /// No description provided for @adjustPosition.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajuste sua posição: {error}'**
+  String adjustPosition(Object error);
+
+  /// No description provided for @autoCaptureMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name}, mantenha-se parado, não se mova, vou tirar a foto agora.'**
+  String autoCaptureMessage(Object name);
+
+  /// No description provided for @encouragement.
+  ///
+  /// In pt, this message translates to:
+  /// **' Você está quase lá, continue se ajustando.'**
+  String get encouragement;
+
+  /// No description provided for @moveRightVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'mova só mais um pouco para a sua direita.'**
+  String get moveRightVoice;
+
+  /// No description provided for @moveLeftVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'mova só mais um pouco para a sua esquerda.'**
+  String get moveLeftVoice;
+
+  /// No description provided for @moveForwardVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'chegue um pouco mais para frente.'**
+  String get moveForwardVoice;
+
+  /// No description provided for @moveBackVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'afaste-se só mais um pouco para trás.'**
+  String get moveBackVoice;
+
+  /// No description provided for @stayStraightVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'alinhe seu corpo, você está inclinado para os lados.'**
+  String get stayStraightVoice;
+
+  /// No description provided for @alignShouldersVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'tente deixar seus ombros bem retos e nivelados.'**
+  String get alignShouldersVoice;
+
+  /// No description provided for @rotateToCenterVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'vire seu corpo um milímetro para o centro, você está um pouco de lado.'**
+  String get rotateToCenterVoice;
+
+  /// No description provided for @fullBodyNotDetectedVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'ainda não consigo ver seus pés ou cabeça. Afaste-se um pouco.'**
+  String get fullBodyNotDetectedVoice;
+
+  /// No description provided for @poseFrontVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'gire seu corpo para ficar totalmente de frente para mim.'**
+  String get poseFrontVoice;
+
+  /// No description provided for @poseSideVoice.
+  ///
+  /// In pt, this message translates to:
+  /// **'fique de perfil, olhando para o lado.'**
+  String get poseSideVoice;
 }
 
 class _AppLocalizationsDelegate

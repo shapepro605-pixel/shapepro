@@ -439,5 +439,45 @@
   },
   "startFasting": "INICIAR JEJUM",
   "breakFasting": "QUEBRAR JEJUM",
-  "finishWindow": "FINALIZAR JANELA"
+  "finishWindow": "FINALIZAR JANELA",
+  "settingsComingSoon": "Configurações estarão disponíveis em breve!",
+  "helpComingSoon": "Central de ajuda em desenvolvimento!",
+  "distanceTip": "Afaste-se ~1.5m para mais precisão",
+  "stabilizing": "ESTABILIZANDO...",
+  "capturing": "Capturando... Mantenha a posição",
+  "captureSuccess": "Já finalizamos sua foto, muito obrigado {name}.",
+  "@captureSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "adjustPosition": "Ajuste sua posição: {error}",
+  "@adjustPosition": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "autoCaptureMessage": "{name}, mantenha-se parado, não se mova, vou tirar a foto agora.",
+  "@autoCaptureMessage": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "encouragement": " Você está quase lá, continue se ajustando.",
+  "moveRightVoice": "mova só mais um pouco para a sua direita.",
+  "moveLeftVoice": "mova só mais um pouco para a sua esquerda.",
+  "moveForwardVoice": "chegue um pouco mais para frente.",
+  "moveBackVoice": "afaste-se só mais um pouco para trás.",
+  "stayStraightVoice": "alinhe seu corpo, você está inclinado para os lados.",
+  "alignShouldersVoice": "tente deixar seus ombros bem retos e nivelados.",
+  "rotateToCenterVoice": "vire seu corpo um milímetro para o centro, você está um pouco de lado.",
+  "fullBodyNotDetectedVoice": "ainda não consigo ver seus pés ou cabeça. Afaste-se um pouco.",
+  "poseFrontVoice": "gire seu corpo para ficar totalmente de frente para mim.",
+  "poseSideVoice": "fique de perfil, olhando para o lado."
 }

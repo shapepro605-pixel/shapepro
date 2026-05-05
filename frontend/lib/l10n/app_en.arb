@@ -439,5 +439,45 @@
   },
   "startFasting": "START FASTING",
   "breakFasting": "BREAK FAST",
-  "finishWindow": "FINISH WINDOW"
+  "finishWindow": "FINISH WINDOW",
+  "settingsComingSoon": "Settings will be available soon!",
+  "helpComingSoon": "Help center under development!",
+  "distanceTip": "Step back ~1.5m for more accuracy",
+  "stabilizing": "STABILIZING...",
+  "capturing": "Capturing... Hold your position",
+  "captureSuccess": "Photo captured, thank you very much {name}.",
+  "@captureSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "adjustPosition": "Adjust your position: {error}",
+  "@adjustPosition": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "autoCaptureMessage": "{name}, stay still, don't move, I'm taking the photo now.",
+  "@autoCaptureMessage": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "encouragement": " You're almost there, keep adjusting.",
+  "moveRightVoice": "move just a bit more to your right.",
+  "moveLeftVoice": "move just a bit more to your left.",
+  "moveForwardVoice": "move a bit more forward.",
+  "moveBackVoice": "step back just a bit more.",
+  "stayStraightVoice": "align your body, you are tilting sideways.",
+  "alignShouldersVoice": "try to keep your shoulders straight and level.",
+  "rotateToCenterVoice": "turn your body a millimeter to the center, you are slightly sideways.",
+  "fullBodyNotDetectedVoice": "I still can't see your feet or head. Step back a bit.",
+  "poseFrontVoice": "turn your body to face me completely.",
+  "poseSideVoice": "stand sideways, looking to the side."
 }

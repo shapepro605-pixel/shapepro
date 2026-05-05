@@ -427,7 +427,7 @@ class _CameraViewState extends State<CameraView> {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Colors.white24),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.straighten, color: Colors.cyanAccent, size: 16),
