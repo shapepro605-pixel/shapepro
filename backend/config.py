@@ -29,8 +29,8 @@ class Config:
     
     # ── App Management ────────────────────────────────────────────────
     APP_NAME = "ShapePro"
-    APP_VERSION = "1.0.17"
-    APP_MIN_VERSION = "1.0.17" # Force update if lower
+    APP_VERSION = "1.0.18"
+    APP_MIN_VERSION = "1.0.18" # Force update if lower
     APP_UPDATE_URL = "https://shapepro-production.up.railway.app"
 
 

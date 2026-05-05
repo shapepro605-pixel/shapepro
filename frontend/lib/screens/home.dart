@@ -14,6 +14,7 @@ import 'dart:io';
 import 'package:shapepro/utils/logger.dart';
 import '../services/wearable_service.dart';
 import '../widgets/fitness_widgets.dart';
+import 'notification_center.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -217,8 +218,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _progresso = result['progresso'];
           
           // Re-schedule notifications if enabled on data load
-          if (_notificationsEnabled && _progresso?['dieta_ativa'] != null) {
-            NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes']);
+          if (_notificationsEnabled) {
+            if (_progresso?['dieta_ativa'] != null) {
+              NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes']);
+            } else {
+              NotificationService.scheduleDailyReflection();
+            }
           }
         }
       });
@@ -307,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       children: [
                         _buildHeaderButton(
                           _notificationsEnabled ? Icons.notifications_active : Icons.notifications_none,
-                          _toggleNotifications,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationCenterScreen())),
                           color: _notificationsEnabled ? const Color(0xFF6C5CE7) : Colors.white54,
                         ),
                         _buildHeaderButton(
