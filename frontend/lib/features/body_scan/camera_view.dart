@@ -64,7 +64,10 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future<void> _initializeVoice() async {
-    await _tts.init();
+    final l10n = AppLocalizations.of(context)!;
+    // Set language based on current locale
+    await _tts.init(langCode: l10n.localeName == "pt" ? "pt-BR" : "en-US");
+    
     final api = Provider.of<ApiService>(context, listen: false);
     _userName = api.currentUser?['nome']?.split(' ').first ?? "";
   }
@@ -185,7 +188,7 @@ class _CameraViewState extends State<CameraView> {
       final errorMessage = _getLocalizedError(_validationErrors.first);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Ajuste sua posição: $errorMessage"),
+          content: Text(AppLocalizations.of(context)!.adjustPosition(errorMessage)),
           backgroundColor: Colors.orangeAccent,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
@@ -204,10 +207,10 @@ class _CameraViewState extends State<CameraView> {
       // Flash effect (UI only)
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Capturando... Mantenha a posição"),
-            duration: Duration(milliseconds: 500),
-            backgroundColor: Color(0xFF6C5CE7),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.capturing),
+            duration: const Duration(milliseconds: 500),
+            backgroundColor: const Color(0xFF6C5CE7),
           ),
         );
       }
@@ -229,9 +232,7 @@ class _CameraViewState extends State<CameraView> {
       setState(() => _showContrastFlash = false);
       
       // Final Thank You Voice
-      final thankYou = _userName.isNotEmpty 
-          ? "Já finalizamos sua foto, muito obrigado $_userName."
-          : "Já finalizamos sua foto, muito obrigado.";
+      final thankYou = AppLocalizations.of(context)!.captureSuccess(_userName.isNotEmpty ? _userName : "Athlete");
       await _tts.speak(thankYou);
 
       if (mounted) {
@@ -247,7 +248,7 @@ class _CameraViewState extends State<CameraView> {
       debugPrint("Capture Error: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erro na captura: $e"), backgroundColor: Colors.red),
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
         );
         _controller!.startImageStream(_processImage);
       }
@@ -298,25 +299,26 @@ class _CameraViewState extends State<CameraView> {
   }
 
   String _getVoiceMessage(String errorKey) {
+    final l10n = AppLocalizations.of(context)!;
     String prefix = _userName.isNotEmpty ? "$_userName, " : "";
     
     // Adicionar um toque de encorajamento se o alinhamento estiver subindo
     String suffix = "";
     if (_alignmentPercentage > 50) {
-      suffix = " Você está quase lá, continue se ajustando.";
+      suffix = l10n.encouragement;
     }
 
     switch (errorKey) {
-      case "moveRight": return "${prefix}mova só mais um pouco para a sua direita.$suffix";
-      case "moveLeft": return "${prefix}mova só mais um pouco para a sua esquerda.$suffix";
-      case "moveForward": return "${prefix}chegue um pouco mais para frente.$suffix";
-      case "moveBack": return "${prefix}afaste-se só mais um pouco para trás.$suffix";
-      case "stayStraight": return "${prefix}alinhe seu corpo, você está inclinado para os lados.";
-      case "alignShoulders": return "${prefix}tente deixar seus ombros bem retos e nivelados.";
-      case "rotateToCenter": return "${prefix}vire seu corpo um milímetro para o centro, você está um pouco de lado.";
-      case "fullBodyNotDetected": return "${prefix}ainda não consigo ver seus pés ou cabeça. Afaste-se um pouco.";
-      case "poseFront": return "${prefix}gire seu corpo para ficar totalmente de frente para mim.";
-      case "poseSide": return "${prefix}fique de perfil, olhando para o lado.";
+      case "moveRight": return "$prefix${l10n.moveRightVoice}$suffix";
+      case "moveLeft": return "$prefix${l10n.moveLeftVoice}$suffix";
+      case "moveForward": return "$prefix${l10n.moveForwardVoice}$suffix";
+      case "moveBack": return "$prefix${l10n.moveBackVoice}$suffix";
+      case "stayStraight": return "$prefix${l10n.stayStraightVoice}";
+      case "alignShoulders": return "$prefix${l10n.alignShouldersVoice}";
+      case "rotateToCenter": return "$prefix${l10n.rotateToCenterVoice}";
+      case "fullBodyNotDetected": return "$prefix${l10n.fullBodyNotDetectedVoice}";
+      case "poseFront": return "$prefix${l10n.poseFrontVoice}";
+      case "poseSide": return "$prefix${l10n.poseSideVoice}";
       default: return "";
     }
   }
@@ -325,9 +327,7 @@ class _CameraViewState extends State<CameraView> {
     _isSpeakingCapture = true;
     _isCapturing = true; // Block manual clicks
     
-    final message = _userName.isNotEmpty 
-        ? "$_userName, mantenha-se parado, não se mova, vou tirar a foto agora."
-        : "Mantenha-se parado, não se mova, vou tirar a foto agora.";
+    final message = AppLocalizations.of(context)!.autoCaptureMessage(_userName.isNotEmpty ? _userName : "Athlete");
     
     await _tts.speak(message);
     
@@ -430,11 +430,11 @@ class _CameraViewState extends State<CameraView> {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.straighten, color: Colors.cyanAccent, size: 16),
-                  SizedBox(width: 8),
+                  const Icon(Icons.straighten, color: Colors.cyanAccent, size: 16),
+                  const SizedBox(width: 8),
                   Text(
-                    "Afaste-se ~1.5m para mais precisão",
-                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                    AppLocalizations.of(context)!.distanceTip,
+                    style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -524,7 +524,7 @@ class _CameraViewState extends State<CameraView> {
             child: Column(
               children: [
                 Text(
-                  "ESTABILIZANDO...",
+                  AppLocalizations.of(context)!.stabilizing,
                   style: GoogleFonts.inter(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2),
                 ),
                 const SizedBox(height: 8),

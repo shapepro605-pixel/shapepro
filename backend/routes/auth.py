@@ -515,6 +515,47 @@ def delete_profile():
         return jsonify({'error': 'Failed to delete account data: ' + str(e)}), 500
 
 
+@auth_bp.route('/request-delete', methods=['POST'])
+def request_delete_web():
+    """Web-based account deletion request (requires email and password)."""
+    data = request.form if request.form else request.get_json()
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '')
+
+    if not email or not password:
+        return "E-mail e senha são obrigatórios.", 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user or not bcrypt.check_password_hash(user.password_hash, password):
+        return "Credenciais inválidas.", 401
+
+    try:
+        # Clean up Firebase Auth
+        if user.firebase_uid and is_firebase_initialized():
+            try:
+                from firebase_admin import auth as firebase_auth
+                firebase_auth.delete_user(user.firebase_uid)
+            except Exception as fe:
+                print(f"[FIREBASE] Web Delete Auth error: {fe}")
+
+        # Clean up DB
+        db.session.delete(user)
+        db.session.commit()
+
+        return '''
+        <html>
+            <body style="font-family: sans-serif; text-align: center; background-color: #0A0A1A; color: white; padding-top: 100px;">
+                <h1 style="color: #FD4556;">Conta Excluída com Sucesso</h1>
+                <p>Todos os seus dados foram removidos permanentemente.</p>
+                <a href="/" style="color: #6C5CE7; text-decoration: none;">Voltar para o Início</a>
+            </body>
+        </html>
+        '''
+    except Exception as e:
+        db.session.rollback()
+        return f"Erro ao excluir conta: {str(e)}", 500
+
+
 @auth_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():

@@ -123,6 +123,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get settingsComingSoon => 'Settings will be available soon!';
+
+  @override
+  String get helpComingSoon => 'Help center under development!';
+
+  @override
   String get deleteAccount => 'Delete Account';
 
   @override
@@ -775,6 +781,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noBodyDetected => 'No body detected';
+
+  @override
+  String get distanceTip => 'Step back ~1.5m for more accuracy';
+
+  @override
+  String get stabilizing => 'STABILIZING...';
+
+  @override
+  String get capturing => 'Capturing... Hold your position';
+
+  @override
+  String captureSuccess(Object name) {
+    return 'Photo captured, thank you very much $name.';
+  }
+
+  @override
+  String adjustPosition(Object error) {
+    return 'Adjust your position: $error';
+  }
+
+  @override
+  String autoCaptureMessage(Object name) {
+    return '$name, stay still, don\'t move, I\'m taking the photo now.';
+  }
+
+  @override
+  String get encouragement => ' You\'re almost there, keep adjusting.';
+
+  @override
+  String get moveRightVoice => 'move just a bit more to your right.';
+
+  @override
+  String get moveLeftVoice => 'move just a bit more to your left.';
+
+  @override
+  String get moveForwardVoice => 'move a bit more forward.';
+
+  @override
+  String get moveBackVoice => 'step back just a bit more.';
+
+  @override
+  String get stayStraightVoice => 'align your body, you are tilting sideways.';
+
+  @override
+  String get alignShouldersVoice => 'try to keep your shoulders straight and level.';
+
+  @override
+  String get rotateToCenterVoice =>
+      'turn your body a millimeter to the center, you are slightly sideways.';
+
+  @override
+  String get fullBodyNotDetectedVoice =>
+      'I still can\'t see your feet or head. Step back a bit.';
+
+  @override
+  String get poseFrontVoice => 'turn your body to face me completely.';
+
+  @override
+  String get poseSideVoice => 'stand sideways, looking to the side.';
 
   @override
   String get perfectCapture => 'PERFECT! YOU CAN TAKE THE PHOTO';

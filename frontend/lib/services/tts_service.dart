@@ -9,10 +9,13 @@ class TtsService {
   final FlutterTts _flutterTts = FlutterTts();
   bool _isInitialized = false;
 
-  Future<void> init() async {
-    if (_isInitialized) return;
+  Future<void> init({String langCode = "pt-BR"}) async {
+    if (_isInitialized) {
+      await _flutterTts.setLanguage(langCode);
+      return;
+    }
 
-    await _flutterTts.setLanguage("pt-BR");
+    await _flutterTts.setLanguage(langCode);
     await _flutterTts.setSpeechRate(0.5);
     await _flutterTts.setVolume(1.0);
     await _flutterTts.setPitch(1.0);

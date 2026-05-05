@@ -140,6 +140,11 @@ def create_app(config_name=None):
             })
         return jsonify({'routes': routes}), 200
 
+    @app.route('/delete-account', methods=['GET'])
+    def delete_account_page():
+        """Web page for account deletion requested by Google Play."""
+        return render_template('delete_account.html')
+
     @app.route('/', methods=['GET'])
     def index():
         return render_template('index.html')

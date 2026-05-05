@@ -123,6 +123,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings => 'Configurações';
 
   @override
+  String get settingsComingSoon => 'Configurações estarão disponíveis em breve!';
+
+  @override
+  String get helpComingSoon => 'Central de ajuda em desenvolvimento!';
+
+  @override
   String get deleteAccount => 'Excluir Conta';
 
   @override
@@ -778,6 +784,68 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noBodyDetected => 'Nenhum corpo detectado';
+
+  @override
+  String get distanceTip => 'Afaste-se ~1.5m para mais precisão';
+
+  @override
+  String get stabilizing => 'ESTABILIZANDO...';
+
+  @override
+  String get capturing => 'Capturando... Mantenha a posição';
+
+  @override
+  String captureSuccess(Object name) {
+    return 'Já finalizamos sua foto, muito obrigado $name.';
+  }
+
+  @override
+  String adjustPosition(Object error) {
+    return 'Ajuste sua posição: $error';
+  }
+
+  @override
+  String autoCaptureMessage(Object name) {
+    return '$name, mantenha-se parado, não se mova, vou tirar a foto agora.';
+  }
+
+  @override
+  String get encouragement => ' Você está quase lá, continue se ajustando.';
+
+  @override
+  String get moveRightVoice => 'mova só mais um pouco para a sua direita.';
+
+  @override
+  String get moveLeftVoice => 'mova só mais um pouco para a sua esquerda.';
+
+  @override
+  String get moveForwardVoice => 'chegue um pouco mais para frente.';
+
+  @override
+  String get moveBackVoice => 'afaste-se só mais um pouco para trás.';
+
+  @override
+  String get stayStraightVoice =>
+      'alinhe seu corpo, você está inclinado para os lados.';
+
+  @override
+  String get alignShouldersVoice =>
+      'tente deixar seus ombros bem retos e nivelados.';
+
+  @override
+  String get rotateToCenterVoice =>
+      'vire seu corpo um milímetro para o centro, você está um pouco de lado.';
+
+  @override
+  String get fullBodyNotDetectedVoice =>
+      'ainda não consigo ver seus pés ou cabeça. Afaste-se um pouco.';
+
+  @override
+  String get poseFrontVoice =>
+      'gire seu corpo para ficar totalmente de frente para mim.';
+
+  @override
+  String get poseSideVoice => 'fique de perfil, olhando para o lado.';
 
   @override
   String get perfectCapture => 'PERFEITO! PODE TIRAR A FOTO';

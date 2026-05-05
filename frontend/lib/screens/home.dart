@@ -1153,8 +1153,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             _buildMenuItem(Icons.person_outline, AppLocalizations.of(context)!.myProfile, () {
               Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData());
             }),
-            _buildMenuItem(Icons.star_outline, AppLocalizations.of(context)!.subscription, () {}),
-            _buildMenuItem(Icons.settings_outlined, AppLocalizations.of(context)!.settings, () {}),
+            _buildMenuItem(Icons.star_outline, AppLocalizations.of(context)!.subscription, () {
+              Navigator.pushNamed(context, '/checkout');
+            }),
+            _buildMenuItem(Icons.settings_outlined, AppLocalizations.of(context)!.settings, () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context)!.settingsComingSoon)),
+              );
+            }),
             _buildMenuItem(Icons.delete_forever, AppLocalizations.of(context)!.deleteAccount, () async {
               final confirm = await showDialog<bool>(
                 context: context,
@@ -1182,7 +1188,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   }
                 }
               }, color: const Color(0xFFFD4556)),
-            _buildMenuItem(Icons.help_outline, AppLocalizations.of(context)!.help, () {}),
+            _buildMenuItem(Icons.help_outline, AppLocalizations.of(context)!.help, () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context)!.helpComingSoon)),
+              );
+            }),
             _buildMenuItem(Icons.info_outline, AppLocalizations.of(context)!.aboutApp, () {
               showLicensePage(
                 context: context,

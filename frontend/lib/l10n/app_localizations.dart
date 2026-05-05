@@ -326,6 +326,18 @@ abstract class AppLocalizations {
   /// **'Configurações'**
   String get settings;
 
+  /// No description provided for @settingsComingSoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações estarão disponíveis em breve!'**
+  String get settingsComingSoon;
+
+  /// No description provided for @helpComingSoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Central de ajuda em desenvolvimento!'**
+  String get helpComingSoon;
+
   /// No description provided for @deleteAccount.
   ///
   /// In pt, this message translates to:
@@ -1567,6 +1579,57 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nenhum corpo detectado'**
   String get noBodyDetected;
+
+  /// No description provided for @distanceTip.
+  String get distanceTip;
+
+  /// No description provided for @stabilizing.
+  String get stabilizing;
+
+  /// No description provided for @capturing.
+  String get capturing;
+
+  /// No description provided for @captureSuccess.
+  String captureSuccess(Object name);
+
+  /// No description provided for @adjustPosition.
+  String adjustPosition(Object error);
+
+  /// No description provided for @autoCaptureMessage.
+  String autoCaptureMessage(Object name);
+
+  /// No description provided for @encouragement.
+  String get encouragement;
+
+  /// No description provided for @moveRightVoice.
+  String get moveRightVoice;
+
+  /// No description provided for @moveLeftVoice.
+  String get moveLeftVoice;
+
+  /// No description provided for @moveForwardVoice.
+  String get moveForwardVoice;
+
+  /// No description provided for @moveBackVoice.
+  String get moveBackVoice;
+
+  /// No description provided for @stayStraightVoice.
+  String get stayStraightVoice;
+
+  /// No description provided for @alignShouldersVoice.
+  String get alignShouldersVoice;
+
+  /// No description provided for @rotateToCenterVoice.
+  String get rotateToCenterVoice;
+
+  /// No description provided for @fullBodyNotDetectedVoice.
+  String get fullBodyNotDetectedVoice;
+
+  /// No description provided for @poseFrontVoice.
+  String get poseFrontVoice;
+
+  /// No description provided for @poseSideVoice.
+  String get poseSideVoice;
 
   /// No description provided for @perfectCapture.
   ///
