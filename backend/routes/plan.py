@@ -537,3 +537,33 @@ def relatar_resultado_dieta():
         'user': user.to_dict(),
         'novo_peso': novo_peso
     }), 200
+
+
+@plan_bp.route('/reflection', methods=['GET'])
+def get_daily_reflection():
+    """Returns an alternating daily reflection (Psalms vs Motivation)."""
+    import random
+    from datetime import datetime
+    
+    # Alterna baseado no dia do ano
+    day_of_year = datetime.now().timetuple().tm_yday
+    is_psalm_day = day_of_year % 2 == 0
+
+    psalms = [
+        {'title': 'Salmo do Dia ✨', 'body': 'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)'},
+        {'title': 'Proteção Divina 🙏', 'body': 'Aquele que habita no esconderijo do Altíssimo, à sombra do Onipotente descansará. (Salmos 91:1)'},
+        {'title': 'Sua Força 🕊️', 'body': 'O Senhor é a minha luz e a minha salvação; a quem temerei? (Salmos 27:1)'},
+        {'title': 'Socorro Presente ⚡', 'body': 'Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia. (Salmos 46:1)'},
+        {'title': 'Caminho de Luz 🕯️', 'body': 'Lâmpada para os meus pés é tua palavra e luz para o meu caminho. (Salmos 119:105)'},
+    ]
+
+    reflections = [
+        {'title': 'Impulsione seu Dia! 🚀', 'body': 'Tudo posso naquele que me fortalece. Hoje será um dia de vitórias!'},
+        {'title': 'Foco e Fé 🙏', 'body': 'Não fui eu que lhe ordenei? Seja forte e corajoso! O Senhor está contigo.'},
+        {'title': 'Sexto Sentido ✨', 'body': 'Acredite nos planos de Deus. Ele está preparando algo maior do que você imagina.'},
+        {'title': 'Energia Positiva ☀️', 'body': 'Comece o dia com um sorriso e gratidão. Deus renovou suas forças hoje!'},
+        {'title': 'Vencedor 🏆', 'body': 'Você nasceu para vencer. Com Deus no controle, nenhum obstáculo é grande demais.'},
+    ]
+
+    selected_list = psalms if is_psalm_day else reflections
+    return jsonify(random.choice(selected_list)), 200

@@ -49,7 +49,7 @@ class _DietaScreenState extends State<DietaScreen> {
           _dieta = result['dieta'];
           
           // Re-schedule notifications on load
-          NotificationService.scheduleDietNotifications(_dieta?['refeicoes'] ?? []);
+          NotificationService.scheduleDietNotifications(_dieta?['refeicoes'] ?? [], context);
         }
       });
       if (result['success'] == true) {
@@ -95,7 +95,7 @@ class _DietaScreenState extends State<DietaScreen> {
           _loadTreinosSincronizados();
           
           // Re-schedule notifications for the new diet
-          NotificationService.scheduleDietNotifications(_dieta?['refeicoes'] ?? []);
+          NotificationService.scheduleDietNotifications(_dieta?['refeicoes'] ?? [], context);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Row(
               children: [

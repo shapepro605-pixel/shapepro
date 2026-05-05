@@ -4,20 +4,12 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:math';
+import 'api.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  static final List<Map<String, String>> _reflections = [
-    {'title': 'Bom dia com Deus! ✨', 'body': 'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)'},
-    {'title': 'Reflexão do Dia 🙏', 'body': 'Tudo posso naquele que me fortalece. (Filipenses 4:13)'},
-    {'title': 'Pão Diário 🍞', 'body': 'Ainda que eu ande pelo vale da sombra da morte, não temerei mal algum. (Salmos 23:4)'},
-    {'title': 'Mensagem de Fé 🕊️', 'body': 'Entrega o teu caminho ao Senhor; confia nele, e ele tudo fará. (Salmos 37:5)'},
-    {'title': 'Deus está contigo! ⚡', 'body': 'O meu socorro vem do Senhor, que fez o céu e a terra. (Salmos 121:2)'},
-    {'title': 'Força e Coragem 💪', 'body': 'Espera no Senhor, anima-te, e ele fortalecerá o teu coração. (Salmos 27:14)'},
-    {'title': 'Amor Incondicional ❤️', 'body': 'Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito. (João 3:16)'},
-    {'title': 'Luz no Caminho 🕯️', 'body': 'Lâmpada para os meus pés é tua palavra e luz para o meu caminho. (Salmos 119:105)'},
-  ];
 
   static Future<void> init() async {
     tz.initializeTimeZones();
@@ -29,10 +21,11 @@ class NotificationService {
       android: initializationSettingsAndroid,
     );
 
+    // FIX DEFINITIVO: Usando parâmetro nomeado 'settings'
     await _notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        // Handle notification click
+        // Clique na notificação
       },
     );
 
@@ -55,26 +48,44 @@ class NotificationService {
     return result ?? false;
   }
 
-  static Future<void> scheduleDailyReflection() async {
+  static Future<void> scheduleDailyReflection(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final bool enabled = prefs.getBool('notifications_enabled') ?? false;
     if (!enabled) return;
 
-    final random = Random();
-    final reflection = _reflections[random.nextInt(_reflections.length)];
+    try {
+      final api = Provider.of<ApiService>(context, listen: false);
+      final reflectionData = await api.getDailyReflection();
+      
+      if (reflectionData['title'] != null) {
+        // Agendar para 8:00 AM UTC
+        // Convertendo 8:00 UTC para o tempo local do dispositivo
+        final now = DateTime.now();
+        final utc8am = DateTime.utc(now.year, now.month, now.day, 8, 0);
+        final localTime = utc8am.toLocal();
 
-    // Schedule for 7:00 AM every day
-    await _scheduleDailyNotification(
-      888, // Unique ID for reflections
-      reflection['title']!,
-      reflection['body']!,
-      7,
-      0,
-      type: 'faith',
-    );
+        await _scheduleDailyNotification(
+          888, 
+          reflectionData['title'],
+          reflectionData['body'],
+          localTime.hour,
+          localTime.minute,
+          type: 'faith',
+        );
+      }
+    } catch (e) {
+      // Fallback caso a API falhe
+      await _scheduleDailyNotification(
+        888, 
+        'Bom dia com Deus! ✨',
+        'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)',
+        5, 0, // 8:00 UTC em Brasília (aprox)
+        type: 'faith',
+      );
+    }
   }
 
-  static Future<void> scheduleDietNotifications(List<dynamic> refeicoes) async {
+  static Future<void> scheduleDietNotifications(List<dynamic> refeicoes, BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final bool enabled = prefs.getBool('notifications_enabled') ?? false;
     
@@ -83,7 +94,6 @@ class NotificationService {
       return;
     }
 
-    // Schedule diet ones starting from ID 0
     for (int i = 0; i < refeicoes.length; i++) {
       final refeicao = refeicoes[i];
       final String? horario = refeicao['horario'];
@@ -105,8 +115,7 @@ class NotificationService {
       );
     }
     
-    // Don't forget the daily reflection
-    await scheduleDailyReflection();
+    await scheduleDailyReflection(context);
   }
 
   static Future<void> _scheduleDailyNotification(
@@ -136,8 +145,28 @@ class NotificationService {
       matchDateTimeComponents: DateTimeComponents.time,
     );
 
-    // Save to history for the Notification Center
     await _saveToHistory(title, body, type);
+  }
+
+  static Future<void> scheduleComparisonReminder() async {
+    final now = tz.TZDateTime.now(tz.local);
+    final scheduledDate = now.add(const Duration(days: 30));
+
+    await _notificationsPlugin.zonedSchedule(
+      id: 999,
+      title: 'Hora de comparar sua evolução! 📸',
+      body: 'Já faz 30 dias desde o seu último Body Scan. Vamos ver como você mudou?',
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'shapepro_notifications',
+          'Notificações ShapePro',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 
   static Future<void> _saveToHistory(String title, String body, String type) async {
@@ -145,7 +174,6 @@ class NotificationService {
     final String? historyJson = prefs.getString('notification_history');
     List<dynamic> history = historyJson != null ? jsonDecode(historyJson) : [];
     
-    // Add new notification to history
     history.add({
       'title': title,
       'body': body,
@@ -153,9 +181,7 @@ class NotificationService {
       'time': DateTime.now().toIso8601String(),
     });
 
-    // Keep only last 50
     if (history.length > 50) history.removeAt(0);
-    
     await prefs.setString('notification_history', jsonEncode(history));
   }
 

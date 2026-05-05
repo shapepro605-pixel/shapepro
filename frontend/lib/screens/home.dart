@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     setState(() => _notificationsEnabled = newState);
 
     if (newState && _progresso?['dieta_ativa'] != null) {
-      await NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes']);
+      await NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes'], context);
     } else {
       await NotificationService.cancelAllNotifications();
     }
@@ -220,9 +220,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // Re-schedule notifications if enabled on data load
           if (_notificationsEnabled) {
             if (_progresso?['dieta_ativa'] != null) {
-              NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes']);
+              NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes'], context);
             } else {
-              NotificationService.scheduleDailyReflection();
+              NotificationService.scheduleDailyReflection(context);
             }
           }
         }
