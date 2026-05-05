@@ -117,7 +117,12 @@ class DietaService:
             else:
                 prot_por_kg = 1.8  # Ativo em déficit padrão
         elif objetivo == 'ganhar_massa':
-            prot_por_kg = 1.8 if nivel_atividade in ['sedentario', 'leve'] else 2.0
+            if ritmo_meta == 'agressivo':
+                prot_por_kg = 2.4  # Dirty bulk / Desafio hipercalórico
+            elif nivel_atividade in ['sedentario', 'leve']:
+                prot_por_kg = 2.0  # Sedentário em superávit
+            else:
+                prot_por_kg = 2.2  # ISSN/RP standard para bulk ativo
         else:
             prot_por_kg = 1.2 if nivel_atividade in ['sedentario', 'leve'] else 1.4
 
@@ -129,8 +134,13 @@ class DietaService:
             proteinas_g = round((calorias_finais * 0.40) / 4)
             cal_proteina = proteinas_g * 4
 
-        # ── Gordura: 25-30% ──
-        gordura_pct = 0.30 if objetivo == 'perder_peso' else 0.25
+        # ── Gordura: 20-30% (varia por objetivo) ──
+        if objetivo == 'perder_peso':
+            gordura_pct = 0.30  # Gordura mais alta ajuda saciedade em déficit
+        elif objetivo == 'ganhar_massa':
+            gordura_pct = 0.20  # Gordura mais baixa → mais carbo para treino
+        else:
+            gordura_pct = 0.25  # Manutenção balanceada
         gorduras_g = round((calorias_finais * gordura_pct) / 9)
         cal_gordura = gorduras_g * 9
 
