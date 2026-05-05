@@ -21,11 +21,10 @@ class NotificationService {
       android: initializationSettingsAndroid,
     );
 
-    // CORREÇÃO CRÍTICA: Usando parâmetro nomeado 'settings' conforme exigido pelo plugin
     await _notificationsPlugin.initialize(
       settings: initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        // Clique na notificação
+        // Handle click
       },
     );
 
@@ -41,6 +40,16 @@ class NotificationService {
         ?.createNotificationChannel(channel);
   }
 
+  static Future<String> _getUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? userData = prefs.getString('user_data');
+    if (userData != null) {
+      final user = jsonDecode(userData);
+      return user['nome'] ?? "Atleta";
+    }
+    return "Atleta";
+  }
+
   static Future<bool> requestPermissions() async {
     final bool? result = await _notificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
@@ -53,19 +62,20 @@ class NotificationService {
     final bool enabled = prefs.getBool('notifications_enabled') ?? false;
     if (!enabled) return;
 
+    final name = await _getUserName();
+
     try {
       final api = Provider.of<ApiService>(context, listen: false);
       final reflectionData = await api.getDailyReflection();
       
       if (reflectionData['title'] != null) {
-        // Agendar para 8:00 AM UTC
         final now = DateTime.now();
         final utc8am = DateTime.utc(now.year, now.month, now.day, 8, 0);
         final localTime = utc8am.toLocal();
 
         await _scheduleDailyNotification(
           888, 
-          reflectionData['title'],
+          "$name, ${reflectionData['title']}",
           reflectionData['body'],
           localTime.hour,
           localTime.minute,
@@ -75,7 +85,7 @@ class NotificationService {
     } catch (e) {
       await _scheduleDailyNotification(
         888, 
-        'Bom dia com Deus! ✨',
+        "$name, bom dia com Deus! ✨",
         'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)',
         5, 0, 
         type: 'faith',
@@ -92,6 +102,8 @@ class NotificationService {
       return;
     }
 
+    final name = await _getUserName();
+
     for (int i = 0; i < refeicoes.length; i++) {
       final refeicao = refeicoes[i];
       final String? horario = refeicao['horario'];
@@ -105,7 +117,7 @@ class NotificationService {
 
       await _scheduleDailyNotification(
         i,
-        'Hora da sua dieta! 🍎',
+        "$name, hora da sua dieta! 🍎",
         'Está na hora do seu ${refeicao['nome']}. Não esqueça de registrar!',
         hour,
         minute,
@@ -147,12 +159,13 @@ class NotificationService {
   }
 
   static Future<void> scheduleComparisonReminder() async {
+    final name = await _getUserName();
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = now.add(const Duration(days: 30));
 
     await _notificationsPlugin.zonedSchedule(
       id: 999,
-      title: 'Hora de comparar sua evolução! 📸',
+      title: "$name, hora de ver sua evolução! 📸",
       body: 'Já faz 30 dias desde o seu último Body Scan. Vamos ver como você mudou?',
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
