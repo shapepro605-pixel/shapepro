@@ -21,9 +21,9 @@ class NotificationService {
       android: initializationSettingsAndroid,
     );
 
-    // FIX DEFINITIVO: Usando parâmetro nomeado 'settings'
+    // CORREÇÃO CRÍTICA: Usando parâmetro nomeado 'settings' conforme exigido pelo plugin
     await _notificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: (details) {
         // Clique na notificação
       },
@@ -59,7 +59,6 @@ class NotificationService {
       
       if (reflectionData['title'] != null) {
         // Agendar para 8:00 AM UTC
-        // Convertendo 8:00 UTC para o tempo local do dispositivo
         final now = DateTime.now();
         final utc8am = DateTime.utc(now.year, now.month, now.day, 8, 0);
         final localTime = utc8am.toLocal();
@@ -74,12 +73,11 @@ class NotificationService {
         );
       }
     } catch (e) {
-      // Fallback caso a API falhe
       await _scheduleDailyNotification(
         888, 
         'Bom dia com Deus! ✨',
         'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)',
-        5, 0, // 8:00 UTC em Brasília (aprox)
+        5, 0, 
         type: 'faith',
       );
     }
