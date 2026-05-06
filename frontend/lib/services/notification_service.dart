@@ -62,33 +62,74 @@ class NotificationService {
     if (!enabled) return;
 
     final name = await _getUserName();
+    final now = DateTime.now();
+    final todayStr = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
 
-    try {
-      final api = Provider.of<ApiService>(context, listen: false);
-      final reflectionData = await api.getDailyReflection();
+    // 1. Load cached reflections
+    final String? cachedJson = prefs.getString('cached_reflections');
+    List<dynamic> cache = cachedJson != null ? jsonDecode(cachedJson) : [];
+
+    // 2. Remove past reflections (consume them)
+    cache.removeWhere((item) {
+      final targetDateStr = item['target_date'] as String?;
+      if (targetDateStr == null) return true;
+      return targetDateStr.compareTo(todayStr) < 0; // Remove if date < today
+    });
+
+    // 3. If cache is empty (7 days passed), fetch a new batch
+    if (cache.isEmpty) {
+      try {
+        final api = Provider.of<ApiService>(context, listen: false);
+        final response = await api.getDailyReflection(days: 7);
+        
+        if (response['success'] == true && response['reflections'] != null) {
+          final List<dynamic> reflections = response['reflections'];
+          for (int i = 0; i < reflections.length; i++) {
+            final targetDate = now.add(Duration(days: i));
+            final dateStr = "${targetDate.year}-${targetDate.month.toString().padLeft(2, '0')}-${targetDate.day.toString().padLeft(2, '0')}";
+            cache.add({
+              'title': reflections[i]['title'],
+              'body': reflections[i]['body'],
+              'target_date': dateStr,
+            });
+          }
+        }
+      } catch (e) {
+        // Fallback for tomorrow
+        final targetDate = now.add(const Duration(days: 1));
+        final dateStr = "${targetDate.year}-${targetDate.month.toString().padLeft(2, '0')}-${targetDate.day.toString().padLeft(2, '0')}";
+        cache.add({
+          'title': 'Bom dia com Deus! ✨',
+          'body': 'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)',
+          'target_date': dateStr,
+        });
+      }
+    }
+
+    // 4. Save updated cache
+    await prefs.setString('cached_reflections', jsonEncode(cache));
+
+    // 5. Schedule exact local notifications for each item
+    for (int i = 0; i < cache.length; i++) {
+      final item = cache[i];
+      final targetDateStr = item['target_date'] as String;
+      final parts = targetDateStr.split('-');
+      final year = int.parse(parts[0]);
+      final month = int.parse(parts[1]);
+      final day = int.parse(parts[2]);
+
+      final localTime = tz.TZDateTime(tz.local, year, month, day, 8, 0); // 8:00 AM local time
       
-      if (reflectionData['title'] != null) {
-        final now = DateTime.now();
-        final utc8am = DateTime.utc(now.year, now.month, now.day, 8, 0);
-        final localTime = utc8am.toLocal();
-
-        await _scheduleDailyNotification(
-          888, 
-          "$name, ${reflectionData['title']}",
-          reflectionData['body'],
-          localTime.hour,
-          localTime.minute,
+      // Only schedule if the 8:00 AM time for that day hasn't passed yet
+      if (localTime.isAfter(tz.TZDateTime.now(tz.local))) {
+        await _scheduleExactNotification(
+          8880 + i, // Unique ID per day in batch
+          "$name, ${item['title']}",
+          item['body'],
+          localTime,
           type: 'faith',
         );
       }
-    } catch (e) {
-      await _scheduleDailyNotification(
-        888, 
-        "$name, bom dia com Deus! ✨",
-        'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)',
-        5, 0, 
-        type: 'faith',
-      );
     }
   }
 
@@ -155,6 +196,26 @@ class NotificationService {
     );
 
     await _saveToHistory(title, body, type);
+  }
+
+  static Future<void> _scheduleExactNotification(
+      int id, String title, String body, tz.TZDateTime scheduledDate, {String type = 'faith'}) async {
+    
+    await _notificationsPlugin.zonedSchedule(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'shapepro_notifications',
+          'Notificações ShapePro',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 
   static Future<void> scheduleComparisonReminder() async {

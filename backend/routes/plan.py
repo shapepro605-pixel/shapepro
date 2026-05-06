@@ -541,13 +541,15 @@ def relatar_resultado_dieta():
 
 @plan_bp.route('/reflection', methods=['GET'])
 def get_daily_reflection():
-    """Returns an alternating daily reflection (Psalms vs Motivation)."""
+    """Returns an alternating daily reflection (Psalms vs Motivation) or a batch."""
     import random
     from datetime import datetime
     
-    # Alterna baseado no dia do ano
-    day_of_year = datetime.now().timetuple().tm_yday
-    is_psalm_day = day_of_year % 2 == 0
+    days_param = request.args.get('days', '1')
+    try:
+        days = int(days_param)
+    except ValueError:
+        days = 1
 
     psalms = [
         {'title': 'Salmo do Dia ✨', 'body': 'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)'},
@@ -565,5 +567,21 @@ def get_daily_reflection():
         {'title': 'Vencedor 🏆', 'body': 'Você nasceu para vencer. Com Deus no controle, nenhum obstáculo é grande demais.'},
     ]
 
-    selected_list = psalms if is_psalm_day else reflections
-    return jsonify(random.choice(selected_list)), 200
+    if days > 1:
+        # Return a batch of distinct reflections, alternating types if possible
+        batch = []
+        all_options = psalms + reflections
+        random.shuffle(all_options)
+        
+        # If days > available options, we just loop/duplicate (rare for days=7 with 10 options)
+        for i in range(days):
+            item = all_options[i % len(all_options)].copy()
+            batch.append(item)
+            
+        return jsonify({'reflections': batch}), 200
+    else:
+        # Single day behavior
+        day_of_year = datetime.now().timetuple().tm_yday
+        is_psalm_day = day_of_year % 2 == 0
+        selected_list = psalms if is_psalm_day else reflections
+        return jsonify(random.choice(selected_list)), 200
