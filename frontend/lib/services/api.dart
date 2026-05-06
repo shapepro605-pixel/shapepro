@@ -26,7 +26,7 @@ class ApiService extends ChangeNotifier {
   }
   
   // Current version must match configuration
-  static const String currentAppVersion = "1.0.24";
+  static const String currentAppVersion = "1.0.26";
   
   String? _accessToken;
   String? _refreshToken;

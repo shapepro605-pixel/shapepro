@@ -76,7 +76,7 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
       if (mounted) {
         setState(() {
           _daysSinceLastScan = diff;
-          _isEvolutionMode = diff >= 30;
+          _isEvolutionMode = diff >= 7; // Show banner if >= 7 days
         });
       }
     }
@@ -143,7 +143,7 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
     if (mounted) {
       setState(() => _isUploading = false);
       if (result['success']) {
-        // Schedule reminder for 30 days
+        // Schedule reminder for 7 days (weekly)
         NotificationService.scheduleComparisonReminder();
         _showSuccess();
       } else {
@@ -217,7 +217,9 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
           if (_isEvolutionMode) _buildEvolutionBanner(),
           const SizedBox(height: 16),
           Text(
-            _isEvolutionMode ? "CHECK-IN DE EVOLUÇÃO" : AppLocalizations.of(context)!.evolutionAnalysis,
+            _isEvolutionMode 
+                ? (_daysSinceLastScan >= 30 ? AppLocalizations.of(context)!.monthlyVerdictReady : AppLocalizations.of(context)!.weeklyCheckin)
+                : AppLocalizations.of(context)!.evolutionAnalysis,
             style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white),
           ),
           const SizedBox(height: 8),
@@ -297,34 +299,41 @@ class _BodyScanPageState extends State<BodyScanPage> with SingleTickerProviderSt
   }
 
   Widget _buildEvolutionBanner() {
+    bool isMonthly = _daysSinceLastScan >= 30;
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF2ED573), Color(0xFF1ABC9C)],
+        gradient: LinearGradient(
+          colors: isMonthly 
+            ? [const Color(0xFFFFD93D), const Color(0xFFF39C12)]
+            : [const Color(0xFF2ED573), const Color(0xFF1ABC9C)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: const Color(0xFF2ED573).withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))
+          BoxShadow(
+            color: (isMonthly ? const Color(0xFFFFD93D) : const Color(0xFF2ED573)).withOpacity(0.3), 
+            blurRadius: 15, 
+            offset: const Offset(0, 8)
+          )
         ],
       ),
       child: Row(
         children: [
-          const Icon(Icons.auto_awesome, color: Colors.white, size: 30),
+          Icon(isMonthly ? Icons.emoji_events : Icons.auto_awesome, color: Colors.white, size: 30),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "HORA DE VER RESULTADOS!",
+                  isMonthly ? AppLocalizations.of(context)!.monthlyVerdictReady : AppLocalizations.of(context)!.weeklyPhotoReady,
                   style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14),
                 ),
                 Text(
-                  "Já faz $_daysSinceLastScan dias desde seu último scan. Vamos ver como você evoluiu?",
+                  isMonthly ? AppLocalizations.of(context)!.monthlyVerdictReadyDesc : AppLocalizations.of(context)!.weeklyPhotoReadyDesc,
                   style: GoogleFonts.inter(color: Colors.white.withOpacity(0.9), fontSize: 12),
                 ),
               ],

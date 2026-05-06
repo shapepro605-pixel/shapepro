@@ -102,7 +102,7 @@
   "creatingAccount": "Criando conta...",
   "createMyAccount": "Criar minha conta",
   "myEvolution": "Minha Evolução",
-  "nextCheckin": "Próximo Check-in",
+  "nextCheckin": "Foto Semanal",
   "scansHistory": "Histórico de Scans",
   "daysRemainingDesc": "Faltam {days} dias para o seu próximo scanner corporal de comparação.",
   "@daysRemainingDesc": {
@@ -112,6 +112,34 @@
   },
   "timeToUpdate": "Hora de Atualizar!",
   "newScanNow": "Faça um novo scanner agora para ver seus resultados!",
+  "weeklyCheckin": "Check-in Semanal",
+  "weeklyCheckinDesc": "Tire sua foto semanal para acompanhar sua evolução!",
+  "weeklyDaysRemaining": "Faltam {days} dias para sua próxima foto semanal.",
+  "@weeklyDaysRemaining": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "monthlyVerdict": "Veredito Final em {days} dias",
+  "@monthlyVerdict": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "weeklyPhotoReady": "📸 HORA DA FOTO SEMANAL!",
+  "weeklyPhotoReadyDesc": "Tire sua foto agora e veja como você evoluiu essa semana!",
+  "monthlyVerdictReady": "🏆 VEREDITO FINAL!",
+  "monthlyVerdictReadyDesc": "Seu ciclo de 30 dias terminou! Veja sua transformação completa!",
+  "weekLabel": "Semana {week}",
+  "@weekLabel": {
+    "placeholders": {
+      "week": { "type": "int" }
+    }
+  },
+  "weeklyProgress": "Progresso Semanal",
+  "monthlyProgress": "Progresso Mensal",
+  "photoOnceAWeek": "1 foto por semana",
+  "trackWeekByWeek": "Acompanhe semana a semana",
   "neck": "Pescoço",
   "shoulders": "Ombros",
   "chest": "Peito",
@@ -246,7 +274,7 @@
   "accept": "Aceitar",
   "diet_generated": "Sua dieta foi gerada com sucesso!",
   "bodyScanAI": "Scanner Corporal",
-  "trackBodyEvolution": "Registre sua evolução corporal",
+  "trackBodyEvolution": "📸 1x por semana • Acompanhe sua evolução",
   "open": "ABRIR",
   "evolutionAnalysis": "Análise de Evolução",
   "selectPoseType": "Selecione o tipo de foto que deseja tirar hoje.",

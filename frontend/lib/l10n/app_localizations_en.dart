@@ -304,7 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myEvolution => 'My Evolution';
 
   @override
-  String get nextCheckin => 'Next Check-in';
+  String get nextCheckin => 'Weekly Photo';
 
   @override
   String get scansHistory => 'Scans History';
@@ -319,6 +319,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newScanNow => 'Do a new scan now to see your results!';
+
+  @override
+  String get weeklyCheckin => 'Weekly Check-in';
+
+  @override
+  String get weeklyCheckinDesc =>
+      'Take your weekly photo to track your evolution!';
+
+  @override
+  String weeklyDaysRemaining(int days) {
+    return '$days days until your next weekly photo.';
+  }
+
+  @override
+  String monthlyVerdict(int days) {
+    return 'Final Verdict in $days days';
+  }
+
+  @override
+  String get weeklyPhotoReady => '📸 WEEKLY PHOTO TIME!';
+
+  @override
+  String get weeklyPhotoReadyDesc =>
+      'Take your photo now and see how you evolved this week!';
+
+  @override
+  String get monthlyVerdictReady => '🏆 FINAL VERDICT!';
+
+  @override
+  String get monthlyVerdictReadyDesc =>
+      'Your 30-day cycle is complete! See your full transformation!';
+
+  @override
+  String weekLabel(int week) {
+    return 'Week $week';
+  }
+
+  @override
+  String get weeklyProgress => 'Weekly Progress';
+
+  @override
+  String get monthlyProgress => 'Monthly Progress';
+
+  @override
+  String get photoOnceAWeek => '1 photo per week';
+
+  @override
+  String get trackWeekByWeek => 'Track week by week';
 
   @override
   String get neck => 'Neck';
@@ -715,7 +763,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bodyScanAI => 'Body Scan AI';
 
   @override
-  String get trackBodyEvolution => 'Track your body evolution';
+  String get trackBodyEvolution => '📸 1x per week • Track your evolution';
 
   @override
   String get open => 'OPEN';
@@ -1203,9 +1251,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sono => 'Sleep';
-
-  @override
-  String get weeklyProgress => 'Weekly Progress';
 
   @override
   String get wearablesTitle => 'Wearables';

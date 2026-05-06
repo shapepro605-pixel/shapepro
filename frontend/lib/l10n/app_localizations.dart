@@ -677,7 +677,7 @@ abstract class AppLocalizations {
   /// No description provided for @nextCheckin.
   ///
   /// In pt, this message translates to:
-  /// **'Próximo Check-in'**
+  /// **'Foto Semanal'**
   String get nextCheckin;
 
   /// No description provided for @scansHistory.
@@ -703,6 +703,84 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Faça um novo scanner agora para ver seus resultados!'**
   String get newScanNow;
+
+  /// No description provided for @weeklyCheckin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Check-in Semanal'**
+  String get weeklyCheckin;
+
+  /// No description provided for @weeklyCheckinDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tire sua foto semanal para acompanhar sua evolução!'**
+  String get weeklyCheckinDesc;
+
+  /// No description provided for @weeklyDaysRemaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faltam {days} dias para sua próxima foto semanal.'**
+  String weeklyDaysRemaining(int days);
+
+  /// No description provided for @monthlyVerdict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Veredito Final em {days} dias'**
+  String monthlyVerdict(int days);
+
+  /// No description provided for @weeklyPhotoReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'📸 HORA DA FOTO SEMANAL!'**
+  String get weeklyPhotoReady;
+
+  /// No description provided for @weeklyPhotoReadyDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tire sua foto agora e veja como você evoluiu essa semana!'**
+  String get weeklyPhotoReadyDesc;
+
+  /// No description provided for @monthlyVerdictReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'🏆 VEREDITO FINAL!'**
+  String get monthlyVerdictReady;
+
+  /// No description provided for @monthlyVerdictReadyDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu ciclo de 30 dias terminou! Veja sua transformação completa!'**
+  String get monthlyVerdictReadyDesc;
+
+  /// No description provided for @weekLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Semana {week}'**
+  String weekLabel(int week);
+
+  /// No description provided for @weeklyProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso Semanal'**
+  String get weeklyProgress;
+
+  /// No description provided for @monthlyProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso Mensal'**
+  String get monthlyProgress;
+
+  /// No description provided for @photoOnceAWeek.
+  ///
+  /// In pt, this message translates to:
+  /// **'1 foto por semana'**
+  String get photoOnceAWeek;
+
+  /// No description provided for @trackWeekByWeek.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acompanhe semana a semana'**
+  String get trackWeekByWeek;
 
   /// No description provided for @neck.
   ///
@@ -1451,7 +1529,7 @@ abstract class AppLocalizations {
   /// No description provided for @trackBodyEvolution.
   ///
   /// In pt, this message translates to:
-  /// **'Registre sua evolução corporal'**
+  /// **'📸 1x por semana • Acompanhe sua evolução'**
   String get trackBodyEvolution;
 
   /// No description provided for @open.
@@ -2353,12 +2431,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Sono'**
   String get sono;
-
-  /// No description provided for @weeklyProgress.
-  ///
-  /// In pt, this message translates to:
-  /// **'Progresso Semanal'**
-  String get weeklyProgress;
 
   /// No description provided for @wearablesTitle.
   ///

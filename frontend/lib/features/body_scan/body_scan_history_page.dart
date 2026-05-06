@@ -22,7 +22,8 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
   late BodyScanService _scanService;
   bool _isLoading = true;
   List<Map<String, List<dynamic>>> _groupedScans = [];
-  int _daysRemaining = 30;
+  int _daysRemainingMonthly = 30;
+  int _daysRemainingWeekly = 7;
   Map<String, dynamic>? _latestMetrics;
 
   @override
@@ -87,9 +88,11 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
       if (sortedKeys.isNotEmpty) {
         DateTime lastScanDate = DateTime.parse(sortedKeys.first);
         final difference = DateTime.now().difference(lastScanDate).inDays;
-        _daysRemaining = math.max(0, 30 - difference);
+        _daysRemainingMonthly = math.max(0, 30 - difference);
+        _daysRemainingWeekly = difference >= 30 ? 0 : (difference % 7 == 0 && difference > 0 ? 0 : 7 - (difference % 7));
       } else {
-        _daysRemaining = 30; 
+        _daysRemainingMonthly = 30; 
+        _daysRemainingWeekly = 7;
       }
 
     } catch (e) {
@@ -150,23 +153,29 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
   }
 
   Widget _buildCountdownHeader() {
-    double progress = (30 - _daysRemaining) / 30;
-    bool isExpired = _daysRemaining == 0;
+    double monthlyProgress = (30 - _daysRemainingMonthly) / 30;
+    double weeklyProgress = (7 - _daysRemainingWeekly) / 7;
+    bool isMonthlyExpired = _daysRemainingMonthly == 0;
+    bool isWeeklyExpired = _daysRemainingWeekly == 0;
     
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: isExpired 
-            ? [const Color(0xFF2ED573), const Color(0xFF1ABC9C)]
-            : [const Color(0xFF6C5CE7), const Color(0xFF8E78FF)],
+          colors: isMonthlyExpired 
+            ? [const Color(0xFFFFD93D), const Color(0xFFF39C12)]
+            : (isWeeklyExpired 
+                ? [const Color(0xFF2ED573), const Color(0xFF1ABC9C)]
+                : [const Color(0xFF6C5CE7), const Color(0xFF8E78FF)]),
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: (isExpired ? const Color(0xFF2ED573) : const Color(0xFF6C5CE7)).withOpacity(0.3),
+            color: (isMonthlyExpired 
+              ? const Color(0xFFFFD93D) 
+              : (isWeeklyExpired ? const Color(0xFF2ED573) : const Color(0xFF6C5CE7))).withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -183,7 +192,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     width: 80,
                     height: 80,
                     child: CircularProgressIndicator(
-                      value: progress,
+                      value: isMonthlyExpired ? 1.0 : weeklyProgress,
                       strokeWidth: 8,
                       backgroundColor: Colors.white24,
                       valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
@@ -193,7 +202,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "$_daysRemaining",
+                        isMonthlyExpired ? "0" : "$_daysRemainingWeekly",
                         style: GoogleFonts.inter(
                           fontSize: 24, 
                           fontWeight: FontWeight.w900, 
@@ -218,9 +227,11 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isExpired 
-                        ? "HORA DA EVOLUÇÃO!" 
-                        : AppLocalizations.of(context)!.nextCheckin,
+                      isMonthlyExpired 
+                        ? AppLocalizations.of(context)!.monthlyVerdictReady 
+                        : (isWeeklyExpired 
+                            ? AppLocalizations.of(context)!.weeklyPhotoReady
+                            : AppLocalizations.of(context)!.weeklyCheckin),
                       style: GoogleFonts.inter(
                         fontSize: 18, 
                         fontWeight: FontWeight.bold, 
@@ -229,9 +240,11 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      isExpired
-                        ? "Seu ciclo de 30 dias terminou. Tire uma nova foto agora!"
-                        : AppLocalizations.of(context)!.daysRemainingDesc(_daysRemaining),
+                      isMonthlyExpired
+                        ? AppLocalizations.of(context)!.monthlyVerdictReadyDesc
+                        : (isWeeklyExpired 
+                            ? AppLocalizations.of(context)!.weeklyPhotoReadyDesc
+                            : AppLocalizations.of(context)!.weeklyDaysRemaining(_daysRemainingWeekly)),
                       style: GoogleFonts.inter(
                         fontSize: 13, 
                         color: Colors.white.withOpacity(0.8)
@@ -242,6 +255,35 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               ),
             ],
           ),
+          
+          if (!isMonthlyExpired) ...[
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: monthlyProgress,
+                      minHeight: 6,
+                      backgroundColor: Colors.white24,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.monthlyVerdict(_daysRemainingMonthly),
+                  style: GoogleFonts.inter(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+          
           if (_groupedScans.length >= 2) ...[
             const SizedBox(height: 20),
             const Divider(color: Colors.white24),
@@ -252,7 +294,7 @@ class _BodyScanHistoryPageState extends State<BodyScanHistoryPage> {
               label: const Text("VER COMPARAÇÃO DE ANTES E DEPOIS"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: isExpired ? const Color(0xFF2ED573) : const Color(0xFF6C5CE7),
+                foregroundColor: isMonthlyExpired ? const Color(0xFFF39C12) : (isWeeklyExpired ? const Color(0xFF2ED573) : const Color(0xFF6C5CE7)),
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,

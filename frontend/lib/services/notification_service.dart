@@ -3,7 +3,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'dart:math';
 import 'api.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -161,12 +160,12 @@ class NotificationService {
   static Future<void> scheduleComparisonReminder() async {
     final name = await _getUserName();
     final now = tz.TZDateTime.now(tz.local);
-    final scheduledDate = now.add(const Duration(days: 30));
+    final scheduledDate = now.add(const Duration(days: 7)); // Weekly check-in
 
     await _notificationsPlugin.zonedSchedule(
       id: 999,
-      title: "$name, hora de ver sua evolução! 📸",
-      body: 'Já faz 30 dias desde o seu último Body Scan. Vamos ver como você mudou?',
+      title: "$name, hora do check-in semanal! 📸",
+      body: 'Sua foto semanal da evolução está te esperando. Mantenha o foco!',
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(

@@ -305,7 +305,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get myEvolution => 'Minha Evolução';
 
   @override
-  String get nextCheckin => 'Próximo Check-in';
+  String get nextCheckin => 'Foto Semanal';
 
   @override
   String get scansHistory => 'Histórico de Scans';
@@ -321,6 +321,54 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get newScanNow =>
       'Faça um novo scanner agora para ver seus resultados!';
+
+  @override
+  String get weeklyCheckin => 'Check-in Semanal';
+
+  @override
+  String get weeklyCheckinDesc =>
+      'Tire sua foto semanal para acompanhar sua evolução!';
+
+  @override
+  String weeklyDaysRemaining(int days) {
+    return 'Faltam $days dias para sua próxima foto semanal.';
+  }
+
+  @override
+  String monthlyVerdict(int days) {
+    return 'Veredito Final em $days dias';
+  }
+
+  @override
+  String get weeklyPhotoReady => '📸 HORA DA FOTO SEMANAL!';
+
+  @override
+  String get weeklyPhotoReadyDesc =>
+      'Tire sua foto agora e veja como você evoluiu essa semana!';
+
+  @override
+  String get monthlyVerdictReady => '🏆 VEREDITO FINAL!';
+
+  @override
+  String get monthlyVerdictReadyDesc =>
+      'Seu ciclo de 30 dias terminou! Veja sua transformação completa!';
+
+  @override
+  String weekLabel(int week) {
+    return 'Semana $week';
+  }
+
+  @override
+  String get weeklyProgress => 'Progresso Semanal';
+
+  @override
+  String get monthlyProgress => 'Progresso Mensal';
+
+  @override
+  String get photoOnceAWeek => '1 foto por semana';
+
+  @override
+  String get trackWeekByWeek => 'Acompanhe semana a semana';
 
   @override
   String get neck => 'Pescoço';
@@ -718,7 +766,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get bodyScanAI => 'Scanner Corporal';
 
   @override
-  String get trackBodyEvolution => 'Registre sua evolução corporal';
+  String get trackBodyEvolution => '📸 1x por semana • Acompanhe sua evolução';
 
   @override
   String get open => 'ABRIR';
@@ -1204,9 +1252,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sono => 'Sono';
-
-  @override
-  String get weeklyProgress => 'Progresso Semanal';
 
   @override
   String get wearablesTitle => 'Wearables';

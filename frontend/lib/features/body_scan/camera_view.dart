@@ -262,9 +262,7 @@ class _CameraViewState extends State<CameraView> {
 
     // 1. Auto-Capture Trigger (>70% alignment + Stability)
     if (_alignmentPercentage >= 70 && _isValid && !_isCapturing) {
-      if (_stableStartTime == null) {
-        _stableStartTime = DateTime.now();
-      }
+      _stableStartTime ??= DateTime.now();
       
       final elapsedStable = DateTime.now().difference(_stableStartTime!).inMilliseconds;
       setState(() {
