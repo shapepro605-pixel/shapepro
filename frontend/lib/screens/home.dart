@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             }
                           },
                           isEmoji: true,
-                          emoji: Provider.of<ApiService>(context).locale.languageCode == 'pt' ? '🇺🇸' : '🇧🇷',
+                          emoji: Provider.of<ApiService>(context).locale.languageCode == 'pt' ? '🇧🇷' : '🇺🇸',
                         ),
                         _buildHeaderButton(
                           Icons.logout,
@@ -1395,11 +1395,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
         onTap: (i) {
           if (i == 0) {
-            if (_currentIndex == 0) {
-              Navigator.pushNamed(context, '/profile_edit').then((_) => _loadData());
-            } else {
-              setState(() => _currentIndex = 0);
-            }
+            setState(() => _currentIndex = 0);
             return;
           }
 
