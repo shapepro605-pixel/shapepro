@@ -219,3 +219,58 @@ class ActivityLevelSelector extends StatelessWidget {
     );
   }
 }
+
+class CountryCodeSelector extends StatelessWidget {
+  final String selectedCountryId;
+  final Function(String) onChanged;
+
+  const CountryCodeSelector({
+    super.key,
+    required this.selectedCountryId,
+    required this.onChanged,
+  });
+
+  static final List<Map<String, String>> countries = [
+    {'id': 'BR', 'code': '+55', 'flag': '🇧🇷', 'name': 'Brasil'},
+    {'id': 'US', 'code': '+1', 'flag': '🇺🇸', 'name': 'Estados Unidos'},
+    {'id': 'CA', 'code': '+1', 'flag': '🇨🇦', 'name': 'Canadá'},
+    {'id': 'UK', 'code': '+44', 'flag': '🇬🇧', 'name': 'Reino Unido'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E38),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF2A2A4A)),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedCountryId,
+          dropdownColor: const Color(0xFF1E1E38),
+          icon: const Icon(Icons.arrow_drop_down, color: Colors.white54),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              onChanged(newValue);
+            }
+          },
+          items: countries.map<DropdownMenuItem<String>>((Map<String, String> country) {
+            return DropdownMenuItem<String>(
+              value: country['id'],
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(country['flag']!, style: const TextStyle(fontSize: 20)),
+                  const SizedBox(width: 8),
+                  Text(country['code']!, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}

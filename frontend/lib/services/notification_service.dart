@@ -6,12 +6,19 @@ import 'dart:convert';
 import 'api.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
     tz.initializeTimeZones();
+    try {
+      final String timezone = (await FlutterTimezone.getLocalTimezone()).identifier;
+      tz.setLocalLocation(tz.getLocation(timezone));
+    } catch (e) {
+      // Ignorar e manter UTC caso falhe
+    }
     
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -120,10 +127,12 @@ class NotificationService {
 
       final localTime = tz.TZDateTime(tz.local, year, month, day, 8, 0); // 8:00 AM local time
       
+      final int dateId = year * 10000 + month * 100 + day; // Ex: 20260506
+      
       // Only schedule if the 8:00 AM time for that day hasn't passed yet
       if (localTime.isAfter(tz.TZDateTime.now(tz.local))) {
         await _scheduleExactNotification(
-          8880 + i, // Unique ID per day in batch
+          dateId, // Unique fixed ID for the date
           "$name, ${item['title']}",
           item['body'],
           localTime,

@@ -34,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   // Step 5: Telefone (inserted as Step 1)
   final _telefoneController = TextEditingController();
-
+  String _selectedCountryId = 'BR';
 
   // Step 4: Objetivo
   String _objetivo = 'perder_peso';
@@ -66,6 +66,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final l10n = AppLocalizations.of(context)!;
     final api = Provider.of<ApiService>(context, listen: false);
+
+    // Get the selected country code
+    final country = CountryCodeSelector.countries.firstWhere((c) => c['id'] == _selectedCountryId);
+    final countryCode = country['code']!;
+    final telefoneCompleto = '$countryCode${_telefoneController.text.trim()}';
+
     final result = await api.register(
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -77,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       objetivo: _objetivo,
       nivelAtividade: _nivelAtividade,
       ritmoMeta: _ritmoMeta,
-      telefone: _telefoneController.text.trim(),
+      telefone: telefoneCompleto,
     );
 
     if (mounted) {
@@ -314,14 +320,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (_errorMessage != null) _buildError(),
         CustomLabel(label: AppLocalizations.of(context)!.phoneNumber),
         const SizedBox(height: 8),
-        TextFormField(
-          controller: _telefoneController,
-          keyboardType: TextInputType.phone,
-          style: GoogleFonts.inter(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.phoneHint,
-            prefixIcon: const Icon(Icons.phone_android_outlined, color: Color(0xFF6C5CE7)),
-          ),
+        Row(
+          children: [
+            CountryCodeSelector(
+              selectedCountryId: _selectedCountryId,
+              onChanged: (val) => setState(() => _selectedCountryId = val),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _telefoneController,
+                keyboardType: TextInputType.phone,
+                style: GoogleFonts.inter(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.phoneHint,
+                  prefixIcon: const Icon(Icons.phone_android_outlined, color: Color(0xFF6C5CE7)),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 40),
         _buildNextButton(AppLocalizations.of(context)!.continueBtn, _nextStep),
