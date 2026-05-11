@@ -30,6 +30,16 @@ def _verify_firebase_token(id_token):
         return None
 
 
+def _get_lang_from_phone(phone):
+    """Helper to detect language based on phone country code."""
+    if not phone:
+        return 'pt'
+    phone = str(phone).strip()
+    if phone.startswith('+1') or phone.startswith('+44'):
+        return 'en'
+    return 'pt'
+
+
 def _send_async_email(app, email_data, diagnostic_prefix="EMAIL"):
     """Internal helper to send email via Firebase Cloud Function (Professional Relay)."""
     import requests
@@ -40,14 +50,15 @@ def _send_async_email(app, email_data, diagnostic_prefix="EMAIL"):
             # URL oficial da sua Cloud Function (2nd Gen)
             cloud_function_url = "https://sendverificationcode-mhxdwt3ztq-uc.a.run.app"
             
-            print(f"[{diagnostic_prefix}] 🚀 Revezando e-mail via Firebase para {data['email']}...")
+            print(f"[{diagnostic_prefix}] 🚀 Revezando e-mail via Firebase ({data.get('lang', 'pt')}) para {data['email']}...")
             
             response = requests.post(
                 cloud_function_url,
                 json={
                     "email": data["email"],
                     "nome": data.get("nome", "Atleta"),
-                    "code": data["code"]
+                    "code": data["code"],
+                    "lang": data.get("lang", "pt")
                 },
                 timeout=15
             )
@@ -146,7 +157,8 @@ def register():
         _send_async_email(current_app, {
             'email': email,
             'nome': nome,
-            'code': token
+            'code': token,
+            'lang': _get_lang_from_phone(telefone)
         }, "REGISTRO")
         # ----------------------------------------------------
 
@@ -628,7 +640,8 @@ def reset_password():
     _send_async_email(current_app, {
         'email': email,
         'nome': user.nome,
-        'code': temp_password
+        'code': temp_password,
+        'lang': _get_lang_from_phone(user.telefone)
     }, "PASSWORD_RESET")
 
     return jsonify({
@@ -662,7 +675,8 @@ def send_verification_email():
     _send_async_email(current_app, {
         'email': user.email,
         'nome': user.nome,
-        'code': token
+        'code': token,
+        'lang': _get_lang_from_phone(user.telefone)
     }, "VERIFY_EMAIL")
     
     # We return success immediately as the thread handles the relay

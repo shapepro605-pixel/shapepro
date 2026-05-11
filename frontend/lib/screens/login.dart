@@ -183,6 +183,13 @@ class _LoginScreenState extends State<LoginScreen>
       normalizedPhone = normalizedPhone.startsWith('55') ? '+$normalizedPhone' : '+55$normalizedPhone';
     }
 
+    // Set language based on country code
+    String langCode = 'pt-br';
+    if (normalizedPhone.startsWith('+1') || normalizedPhone.startsWith('+44')) {
+      langCode = 'en';
+    }
+    await FirebaseAuth.instance.setLanguageCode(langCode);
+
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: normalizedPhone,

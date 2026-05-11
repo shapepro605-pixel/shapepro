@@ -72,17 +72,20 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
     
     // Normalize phone number for Firebase (Add +55 if missing, ensure + is present)
     if (phone.isNotEmpty) {
-      phone = phone.replaceAll(RegExp(r'[^0-9+]'), ''); // Remove spaces, dashes, etc
+      phone = phone.replaceAll(RegExp(r'[^0-9+]'), '');
       if (!phone.startsWith('+')) {
-        if (!phone.startsWith('55')) {
-          phone = '+55$phone';
-        } else {
-          phone = '+$phone';
-        }
+        phone = phone.startsWith('55') ? '+$phone' : '+55$phone';
       }
     }
     
-    debugPrint('[DEBUG] Starting SMS verification for: $phone');
+    // Set language based on country code
+    String langCode = 'pt-br';
+    if (phone.startsWith('+1') || phone.startsWith('+44')) {
+      langCode = 'en';
+    }
+    await FirebaseAuth.instance.setLanguageCode(langCode);
+    
+    debugPrint('[DEBUG] Starting SMS verification (${langCode}) for: $phone');
 
     if (phone.isEmpty) {
       setState(() {

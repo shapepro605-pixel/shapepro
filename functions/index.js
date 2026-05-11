@@ -22,26 +22,32 @@ exports.sendVerificationCode = functions.https.onRequest(async (req, res) => {
     // const authHeader = req.headers.authorization;
     // if (authHeader !== 'Bearer SEU_TOKEN_DE_SEGURANCA') return res.status(403).send('Unauthorized');
 
-    const { email, nome, code } = req.body;
+    const { email, nome, code, lang } = req.body;
 
     if (!email || !code) {
         return res.status(400).send('E-mail e código são obrigatórios.');
     }
 
+    const isEn = lang === 'en';
+
     const mailOptions = {
         from: '"ShapePro Support" <shapepro605@gmail.com>',
         to: email,
-        subject: `${code} é o seu código de verificação ShapePro`,
+        subject: isEn 
+            ? `${code} is your ShapePro verification code` 
+            : `${code} é o seu código de verificação ShapePro`,
         html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #0A0A1A; color: white; padding: 40px; border-radius: 20px;">
                 <div style="text-align: center; margin-bottom: 30px;">
                     <h1 style="color: #6C5CE7; font-size: 32px; margin: 0;">ShapePro</h1>
-                    <p style="color: #aaa; font-size: 14px;">Sua jornada fitness começa aqui</p>
+                    <p style="color: #aaa; font-size: 14px;">${isEn ? 'Your fitness journey starts here' : 'Sua jornada fitness começa aqui'}</p>
                 </div>
                 
-                <h2 style="font-size: 24px; text-align: center;">Olá, ${nome || 'Atleta'}!</h2>
+                <h2 style="font-size: 24px; text-align: center;">${isEn ? 'Hello' : 'Olá'}, ${nome || (isEn ? 'Athlete' : 'Atleta')}!</h2>
                 <p style="font-size: 16px; line-height: 1.6; text-align: center; color: #ccc;">
-                    Obrigado por se juntar à nossa comunidade. Use o código abaixo para validar sua conta e começar agora mesmo:
+                    ${isEn 
+                        ? 'Thank you for joining our community. Use the code below to validate your account and get started right now:' 
+                        : 'Obrigado por se juntar à nossa comunidade. Use o código abaixo para validar sua conta e começar agora mesmo:'}
                 </p>
                 
                 <div style="background-color: #16162A; border: 2px solid #6C5CE7; border-radius: 15px; padding: 20px; margin: 30px 0; text-align: center;">
@@ -49,14 +55,15 @@ exports.sendVerificationCode = functions.https.onRequest(async (req, res) => {
                 </div>
                 
                 <p style="font-size: 14px; text-align: center; color: #777; margin-top: 40px;">
-                    Este código expira em 30 minutos.<br>
-                    Se você não solicitou este cadastro, pode ignorar este e-mail com segurança.
+                    ${isEn 
+                        ? 'This code expires in 30 minutes.<br>If you did not request this registration, you can safely ignore this email.' 
+                        : 'Este código expira em 30 minutos.<br>Se você não solicitou este cadastro, pode ignorar este e-mail com segurança.'}
                 </p>
                 
                 <hr style="border: 0; border-top: 1px solid #222; margin: 40px 0;">
                 
                 <p style="font-size: 12px; text-align: center; color: #555;">
-                    © 2026 ShapePro Fitness. Todos os direitos reservados.
+                    © 2026 ShapePro Fitness. ${isEn ? 'All rights reserved.' : 'Todos os direitos reservados.'}
                 </p>
             </div>
         `
