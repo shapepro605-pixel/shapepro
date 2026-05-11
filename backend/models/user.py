@@ -117,9 +117,9 @@ class User(db.Model, SerialMixin):
         if self.is_in_trial():
             return 999  # Allow everything during the 2-day taste period
             
-        # Trial expired and no subscription = NO access
-        # TEST MODE: Unlock everything for testing the whole app
-        return 999
+        # Trial expired and no subscription = Restricted access
+        # We return a limit of 1 (Café and Lunch only) to tease the user
+        return 1
 
     def calcular_imc(self):
         """Calculate BMI (IMC)."""

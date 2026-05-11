@@ -27,16 +27,12 @@ def checkout():
     data = request.get_json()
     plan_code = data.get('plan_code', 'premium')
 
-    # TEST ENVIRONMENT: Always simulate successful payment
-    user.plano_assinatura = plan_code
-    user.assinatura_ativa = True
-    
-    db.session.commit()
+    # PRODUCTION: In production, this route should only handle external payment redirects or logs.
+    # It should NOT grant access directly based on a client request.
     return jsonify({
-        'success': True, 
-        'message': t('subscription_activated') if 'subscription_activated' in dir(t) else 'Assinatura Ativada!',
-        'user': user.to_dict()
-    }), 200
+        'success': False, 
+        'error': 'Checkout must be completed via Google Play Store.'
+    }), 403
 
 @payment_bp.route('/api/payment/verify', methods=['POST'])
 @jwt_required()
@@ -50,36 +46,18 @@ def verify_purchase():
     product_id = data.get('product_id')
     is_test = data.get('is_test', False)
 
-    # ── MOCK/TEST LOGIC ──
-    # If is_test is True, we skip external verification and grant access immediately.
-    # This is useful for internal testing or manual GIFTS.
-    if is_test:
-        if product_id == 'shapepro_anual':
-            user.plano_assinatura = 'anual'
-        else:
-            user.plano_assinatura = 'mensal'
-            
-        user.assinatura_ativa = True
-        db.session.commit()
-        return jsonify({
-            'success': True,
-            'message': 'Simulação de compra bem-sucedida!',
-            'user': user.to_dict()
-        }), 200
+    # ── REAL GOOGLE PLAY LOGIC ──
+    server_verification_data = data.get('server_verification_data')
+    
+    if not server_verification_data:
+        return jsonify({'success': False, 'error': 'No verification data provided.'}), 400
 
-    # ── REAL GOOGLE PLAY LOGIC (FUTURE) ──
-    # server_verification_data = data.get('server_verification_data')
-    # ... verification logic here ...
-
-    # Fallback status for non-test requests during dev
-    user.assinatura_ativa = True
-    user.plano_assinatura = 'mensal'
-    db.session.commit()
-
+    # TODO: Implement actual Google Play Developer API call here
+    # For now, we fail closed to ensure security.
     return jsonify({
-        'success': True,
-        'user': user.to_dict()
-    }), 200
+        'success': False,
+        'error': 'Server-side receipt validation is required for production.'
+    }), 402
 
 @payment_bp.route('/api/payment/register-card', methods=['POST'])
 @jwt_required()

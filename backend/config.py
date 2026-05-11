@@ -9,6 +9,16 @@ class Config:
     """Base configuration."""
     SECRET_KEY = os.getenv('SECRET_KEY', 'shapepro-default-secret')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'shapepro-jwt-default')
+    
+    # Security Check: Prevent using defaults in production
+    if os.getenv('FLASK_ENV') == 'production':
+        if SECRET_KEY == 'shapepro-default-secret' or JWT_SECRET_KEY == 'shapepro-jwt-default':
+            print("\n" + "!"*60)
+            print("CRITICAL SECURITY ERROR: DEFAULT SECRETS DETECTED IN PRODUCTION!")
+            print("PLEASE SET 'SECRET_KEY' AND 'JWT_SECRET_KEY' ENVIRONMENT VARIABLES.")
+            print("!"*60 + "\n")
+            # In a real environment, we might want to raise an exception here.
+    
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     SQLALCHEMY_TRACK_MODIFICATIONS = False

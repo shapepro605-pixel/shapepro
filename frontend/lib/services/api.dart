@@ -159,6 +159,10 @@ class ApiService extends ChangeNotifier {
     await _iap.buyNonConsumable(purchaseParam: purchaseParam);
   }
 
+  Future<void> restorePurchases() async {
+    await _iap.restorePurchases();
+  }
+
   Future<Map<String, dynamic>> reportFoodPrice({
     required String foodName,
     required double price,
@@ -389,19 +393,6 @@ class ApiService extends ChangeNotifier {
     return result;
   }
 
-  /// TEST MODE ONLY: Simulates a successful Google Play purchase locally.
-  Future<Map<String, dynamic>> simulatePurchase(String productId) async {
-    final result = await _request('POST', '/payment/verify', body: {
-      'product_id': productId,
-      'is_test': true,
-      'purchase_id': 'MOCK_PURCHASE_${DateTime.now().millisecondsSinceEpoch}',
-    });
-    
-    if (result['success'] == true && result['user'] != null) {
-      await _saveUser(result['user']);
-    }
-    return result;
-  }
 
   /// Applies a promotional or VIP access code.
   Future<Map<String, dynamic>> applyVipCoupon(String code) async {

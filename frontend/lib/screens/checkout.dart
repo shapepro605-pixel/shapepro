@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shapepro/l10n/app_localizations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/api.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -31,29 +32,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _assinar(ProductDetails product) async {
-    setState(() => _isLoading = true);
     final api = Provider.of<ApiService>(context, listen: false);
-    
-    // ── TEST MODE ──
-    // Instead of real Google Play, we simulate the backend verification.
-    final result = await api.simulatePurchase(product.id);
-    
-    if (mounted) {
-      setState(() => _isLoading = false);
-      if (result['success'] == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Acesso Premium Liberado! (Modo de Teste)'),
-            backgroundColor: Color(0xFF2ED573),
-          ),
-        );
-        Navigator.pop(context); // Return home
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro: ${result['error']}')),
-        );
-      }
-    }
+    await api.buyProduct(product);
+    // The purchase result is handled by the listener in ApiService
+    if (mounted) Navigator.pop(context);
   }
 
   Future<void> _aplicarCupom() async {
@@ -99,10 +81,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         title: Text(AppLocalizations.of(context)!.premiumTitle),
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Buscando compras anteriores...')),
               );
+              await Provider.of<ApiService>(context, listen: false).restorePurchases();
             },
             child: Text(
               AppLocalizations.of(context)!.restore,
@@ -141,29 +124,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // DEBUG BUTTON FOR QUICK TESTING
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _simulateMockPurchase('shapepro_mensal'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2ED573).withValues(alpha: 0.1),
-                        side: const BorderSide(color: Color(0xFF2ED573), width: 1.5),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.bug_report, color: Color(0xFF2ED573)),
-                          SizedBox(width: 10),
-                          Text(
-                            'DEBUG: LIBERAR TUDO AGORA',
-                            style: TextStyle(color: Color(0xFF2ED573), fontWeight: FontWeight.w900, letterSpacing: 1),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 32),
                   // Store Products or Mock Plans for testing
                   ...(_loadPlansList(Provider.of<ApiService>(context).products)),
@@ -242,12 +202,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/privacy'),
+                        onTap: () async {
+                          const url = 'https://play.google.com/store/account/subscriptions';
+                          final uri = Uri.parse(url);
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          }
+                        },
                         child: Text(
-                          AppLocalizations.of(context)!.termsOfUse,
+                          AppLocalizations.of(context)!.manageSubscription,
                           style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: Colors.white38,
+                            color: const Color(0xFF00D2FF),
+                            fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -277,123 +244,27 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return products.map((p) => _buildProductCard(p)).toList();
     }
     
-    // Fallback: MOCK PLANS FOR TESTING
     return [
-      _buildMockCard(
-        id: 'shapepro_mensal',
-        title: 'Plano Mensal (TESTE)',
-        desc: 'Acesso total por 1 mês',
-        price: 'R\$ 29,90',
-      ),
-      _buildMockCard(
-        id: 'shapepro_anual',
-        title: 'Plano Anual (TESTE)',
-        desc: 'Melhor custo-benefício',
-        price: 'R\$ 199,90',
-        isBest: true,
-      ),
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white24, size: 48),
+              const SizedBox(height: 16),
+              Text(
+                'Planos não carregados.\nVerifique sua conexão ou a Google Play Store.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(color: Colors.white54, fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+      )
     ];
   }
 
-  Widget _buildMockCard({
-    required String id, 
-    required String title, 
-    required String desc, 
-    required String price, 
-    bool isBest = false
-  }) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        GestureDetector(
-          onTap: () => _simulateMockPurchase(id),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: const Color(0xFF16162A),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isBest ? const Color(0xFF6C5CE7) : const Color(0xFF2A2A4A),
-                width: isBest ? 2 : 1,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      desc,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      price,
-                      style: GoogleFonts.inter(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        color: isBest ? const Color(0xFF6C5CE7) : Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (isBest)
-          Positioned(
-            top: -10,
-            right: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF6C5CE7),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Text(
-                'MELHOR VALOR',
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
 
-  void _simulateMockPurchase(String productId) async {
-    setState(() => _isLoading = true);
-    final api = Provider.of<ApiService>(context, listen: false);
-    final result = await api.simulatePurchase(productId);
-    
-    if (mounted) {
-      setState(() => _isLoading = false);
-      if (result['success'] == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Acesso Premium Liberado! (MOCK)'), backgroundColor: Colors.green),
-        );
-        Navigator.pop(context);
-      }
-    }
-  }
 
   Widget _buildProductCard(ProductDetails product) {
     final bool isBest = product.id == 'shapepro_anual';
