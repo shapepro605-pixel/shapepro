@@ -85,7 +85,7 @@ class _VerifySmsScreenState extends State<VerifySmsScreen> {
     }
     await FirebaseAuth.instance.setLanguageCode(langCode);
     
-    debugPrint('[DEBUG] Starting SMS verification (${langCode}) for: $phone');
+    debugPrint('[DEBUG] Starting SMS verification ($langCode) for: $phone');
 
     if (phone.isEmpty) {
       setState(() {
