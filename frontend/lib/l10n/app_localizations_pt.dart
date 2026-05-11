@@ -655,6 +655,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get bestValue => 'MELHOR VALOR';
 
   @override
+  String get manageSubscription => 'Gerenciar Assinatura';
+
+  @override
   String get errorLoadingPlans => 'Erro ao carregar planos.';
 
   @override

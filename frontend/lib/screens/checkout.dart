@@ -153,7 +153,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Expanded(
                               child: TextField(
                                 controller: _promoController,
+                                enabled: !_isLoading,
                                 textCapitalization: TextCapitalization.characters,
+                                keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
                                   hintText: AppLocalizations.of(context)!.promoCodeHint,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -161,6 +163,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),

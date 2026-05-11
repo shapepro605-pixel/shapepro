@@ -652,6 +652,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bestValue => 'BEST VALUE';
 
   @override
+  String get manageSubscription => 'Manage Subscription';
+
+  @override
   String get errorLoadingPlans => 'Error loading plans.';
 
   @override

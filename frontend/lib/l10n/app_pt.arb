@@ -234,6 +234,7 @@
   "month": "mês",
   "months": "meses",
   "bestValue": "MELHOR VALOR",
+  "manageSubscription": "Gerenciar Assinatura",
   "errorLoadingPlans": "Erro ao carregar planos.",
   "confirmSubscription": "Confirmar Assinatura?",
   "confirmPlanActivation": "Deseja ativar o {planName}? (Ambiente Simulado)",

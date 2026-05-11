@@ -1316,6 +1316,12 @@ abstract class AppLocalizations {
   /// **'MELHOR VALOR'**
   String get bestValue;
 
+  /// No description provided for @manageSubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar Assinatura'**
+  String get manageSubscription;
+
   /// No description provided for @errorLoadingPlans.
   ///
   /// In pt, this message translates to:

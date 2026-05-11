@@ -234,6 +234,7 @@
   "month": "month",
   "months": "months",
   "bestValue": "BEST VALUE",
+  "manageSubscription": "Manage Subscription",
   "errorLoadingPlans": "Error loading plans.",
   "confirmSubscription": "Confirm Subscription?",
   "confirmPlanActivation": "Do you want to activate {planName}? (Simulated Environment)",

@@ -510,20 +510,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Row(
                   children: [
                     _buildQuickAction(AppLocalizations.of(context)!.treino, Icons.fitness_center_rounded, const Color(0xFF00D2FF), () {
-                      final isFree = _progresso?['usuario']?['plano_assinatura'] == 'free';
-                      if (isFree) {
-                        Navigator.pushNamed(context, '/checkout');
-                      } else {
+                      final isPremium = _progresso?['usuario']?['plano_assinatura'] != 'free';
+                      final isTrial = _progresso?['usuario']?['is_trial'] == true;
+                      
+                      if (isPremium || isTrial) {
                         Navigator.pushNamed(context, '/treino');
+                      } else {
+                        Navigator.pushNamed(context, '/checkout');
                       }
                     }),
                     const SizedBox(width: 14),
                     _buildQuickAction(AppLocalizations.of(context)!.dieta, Icons.restaurant_menu, const Color(0xFF6C5CE7), () {
-                      final isFree = _progresso?['usuario']?['plano_assinatura'] == 'free';
-                      if (isFree) {
-                        Navigator.pushNamed(context, '/checkout');
-                      } else {
+                      final isPremium = _progresso?['usuario']?['plano_assinatura'] != 'free';
+                      final isTrial = _progresso?['usuario']?['is_trial'] == true;
+                      
+                      if (isPremium || isTrial) {
                         Navigator.pushNamed(context, '/dieta');
+                      } else {
+                        Navigator.pushNamed(context, '/checkout');
                       }
                     }),
                     const SizedBox(width: 14),
@@ -1401,7 +1405,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
           final api = Provider.of<ApiService>(context, listen: false);
           final user = api.currentUser;
-          final isFree = user?['plano_assinatura'] == 'free';
+          final isPremium = user?['plano_assinatura'] != 'free';
+          final isTrial = user?['is_trial'] == true;
 
           String route;
           switch (i) {
@@ -1411,7 +1416,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             default: route = '/home';
           }
 
-          if ((route == '/treino' || route == '/dieta') && isFree) {
+          if ((route == '/treino' || route == '/dieta') && !isPremium && !isTrial) {
             Navigator.pushNamed(context, '/checkout').then((_) {
               if (mounted) setState(() => _currentIndex = 0);
             });

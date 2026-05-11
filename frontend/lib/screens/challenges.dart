@@ -61,6 +61,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
     
     final api = Provider.of<ApiService>(context);
     final isPremium = api.currentUser?['plano_assinatura'] != 'free';
+    final isTrial = api.currentUser?['is_trial'] == true;
+    final hasAccess = isPremium || isTrial;
 
     return Scaffold(
       appBar: AppBar(
@@ -82,15 +84,15 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
           : TabBarView(
               controller: _tabController,
               children: [
-                _buildChallengeList('diario', isPremium),
-                _buildChallengeList('semanal', isPremium),
-                _buildChallengeList('mensal', isPremium),
+                _buildChallengeList('diario', hasAccess),
+                _buildChallengeList('semanal', hasAccess),
+                _buildChallengeList('mensal', hasAccess),
               ],
             ),
     );
   }
 
-  Widget _buildChallengeList(String type, bool isPremium) {
+  Widget _buildChallengeList(String type, bool hasAccess) {
     final l10n = AppLocalizations.of(context)!;
     final filtered = _allChallenges.where((c) => c['tipo'] == type).toList();
 
@@ -110,12 +112,12 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
         final challenge = filtered[index];
         final isActive = _activeChallengeIds.contains(challenge['id']);
 
-        return _buildChallengeCard(context, challenge, isPremium, isActive);
+        return _buildChallengeCard(context, challenge, hasAccess, isActive);
       },
     );
   }
 
-  Widget _buildChallengeCard(BuildContext context, dynamic challenge, bool isPremium, bool isActive) {
+  Widget _buildChallengeCard(BuildContext context, dynamic challenge, bool hasAccess, bool isActive) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -224,7 +226,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> with SingleTickerPr
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     )
-                  else if (!isPremium)
+                  else if (!hasAccess)
                     ElevatedButton.icon(
                       onPressed: () => Navigator.pushNamed(context, '/checkout'),
                       icon: const Icon(Icons.lock_rounded, size: 16),
