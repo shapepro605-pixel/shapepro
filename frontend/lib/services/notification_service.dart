@@ -116,7 +116,30 @@ class NotificationService {
     // 4. Save updated cache
     await prefs.setString('cached_reflections', jsonEncode(cache));
 
-    // 5. Schedule exact local notifications for each item
+    // 5. Check if today's reflection is already in history, if not, add it
+    final String? historyJson = prefs.getString('notification_history');
+    List<dynamic> history = historyJson != null ? jsonDecode(historyJson) : [];
+    
+    final todayItem = cache.firstWhere((item) => item['target_date'] == todayStr, orElse: () => null);
+    if (todayItem != null) {
+      bool alreadyInHistory = history.any((h) => 
+        h['title'].contains(todayItem['title']) && 
+        h['time'].toString().startsWith(todayStr)
+      );
+      
+      if (!alreadyInHistory) {
+        history.add({
+          'title': "$name, ${todayItem['title']}",
+          'body': todayItem['body'],
+          'type': 'faith',
+          'time': DateTime.now().toIso8601String(),
+        });
+        if (history.length > 50) history.removeAt(0);
+        await prefs.setString('notification_history', jsonEncode(history));
+      }
+    }
+
+    // 6. Schedule exact local notifications for each item
     for (int i = 0; i < cache.length; i++) {
       final item = cache[i];
       final targetDateStr = item['target_date'] as String;
@@ -203,8 +226,9 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-
-    await _saveToHistory(title, body, type);
+    
+    // Note: We don't save to history here anymore because this is a future schedule.
+    // The history should represent delivered or "today's current" notifications.
   }
 
   static Future<void> _scheduleExactNotification(
