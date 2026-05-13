@@ -145,6 +145,11 @@ def create_app(config_name=None):
         """Web page for account deletion requested by Google Play."""
         return render_template('delete_account.html')
 
+    @app.route('/privacy', methods=['GET'])
+    def privacy_policy():
+        """Public Privacy Policy page for Google Play Store compliance."""
+        return render_template('privacy.html')
+
     @app.route('/', methods=['GET'])
     def index():
         return render_template('index.html')
