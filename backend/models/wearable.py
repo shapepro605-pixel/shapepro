@@ -21,6 +21,9 @@ class WearableData(db.Model, SerialMixin):
     # Unique constraint per user and date
     __table_args__ = (db.UniqueConstraint('user_id', 'data', name='_user_date_uc'),)
 
+    # Relacionamento com cascade para permitir exclusão da conta
+    user = db.relationship('User', backref=db.backref('dados_wearable', lazy=True, cascade='all, delete-orphan'))
+
     def to_dict(self):
         d = super().to_dict()
         if d.get('data'):
