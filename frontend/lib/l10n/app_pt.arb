@@ -508,5 +508,22 @@
   "rotateToCenterVoice": "vire seu corpo um milímetro para o centro, você está um pouco de lado.",
   "fullBodyNotDetectedVoice": "ainda não consigo ver seus pés ou cabeça. Afaste-se um pouco.",
   "poseFrontVoice": "gire seu corpo para ficar totalmente de frente para mim.",
-  "poseSideVoice": "fique de perfil, olhando para o lado."
+  "poseSideVoice": "fique de perfil, olhando para o lado.",
+  "monthlyPlanTitle": "Plano Mensal",
+  "monthlyPlanDesc": "Acesso total aos recursos do app",
+  "annualPlanTitle": "Plano Anual",
+  "annualPlanDesc": "Acesso total aos recursos do app",
+  "cancelAnytime": "Cancele grátis a qualquer momento",
+  "upgradeFeatureMeals": "Todas as refeições desbloqueadas",
+  "upgradeFeatureWorkouts": "Todos os exercícios liberados",
+  "upgradeFeatureChampionships": "Acesso a campeonatos",
+  "subscribePremiumBtn": "ASSINAR PREMIUM",
+  "activateBtn": "Ativar",
+  "restoringPurchases": "Buscando compras anteriores...",
+  "plansNotLoaded": "Planos não carregados. Verifique sua conexão ou a Google Play Store.",
+  "trialPopupTitle": "Seu período grátis está acabando! 🔥",
+  "trialPopupBody": "Não perca acesso aos treinos personalizados, dietas exclusivas e campeonatos. Assine agora e transforme seu corpo!",
+  "trialPopupCta": "ASSINAR PLANO MENSAL",
+  "trialPopupLater": "Talvez depois",
+  "recommendedPlan": "⚡ RECOMENDADO"
 }

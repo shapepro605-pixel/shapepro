@@ -26,7 +26,7 @@ class ApiService extends ChangeNotifier {
   }
   
   // Current version must match configuration
-  static const String currentAppVersion = "1.0.30";
+  static const String currentAppVersion = "1.0.33";
   
   String? _accessToken;
   String? _refreshToken;
@@ -619,9 +619,7 @@ class ApiService extends ChangeNotifier {
     return await _request('GET', '/plan/dieta/historico');
   }
 
-  Future<Map<String, dynamic>> getDailyReflection({int days = 1}) async {
-    return await _request('GET', '/plan/reflection?days=$days');
-  }
+
 
   Future<Map<String, dynamic>> sugerirSubstituicao({
     required String alimentoAtual,

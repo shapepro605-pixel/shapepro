@@ -107,10 +107,7 @@ class ShapeProApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('pt', 'BR'),
-              Locale('en', 'US'),
-            ],
+            supportedLocales: AppLocalizations.supportedLocales,
             initialRoute: isLoggedIn ? '/home' : '/splash',
             routes: {
               '/splash': (context) => const SplashScreen(),

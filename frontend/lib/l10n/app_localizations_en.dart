@@ -1423,4 +1423,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get poseSideVoice => 'stand sideways, looking to the side.';
+
+  @override
+  String get monthlyPlanTitle => 'Monthly Plan';
+
+  @override
+  String get monthlyPlanDesc => 'Full access to all app features';
+
+  @override
+  String get annualPlanTitle => 'Annual Plan';
+
+  @override
+  String get annualPlanDesc => 'Full access to all app features';
+
+  @override
+  String get cancelAnytime => 'Cancel free at any time';
+
+  @override
+  String get upgradeFeatureMeals => 'All meals unlocked';
+
+  @override
+  String get upgradeFeatureWorkouts => 'All workouts unlocked';
+
+  @override
+  String get upgradeFeatureChampionships => 'Access to championships';
+
+  @override
+  String get subscribePremiumBtn => 'SUBSCRIBE TO PREMIUM';
+
+  @override
+  String get activateBtn => 'Activate';
+
+  @override
+  String get restoringPurchases => 'Checking previous purchases...';
+
+  @override
+  String get plansNotLoaded =>
+      'Plans not loaded. Check your connection or the Google Play Store.';
+
+  @override
+  String get trialPopupTitle => 'Your free trial is ending! 🔥';
+
+  @override
+  String get trialPopupBody =>
+      'Don\'t lose access to personalized workouts, exclusive diets, and championships. Subscribe now and transform your body!';
+
+  @override
+  String get trialPopupCta => 'SUBSCRIBE MONTHLY PLAN';
+
+  @override
+  String get trialPopupLater => 'Maybe later';
+
+  @override
+  String get recommendedPlan => '⚡ RECOMMENDED';
 }

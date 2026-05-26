@@ -44,12 +44,6 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
       setState(() {
         _notifications = [
           {
-            'title': '$_userName, bom dia com Deus! ✨',
-            'body': 'O Senhor é o meu pastor, nada me faltará. (Salmos 23:1)',
-            'type': 'faith',
-            'time': DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
-          },
-          {
             'title': 'Hora de brilhar, $_userName! 🍎',
             'body': 'Está na hora do seu Almoço. Mantenha o foco no seu objetivo!',
             'type': 'diet',

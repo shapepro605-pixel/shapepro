@@ -2743,6 +2743,108 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'fique de perfil, olhando para o lado.'**
   String get poseSideVoice;
+
+  /// No description provided for @monthlyPlanTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Plano Mensal'**
+  String get monthlyPlanTitle;
+
+  /// No description provided for @monthlyPlanDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso total aos recursos do app'**
+  String get monthlyPlanDesc;
+
+  /// No description provided for @annualPlanTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Plano Anual'**
+  String get annualPlanTitle;
+
+  /// No description provided for @annualPlanDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso total aos recursos do app'**
+  String get annualPlanDesc;
+
+  /// No description provided for @cancelAnytime.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancele grátis a qualquer momento'**
+  String get cancelAnytime;
+
+  /// No description provided for @upgradeFeatureMeals.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas as refeições desbloqueadas'**
+  String get upgradeFeatureMeals;
+
+  /// No description provided for @upgradeFeatureWorkouts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os exercícios liberados'**
+  String get upgradeFeatureWorkouts;
+
+  /// No description provided for @upgradeFeatureChampionships.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso a campeonatos'**
+  String get upgradeFeatureChampionships;
+
+  /// No description provided for @subscribePremiumBtn.
+  ///
+  /// In pt, this message translates to:
+  /// **'ASSINAR PREMIUM'**
+  String get subscribePremiumBtn;
+
+  /// No description provided for @activateBtn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativar'**
+  String get activateBtn;
+
+  /// No description provided for @restoringPurchases.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscando compras anteriores...'**
+  String get restoringPurchases;
+
+  /// No description provided for @plansNotLoaded.
+  ///
+  /// In pt, this message translates to:
+  /// **'Planos não carregados. Verifique sua conexão ou a Google Play Store.'**
+  String get plansNotLoaded;
+
+  /// No description provided for @trialPopupTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu período grátis está acabando! 🔥'**
+  String get trialPopupTitle;
+
+  /// No description provided for @trialPopupBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não perca acesso aos treinos personalizados, dietas exclusivas e campeonatos. Assine agora e transforme seu corpo!'**
+  String get trialPopupBody;
+
+  /// No description provided for @trialPopupCta.
+  ///
+  /// In pt, this message translates to:
+  /// **'ASSINAR PLANO MENSAL'**
+  String get trialPopupCta;
+
+  /// No description provided for @trialPopupLater.
+  ///
+  /// In pt, this message translates to:
+  /// **'Talvez depois'**
+  String get trialPopupLater;
+
+  /// No description provided for @recommendedPlan.
+  ///
+  /// In pt, this message translates to:
+  /// **'⚡ RECOMENDADO'**
+  String get recommendedPlan;
 }
 
 class _AppLocalizationsDelegate

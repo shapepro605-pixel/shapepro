@@ -508,5 +508,22 @@
   "rotateToCenterVoice": "turn your body a millimeter to the center, you are slightly sideways.",
   "fullBodyNotDetectedVoice": "I still can't see your feet or head. Step back a bit.",
   "poseFrontVoice": "turn your body to face me completely.",
-  "poseSideVoice": "stand sideways, looking to the side."
+  "poseSideVoice": "stand sideways, looking to the side.",
+  "monthlyPlanTitle": "Monthly Plan",
+  "monthlyPlanDesc": "Full access to all app features",
+  "annualPlanTitle": "Annual Plan",
+  "annualPlanDesc": "Full access to all app features",
+  "cancelAnytime": "Cancel free at any time",
+  "upgradeFeatureMeals": "All meals unlocked",
+  "upgradeFeatureWorkouts": "All workouts unlocked",
+  "upgradeFeatureChampionships": "Access to championships",
+  "subscribePremiumBtn": "SUBSCRIBE TO PREMIUM",
+  "activateBtn": "Activate",
+  "restoringPurchases": "Checking previous purchases...",
+  "plansNotLoaded": "Plans not loaded. Check your connection or the Google Play Store.",
+  "trialPopupTitle": "Your free trial is ending! 🔥",
+  "trialPopupBody": "Don't lose access to personalized workouts, exclusive diets, and championships. Subscribe now and transform your body!",
+  "trialPopupCta": "SUBSCRIBE MONTHLY PLAN",
+  "trialPopupLater": "Maybe later",
+  "recommendedPlan": "⚡ RECOMMENDED"
 }

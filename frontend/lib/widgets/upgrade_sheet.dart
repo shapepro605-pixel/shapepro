@@ -138,11 +138,11 @@ class _UpgradeSheetContentState extends State<_UpgradeSheetContent>
             ),
             child: Column(
               children: [
-                _buildFeatureRow(Icons.restaurant_menu, 'Todas as refeições desbloqueadas'),
+                _buildFeatureRow(Icons.restaurant_menu, AppLocalizations.of(context)!.upgradeFeatureMeals),
                 const SizedBox(height: 10),
-                _buildFeatureRow(Icons.fitness_center, 'Todos os exercícios liberados'),
+                _buildFeatureRow(Icons.fitness_center, AppLocalizations.of(context)!.upgradeFeatureWorkouts),
                 const SizedBox(height: 10),
-                _buildFeatureRow(Icons.emoji_events, 'Acesso a campeonatos'),
+                _buildFeatureRow(Icons.emoji_events, AppLocalizations.of(context)!.upgradeFeatureChampionships),
               ],
             ),
           ),
@@ -178,7 +178,7 @@ class _UpgradeSheetContentState extends State<_UpgradeSheetContent>
                       const Icon(Icons.verified, color: Colors.white, size: 20),
                       const SizedBox(width: 10),
                       Text(
-                        "ASSINAR PREMIUM",
+                        AppLocalizations.of(context)!.subscribePremiumBtn,
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w900,
                           color: Colors.white,

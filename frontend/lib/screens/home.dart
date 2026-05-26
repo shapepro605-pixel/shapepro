@@ -15,6 +15,7 @@ import 'package:shapepro/utils/logger.dart';
 import '../services/wearable_service.dart';
 import '../widgets/fitness_widgets.dart';
 import 'notification_center.dart';
+import '../services/trial_popup_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -221,10 +222,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           if (_notificationsEnabled) {
             if (_progresso?['dieta_ativa'] != null) {
               NotificationService.scheduleDietNotifications(_progresso!['dieta_ativa']['refeicoes'], context);
-            } else {
-              NotificationService.scheduleDailyReflection(context);
             }
           }
+          
+          // Check for trial popup
+          TrialPopupService.checkAndShowTrialPopup(context);
         }
       });
     }
